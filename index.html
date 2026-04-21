@@ -121,8 +121,15 @@ body {
   box-shadow: 0 0 6px rgba(56,189,248,0.6);
 }
 
-.section { display:none; }
-.section.active { display:block; }
+.section {
+  display: none;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.section.active {
+  display: block;
+}
 
 /* INPUT */
 .input-wrap {
