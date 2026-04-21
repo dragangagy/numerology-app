@@ -430,6 +430,24 @@ body {
   font-size: 12px;
 }
 
+.back-arrow {
+  position: sticky;
+  top: 10px;
+  left: 10px;
+
+  font-size: 22px;
+  color: #38bdf8;
+  cursor: pointer;
+
+  z-index: 9999;
+  width: fit-content;
+
+  text-shadow:
+    0 0 6px #38bdf8,
+    0 0 12px rgba(56,189,248,0.6);
+    transform: scale(0.9);
+}
+
 </style>
 </head>
 
@@ -601,6 +619,7 @@ onkeypress="if(event.key === 'Enter'){ generate(); }">
 
 <!-- ANALYSIS -->
 <div id="analysis" class="section">
+<div class="back-arrow" onclick="goBack()">❮</div>
 
   <div class="analysis-box">
     <h3 style="color:#38bdf8;">PYRAMID</h3>
@@ -630,7 +649,7 @@ onkeypress="if(event.key === 'Enter'){ calculateDifference(); }">
  <!-- 🔥 INVISIBLE TAB -->
 
 <div id="detail" class="section">
-
+<div class="back-arrow" onclick="goBack()">❮</div>
 
   <div id="detailText" style="margin-top:20px;"></div>
 
