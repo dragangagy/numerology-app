@@ -1,0 +1,1940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pyramid App</title>
+
+<style>
+
+    .seasonBtn {
+  cursor:pointer;
+  color:#FFD700;
+  font-size:12px;
+  letter-spacing:1px;
+  transition:0.3s;
+
+  text-shadow:
+    0 0 5px #FFD700,
+    0 0 10px #FFD700,
+    0 0 20px rgba(255,215,0,0.6);
+}
+
+.seasonBtn.active {
+  text-shadow:none;
+}
+
+#numberHint {
+  display: none; /* 🔥 SAKRIVEN NA STARTU */
+  color: #38bdf8;
+  text-shadow:
+    0 0 10px #38bdf8,
+    0 0 20px rgba(56,189,248,0.8),
+    0 0 40px rgba(56,189,248,0.6);
+  animation: glowBig 1.8s infinite alternate;
+}
+
+#introVideo {
+  display: block;
+  width: 70%;
+  margin: 0 auto;
+  border-radius: 10px;
+}
+
+body.detail-active .tabs {
+  display: none !important;
+}
+
+body.detail-active .title {
+  display: none;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 12px;
+  width: 80%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.back-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #38bdf8;
+  color: white;
+}
+
+body {
+  font-family: Arial;
+  background: #0f172a;
+  color: white;
+  text-align: center;
+  margin: 0;
+  padding: 10px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.tabs {
+  display: none;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin: 15px 0;
+}
+
+.tab {
+  padding: 6px 10px;
+  background: #1e293b;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.tab.active {
+  opacity: 1;
+  box-shadow: 0 0 6px rgba(56,189,248,0.6);
+}
+
+.section { display:none; }
+.section.active { display:block; }
+
+/* INPUT */
+.input-wrap {
+  width: 90%;
+  margin: 0 auto;
+  background: #1e293b;
+  border-radius: 14px;
+  padding: 5px;
+}
+
+.input-wrap input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  padding: 12px;
+  color: white;
+  text-align: center;
+}
+
+.analyze-btn {
+  width: 90%;
+  padding: 14px;
+  margin-top: 15px;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  color: white;
+  font-weight: bold;
+}
+
+/* HERO */
+.main-label {
+  margin-top: 20px;
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: #38bdf8;
+  opacity: 0;
+  text-shadow: 0 0 6px rgba(56,189,248,0.6);
+}
+
+.main-number {
+  margin-top: 10px;
+  font-size: 110px;
+  font-weight: bold;
+  color: #38bdf8;
+  opacity: 1; /* 🔥 promeni */
+  /* ❌ OBRIŠI transform */
+  text-shadow: 0 0 20px rgba(56,189,248,0.6);
+  position: relative;
+  z-index: 9999;
+  pointer-events: auto;
+}
+
+@keyframes pulseHint {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.08); }
+}
+
+.main-number {
+  animation: pulseHint 1s infinite alternate;
+}
+
+.main-number:hover {
+  transform: scale(1.05);
+  text-shadow: 0 0 40px #38bdf8;
+}
+
+.zodiac {
+  margin-top: 10px;
+  color: #38bdf8;
+  opacity: 0;
+}
+
+.store-msg {
+  margin-top: 20px;
+  font-size: 12px;
+  color: white;
+  opacity: 0;
+}
+
+/* PIRAMIDA */
+.row-wrap { display:flex; justify-content:center; margin:4px 0; }
+.row { display:flex; gap:6px; }
+
+.first-row span {
+  animation: redGlow 1.5s infinite alternate;
+}
+
+@keyframes redGlow {
+  from { box-shadow: 0 0 5px rgba(239,68,68,0.6); }
+  to { box-shadow: 0 0 25px rgba(239,68,68,1); }
+}
+
+@keyframes glowPulse {
+  from { box-shadow: 0 0 5px rgba(56,189,248,0.6); }
+  to { box-shadow: 0 0 20px rgba(56,189,248,1); }
+}
+
+.row span {
+  padding: 4px 5px;
+  border-radius: 6px;
+  min-width: 16px;
+  font-size: 11px;
+  background:#1e293b;
+  box-shadow:0 0 8px rgba(56,189,248,0.5);
+}
+
+#detail {
+  text-align: left;
+  padding: 20px;
+}
+
+.code-line {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:20px;
+}
+
+.label {
+  width:200px;
+  text-align:right;
+}
+
+/* CODES */
+.codes-glow {
+  line-height: 1.3;
+  font-size: 15px;
+}
+
+.codes-glow div {
+  margin-bottom: 4px;
+}
+
+.analysis-box h3 {
+  margin-bottom: 10px;
+  letter-spacing: 2px;
+}
+
+@media (max-width: 480px) {
+
+  .code-line {
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .label {
+    width: auto;
+    text-align: center;
+    font-size: 10px;
+  }
+
+  .row {
+    display:flex;
+    gap:3px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .row span {
+    padding: 3px 4px;
+    min-width: 14px;
+    font-size: 10px;
+  }
+}
+
+/* BOOK STORE */
+.season {
+  margin-top: 25px;
+}
+
+.season h3 {
+  margin-bottom: 10px;
+  color: #38bdf8;
+  text-shadow: 0 0 8px rgba(56,189,248,0.6);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.season h3:hover {
+  color: #38bdf8;
+  text-shadow: 0 0 10px rgba(56,189,248,0.8);
+}
+
+.grid {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 6px 0;
+}
+
+.book {
+  width: 70px;
+  height: 100px;
+  background: #1e293b;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(56,189,248,0.4);
+}
+
+.book img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: auto;
+}
+
+.book:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 20px rgba(56,189,248,0.8);
+}
+
+.analysis-box {
+  margin-top:20px;
+  padding:15px;
+  background:#1e293b;
+  border-radius:10px;
+}
+
+/* ANIMACIJE */
+.show-label { 
+    animation: fadeIn 0.5s forwards; }
+.show-number {
+  opacity: 1;
+}
+.show-fade { 
+    animation: fadeIn 0.8s forwards; }
+
+@keyframes fadeIn {
+  from { opacity:0; }
+  to { opacity:1; }
+}
+
+@keyframes popIn {
+  0% { opacity:0; transform:scale(0.5); }
+  100% { opacity:1; transform:scale(1); }
+}
+
+@keyframes glowBig {
+  from { text-shadow: 0 0 10px #38bdf8; }
+  to { text-shadow: 0 0 40px #38bdf8; }
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #0f172a;
+  border-top: 1px solid #334155;
+  padding: 10px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  font-size: 11px;
+  z-index: 999;
+}
+
+.footer-logo {
+  width: 80px;
+}
+
+.footer-text {
+  text-align: left;
+  line-height: 1.3;
+}
+
+body {
+  padding-bottom: 80px;
+}
+
+#codes {
+  padding-bottom: 80px;
+}
+
+.section {
+  padding-bottom: 100px;
+}
+
+/* PITAGORA */
+
+.calendar {
+  max-width: 320px;
+  margin: 20px auto;
+  background: #1e293b;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.calendar h3 {
+  margin-bottom: 10px;
+  color: #38bdf8;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.calendar-grid div {
+  padding: 8px;
+  background: #0f172a;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="title" style="
+  color: rgb(218, 194, 58);
+  
+">
+  Numerology App
+</div>
+
+<div class="tabs" id="tabs">
+  <div class="tab active" data-tab="home" onclick="showTab('home')">HOME</div>
+  <div class="tab" data-tab="codes" onclick="showTab('codes')">CODES</div>
+  <div class="tab" data-tab="analysis" onclick="showTab('analysis')">ANALYSIS</div>
+  <div class="tab" data-tab="pyramid" onclick="showTab('pyramid')">ASPEKT</div>
+  <div class="tab" data-tab="pitagora" onclick="showTab('pitagora')">PITAGORA</div>
+  <div class="tab" data-tab="store" onclick="showTab('store')">BOOK STORE</div>
+</div>
+
+<!-- HOME -->
+<div id="home" class="section active">
+
+
+
+  <div class="input-wrap">
+    <input type="text" id="input" placeholder="DD.MM.YYYY"
+onkeypress="if(event.key === 'Enter'){ generate(); }">
+  </div>
+
+  <button class="analyze-btn" onclick="generate()">ANALYZE</button>
+
+<div id="introContainer">
+
+  <video id="introVideo" width="100%" muted playsinline autoplay>
+    <source src="images/video.mp4" type="video/mp4">
+  </video>
+
+ <div onclick="openAbout()" style="
+  margin-top:12px;
+  font-size:11px;
+  color:#38bdf8;
+  opacity:0.8;
+  cursor:pointer;
+  text-shadow:
+    0 0 6px #38bdf8,
+    0 0 12px rgba(56,189,248,0.7),
+    0 0 20px rgba(56,189,248,0.5);
+  transition:0.3s;
+">
+  LEARN MORE ABOUT THE AUTHORS
+</div>
+
+</div>
+
+  <div id="mainLabel" class="main-label" style="display:none;">
+    YOUR NUMEROLOGICAL CODE
+  </div>
+
+  <div id="mainNumber" class="main-number"></div>
+  <div id="numberHint">
+  Touch the code. Reveal the truth.
+</div>
+  <div id="zodiac" class="zodiac"></div>
+
+  <div id="recommendedBooks" class="grid" style="margin-top:20px;"></div>
+
+  <div id="storeMsg" class="store-msg">
+    In our Book Store section<br>
+    you can find books related to your number<br>
+    <br>
+    AS  WELL  AS  BOOKS  FOR  ALL  THE  OTHER  NUMBERS
+
+  </div>
+</div>
+
+<!-- ASPECT -->
+<div id="pyramid" class="section">
+  <div id="output"></div>
+
+  <div id="calendar-controls" style="margin-top:20px; text-align:center;">
+
+  <div style="
+    margin-bottom:5px;
+    font-size:11px;
+    letter-spacing:2px;
+    color:#38bdf8;
+    opacity:0.7;
+    text-shadow: 0 0 8px rgba(56,189,248,0.6);
+  ">
+    ASPECT FOR YEAR:
+  </div>
+
+  <select id="aspectYear"></select>
+ <div id="aspectResult" onclick="openAspectDetail()" style="
+  margin-top:20px;
+  text-align:center;
+  cursor:pointer;
+">
+
+  <div id="aspectValue" style="
+    font-size:22px;
+    font-weight:bold;
+    color:gold;
+    text-shadow:
+      0 0 10px gold,
+      0 0 20px gold,
+      0 0 30px rgba(255,215,0,0.8);
+  ">
+    0/0
+  </div>
+
+  <div style="
+    font-size:22px;
+    font-weight:bold;
+    color:gold;
+    text-shadow:
+      0 0 10px gold,
+      0 0 20px gold,
+      0 0 30px rgba(255,215,0,0.8);
+  ">
+    ASPECT
+  </div>
+
+  <div style="
+  font-size:12px;
+  margin-top:4px;
+  color:white;
+  opacity:0.8;
+">
+  (Click aspect for more details)
+
+</div>
+
+<div id="aspectText" style="
+  margin-top:15px;
+  font-size:12px;
+  line-height:1.5;
+  text-align:left;
+"></div>
+
+</div>
+
+  <div id="result"></div>
+</div>
+
+  <div id="result"></div>
+</div>
+
+<!-- CODES -->
+<div id="codes" class="section">
+
+  <div class="analysis-box">
+    <h3 style="color:#38bdf8;">NUMEROLOGICAL PYRAMID STRUCTURE</h3>
+    <div id="codesPyramid"></div>
+  </div>
+
+  <div class="analysis-box">
+    <h3 style="color:#38bdf8;">CODES</h3>
+    <div id="codesText" class="codes-glow"></div>
+  </div>
+
+</div>
+
+<!-- ANALYSIS -->
+<div id="analysis" class="section">
+
+  <div class="analysis-box">
+    <h3 style="color:#38bdf8;">PYRAMID</h3>
+    <div id="analysisPyramid"></div>
+    <div style="
+  margin-top:10px;
+  font-size:12px;
+  color:white;
+  opacity:0.8;
+">
+  (Calculate specific code for day, month or year)
+</div>
+  </div>
+
+  <!-- 🔥 NOVI INPUT -->
+  <div class="input-wrap" style="margin-top:20px;">
+  <input type="text" id="analysisInput" placeholder="DD.MM.YYYY"
+onkeypress="if(event.key === 'Enter'){ calculateDifference(); }">
+</div>
+
+<button class="analyze-btn" onclick="calculateDifference()">CALCULATE</button>
+
+  <div class="analysis-box" id="analysisText"></div>
+
+</div>
+
+ <!-- 🔥 INVISIBLE TAB -->
+
+<div id="detail" class="section">
+
+
+  <div id="detailText" style="margin-top:20px;"></div>
+
+  <button onclick="goBack()" class="back-btn">BACK</button>
+
+</div>
+
+<div id="about" class="section">
+
+  <div style="padding:20px; text-align:left; line-height:1.6;">
+
+    <h3 style="color:#38bdf8; text-align:center;">ABOUT AUTHORS</h3>
+
+    <p style="line-height:1.6; text-align:left; white-space:pre-line;">
+
+Suzy Q & G Lab Research is not built around personalities.
+It is built around patterns.
+
+Behind this name stands a focused research approach dedicated to understanding one question:
+
+Why do people behave the way they do in relationships?
+
+Their work is based on the observation that human behavior follows recurring structures — patterns that can be recognized, understood, and predicted.
+
+At the core of this system lies a key principle:
+
+Numerical archetypes shape behavior.
+
+Drawing from the foundation of numerology, this approach identifies nine distinct patterns — each representing a different way a man thinks, feels, and acts.
+
+These are not random categories.
+They are structured behavioral types, each aligned with a specific numerical pattern.
+
+This system is presented through the 9 Types of Men, where each number represents:
+
+• a different mindset  
+• a different emotional response  
+• a different way of relating in relationships  
+
+The purpose of this work is simple:
+
+• to make behavior understandable  
+• to reveal hidden patterns  
+• to replace confusion with clarity  
+
+This is not guesswork.
+This is a system.
+
+Understand the number — understand the man.
+
+
+Suzy Q & G Lab Research
+
+</p>
+
+  </div>
+
+  <button onclick="goBack()" class="back-btn">BACK</button>
+
+</div>
+
+
+<!-- BOOK STORE -->
+<div id="store" class="section">
+
+  <div style="
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  margin-bottom:15px;
+">
+
+<div class="seasonBtn" onclick="toggleSeason('s1', this)">SEASON 1</div>
+<div class="seasonBtn" onclick="toggleSeason('s2', this)">SEASON 2</div>
+<div class="seasonBtn" onclick="toggleSeason('s3', this)">SEASON 3</div>
+
+</div>
+
+<div style="
+  margin-top:-5px;
+  margin-bottom:10px;
+  font-size:12px;
+  color:white;
+  opacity:0.7;
+">
+  (choose a season)
+</div>
+
+  <div id="storeIntro">
+
+  <video id="storeVideo" playsinline autoplay style="
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(56,189,248,0.4);
+">
+
+    <source src="images/free.mp4" type="video/mp4">
+  </video>
+
+  <div id="storeDownload" style="display:none; margin-top:10px; cursor:pointer;"
+onclick="window.location.href='free.pdf'">
+
+   <img src="images/free.png" style="
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(56,189,248,0.4);
+  cursor: pointer;
+  transition: 0.3s;
+">
+
+    <div style="color:white; margin-top:5px; font-size:12px;">
+      (download free edition right now)
+    </div>
+
+  </div>
+
+</div>
+
+  <div class="season">
+
+  <div class="season-content" id="s1" style="display:none;">
+    <div class="grid" id="s1-r1"></div>
+    <div class="grid" id="s1-r2"></div>
+    <div class="grid" id="s1-r3"></div>
+    <div class="grid" id="s1-r4"></div>
+  </div>
+</div>
+
+ <div class="season">
+
+  <div class="season-content" id="s2" style="display:none;">
+    <div class="grid" id="s2-r1"></div>
+    <div class="grid" id="s2-r2"></div>
+    <div class="grid" id="s2-r3"></div>
+    <div class="grid" id="s2-r4"></div>
+  </div>
+</div>
+
+  <div class="season">
+
+  <div class="season-content" id="s3" style="display:none;">
+    <div class="grid" id="s3-r1"></div>
+    <div class="grid" id="s3-r2"></div>
+    <div class="grid" id="s3-r3"></div>
+    <div class="grid" id="s3-r4"></div>
+  </div>
+</div>
+</div>
+
+<!-- PITAGORA -->
+
+<div id="pitagora" class="section">
+
+  <div class="analysis-box">
+    <h3 style="color:#38bdf8;">PYTHAGOREAN ANALYSIS</h3>
+
+       <div id="calendar-controls" style="text-align:center; margin-bottom:10px;">
+  <select id="monthSelect"></select>
+  <select id="yearSelect"></select>
+</div>
+
+<div id="calendar"></div>
+  </div>
+
+</div>
+
+<script>
+ //ASPEKT//
+   function loadAspectYears(){
+
+  let select = document.getElementById("aspectYear");
+  if(!select) return;
+
+  select.innerHTML = "";
+
+  // uzmi datum iz HOME
+  let input = document.getElementById("input").value;
+
+  let age = 0;
+
+  if(input && input.match(/^\d{2}\.\d{2}\.\d{4}$/)){
+
+  let parts = input.split(".");
+  let day = parseInt(parts[0]);
+  let month = parseInt(parts[1]) - 1;
+  let year = parseInt(parts[2]);
+
+  let today = new Date();
+
+  age = today.getFullYear() - year;
+
+  let birthday = new Date(today.getFullYear(), month, day);
+
+  if(today < birthday){
+    age--;
+  }
+
+} else {
+  age = 0; // 🔥 fallback da ništa ne pukne
+}
+
+  for(let i = 1; i <= 99; i++){
+    let opt = document.createElement("option");
+    opt.value = i;
+    opt.text = i;
+
+    if(i === age){
+      opt.selected = true;
+    }
+
+    select.appendChild(opt);
+  }
+  // 🔥 OVO TI FALI
+  select.onchange = function(){
+    markAspectInPyramid(parseInt(this.value));
+  };
+
+  markAspectInPyramid(age);
+
+}
+
+function markAspectInPyramid(steps){
+
+  let rows = document.querySelectorAll("#output .row");
+
+let spans = [];
+
+// 🔥 IDENTIČNO kao ANALYSIS
+rows.forEach((row, index) => {
+  if(index === 0) return; // preskoči prvi red
+  spans.push(...row.querySelectorAll("span"));
+});
+
+  // reset
+  spans.forEach(s => {
+  s.style.border = "";
+  s.style.boxShadow = "";
+});
+
+  let index = -1;
+
+for(let i=0; i<steps; i++){
+  index++;
+
+  // preskoči prvi element
+  if(index === 0){
+    index++;
+  }
+
+  if(index >= spans.length){
+    index = 0;
+  }
+}
+
+ // GLOW
+if(spans[index]){
+  spans[index].style.boxShadow = "0 0 15px gold, 0 0 30px gold";
+}
+
+// SLEDEĆI
+let nextIndex = (index + 1) % spans.length;
+
+if(spans[nextIndex]){
+  spans[nextIndex].style.boxShadow = "0 0 15px gold, 0 0 30px gold";
+}
+
+// 🔥 ASPECT X/X
+if(spans[index]){
+
+  let current = parseInt(spans[index].innerText);
+  let next = parseInt(spans[nextIndex].innerText);
+
+  let aspect = `${current}/${next}`;
+
+  document.getElementById("aspectValue").innerText = aspect;
+}
+}
+
+function openAbout(){
+  document.body.classList.add("detail-active");
+  showTab("about");
+}
+
+function openAspectDetail(){
+
+  let val = document.getElementById("aspectValue").innerText;
+
+  let texts = {
+
+  "0/0": "Aspect 0/0 ComingSoon",
+  "0/1": "Aspect 0/1 ComingSoon",
+  "0/2": "Aspect 0/2 ComingSoon",
+  "0/3": "Aspect 0/3 ComingSoon",
+  "0/4": "Aspect 0/4 ComingSoon",
+  "0/5": "Aspect 0/5 ComingSoon",
+  "0/6": "Aspect 0/6 ComingSoon",
+  "0/7": "Aspect 0/7 ComingSoon",
+  "0/8": "Aspect 0/8 ComingSoon",
+  "0/9": "Aspect 0/9 ComingSoon",
+
+  "1/0": "Aspect 1/0\n\nIn its positive manifestation, this aspect becomes highly powerful and influential. It reflects a strong drive for self-proving, significant impact on others, and a favorable professional position. For women, it may indicate meeting a powerful or influential man (especially in the case of night birth).\n\nWhen we refer to 'positive aspects,' we mean situations such as being in a personal Year 6 (according to Pythagorean numerology), supported by beneficial numbers like 615.\n\nIt may also occur during personal Years 1 or 8, provided they are accompanied by other positive influences.\n\nIf a person enters a personal Year 5 (career) and it is well-positioned, the influence of the 1/0 pyramid contributes to professional growth, including benefits for their partner.\n\nIn its negative manifestation, this aspect leads to internal conflict (ego, pride) and conflicts with others, especially authority figures.\n\nFor women, it may bring complications related to a partner, father, or employer.\n\nThis may result from poorly positioned personal years (e.g., 647), or during Years 4 or 7, which are generally more challenging.\n\nFrom a professional perspective, it enhances status, especially in media and public recognition.\n\nThis aspect increases visibility and popularity—the person may attract significant attention. A partner may also be influential and successful.\n\nIf a male partner is involved in a high-risk profession, this period requires increased caution.\n\nThe most severe outcome may involve the loss of a partner or father.\n\nSpecial attention should be given to the summer period.\n\nFor those with a well-positioned Number 1, this period is favorable for buying or selling gold.\n\nBe cautious about what you share—truths may surface, or manipulation may occur, even from a partner.",
+  "1/1": "Aspect 1/1\n\nThis aspect amplifies the influence of Number 1 and is generally considered highly favorable. It typically indicates successful events that may occur during the year, month, or day.\n\nIt brings enthusiasm, optimism, and new beginnings—any kind of beginning. Due to the opposition with Number 2, this may also represent a new beginning for a spouse, who may be successful during this period.\n\nIt is an excellent time for implementing plans, as well as for personal and professional growth. It also supports future planning (setting priorities) and introducing changes or innovations into existing work.\n\nThe essence of this period is to carry out changes that have been planned for a long time.\n\nThere is a possibility of forming new connections or friendships that may become long-term. Choose successful and motivating people (relationship compatibility—synastry—should always be considered first).\n\nIt can bring good positioning in competitions and strengthening of status. The person becomes more aware and difficult to deceive (truth revelation). Others may show increased interest in your private life—be careful what you share.\n\nFor women, it inevitably brings events related to the opposite sex (for example, a spouse may be very successful—especially in daytime birth charts). Due to the opposition of 1 and 2, in a negative natal setup, it may lead to breakups. It is important to rely more on reason than emotions.\n\nFrom a personality perspective, it is necessary to work on ego and tolerance, be more generous, and avoid selfishness. This aspect represents a conflict between the awareness of Number 1 and the emotional bias of Number 2. Which side prevails depends on daytime (1) or nighttime (2) dominance.\n\nIn conclusion, this is an aspect of conflict between ego and emotions.\n\nAll of the above may not apply if this aspect occurs during unfavorable personal years (according to Pythagorean numerology) or under negative activation.\n\nFor example, health-wise, if Number 1 is poorly positioned in the natal chart (code 415) and the person is in a challenging personal year (471), during this aspect attention should be paid to the heart and spine, while in relationships it may lead to emotional distancing.\n\nRegardless of the rest of the chart, during this aspect it is important to develop patience—avoid expecting instant results (use the analytical strength of Number 1).\n\nIf the previous period was difficult, entering 112 requires increased activity, especially during the day (the influence of the Sun—1—affects the psyche and emotions of Number 2).",
+  "1/2": "Aspect 1/2\n\nThis aspect indicates a pleasant mood and a period when many successful connections can be established, especially with the opposite sex.\n\nIn terms of emotional life, it may bring a new beginning (1) in partnerships (2). It is equally favorable for both men and women.\n\nHowever, one potential issue is the arrogance of one partner.\n\nFor example, if there is poor relationship compatibility (synastry), and one or both individuals are in more challenging personal years—such as 4 (difficulties; karmic tests), 6 (love and marriage events), 7 (possible sudden endings), 8 (conflicts), or 9 (end of a cycle)—it becomes clear that a relationship may end, but also that a new beginning (1) in love or partnership (2) may occur.\n\nIn its mildest form, this aspect may lead to conflicts or arguments between a man (1) and a woman (2).\n\nBeyond love, this is also an aspect of conflict between ego (1) and emotions (2). In daytime birth, the logic of 1 prevails, while in nighttime birth, 2 takes dominance.\n\nIt may also bring a new beginning (1) related to private business (2) or relocation (2).\n\nFrom a personality perspective, it is important to be social, work on optimism (choose a positive environment and successful people), and in terms of health, exposure to sunlight (at least 10 minutes) is beneficial, as it directly affects the energy of Number 2.\n\nDuring this period, both men and women can make significant progress—small goals should be avoided.",
+  "1/3": "Aspect 1/3\n\nThis aspect indicates a favorable period for finances, travel, business contacts, and success in communication with superiors or authorities (people in positions of power).\n\nHowever, caution is advised due to possible excess in various areas of life. A person may overestimate their abilities, show arrogance, and unintentionally create problems for themselves.\n\nRelationships or any form of partnership (including marriage or business) formed during this period tend to become long-lasting and beneficial.\n\nFor example, marriages entered into during this time are, in most cases, happy.\n\nA period of satisfaction lies ahead.\n\nFor women, this aspect may bring the opportunity to meet a man with a significant age difference, often connected to the symbolism of Number 3—such as a foreigner, someone linked to abroad, well-established, educated, or well-known/popular.\n\nHowever, under a negative natal chart, support may be lacking.\n\nRespect for laws is important due to the potential for conflict with authorities.\n\nIf taking exams, this period is especially favorable when evaluated by male, older professors.",
+  "1/4": "Aspect 1/4\n\nThis aspect indicates difficulties, effort, and challenges.\n\nProblems (4) may arise in relation to the father (1), husband (1), an older person, or authority figures.\n\nIf something from the past was not properly resolved, now is the time to deal with it.\n\nEmotionally, it may bring distance in relationships, separation, चिंता, return of former partners, or other types of issues. For example, checking a partner’s phone during this period may reveal unpleasant messages (4/5).\n\nIt is important to control a strong ego, but also not to allow a partner to impose their views. A heavier character may be reflected in the partner or father, as well as potential health concerns.\n\nBe cautious of damage caused by storms, floods, or extreme weather conditions (summer and winter periods may be particularly challenging). Envy, malice, and jealousy may be directed toward you during this time.\n\nReputation and public image may be affected. Overall, this period may feel like a test of endurance.\n\nYou may feel tired or drained, especially if your daily responsibilities exceed your energy and time (better organization and patience are needed).\n\nThis is a time to reassess priorities and remove anything that has been holding you back.\n\nKarmic patterns may become active—mistakes should be avoided.\n\nIf starting something new, expect a more difficult beginning.\n\nBe mindful of negative or melancholic thoughts. A person may become too serious or rigid (lack of optimism and flexibility).\n\nFocus on what truly matters in life, especially health.\n\nPossible health issues may involve blood pressure, heart, or spine. There is also a risk of falls or injuries.\n\nFor women, health problems may also be influenced by a male figure (difficulty in making decisions about ending such relationships can be a mistake).\n\nIn general, health should be monitored carefully.\n\nBe cautious in traffic.\n\nBe mindful of what you say—Number 4 brings consequences, and others may dig into your past.",
+  "1/5": "Aspect 1/5\n\nThis aspect positively influences decision-making and practical thinking. It brings a clear intellect, awareness of goals, and is favorable for working with documents, paperwork, and trade.\n\nIt supports career-related matters (possible promotion—also applies to a partner), negotiations, new connections, education, purchases (such as a car or phone), and entertainment.\n\nIf supported by other aspects, this can also be a favorable period regarding children.\n\nEmotionally, although women may have opportunities to meet someone, it can be difficult to form a stable bond during this period (a partner who values freedom). Those already in relationships should be aware of possible communication with others (someone may show interest in the partner).\n\nThe probability of making wrong decisions is very low, especially if the person is detail-oriented, systematic, and uses intuition.\n\nVerbal influence plays a significant role and should be used wisely.\n\nBesides a partner, strong verbal influence may also come from a family member or a friend, but when influenced by Number 9, it is often misleading. For example, women may meet someone charming and persuasive who could manipulate through words—caution is advised.\n\nConflicts should be avoided—diplomatic approaches bring better results.\n\nFrom a personality perspective, there may be a tendency toward dominant behavior (women may be more attracted to such traits in a partner).\n\nBe careful about what you share publicly, especially with friends.\n\nFor those working in fields related to Number 5 (journalism, writing, music, administration, paperwork), this period can bring significant achievements and strong results (children may also be successful).\n\nThis is a period when children and career (Number 5 domain) should be priorities.\n\nIt is favorable for buying or selling gold, and gifts such as an engagement ring are possible.\n\nA good time for vacation.\n\nHealth-wise, it is important to manage stress and stay physically active for heart health.",
+  "1/6": "Aspect 1/6\n\nThis aspect represents a favorable period for love events (especially for those who are single), enjoyment, finances, and financial transactions. It brings a sense of pleasure and hedonism.\n\nThere is a possibility of receiving gifts or attention (especially for women). During this period, a person appears more attractive and draws attention.\n\nIf Number 6 in the natal chart is under unfavorable influence (6/4, 6/7, 6/9, 6/0), there is a higher chance of extramarital affairs or unstable relationships.\n\nFor example, someone with code 876 entering aspect 1/6 should not expect relationship stability (relationship compatibility—synastry—should always be considered first, along with other aspects).\n\nA common mistake during this period is focusing too much on appearances—trying to present everything as perfect in public despite emotional or family issues.\n\nImpulsiveness in entering relationships is not advised. However, more serious relationships may benefit from progressing into marriage (especially after at least four years together).\n\nBe cautious—there is a risk of emotional exploitation (1 represents the partner, 6 emotions, and 7 the tendency toward exploitation).\n\nIt is advisable to keep your emotional life private, as sharing too much may lead to problems.\n\nThere may be romantic attention from someone previously considered just a friend. Feelings may become confusing.\n\nPeople in positions of power (1) or public professions should be cautious of interference from third parties (6), which may harm their reputation (7), especially through media exposure (1).\n\nIn essence, figures such as a partner, lover, or female relative may be more likely to speak out publicly rather than remain silent during this period.",
+  "1/7": "Aspect 1/7\n\nDuring this period, a person is often euphoric, full of new ideas and plans, and generally inspired. Unexpected visits, news, and various unplanned situations may occur.\n\nHowever, this is primarily an aspect of impulsiveness that must be strictly controlled, as many things will not depend on your actions.\n\nEmotionally, for women it may indicate conflicts, separation, divorce, or any kind of disturbance in relationships with a husband or partner. Single women may enter a relationship or marriage, provided other aspects support it.\n\nIf a partner has harmful habits, pay attention to how money is spent (gambling, alcohol, other distractions)—extra caution is needed during this period.\n\nIt may also bring various issues related to the father.\n\nSince numbers do not provide protection during this period, it is important to avoid arguments and conflicts, especially because there may be resistance toward authority. Even minor issues can escalate into problems.\n\nThis aspect can give a strong influence over a group of people, which should be used wisely.\n\nHowever, sudden endings of something that has lasted for a while are possible. If you are studying, do not give up—this is only a temporary crisis.\n\nFrom a health perspective, stress may directly affect the heart (possible rapid heartbeat).\n\nBe cautious of being taken advantage of, and avoid impulsive financial decisions.",
+  "1/8": "Aspect 1/8\n\nThis aspect brings opportunities for success, ambition, and action. It supports all forms of initiative. If someone is ill, especially in daytime birth, it may contribute to faster recovery.\n\nIn natal charts dominated by strong or 'fiery' numbers, this period can bring success and progress, but often accompanied by competition and struggle, as others may see you as a rival.\n\nIt is a favorable period for achieving results in sports.\n\nHowever, in negative manifestations, it may lead to misunderstandings, conflicts, injuries, and various unpleasant situations. It is important to control ego.\n\nDuring this period, hidden truths or secrets may come to light, which can lead to conflict.\n\nBe cautious with finances and avoid impulsive spending.\n\nFrom a health perspective, attention should be paid to medical procedures, as mistakes are more likely—especially with less experienced practitioners. Physical activity is beneficial for heart function, but those with challenging placements of these numbers should avoid overexertion.\n\nAvoid excessive exposure to the sun and be cautious with protective skincare use.\n\nFor women, this aspect brings events related to the opposite sex, whether positive or negative, depending on other influences.\n\nMen may display more aggressive behavior under emotional pressure, so communication should be handled carefully.\n\nOverall, financial caution is advised, especially during summer or while traveling.",
+  "1/9": "Aspect 1/9\n\nThis aspect indicates a tendency toward travel and may bring modest financial gains.\n\nWhen it comes to finances, those in leadership positions should be cautious of manipulation or deceit. If someone is making promises, verify everything carefully. Extra caution is needed when buying or selling gold, as deception is possible.\n\nIn negative manifestations, it may lead to poor judgment in business, unreliable contacts, and increased sensitivity (weakened immunity), especially allergies related to sun exposure.\n\nIndividuals with strong 1 and 9 combinations (such as 911, 191, or birth date 19.09) may experience this aspect more intensely than others.\n\nIf supported by other factors, it may indicate health concerns involving a male figure, or the need for medical attention. Personal health should also be monitored, especially due to lowered immunity.\n\nDuring this period, a person may experience emotional or psychological imbalance, becoming easily disturbed by minor issues.\n\nThere is a possibility of infections or health-related vulnerabilities, so general caution and hygiene are important.\n\nWomen should be cautious of possible deception from the opposite sex (manipulation of truth). In general, be careful with unverified people, especially during the summer period.\n\nThis aspect may also lead to saying something unintentionally or revealing information that was meant to stay hidden.\n\nA key challenge is difficulty accepting the truth. There may be a tendency to doubt first, then overanalyze, which can lead to incorrect conclusions.\n\nFrom a personality standpoint, it is important to work on compromise and avoid letting ego dominate, as stubbornness and rigidity may be pronounced.\n\nExtra caution is advised in traffic, especially on straight roads or roundabouts, as reduced focus or distraction is possible.",
+  
+  "2/0": "Aspect 2/0\n\nIn daytime birth, this aspect brings a strong sense of power and energy (regeneration of body and psyche). The person has influence over others and a strong desire to prove themselves. Willpower is high, along with strong psychological strength and a tendency to control people around them.\n\nIn nighttime birth, or under unfavorable numerical influences (difficult personal year or month according to Pythagorean numerology, or challenging aspects), it is not advisable to undertake major actions while this aspect is active. Difficulties related to the mother may arise, as well as disturbances within the family or private life.\n\nFor women, it may indicate painful menstrual cycles. It is not a favorable period for conception or surgical procedures, especially those involving implants or foreign objects. These indications depend on the natal positioning of the numbers involved.\n\nEven though daytime and nighttime birth are mentioned, they should not be taken strictly literally, as experiences may vary depending on the overall chart.\n\nSince Number 2 represents the face and emotions, and 0 symbolizes hidden influences, extra caution is advised regarding other people—particularly in terms of sincerity and emotional manipulation, especially during sensitive cycles.\n\nEmotions are intensified during this period, particularly the heavier ones, so emotional control is important.\n\nThe extreme nature of 0 may symbolically represent major life events within the family, such as beginnings or endings.\n\nEnvironment, living conditions, and the influence of others may strongly affect the individual during this time.\n\nAvoid risky environments and be cautious in unfamiliar or uncontrolled settings.",
+  "2/1": "Aspect 2/1\n\nThis aspect brings a positive mood, popularity, emotional fulfillment, satisfaction, and recognition. However, it is important to maintain the optimism of Number 1.\n\nActivities started during this period are best initiated on Sunday, Monday, or Thursday.\n\nIt supports good relationships with people in positions of authority. If help or support is needed, this is a favorable time to ask for it.\n\nIn relationships, women may take a more dominant role, while ego or arrogance may be the only factors that can disrupt emotional harmony.\n\nThis is a period when a husband or partner may receive strong support from his spouse. Professionally, regardless of gender, promotions or salary increases are possible, although this aspect tends to favor women more.\n\nOverall, it indicates a pleasant period both for the individual and their family, including good relations with in-laws.\n\nFinancially, it is important to control expenses and set priorities—avoid unnecessary or large spending.\n\nFor those involved in public professions, this period should be used wisely, especially by maintaining visibility and presence, as influence over others is strong.\n\nIn negative manifestations, Number 2 may bring intense emotions, mood instability, and conflict between emotions and logic, as well as minor conflicts with individuals represented by Number 1 (such as partners, authority figures, or dominant personalities).\n\nRegardless of birth timing, unless disrupted by other aspects, this period may bring positive relocation or opportunities related to living abroad.",
+  "2/2": "Aspect 2/2\n\nThis aspect amplifies the influence of Number 2, bringing fateful events, but also possible stagnation or repetition of situations. There may be a subjective feeling of moving backwards.\n\nDuring this period, a person tends to take things very personally and may become overly sensitive.\n\nMany situations will not depend entirely on your actions, and outcomes may be uncertain.\n\nThis is a time for patience (2/4), not impulsive or sudden reactions. Everything should be approached slowly, tactically, and calmly.\n\nThere may be unions or separations (in love, family, or business relationships).\n\nThis is a period of working with people, but toxic environments should be avoided.\n\nFamily and private life take priority. Marriage is possible, but also breakups or emotional instability for those already in relationships.\n\nIn more difficult circumstances, health concerns within the family may arise.\n\nEmotions and mood may fluctuate significantly, influenced even by external factors such as environment.\n\nA person may spend more time at home or in enclosed spaces. It is important to stay socially active to avoid long-term passivity and negative psychological effects.\n\nPhysical activity or work can be very beneficial.\n\nPeople with strong 2 and 4 influences in their natal chart may reconnect with individuals from the past, but reviving old romantic relationships is not advised.\n\nThis can be a good period for buying or selling property or relocation, although delays or forced changes are possible.\n\nFinancial situations may fluctuate and will depend largely on personal effort and other influencing factors.\n\nHealth-wise, it is important to strengthen mental resilience and avoid toxic environments. Sensitive areas may include the stomach, chest, and, for women, reproductive health.\n\nProper hydration is essential, as well as maintaining healthy habits.\n\nThere may be concern regarding the health of a family member or emotional distancing from someone.\n\nAvoid risky environments and be cautious in situations involving water.",
+  "2/3": "Aspect 2/3\n\nThis aspect indicates a very favorable period, bringing a sense of happiness, recognition, communication with superiors, and encounters with educated or influential people.\n\nIf supported by other aspects, it may lead to relocation or travel, especially to larger cities or abroad.\n\nFor women, this may represent a favorable period for pregnancy (depending on other supporting aspects).\n\nFor those with private businesses, especially under additional positive influences, this period may bring strong financial gains or business expansion.\n\nHowever, this aspect can also bring a tendency toward excess. This may result in weight gain, increased expenses, or impulsive decisions driven by strong emotions.\n\nPeople may feel more relaxed during this time, which can increase the likelihood of mistakes.\n\nThere may also be overly high expectations, so it is important to remain realistic to avoid disappointment.\n\nBe cautious of manipulation or intrigue, particularly from female individuals.\n\nSomeone in the household, especially a woman, may experience professional success, advancement, or positive developments in education, although there may also be situations involving rules or authority.",
+  "2/4": "Aspect 2/4 ComingSoon",
+  "2/5": "Aspect 2/5 ComingSoon",
+  "2/6": "Aspect 2/6 ComingSoon",
+  "2/7": "Aspect 2/7 ComingSoon",
+  "2/8": "Aspect 2/8 ComingSoon",
+  "2/9": "Aspect 2/9 ComingSoon",
+
+  "3/0": "Aspect 3/0 ComingSoon",
+  "3/1": "Aspect 3/1 ComingSoon",
+  "3/2": "Aspect 3/2 ComingSoon",
+  "3/3": "Aspect 3/3 ComingSoon",
+  "3/4": "Aspect 3/4 ComingSoon",
+  "3/5": "Aspect 3/5 ComingSoon",
+  "3/6": "Aspect 3/6 ComingSoon",
+  "3/7": "Aspect 3/7 ComingSoon",
+  "3/8": "Aspect 3/8 ComingSoon",
+  "3/9": "Aspect 3/9 ComingSoon",
+
+  "4/0": "Aspect 4/0 ComingSoon",
+  "4/1": "Aspect 4/1 ComingSoon",
+  "4/2": "Aspect 4/2 ComingSoon",
+  "4/3": "Aspect 4/3 ComingSoon",
+  "4/4": "Aspect 4/4 ComingSoon",
+  "4/5": "Aspect 4/5 ComingSoon",
+  "4/6": "Aspect 4/6 ComingSoon",
+  "4/7": "Aspect 4/7 ComingSoon",
+  "4/8": "Aspect 4/8 ComingSoon",
+  "4/9": "Aspect 4/9 ComingSoon",
+
+  "5/0": "Aspect 5/0 ComingSoon",
+  "5/1": "Aspect 5/1 ComingSoon",
+  "5/2": "Aspect 5/2 ComingSoon",
+  "5/3": "Aspect 5/3 ComingSoon",
+  "5/4": "Aspect 5/4 ComingSoon",
+  "5/5": "Aspect 5/5 ComingSoon",
+  "5/6": "Aspect 5/6 ComingSoon",
+  "5/7": "Aspect 5/7 ComingSoon",
+  "5/8": "Aspect 5/8 ComingSoon",
+  "5/9": "Aspect 5/9 ComingSoon",
+
+  "6/0": "Aspect 6/0 ComingSoon",
+  "6/1": "Aspect 6/1 ComingSoon",
+  "6/2": "Aspect 6/2 ComingSoon",
+  "6/3": "Aspect 6/3 ComingSoon",
+  "6/4": "Aspect 6/4 ComingSoon",
+  "6/5": "Aspect 6/5 ComingSoon",
+  "6/6": "Aspect 6/6 ComingSoon",
+  "6/7": "Aspect 6/7 ComingSoon",
+  "6/8": "Aspect 6/8 ComingSoon",
+  "6/9": "Aspect 6/9 ComingSoon",
+
+  "7/0": "Aspect 7/0 ComingSoon",
+  "7/1": "Aspect 7/1 ComingSoon",
+  "7/2": "Aspect 7/2 ComingSoon",
+  "7/3": "Aspect 7/3 ComingSoon",
+  "7/4": "Aspect 7/4 ComingSoon",
+  "7/5": "Aspect 7/5 ComingSoon",
+  "7/6": "Aspect 7/6 ComingSoon",
+  "7/7": "Aspect 7/7 ComingSoon",
+  "7/8": "Aspect 7/8 ComingSoon",
+  "7/9": "Aspect 7/9 ComingSoon",
+
+  "8/0": "Aspect 8/0 ComingSoon",
+  "8/1": "Aspect 8/1 ComingSoon",
+  "8/2": "Aspect 8/2 ComingSoon",
+  "8/3": "Aspect 8/3 ComingSoon",
+  "8/4": "Aspect 8/4 ComingSoon",
+  "8/5": "Aspect 8/5 ComingSoon",
+  "8/6": "Aspect 8/6 ComingSoon",
+  "8/7": "Aspect 8/7 ComingSoon",
+  "8/8": "Aspect 8/8 ComingSoon",
+  "8/9": "Aspect 8/9 ComingSoon",
+
+  "9/0": "Aspect 9/0 ComingSoon",
+  "9/1": "Aspect 9/1 ComingSoon",
+  "9/2": "Aspect 9/2 ComingSoon",
+  "9/3": "Aspect 9/3 ComingSoon",
+  "9/4": "Aspect 9/4 ComingSoon",
+  "9/5": "Aspect 9/5 ComingSoon",
+  "9/6": "Aspect 9/6 ComingSoon",
+  "9/7": "Aspect 9/7 ComingSoon",
+  "9/8": "Aspect 9/8 ComingSoon",
+  "9/9": "Aspect 9/9 ComingSoon"
+
+    // 🔥 OSTAVI PROSTOR ZA SVE DO 9/9
+  };
+
+  let text = texts[val] || "No description yet.";
+
+  document.getElementById("detailText").innerHTML =
+  `<p style="line-height:1.6; text-align:left;">${text}</p>`;
+
+  document.body.classList.add("detail-active");
+  showTab("detail");
+}
+
+  //PITAGORA//
+
+function generateCalendar(){
+
+  let cal = document.getElementById("calendar");
+  let monthSelect = document.getElementById("monthSelect");
+  let yearSelect = document.getElementById("yearSelect");
+
+  // 🔥 POMOCNE FUNKCIJE
+function getPythagoreanBase(){
+  let input = document.getElementById("input").value;
+  if(!input || !input.match(/^\d{2}\.\d{2}\.\d{4}$/)) return [0,0,0];
+
+  let parts = input.split(".");
+  let day = parseInt(parts[0]);
+  let month = parseInt(parts[1]);
+  let year = parseInt(parts[2]);
+
+  let p1 = reduce(day + month);
+  let p2 = reduce(year);
+  let p3 = reduce(p1 + p2);
+
+  return [p1, p2, p3];
+}
+
+  if(!cal || !monthSelect || !yearSelect) return;
+
+  let now = new Date();
+  let currentMonth = now.getMonth();
+  let currentYear = now.getFullYear();
+
+  let months = [
+    "January","February","March","April","May","June",
+    "July","August","September","October","November","December"
+  ];
+
+  // popuni mesece
+  monthSelect.innerHTML = "";
+  months.forEach((m, i)=>{
+    let opt = document.createElement("option");
+    opt.value = i;
+    opt.text = m;
+    if(i === currentMonth) opt.selected = true;
+    monthSelect.appendChild(opt);
+  });
+
+  // popuni godine
+  yearSelect.innerHTML = "";
+
+for(let y = 1950; y <= 2050; y++){
+  let opt = document.createElement("option");
+  opt.value = y;
+  opt.text = y;
+
+  if(y === currentYear) opt.selected = true;
+
+  yearSelect.appendChild(opt);
+}
+
+  function renderCalendar(month, year){
+
+    let firstDay = new Date(year, month, 1).getDay();
+    firstDay = (firstDay === 0) ? 6 : firstDay - 1;
+
+    let daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    let today = new Date();
+    let todayDay = today.getDate();
+    let todayMonth = today.getMonth();
+    let todayYear = today.getFullYear();
+
+    let days = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+
+    let html = `<div style="background:#1e293b; padding:15px; border-radius:10px;">
+                  <div style="display:grid; grid-template-columns:repeat(7,1fr); text-align:center; margin-bottom:5px;">`;
+
+    // nazivi dana
+    days.forEach(d=>{
+      html += `<div style="font-weight:bold; color:#38bdf8;">${d}</div>`;
+    });
+
+    html += `</div><div style="display:grid; grid-template-columns:repeat(7,1fr); gap:5px;">`;
+
+    // prazna mesta
+    for(let i=0; i<firstDay; i++){
+      html += `<div></div>`;
+    }
+
+    // dani
+    for(let d=1; d<=daysInMonth; d++){
+
+  let dayIndex = (firstDay + d - 1) % 7;
+
+  let isSunday = (dayIndex === 6);
+  let isToday = (d === todayDay && month === todayMonth && year === todayYear);
+
+  let style = `
+    background:#0f172a;
+    padding:8px;
+    text-align:center;
+    border-radius:6px;
+  `;
+
+  // 🔴 nedelja
+  if(isSunday){
+    style += "box-shadow: 0 0 10px rgba(255,0,0,0.5);";
+  }
+
+  // 🟡 danas
+  if(isToday){
+    style += "box-shadow: 0 0 15px gold, 0 0 30px gold; border:1px solid gold;";
+  }
+
+  let base = getPythagoreanBase();
+
+// GODINA
+let y = reduce(year);
+
+// MESEC (VAŽNO: +1 jer je 0-based)
+let m = reduce(month + 1);
+
+// DAN
+let dayVal = reduce(d);
+
+// VERTIKALNO SABIRANJE
+let c1 = reduce(base[0] + y + m + dayVal);
+let c2 = reduce(base[1] + y + m + dayVal);
+let c3 = reduce(base[2] + y + m + dayVal);
+
+let finalNumber = `${c1}${c2}${c3}`;
+
+// HTML BLOK
+html += `
+<div style="${style}; position:relative;">
+  ${d}
+  <span style="
+    position:absolute;
+    bottom:3px;
+    right:4px;
+    font-size:10px;
+    color:gold;
+    text-shadow:0 0 6px gold;
+  ">
+    ${finalNumber}
+  </span>
+</div>
+`;
+}
+
+    html += `</div></div>`;
+
+    cal.innerHTML = html;
+  }
+
+  // prvi render
+  renderCalendar(currentMonth, currentYear);
+
+  // promene
+  monthSelect.onchange = ()=>{
+    renderCalendar(parseInt(monthSelect.value), parseInt(yearSelect.value));
+  };
+
+  yearSelect.onchange = ()=>{
+    renderCalendar(parseInt(monthSelect.value), parseInt(yearSelect.value));
+  };
+}
+
+function goBack(){
+  document.body.classList.remove("detail-active"); // 🔥 vrati tabove
+  showTab("home");
+}
+
+function playStoreVideo(){
+
+
+
+  let video = document.getElementById("storeVideo");
+  let download = document.getElementById("storeDownload");
+
+  if(!video) return;
+
+  video.style.display = "block";
+  download.style.display = "none";
+
+  video.currentTime = 0;
+
+  let p = video.play();
+
+  if(p !== undefined){
+    p.catch(()=>{
+      video.controls = true; // fallback ako blokira autoplay
+    });
+  }
+
+  video.onended = function(){
+    video.pause();
+    video.style.display = "none";
+    download.style.display = "block";
+  };
+}
+
+function showTab(id){
+
+  // sakrij sve sekcije
+  document.querySelectorAll(".section").forEach(s=>{
+    s.classList.remove("active");
+  });
+
+  // ukloni active sa tabova
+  document.querySelectorAll(".tab").forEach(t=>{
+    t.classList.remove("active");
+  });
+
+  // prikaži sekciju
+  let current = document.getElementById(id);
+  if(current){
+    current.classList.add("active");
+  }
+
+  // označi tab
+  let tab = document.querySelector(`[data-tab="${id}"]`);
+  if(tab){
+    tab.classList.add("active");
+  }
+
+  // 🔥 OVDE IDE TVOJ KOD (NA SAMOM KRAJU)
+  if(id === "pitagora"){
+    generateCalendar();
+  }
+
+
+  if(id === "store"){
+  playStoreVideo();
+}
+
+if(id === "pyramid"){
+  loadAspectYears();
+}
+
+}
+
+function toggleSeason(seasonId, el){
+
+  // 🟡 ACTIVE dugme
+  document.querySelectorAll(".seasonBtn").forEach(btn=>{
+    btn.classList.remove("active");
+  });
+
+  if(el){
+    el.classList.add("active");
+  }
+
+  let video = document.getElementById("storeVideo");
+  let download = document.getElementById("storeDownload");
+
+  // 🔴 sakrij video i sliku
+  if(video) video.style.display = "none";
+  if(download) download.style.display = "none";
+
+  // 🔴 zatvori sve
+  document.querySelectorAll(".season-content").forEach(el=>{
+    el.style.display = "none";
+  });
+
+  // 🟢 otvori kliknuto
+  let selected = document.getElementById(seasonId);
+  if(selected){
+    selected.style.display = "block";
+  }
+}
+
+function showRecommendedBooks(mainNum){
+
+  let container = document.getElementById("recommendedBooks");
+  container.innerHTML = "";
+
+  let books = [
+    `s1-b${mainNum}`,
+    `s2-b${mainNum}`,
+    `s3-b${mainNum}`
+  ];
+
+  books.forEach(id => {
+
+    let link = document.createElement("div");
+
+link.onclick = () => {
+  showTab('store');
+};
+
+    let book = document.createElement("div");
+    book.className = "book";
+
+    let img = document.createElement("img");
+    img.src = `images/${id}.png`;
+
+    book.appendChild(img);
+    link.appendChild(book);
+    container.appendChild(link);
+  });
+}
+
+function reduce(num){
+  while(num>9){
+    num=num.toString().split('').reduce((a,b)=>a+ +b,0);
+  }
+  return num;
+}
+
+function calculateDifference(){
+
+  let firstDate = document.getElementById("input").value;
+  let secondDate = document.getElementById("analysisInput").value;
+
+// 🔥 VALIDACIJA
+if(!firstDate.match(/^\d{2}\.\d{2}\.\d{4}$/) ||
+   !secondDate.match(/^\d{2}\.\d{2}\.\d{4}$/)){
+
+alert("Use format DD.MM.YYYY");
+  return;
+}
+
+
+
+
+  if(!firstDate || !secondDate) return;
+
+  let p1 = firstDate.split(".");
+  let p2 = secondDate.split(".");
+
+  let d1 = new Date(p1[2], p1[1]-1, p1[0]);
+  let d2 = new Date(p2[2], p2[1]-1, p2[0]);
+
+  if(d2 < d1){
+    let temp = d1;
+    d1 = d2;
+    d2 = temp;
+  }
+
+  let years = d2.getFullYear() - d1.getFullYear();
+  let months = d2.getMonth() - d1.getMonth();
+  let days = d2.getDate() - d1.getDate();
+
+  if(days < 0){
+    months--;
+    let prevMonth = new Date(d2.getFullYear(), d2.getMonth(), 0).getDate();
+    days += prevMonth;
+  }
+
+  if(months < 0){
+    years--;
+    months += 12;
+  }
+
+  document.getElementById("analysisText").innerHTML = `
+
+
+    <b>TIME DIFFERENCE</b><br><br>
+    ${years} years<br>
+    ${months} months<br>
+    ${days} days
+  `;
+  // 🔥 UZMI SVA POLJA PIRAMIDE
+let rows = document.querySelectorAll("#analysisPyramid .row");
+
+// preskoči prvi red
+let spans = [];
+
+rows.forEach((row, index) => {
+  if(index === 0) return; // ❌ preskače prvi red
+  spans.push(...row.querySelectorAll("span"));
+});
+
+// 🔥 RESETUJ STARA OBELEŽJA
+spans.forEach(s => {
+  s.style.border = "";
+});
+
+// 🔥 FUNKCIJA ZA KRETANJE
+function markPosition(startIndex, steps, color, skipFirst=false){
+
+  let index = startIndex;
+
+  for(let i=0; i<steps; i++){
+    index++;
+
+    if(skipFirst && index === 0){
+      index++;
+    }
+
+    if(index >= spans.length){
+      index = 0;
+    }
+  }
+
+  // označi
+  spans[index].style.border = "2px solid " + color;
+
+  let current = parseInt(spans[index].innerText);
+
+  let nextIndex = (index + 1) % spans.length;
+  let next = parseInt(spans[nextIndex].innerText);
+
+  let sum = reduce(current + next);
+
+  return { index, current, next, sum };
+}
+
+// 🔥 KRETANJE KROZ PIRAMIDU
+
+let currentIndex = -1;
+
+// YEAR
+let y = markPosition(currentIndex, years, "red", true);
+currentIndex = y.index;
+
+// MONTH
+let m = markPosition(currentIndex, months, "blue", false);
+currentIndex = m.index;
+
+// DAY
+let d = markPosition(currentIndex, days, "green", false);
+// obriši stari rezultat
+let old = document.getElementById("resultBlock");
+if(old) old.remove();
+
+// napravi novi
+let result = document.createElement("div");
+result.id = "resultBlock";
+result.style.marginTop = "15px";
+result.style.fontSize = "18px";
+
+// YEAR (crveno)
+let yearLine = document.createElement("div");
+yearLine.style.color = "red";
+yearLine.innerHTML = `YEAR - ${y.current}${y.next}${y.sum}`;
+
+// MONTH (plavo)
+let monthLine = document.createElement("div");
+monthLine.style.color = "blue";
+monthLine.innerHTML = `MONTH - ${m.current}${m.next}${m.sum}`;
+
+// DAY (zeleno)
+let dayLine = document.createElement("div");
+dayLine.style.color = "green";
+dayLine.innerHTML = `DAY - ${d.current}${d.next}${d.sum}`;
+
+result.appendChild(yearLine);
+result.appendChild(monthLine);
+result.appendChild(dayLine);
+
+// ubaci ispod piramide
+let pyramid = document.getElementById("analysisPyramid");
+pyramid.parentNode.insertBefore(result, pyramid.nextSibling);
+}
+
+
+function createRow(numbers){
+
+  let wrap=document.createElement("div");
+  wrap.className="row-wrap";
+
+  let row=document.createElement("div");
+  row.className="row";
+
+  // 🔥 SAMO PRVI RED (8 BROJEVA)
+  if(numbers.length === 8){
+    row.classList.add("first-row");
+  }
+
+  numbers.forEach(num=>{
+    let span=document.createElement("span");
+    span.innerText=num;
+    row.appendChild(span);
+  });
+
+  wrap.appendChild(row);
+  return wrap;
+}
+
+function getZodiac(day, month){
+
+  if ((day >= 21 && month == 3) || (day <= 19 && month == 4)) return "♈ Aries";
+  if ((day >= 20 && month == 4) || (day <= 20 && month == 5)) return "♉ Taurus";
+  if ((day >= 21 && month == 5) || (day <= 20 && month == 6)) return "♊ Gemini";
+  if ((day >= 21 && month == 6) || (day <= 22 && month == 7)) return "♋ Cancer";
+  if ((day >= 23 && month == 7) || (day <= 22 && month == 8)) return "♌ Leo";
+  if ((day >= 23 && month == 8) || (day <= 22 && month == 9)) return "♍ Virgo";
+  if ((day >= 23 && month == 9) || (day <= 22 && month == 10)) return "♎ Libra";
+  if ((day >= 23 && month == 10) || (day <= 21 && month == 11)) return "♏ Scorpio";
+  if ((day >= 22 && month == 11) || (day <= 21 && month == 12)) return "♐ Sagittarius";
+  if ((day >= 22 && month == 12) || (day <= 19 && month == 1)) return "♑ Capricorn";
+  if ((day >= 20 && month == 1) || (day <= 18 && month == 2)) return "♒ Aquarius";
+
+  return "♓ Pisces";
+}
+
+function generate(){
+
+  document.getElementById("tabs").style.display="flex";
+
+let intro = document.getElementById("introContainer");
+if(intro){
+  intro.style.display = "none";
+}
+
+  let inputVal=document.getElementById("input").value;
+  // 🔥 UBACI OVDE
+  if(!inputVal.match(/^\d{2}\.\d{2}\.\d{4}$/)){
+    alert("Use format DD.MM.YYYY");
+    return;
+  }
+  let raw=inputVal.replace(/\D/g,'');
+
+  if(!raw) return;
+
+  let sum = raw.split('').reduce((a,b)=>a + +b, 0);
+  let mainNum = reduce(sum);
+
+  document.getElementById("mainLabel").style.display="block";
+
+  setTimeout(()=>{
+
+  document.getElementById("mainLabel").classList.add("show-label");
+
+  let numEl = document.getElementById("mainNumber");
+
+  // 🔥 RESET (da ne baguje pri više klikova)
+  numEl.style.animation = "none";
+  numEl.offsetHeight; // force refresh
+
+  // 🔥 POSTAVLJANJE BROJA
+  numEl.innerText = mainNum;
+  numEl.style.opacity = "1";
+  numEl.classList.add("show-number");
+
+  // 🔥 PRIKAŽI TEKST KAD SE POJAVI BROJ
+document.getElementById("numberHint").style.display = "block";
+
+  // 🔥 ANIMACIJA
+  numEl.style.animation = "glowBig 1s infinite alternate";
+
+  // 🔥 KLIK NA BROJ (modal)
+  numEl.style.cursor = "pointer";
+  numEl.onclick = function() {
+  openDetail(mainNum);
+};
+
+  // ZODIAK
+  let parts = inputVal.split(".");
+  let zodiac = getZodiac(parseInt(parts[0]), parseInt(parts[1]));
+
+  document.getElementById("zodiac").innerText = zodiac;
+  document.getElementById("zodiac").classList.add("show-fade");
+
+  // STORE TEXT
+  document.getElementById("storeMsg").classList.add("show-fade");
+
+  // BOOKS
+  showRecommendedBooks(mainNum);
+
+},150);
+
+  // PIRAMIDA
+  let numbers=raw.split('').map(Number);
+
+  let output=document.getElementById("output");
+  let result=document.getElementById("result");
+
+  output.innerHTML="";
+  result.innerHTML="";
+
+  // 🔥 KOPIJA PIRAMIDE U ANALYSIS
+
+
+  let rows=[];
+  let temp=[...numbers];
+
+  while(temp.length>0){
+  rows.push([...temp]);
+
+  let isFirst = rows.length === 1;
+  output.appendChild(createRow(temp, isFirst));
+
+    let next=[];
+    for(let i=0;i<temp.length-1;i++){
+      next.push(reduce(temp[i]+temp[i+1]));
+    }
+    temp=next;
+  }
+
+  // 🔥 SADA KOPIRAMO GOTOVU PIRAMIDU
+document.getElementById("analysisPyramid").innerHTML = output.innerHTML;
+
+function generateFromAnalysis(){
+
+  let val = document.getElementById("analysisInput").value;
+
+  // ubaci vrednost u glavni input
+  document.getElementById("input").value = val;
+
+  // pokreni postojeću funkciju
+  generate();
+
+  // opcionalno: ostani u ANALYSIS tabu
+  showTab('analysis');
+}
+
+  // CODES
+  let codesPyramid=document.getElementById("codesPyramid");
+  let codes=document.getElementById("codesText");
+
+  codesPyramid.innerHTML="";
+
+  let labels=["Life Path","Core Essence","Marriage","Children","Connections","Pyramidal Code","Pyramidal Code"];
+
+  rows.slice(1).forEach((r,i)=>{
+    let line=document.createElement("div");
+    line.className="code-line";
+
+    let label=document.createElement("div");
+    label.className="label";
+    label.innerText=labels[i];
+
+    let row=createRow(r);
+
+    line.appendChild(label);
+    line.appendChild(row);
+
+    codesPyramid.appendChild(line);
+  });
+
+  let parts=inputVal.split(".");
+  let day=parseInt(parts[0]);
+  let month=parseInt(parts[1]);
+  let year=parseInt(parts[2]);
+
+  let p1=reduce(day+month);
+  let p2=reduce(year);
+  let p3=reduce(p1+p2);
+
+  let pyth=[p1,p2,p3];
+  let pyr=rows[rows.length-2].join("") + rows[rows.length-1].join("");
+
+  let unique=[
+    reduce(pyth[0]+parseInt(pyr[0])),
+    reduce(pyth[1]+parseInt(pyr[1])),
+    reduce(pyth[2]+parseInt(pyr[2]))
+  ].join("");
+
+  codes.innerHTML = `
+  <div><b>PYTHAGOREAN CODE</b> ${pyth.join("")}</div>
+  <div><b>PYRAMIDAL CODE</b> ${pyr}</div>
+  <div><b>UNIQUE CODE</b> ${unique}</div>
+`;
+
+}
+
+/* LOAD BOOKS */
+function loadBooks(){
+
+  // 🔥 OVDE UNOSIŠ AMAZON LINKOVE
+  const amazonLinks = {
+
+    // SEASON 1
+    "s1-b1": "https://www.amazon.com/gp/product/B0GHNZ43FQ?ref_=dbs_m_mng_rwt_calw_tkin_0&storeType=ebooks",
+    "s1-b2": "https://www.amazon.com/gp/product/B0GP9K4X48?ref_=dbs_mng_crcw_0&storeType=ebooks",
+    "s1-b3": "https://www.amazon.com/gp/product/B0GN8SDXRR?ref_=dbs_mng_crcw_1&storeType=ebooks",
+    "s1-b4": "https://www.amazon.com/gp/product/B0GQ8HHPNZ?ref_=dbs_mng_crcw_2&storeType=ebooks",
+    "s1-b5": "https://www.amazon.com/gp/product/B0GHLL4XXQ?ref_=dbs_mng_crcw_3&storeType=ebooks",
+    "s1-b6": "https://www.amazon.com/gp/product/B0GMF2LKF6?ref_=dbs_mng_crcw_4&storeType=ebooks",
+    "s1-b7": "https://www.amazon.com/gp/product/B0GGY9FMSK?ref_=dbs_mng_crcw_5&storeType=ebooks",
+    "s1-b8": "https://www.amazon.com/gp/product/B0GK9ZM3R6?ref_=dbs_mng_crcw_6&storeType=ebooks",
+    "s1-b9": "https://www.amazon.com/gp/product/B0GHQW1N8G?ref_=dbs_mng_crcw_7&storeType=ebooks",
+    "s1-b10": "UNESI_LINK",
+
+    // SEASON 2
+    "s2-b1": "https://www.amazon.com/dp/B0GX32T8Z1?binding=kindle_edition&qid=1776776167&sr=1-16&ref=dbs_dp_rwt_sb_pc_tkin",
+    "s2-b2": "https://www.amazon.com/gp/product/B0GX2WLDB6?ref_=dbs_mng_crcw_0&storeType=ebooks&qid=1776776167&sr=1-16",
+    "s2-b3": "https://www.amazon.com/gp/product/B0GXKBGWJF?ref_=dbs_mng_crcw_1&storeType=ebooks&qid=1776776167&sr=1-16",
+    "s2-b4": "https://www.amazon.com/gp/product/B0GX5JGM3D?ref_=dbs_mng_crcw_2&storeType=ebooks&qid=1776776167&sr=1-16",
+    "s2-b5": "https://www.amazon.com/gp/product/B0GX2Y9HGK?ref_=dbs_mng_crcw_3&storeType=ebooks&qid=1776776167&sr=1-16",
+    "s2-b6": "https://www.amazon.com/gp/product/B0GX2ZQFXL?ref_=dbs_mng_crcw_4&storeType=ebooks&qid=1776776167&sr=1-16",
+    "s2-b7": "https://www.amazon.com/gp/product/B0GX2JQJR1?ref_=dbs_mng_crcw_5&storeType=ebooks&qid=1776776167&sr=1-16",
+    "s2-b8": "https://www.amazon.com/gp/product/B0GX34L3TH?ref_=dbs_mng_crcw_6&storeType=ebooks&qid=1776776167&sr=1-16",
+    "s2-b9": "https://www.amazon.com/gp/product/B0GXK2ZXBL?ref_=dbs_mng_crcw_7&storeType=ebooks&qid=1776776167&sr=1-16",
+    "s2-b10": "UNESI_LINK",
+
+    // SEASON 3
+    "s3-b1": "UNESI_LINK",
+    "s3-b2": "UNESI_LINK",
+    "s3-b3": "UNESI_LINK",
+    "s3-b4": "UNESI_LINK",
+    "s3-b5": "UNESI_LINK",
+    "s3-b6": "UNESI_LINK",
+    "s3-b7": "UNESI_LINK",
+    "s3-b8": "UNESI_LINK",
+    "s3-b9": "UNESI_LINK",
+    "s3-b10": "UNESI_LINK"
+  };
+
+  let layout = [4,3,2];
+
+  for(let s=1; s<=3; s++){
+
+    let bookNum = 1;
+
+    for(let r=1; r<=4; r++){
+
+      let grid = document.getElementById(`s${s}-r${r}`);
+
+      for(let i=0; i<layout[r-1]; i++){
+
+        let id = `s${s}-b${bookNum}`;
+
+        let link = document.createElement("a");
+
+        // 🔥 POVLAČI LINK IZ LISTE
+        link.href = amazonLinks[id] || "#";
+        link.target = "_blank";
+
+        let book = document.createElement("div");
+        book.className = "book";
+
+        let img = document.createElement("img");
+
+        // 🔥 PNG SLIKE
+        img.src = `images/${id}.png`;
+
+        book.appendChild(img);
+        link.appendChild(book);
+        grid.appendChild(link);
+
+        bookNum++;
+      }
+    }
+  }
+}
+
+loadBooks();
+
+function openDetail(num){
+
+  let texts = {
+
+
+      1: `Number 1 – The Leader<br>
+
+Represents independence, ambition, and new beginnings. It is the energy of leadership, originality, and self-confidence. People influenced by this number are natural pioneers—they prefer to take initiative rather than follow others. They are driven, focused, and determined to achieve their goals.
+
+This number carries strong masculine, active energy. It symbolizes creation, individuality, and the courage to stand alone. Those connected to number 1 often have a clear vision and the willpower to turn ideas into reality.
+
+However, this powerful energy can also bring challenges. It may lead to impatience, dominance, or a tendency to be overly self-centered if not balanced. The key lesson of number 1 is to lead with confidence while staying aware of others.
+
+In essence, number 1 is the starting point—the force that begins everything.`,
+
+
+    2: `Number 2 – The Empath<br>
+
+Represents harmony, sensitivity, and cooperation. It is the energy of balance, diplomacy, and emotional intelligence. People influenced by this number are natural mediators—they seek peace, avoid conflict, and value relationships deeply.
+
+This number carries gentle, intuitive, and receptive energy. It symbolizes partnership, understanding, and the ability to connect with others on a deeper level. Those connected to number 2 are often empathetic, patient, and supportive, making them excellent friends and partners.
+
+However, this sensitivity can also bring challenges. It may lead to indecision, overthinking, or a tendency to depend too much on others. The key lesson of number 2 is to trust your intuition while maintaining inner strength.
+
+In essence, number 2 is the force that unites—it brings balance where there is division.`,
+
+
+    3: `Number 3 – The Expressive<br>
+
+Represents creativity, expression, and joy. It is the energy of communication, imagination, and inspiration. People influenced by this number are naturally expressive—they enjoy sharing ideas, emotions, and stories with the world.
+
+This number carries vibrant, playful, and artistic energy. It symbolizes self-expression, optimism, and the ability to see beauty in life. Those connected to number 3 are often charismatic, social, and full of enthusiasm, with a natural talent for art, writing, or speaking.
+
+However, this lively energy can also bring challenges. It may lead to distraction, inconsistency, or a tendency to avoid responsibility. The key lesson of number 3 is to channel creativity with focus and discipline.
+
+In essence, number 3 is the voice of creation—it brings ideas to life and turns emotions into expression.`,
+
+
+    4: `Number 4 – The Structured Man<br>
+
+Represents structure, stability, and discipline. It is the energy of hard work, order, and responsibility. People influenced by this number are practical and reliable—they build strong foundations and value security in all aspects of life.
+
+This number carries grounded, methodical energy. It symbolizes persistence, organization, and long-term success through effort. Those connected to number 4 are often loyal, detail-oriented, and committed to their goals.
+
+However, this energy can also bring challenges. It may lead to rigidity, stubbornness, or resistance to change. The key lesson of number 4 is to stay flexible while maintaining structure.
+
+In essence, number 4 is the foundation—it creates stability that everything else can grow upon.`,
+
+
+    5: `Number 5 – The Free Spirit<br>
+
+Represents freedom, change, and adventure. It is the energy of movement, curiosity, and experience. People influenced by this number seek variety—they thrive on new ideas, travel, and excitement.
+
+This number carries dynamic, restless energy. It symbolizes adaptability, independence, and a desire to break limits. Those connected to number 5 are often energetic, versatile, and open-minded.
+
+However, this energy can also bring challenges. It may lead to impulsiveness, inconsistency, or lack of direction. The key lesson of number 5 is to embrace freedom with responsibility.
+
+In essence, number 5 is the force of change—it pushes life forward through experience.`,
+
+
+    6: `Number 6 – The Caretaker<br>
+
+Represents care, responsibility, and love. It is the energy of family, harmony, and protection. People influenced by this number are natural caregivers—they prioritize others and create a sense of comfort and safety.
+
+This number carries warm, compassionate energy. It symbolizes service, balance, and emotional connection. Those connected to number 6 are often supportive, loyal, and deeply devoted.
+
+However, this energy can also bring challenges. It may lead to over-sacrifice, control, or taking on too much responsibility. The key lesson of number 6 is to care for others without neglecting yourself.
+
+In essence, number 6 is the heart—it nurtures and protects what matters most.`,
+
+
+    7: `Number 7 – The Thinker<br>
+
+Represents introspection, wisdom, and spirituality. It is the energy of analysis, inner truth, and deeper understanding. People influenced by this number are thinkers—they seek knowledge beyond the surface.
+
+This number carries quiet, analytical energy. It symbolizes reflection, intuition, and the search for meaning. Those connected to number 7 are often insightful, independent, and drawn to learning.
+
+However, this energy can also bring challenges. It may lead to isolation, skepticism, or emotional distance. The key lesson of number 7 is to balance intellect with openness and connection.
+
+In essence, number 7 is the mind—it searches for truth within and beyond.`,
+
+
+    8: `Number 8 – The Power Man<br>
+
+Represents power, ambition, and success. It is the energy of achievement, authority, and material mastery. People influenced by this number are goal-oriented—they strive for results and leadership.
+
+This number carries strong, determined energy. It symbolizes control, discipline, and financial or professional success. Those connected to number 8 are often confident, strategic, and resilient.
+
+However, this energy can also bring challenges. It may lead to materialism, dominance, or imbalance between work and personal life. The key lesson of number 8 is to use power with integrity.
+
+In essence, number 8 is the force of achievement—it turns ambition into reality.`
+
+,
+    9: `Number 9 – The Giver<br>
+
+Represents compassion, completion, and universal love. It is the energy of giving, wisdom, and higher purpose. People influenced by this number are idealists—they care deeply about others and the world.
+
+This number carries emotional, expansive energy. It symbolizes endings, transformation, and selflessness. Those connected to number 9 are often generous, understanding, and spiritually aware.
+
+However, this energy can also bring challenges. It may lead to emotional overwhelm, letting go too slowly, or sacrificing too much. The key lesson of number 9 is to give with wisdom and healthy boundaries.
+
+In essence, number 9 is the completion—it represents the end of a cycle and the beginning of a higher understanding.`
+
+  };
+
+  document.getElementById("detailText").innerHTML =
+  `<p style="line-height:1.6; text-align:left; white-space:pre-line;">
+    ${texts[num]}
+  </p>`;
+  document.body.classList.add("detail-active"); // 🔥 sakrij tabove
+  showTab("detail");
+}
+
+window.onload = function(){
+
+  let video = document.getElementById("introVideo");
+  if(!video) return;
+
+  // 🔥 probaj autoplay
+  let playPromise = video.play();
+
+  if(playPromise !== undefined){
+    playPromise.catch(() => {
+      // 🔥 fallback ako browser blokira autoplay
+      video.controls = true;
+    });
+  }
+
+  video.onended = function(){
+    video.pause();
+  };
+
+};
+
+</script>
+
+
+<div class="footer">
+  <img src="images/logo.png" class="footer-logo">
+  <div class="footer-text">
+    <div>Suzy Q & G-Lab Team</div>
+    <div>IT Research & Development</div>
+    <br>
+    <div>Concept, design and realization by our team.</div>
+    <div>© 2025 G-Lab – All rights reserved.</div>
+    <div><b>Beta Version – Not a Final Release</b></div>
+  </div>
+
+</div>
+</body>
+</html>
