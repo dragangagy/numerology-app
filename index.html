@@ -72,17 +72,12 @@ body.detail-active .title {
 }
 
 .back-btn {
-  position: sticky;
-  top: 10px;
-  left: 10px;
-
-  padding: 8px 14px;
-  background: #1e293b;
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #38bdf8;
   color: white;
-  border-radius: 8px;
-
-  z-index: 9999;
-  display: inline-block;
 }
 
 body {
@@ -122,15 +117,8 @@ body {
   box-shadow: 0 0 6px rgba(56,189,248,0.6);
 }
 
-.section {
-  display: none;
-  height: 100vh;
-  overflow-y: auto;
-}
-
-.section.active {
-  display: block;
-}
+.section { display:none; }
+.section.active { display:block; }
 
 /* INPUT */
 .input-wrap {
@@ -477,11 +465,7 @@ onkeypress="if(event.key === 'Enter'){ generate(); }">
 
 <div id="introContainer">
 
-  <video id="introVideo" autoplay muted playsinline style="
-  width: 120%;
-  height: auto;
-  display: block;
-">
+  <video id="introVideo" width="100%" muted playsinline autoplay>
     <source src="images/video.mp4" type="video/mp4">
   </video>
 
