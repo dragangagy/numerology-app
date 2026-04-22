@@ -7,6 +7,23 @@
 
 <style>
 
+.contact-item {
+  width: 200px;
+  padding: 12px;
+  background: #1e293b;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s;
+
+  box-shadow: 0 0 10px rgba(56,189,248,0.4);
+}
+
+.contact-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(56,189,248,0.8);
+}
+
     .seasonBtn {
   cursor:pointer;
   color:#FFD700;
@@ -26,6 +43,15 @@
 
 #numberHint {
   display: none; /* 🔥 SAKRIVEN NA STARTU */
+  color: #38bdf8;
+  text-shadow:
+    0 0 10px #38bdf8,
+    0 0 20px rgba(56,189,248,0.8),
+    0 0 40px rgba(56,189,248,0.6);
+  animation: glowBig 1.8s infinite alternate;
+}
+
+.main-text {
   color: #38bdf8;
   text-shadow:
     0 0 10px #38bdf8,
@@ -71,13 +97,30 @@ body.detail-active .title {
   text-align: center;
 }
 
-.back-btn {
-  margin-top: 20px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 10px;
-  background: #38bdf8;
-  color: white;
+
+.back-arrow {
+     display: block;
+  text-align: left;
+  width: 100%;
+    font-size: 22px;              /* veće */
+    color: #38bdf8;               /* plava */
+    font-weight: bold;
+    cursor: pointer;
+    
+    text-shadow:
+        0 0 5px #3b82f6,
+        0 0 10px #3b82f6,
+        0 0 20px #60a5fa;         /* glow efekat */
+
+    transition: 0.3s;
+}
+
+.back-arrow:hover {
+    color: #60a5fa;
+    text-shadow:
+        0 0 10px #60a5fa,
+        0 0 20px #60a5fa,
+        0 0 30px #93c5fd;
 }
 
 body {
@@ -430,22 +473,69 @@ body {
   font-size: 12px;
 }
 
-.back-arrow {
-  position: sticky;
-  top: 10px;
-  left: 10px;
-
-  font-size: 22px;
-  color: #38bdf8;
-  cursor: pointer;
-
-  z-index: 9999;
-  width: fit-content;
+/* DISABLED SEASON (S4) */
+.seasonBtn.disabled {
+  color: #9ca3af; /* siva */
+  cursor: default;
+  position: relative;
 
   text-shadow:
-    0 0 6px #38bdf8,
-    0 0 12px rgba(56,189,248,0.6);
-    transform: scale(0.9);
+    0 0 5px #9ca3af,
+    0 0 10px rgba(156,163,175,0.6),
+    0 0 20px rgba(156,163,175,0.4);
+}
+
+/* da ne reaguje na hover */
+.seasonBtn.disabled:hover {
+  transform: none;
+}
+
+/* WRITING overlay (koso, kao watermark) */
+.seasonBtn.disabled::after {
+  content: "WRITING...";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-25deg);
+
+  font-size: 7px;
+  color: white;
+  opacity: 0.8;
+  letter-spacing: 1px;
+
+  pointer-events: none;
+
+  text-shadow:
+    0 0 4px rgba(255,255,255,0.8),
+    0 0 8px rgba(255,255,255,0.5);
+}
+
+/* SPIRITUAL NUMBER */
+.spirit-hint {
+  display: block;
+  color: #38bdf8;
+  font-size: 14px;
+  text-align: center;
+
+  text-shadow:
+    0 0 10px #38bdf8,
+    0 0 20px rgba(56,189,248,0.8),
+    0 0 40px rgba(56,189,248,0.6);
+
+  animation: glowBig 1.8s infinite alternate;
+}
+.main-text {
+  font-size: 14px;
+  text-align: center;
+  color: white;
+  opacity: 0.9;
+  text-shadow: 0 0 8px rgba(56,189,248,0.6);
+}
+
+#spiritDetailText {
+  white-space: pre-line;
+  line-height: 1.6;
+  font-size: 13px;
 }
 
 </style>
@@ -462,11 +552,13 @@ body {
 
 <div class="tabs" id="tabs">
   <div class="tab active" data-tab="home" onclick="showTab('home')">HOME</div>
+  <div class="tab" data-tab="spirit" onclick="showTab('spirit')">SPIRITUAL NUMBER</div>
   <div class="tab" data-tab="codes" onclick="showTab('codes')">CODES</div>
   <div class="tab" data-tab="analysis" onclick="showTab('analysis')">ANALYSIS</div>
   <div class="tab" data-tab="pyramid" onclick="showTab('pyramid')">ASPEKT</div>
   <div class="tab" data-tab="pitagora" onclick="showTab('pitagora')">PITAGORA</div>
   <div class="tab" data-tab="store" onclick="showTab('store')">BOOK STORE</div>
+  <div class="tab" data-tab="contacts" onclick="showTab('contacts')">CONTACTS</div>
 </div>
 
 <!-- HOME -->
@@ -483,12 +575,7 @@ onkeypress="if(event.key === 'Enter'){ generate(); }">
 
 <div id="introContainer">
 
-  <video id="introVideo" autoplay muted playsinline style="
-  width: 100%;
-    max-width: 400px;
-    height: auto;
-    display: block;
-">
+  <video id="introVideo" width="100%" muted playsinline autoplay>
     <source src="images/video.mp4" type="video/mp4">
   </video>
 
@@ -528,6 +615,33 @@ onkeypress="if(event.key === 'Enter'){ generate(); }">
     AS  WELL  AS  BOOKS  FOR  ALL  THE  OTHER  NUMBERS
 
   </div>
+</div>
+
+<!-- SPIRITUAL NUMBER -->
+
+<div id="spirit" class="section">
+
+  <h3 style="color:#38bdf8;">SPIRITUAL NUMBER</h3>
+
+  <div style="margin-top:10px; margin-bottom:15px; color:#38bdf8; font-size:12px; opacity:0.8;">
+    The day of birth in Numerology is referred to as the SPIRITUAL NUMBER. In this section, we will analyze individuals born on any day from the 1st to the 31st of the month.
+
+It is important to note that the interpretation of the birth day should be used as a supportive tool in understanding a person’s character. It should not be taken as a standalone rule, but rather considered together with other key elements of the chart—especially the influence of the birth month and how it interacts with the day.
+
+For example, being born on the 29th carries a different meaning depending on whether the month is April or November, as each context shapes the final interpretation differently.
+  </div>
+
+  <!-- SELECT -->
+  <select id="spiritSelect"></select>
+
+  <!-- REZULTAT -->
+  <div id="spiritNumber" class="main-number" style="font-size:90px;"></div>
+
+  <div class="spirit-hint" style="margin-top:10px;">
+  Tap the number to reveal<br>
+  the meaning of your spiritual number
+</div>
+
 </div>
 
 <!-- ASPECT -->
@@ -620,7 +734,6 @@ onkeypress="if(event.key === 'Enter'){ generate(); }">
 
 <!-- ANALYSIS -->
 <div id="analysis" class="section">
-<div class="back-arrow" onclick="goBack()">❮</div>
 
   <div class="analysis-box">
     <h3 style="color:#38bdf8;">PYRAMID</h3>
@@ -649,12 +762,21 @@ onkeypress="if(event.key === 'Enter'){ calculateDifference(); }">
 
  <!-- 🔥 INVISIBLE TAB -->
 
+ <div id="spiritDetail" class="section">
+
+  <div class="back-arrow" onclick="showTab('spirit')">❮ BACK</div>
+
+  <div id="spiritDetailText" style="margin-top:20px; text-align:left;"></div>
+
+</div>
+
+
 <div id="detail" class="section">
-<div class="back-arrow" onclick="goBack()">❮</div>
+    <div class="back-arrow" onclick="goBack()">❮ BACK</div>
+
 
   <div id="detailText" style="margin-top:20px;"></div>
 
-  <button onclick="goBack()" class="back-btn">BACK</button>
 
 </div>
 
@@ -726,6 +848,7 @@ Suzy Q & G Lab Research
 <div class="seasonBtn" onclick="toggleSeason('s1', this)">SEASON 1</div>
 <div class="seasonBtn" onclick="toggleSeason('s2', this)">SEASON 2</div>
 <div class="seasonBtn" onclick="toggleSeason('s3', this)">SEASON 3</div>
+<div class="seasonBtn disabled">SEASON 4</div>
 
 </div>
 
@@ -771,6 +894,39 @@ onclick="window.location.href='free.pdf'">
 
     <div style="color:white; margin-top:5px; font-size:12px;">
       (download free edition right now)
+    </div>
+
+  </div>
+
+</div>
+
+<div id="storeIconsWrapper" style="display:block;">
+
+  <div class="store-icons">
+
+    <div class="store-item" onclick="openStore('amazon')">
+      <img src="images/amazon.png">
+      <div>Amazon</div>
+    </div>
+
+    <div class="store-item" onclick="openStore('google')">
+      <img src="images/googlebooks.png">
+      <div>Google Books</div>
+    </div>
+
+    <div class="store-item disabled">
+      <img src="images/apple.png">
+      <div>Apple Books</div>
+    </div>
+
+    <div class="store-item disabled">
+      <img src="images/kobo.png">
+      <div>Kobo</div>
+    </div>
+
+    <div class="store-item disabled">
+      <img src="images/barnes.png">
+      <div>Barnes</div>
     </div>
 
   </div>
@@ -824,6 +980,47 @@ onclick="window.location.href='free.pdf'">
   </div>
 
 </div>
+
+<!-- contaks -->
+
+<div id="contacts" class="section">
+
+  <div style="margin-top:20px;">
+
+    <h2 style="
+      color:#38bdf8;
+      text-align:center;
+      text-shadow:0 0 10px #38bdf8;
+    ">
+      CONTACT
+    </h2>
+
+    <div style="
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:15px;
+      margin-top:25px;
+    ">
+
+      <div class="contact-item" onclick="openEmail()">
+        📧 Email
+      </div>
+
+      <div class="contact-item" onclick="openInsta()">
+        📱 Instagram
+      </div>
+
+      <div class="contact-item" onclick="openSite()">
+        🌐 Website
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
 
 <script>
  //ASPEKT//
@@ -1300,7 +1497,6 @@ function showTab(id){
     generateCalendar();
   }
 
-
   if(id === "store"){
   playStoreVideo();
 }
@@ -1309,11 +1505,34 @@ if(id === "pyramid"){
   loadAspectYears();
 }
 
+if(id === "spirit"){
+  loadSpirit();
+}
+
 }
 
 function toggleSeason(seasonId, el){
 
-  // 🟡 ACTIVE dugme
+  let selected = document.getElementById(seasonId);
+  let video = document.getElementById("storeVideo");
+  let download = document.getElementById("storeDownload");
+  let icons = document.getElementById("storeIconsWrapper"); // 🔥 DODATO
+
+  if(selected.style.display === "block"){
+
+    selected.style.display = "none";
+
+    if(video) video.style.display = "none";
+    if(download) download.style.display = "block";
+    if(icons) icons.style.display = "block"; // 🔥 DODATO
+
+    document.querySelectorAll(".seasonBtn").forEach(btn=>{
+      btn.classList.remove("active");
+    });
+
+    return;
+  }
+
   document.querySelectorAll(".seasonBtn").forEach(btn=>{
     btn.classList.remove("active");
   });
@@ -1322,23 +1541,15 @@ function toggleSeason(seasonId, el){
     el.classList.add("active");
   }
 
-  let video = document.getElementById("storeVideo");
-  let download = document.getElementById("storeDownload");
-
-  // 🔴 sakrij video i sliku
   if(video) video.style.display = "none";
   if(download) download.style.display = "none";
+  if(icons) icons.style.display = "none"; // 🔥 DODATO
 
-  // 🔴 zatvori sve
-  document.querySelectorAll(".season-content").forEach(el=>{
-    el.style.display = "none";
+  document.querySelectorAll(".season-content").forEach(s=>{
+    s.style.display = "none";
   });
 
-  // 🟢 otvori kliknuto
-  let selected = document.getElementById(seasonId);
-  if(selected){
-    selected.style.display = "block";
-  }
+  selected.style.display = "block";
 }
 
 function showRecommendedBooks(mainNum){
@@ -1945,6 +2156,906 @@ window.onload = function(){
 
 };
 
+function openEmail(){
+  window.location.href = "mailto:your@email.com";
+}
+
+function openInsta(){
+  window.open("https://instagram.com/yourprofile", "_blank");
+}
+
+function openSite(){
+  window.open("https://yoursite.com", "_blank");
+}
+
+//SPIRITUAL NUMBER
+
+function loadSpirit(){
+
+  let select = document.getElementById("spiritSelect");
+  select.innerHTML = "";
+
+  for(let i=1; i<=31; i++){
+    let opt = document.createElement("option");
+    opt.value = i;
+    opt.text = i;
+    select.appendChild(opt);
+  }
+
+  // 🔥 auto iz inputa
+  let input = document.getElementById("input").value;
+
+  if(input.match(/^\d{2}\.\d{2}\.\d{4}$/)){
+    let day = parseInt(input.split(".")[0]);
+    select.value = day;
+    showSpiritNumber(day);
+  }
+
+  select.onchange = function(){
+    showSpiritNumber(parseInt(this.value));
+  };
+}
+
+function showSpiritNumber(day){
+
+  let el = document.getElementById("spiritNumber");
+
+  el.innerText = day;
+
+  el.style.cursor = "pointer";
+
+  el.onclick = function(){
+    openSpiritDetail(day);
+  };
+}
+
+function openSpiritDetail(day){
+
+  let texts = {
+
+  1: `Those born on the 1st day of any month, often associated with the Aries degree, tend to carry a strong, dynamic, and assertive nature. They are usually fast, direct, emotionally reactive, and open in their expression. This position may also indicate a tendency toward physical strain, injuries, inflammations, or even surgical interventions. It often produces individuals with a disciplined or "uniformed" character, whether in military, structured professions, or even civilian roles that require authority and order.
+
+People born on this day possess a natural ability to stand out and impose themselves in a noticeable way, which often leads to popularity, recognition, and success within their chosen field—especially if their work involves public exposure. Many of them have the potential to leave a significant mark on society. Compared to other birth dates, their path is often somewhat easier from the very beginning, opening opportunities for them to reach high and influential positions over time. They usually show strong independence, originality, creativity, practicality, and persistence.
+
+However, if they do not learn to act with balance and awareness, their negative traits may become more pronounced. These can include stubbornness, a tendency to dominate others, the belief that they are always right, and in some situations even selfishness or a lack of sensitivity. What makes this more complex is that many of them are not fully aware of these tendencies, as they are driven by a deep inner need to succeed, to be first, to be seen, and to achieve recognition.
+
+For this reason, it is important for them to avoid arrogance, excessive self-importance, and the conviction that they are always right. Otherwise, they may encounter various challenges, particularly in their professional life, and sometimes in relationships as well. They are often best suited for independent work or leadership positions, but it is equally important for them to build strong connections and surround themselves with people of similar mindset.
+
+Despite their strong desire for success, some may also show tendencies toward laziness, impatience, or a lack of tact, often expecting quick results. In such cases, success becomes significantly harder to achieve. For women born on this day, career development is often closely linked to emotional fulfillment. Depending on the rest of their chart, many may express strong independent energy even in relationships. However, over time, this can lead to feelings of loneliness or a sense of being misunderstood.`,
+   
+
+2: `Those born on the 2nd day of any month, often associated with the Taurus degree, tend to have a strong connection to pleasure, comfort, and material stability. They are natural hedonists in the sense that they know how to enjoy life—appreciating good food, financial security, and family life as interconnected values.
+
+They often carry the potential to become recognized within their field, or to create something in their work that gains respect and long-term value.
+
+A large number of individuals with this spiritual number place great importance on privacy. This does not mean they are loners, but rather that they periodically need solitude and personal space. At the same time, they deeply desire connection, belonging, and emotional closeness with others.
+
+Their emotional state can be changeable. They may react more sensitively when they feel their personal security is threatened, or when influenced by fear, negative environments, or difficult life circumstances. In such situations, they may withdraw, feel inner heaviness, or develop subtle defensive strategies as a way to protect themselves.
+
+At their core, they are kind, gentle, and pleasant individuals. However, due to the influence of the Moon, especially in women, there is also a deeper and more complex emotional side. This can sometimes manifest as possessiveness, intolerance, or heightened criticism if not properly balanced.
+
+They are naturally drawn to beauty, refinement, and aesthetics—often appreciating style, clothing, perfumes, and harmonious surroundings. They are also strongly connected to family and emotional security.
+
+One of their main challenges is overthinking. Excessive analysis, especially when making important life decisions, can slow their progress or prevent them from fully achieving their goals. Because of this, they are advised to engage more in social environments and teamwork, where they feel safer and more stable.
+
+Their success often lies in connection—learning to discover themselves through others rather than trying to force major changes on their own. Otherwise, dissatisfaction may grow, along with indecision and stagnation.
+
+At the same time, they must remain cautious of being taken advantage of—not only materially, but also emotionally and energetically.
+
+Life may bring periods of change, uncertainty, and disappointment, which can affect both their emotional state and mental well-being. For this reason, it is essential for them to find a healthy emotional outlet and maintain inner balance.
+
+If they learn to stay calm, adapt to life’s demands, and align themselves with their environment, they can achieve deep personal fulfillment—and in some cases, even recognition, popularity, or success.`,
+   
+
+3: `Those born on the 3rd day of any month, often associated with the Gemini degree, are strongly connected to learning, movement, speech, communication, travel, and all forms of exchange. Their life path is closely tied to interaction, information, and constant activity.
+
+This number can indicate extremes—ranging from great wealth achieved through effort, to financial instability or even loss. In many cases, the early stages of life involve struggle and effort, but these experiences serve as an important foundation for personal growth and development.
+
+Individuals born on this day often have a complex character and a strong sense of pride. They do not tolerate being subordinate, especially in professional environments. They are ambitious, broad-minded, and naturally drawn toward higher positions and influence.
+
+Their social nature and wide network of contacts can be both a strength and a challenge. While connections often bring support, opportunities, and advancement, they can also consume valuable time and energy.
+
+They are naturally gifted communicators—eloquent, intelligent, and capable of finding solutions to various life situations. Many possess talents in creative and artistic fields, but a common issue is the tendency to scatter their energy across too many directions, leaving their true potential underdeveloped.
+
+They are generous and willing to help others, often guided by courage, diligence, reliability, and a growing sense of responsibility. Life will frequently place them in situations where they must take responsibility not only for themselves, but also for others.
+
+However, if their negative traits dominate, they may become inconsistent, unfocused, or difficult for others to understand. There can be a tendency toward restlessness—wanting too much, starting many things, but not always finishing them.
+
+Because of this, it is important for them to learn discipline, focus, and realistic goal-setting. They should avoid saying “yes” to everything and take care not to overpromise beyond their actual capacity.
+
+Their life path often includes intense activity, communication, and emotional challenges. One of their key weaknesses can be neglecting their own long-term stability, sometimes appearing indifferent or overly relaxed about their future.
+
+There is also a strong indication of connections with foreign countries, whether through travel, work, or collaboration, where significant financial opportunities may arise.`,
+    
+
+4: `Those born on the 4th day of any month, often associated with the Cancer degree, are strongly connected to home, family, and a sense of belonging. They may experience changes of residence throughout life, yet there is always a tendency to return to their roots sooner or later, unless other influences redirect their path.
+
+This birth day is often linked to a difficult or demanding start in life. However, through persistence, discipline, and sacrifice, these individuals can achieve stable positions and long-term success.
+
+They are born with a karmic task. Because of this, they often encounter obstacles, delays, or internal blockages that must be overcome. Their development requires learning practicality, structure, discipline, and long-term commitment. They are also encouraged to help others, as this directly contributes to balancing their karmic path.
+
+If they choose to live without integrity, responsibility, or consistency, life tends to respond with consequences. This number operates through a clear principle of cause and effect—rewarding effort, persistence, and discipline, while strongly challenging passivity, procrastination, or avoidance.
+
+Nothing in their life happens without reason. They are often tested through limitations, fears, insecurity, and psychological pressure. Their task is to face these challenges directly and build inner strength.
+
+They are naturally methodical, practical, and responsible. However, this can sometimes turn into rigidity, excessive seriousness, or emotional restraint. They do not tolerate superficiality and tend to complete what they start, often carrying a strong sense of duty.
+
+Many of them find it difficult to fully relax, as they are constantly focused on responsibilities, work, or long-term planning. While this mindset supports professional success, it can create imbalance in emotional life, especially in relationships.
+
+Life may often place responsibilities upon them that feel imposed or unavoidable. Their path requires patience, endurance, and acceptance that progress comes through effort, discipline, and time.
+
+There is also a tendency toward valuing material stability—especially property, land, or creating a secure home environment. A sense of safety for themselves and their loved ones is extremely important.
+
+Because they seek stability, they generally avoid uncertainty and change. They will often spend their lives working toward securing their future, usually through consistent effort rather than quick results.
+
+However, if their negative traits dominate, they may become overly career-focused, rigid, overly cautious, or distrustful. In some cases, they may impose their views on others or struggle with flexibility, which can distance them from people, especially in professional environments.
+
+One of their key life lessons is to find balance—neither to dominate others nor allow others to dominate them. Excessive seriousness and responsibility can lead to emotional distance and lack of adaptability in other areas of life.
+
+The influence of their environment is extremely important. The people they surround themselves with will significantly shape their future development, even if they are not always aware of it.
+
+From a health perspective, attention should be given to teeth, bones, the skeletal system, and skin. Physical or mental activity is essential, as a static lifestyle negatively affects both physical and psychological well-being.
+
+Overall, this number represents discipline, karma, responsibility, and structure—but also the potential for great achievement, if the lessons it brings are fully understood and accepted.`,
+    
+
+5: `Those born on the 5th day of any month, often associated with the Leo degree, are strongly connected to movement, communication, travel, education, and dynamic life experiences. On a psychological level, staying in one place for too long does not suit them—they need change, interaction, and constant stimulation.
+
+They are among the most sociable, lively, and expressive individuals, but also carry a changeable and restless nature. Because of this, they are advised not to dwell on the past, but to remain focused on growth, progress, and future opportunities. Their early life and formative years play a significant role in shaping their personality.
+
+As a number of change, they are naturally drawn to transformation and new experiences throughout life. However, decision-making can sometimes be difficult, which creates an inner duality. Balance is essential for them.
+
+Their true strength lies in living in the present moment. When their energy is focused on the “now,” and when they stay socially active and communicative, they gain the momentum needed to successfully handle multiple tasks and responsibilities at once.
+
+Formal education is not always essential for their success, as they are often naturally gifted in communication, expression, and verbal skills—especially on a higher psychological level. When used properly, their words carry influence, and others tend to respect what they say. Diplomacy is a key asset.
+
+However, due to their inner duality, they may express themselves in extremes—either very open or very closed, highly successful or inconsistent.
+
+If their negative traits take over, they may experience inner tension, nervousness, and dissatisfaction. This can lead to arguments, misunderstandings, stubbornness, irresponsibility, and frequent changes in career or direction. Their dissatisfaction often comes from their own restless nature rather than external circumstances.
+
+Because of this, they should avoid excessive impulsiveness, isolation, or withdrawal. Escaping into silence or solitude can worsen their instability.
+
+Their life lesson is to approach life with more seriousness, develop responsibility, and learn to stay consistent. Among them, there are individuals who knew from an early age what they wanted in life, often maturing faster than their peers. Others, however, may take longer to adapt and find their path.
+
+Overall, this number represents movement, communication, adaptability, and life experience—but only when supported by balance, discipline, and self-awareness.`,
+    
+
+6: `Those born on the 6th day of any month, often associated with the Virgo degree, are strongly connected to family, health, responsibility, and work. These areas naturally come into focus throughout their life.
+
+They should not be surprised if life limits their choices in certain situations, especially in relationships or career paths. Their role is often that of a quiet force behind the scenes—loyal, reserved, responsible, and at times self-sacrificing, particularly within family and emotional life.
+
+It is not uncommon for them to go through heavy emotional or family-related experiences. They may sometimes appear distant or even unapproachable to others, but this is often misunderstood. In reality, many of them experience emotions very deeply, choosing to keep their feelings within rather than express them openly.
+
+However, when their inner threshold is crossed, they can reveal a completely different side—becoming argumentative, sharp, and even arrogant. In such moments, they can be extremely stubborn and unyielding. Despite this, they are often respected and appreciated for their strong sense of responsibility.
+
+On the other hand, if they fall out of balance, they may become overly passive, careless, or even neglect themselves for the sake of others—especially family. This tendency is more of a weakness than a virtue and must be managed carefully.
+
+For them, emotional extremes are common. They either deeply connect or completely withdraw. They accept people as they are—or walk away entirely. This intensity shapes them strongly, especially on an emotional level.
+
+This is not merely a matter of personality, but a reflection of deeper karmic patterns. They often carry a strong personal karmic imprint, which brings specific life lessons and challenges, particularly in relationships. They may encounter situations involving temptation, moral tests, or complex emotional dynamics.
+
+Because of this, they are advised to avoid destructive or “forbidden” relationships and to remain grounded in their values. In some cases, these patterns may not manifest directly through them, but through close family members.
+
+Their main task in life is to find themselves in areas where they can create harmony, beauty, and balance. They thrive in environments where they can express creativity, care, and refinement. The key for them is simple—do what they genuinely love.
+
+If they succeed in aligning their life with what they love, they can achieve remarkable results. If not, dissatisfaction grows, and their negative traits become more visible. They tend to live in extremes—either fully committed and fulfilled, or stuck in obligation and inner conflict.
+
+This duality can also reflect in relationships—they may remain committed for a long time, or abruptly end connections when balance is lost.`,
+     
+7: `Those born on the 7th day of any month, often associated with the Libra degree, are connected to harmony, balance, relationships, partnership, and natural charm. Their life path is closely tied to interactions with others, yet their true strength lies in developing inner independence.
+
+They may easily become shaped or limited by upbringing or by their own philosophical beliefs. In many cases, there is a tendency toward extreme expression in certain areas of life. Although they are destined to be surrounded by people and social interactions, it is often more beneficial for them to rely on themselves and work independently.
+
+For this reason, they are best suited for roles where they can operate alone, develop their analytical abilities, and use their natural talent for deep thinking, logical judgment, and decision-making—even on behalf of others.
+
+One of their most important life lessons is to learn how to say “no”—not only to authority figures, but also to family and partners. They must prove their value through their own actions, rather than constantly trying to please others.
+
+At the same time, they are encouraged to maintain a friendly and open attitude toward people, learning to accept others as they are. There is often an inner tension between their need for independence and their role within social structures.
+
+From a spiritual perspective, many of them begin life with an underdeveloped sense of inner awareness. Therefore, they are required to consciously work on their personal and spiritual growth throughout life. This development must come from within—it cannot be imposed from the outside.
+
+Emotionally, they tend to place reason before feelings. Because of this, others may perceive them as distant, cold, or difficult to understand. However, when emotions do surface, they may be expressed intensely or even in extremes.
+
+In professional life, they have strong potential in fields such as science, research, or business. They are often perfectionists with original thinking, capable of achieving significant results. However, this is frequently accompanied by a more complex or unstable emotional and family life.
+
+They are advised to invest in education and personal development, as this can take them far in life. At the same time, it is essential that they do not become dependent on others, but instead build their own stability and direction.
+
+Overall, this number represents a path of balance between independence and connection, logic and emotion, isolation and partnership—where true growth comes through self-awareness and inner development.`,
+   
+
+8: `Those born on the 8th day of any month, often associated with the Scorpio degree, are connected to intensity, transformation, power, and extremes. Their life path is marked by “all or nothing” experiences, deep inner changes, and cycles of endings and new beginnings.
+
+They are natural fighters—strong-willed, determined, and rarely afraid of challenges. One of the deeper motivations behind this strength is a hidden fear of instability, especially on a material level. Because of this, financial security and control over resources often play a central role in their lives.
+
+They possess a natural ability to assess situations accurately and find solutions, often in moments where others feel lost. However, not everyone uses this ability wisely. Some are driven by a powerful desire to rise above average circumstances, which fuels their persistence and can ultimately lead to significant success.
+
+When they embrace boldness, creativity, and forward movement, they can achieve remarkable results—sometimes even recognition or influence. They are drawn to large-scale endeavors and often have the capability to manage complex responsibilities successfully.
+
+However, their challenges emerge when ambition turns into dominance. There can be a tendency toward control, difficulty accepting loss, and imposing their will on others. In many cases, this outward strength is only a protective layer, hiding deeper insecurities and a fear of vulnerability.
+
+They often struggle to express emotions openly. While they may feel deeply, they tend to maintain control and distance, which can make them appear reserved or difficult to read. This emotional restraint, combined with a calculated approach to life, can sometimes lead to isolation.
+
+Material stability is extremely important to them, and they are often highly motivated to avoid failure or lack. They are not easily discouraged by hardship, but their relationship with success and loss can be intense.
+
+Their life path requires learning balance—between power and sensitivity, control and trust, ambition and emotional openness.
+
+If they learn to channel their strength constructively, they can achieve great success, stability, and influence. If not, internal pressure and unresolved fears may create emotional or psychological challenges.
+
+Overall, this number represents transformation, strength, resilience, and the ability to rise through life’s extremes—emerging stronger with each challenge they overcome.`,
+    
+
+9: `Those born on the 9th day of any month, often associated with the Sagittarius degree, are connected to expansion, travel, higher knowledge, optimism, and the possibility of foreign connections. Their life path is often linked to movement, learning, and a broader perspective on life.
+
+They may experience a strong inner restlessness throughout life, which is not always visible to others. This internal tension can influence important decisions, especially when choosing a career. Many of them take longer to define their true path, as they search for something that aligns with their deeper sense of purpose.
+
+At the same time, they are naturally drawn toward the spiritual and humanitarian side of life. Engaging in acts of kindness, service, or helping others plays an important role in their development and contributes to balancing their inner state.
+
+They often possess various talents, strong intuition, and a powerful will, which can lead to success in many areas. However, it is not uncommon for some of these talents to remain underdeveloped or unused if they lack direction.
+
+Persistence, endurance, and determination support them on their path to success. When they commit fully, they are capable of achieving recognition, stability, and even a certain level of public success—especially if they choose their profession wisely and at the right time.
+
+Emotionally, despite their charm and strong presence, they may face more complex experiences in love or family life. Relationships can bring challenges, lessons, and periods of disappointment.
+
+However, they have the inner strength to overcome such situations. Regardless of losses or emotional setbacks, they are capable of rebuilding and moving forward.
+
+There is also a strong element of mystery surrounding them. Even when they appear open, they often keep certain aspects of themselves private. This sense of depth and secrecy is part of their nature, and not everything about them is easily understood or revealed.
+
+Their life may include relocation, travel, or even long-term connections with foreign countries. Movement and change of environment often play a significant role in their overall life journey.
+
+Overall, this number represents expansion, wisdom, resilience, and inner growth—through both experience and self-discovery.`,
+
+   
+10: `Those born on the 10th day of the month carry amplified leadership energy. Routine does not suit them—they are driven by ambition, independence, and the need to stand out and express their full potential.
+
+They are highly intelligent individuals, capable of solving even the most complex problems. Professionally, they can excel in fields such as marketing, education, trade (especially sales), innovation, and invention.
+
+Most of them are characterized by honor, strong belief, and confidence. However, their path is not without challenges. They are likely to encounter obstacles, especially on their journey toward career success and recognition.
+
+When they achieve success, they must remain cautious—particularly in dealing with others. Envy, jealousy, false friendships, and hidden agendas may surround them. They should not expect support from others easily, as they are often the ones expected to provide help rather than receive it.
+
+Because of this, it is essential for them to develop inner strength. When facing mental, emotional, or physical setbacks, they must rely on themselves to recover, reset, and move forward.
+
+Despite difficulties, they are given opportunities to overcome challenges, primarily through their strong will, confidence, and belief in their own abilities.
+
+They possess creative, constructive, and intellectual power, which constantly pushes them toward change—both within themselves and in their surroundings. However, this strong energy must be handled carefully.
+
+Although this number is associated with success, recognition, and honor, the outcome is not always guaranteed. Much depends on how their energy is directed and how consciously they act.
+
+They are generally fearless and decisive, sometimes even harsh toward themselves and others. If not balanced, this intensity may prevent their true potential from fully expressing itself.
+
+One of their weaknesses is overanalyzing, which can slow down progress or create unnecessary pressure.
+
+From a health perspective, they are generally strong and resilient, often with good longevity—unless other factors interfere.
+
+Financially, they are often fortunate when dealing with their own money. However, when it comes to other people’s finances, they may face complications or setbacks.
+
+No matter their financial status, they rarely give the impression of lack—due to their strong sense of pride and dignity. For this reason, it is advised that they avoid borrowing money or depending on others financially.
+
+Instead, they should focus on financial discipline, awareness, and building personal reserves over time.
+
+If operating on a lower level of awareness, they may become overly focused on serving others or achieving goals by questionable means, adopting a mindset where the end justifies the means. This path leads to imbalance and prevents true fulfillment.
+
+As parents, they tend to be dedicated, responsible, and somewhat authoritative.
+
+Overall, this number represents strong personal power, leadership, and potential for success—but only when guided by integrity, balance, and self-awareness.`,
+
+
+   11: `Those born on the 11th day of any month, often associated with the Aquarius degree, are individuals who stand apart from others. They are innovators, reformers, and independent thinkers, often drawn toward unconventional paths in life. Their relationships may not follow traditional patterns, and there can be a tendency toward non-standard partnerships or challenges within formal commitments.
+
+This number carries strong mental energy, often accompanied by inner tension, nervous sensitivity, and periods of stress.
+
+At its core, the number 11 represents movement, progress, and the constant desire for improvement. When individuals embrace self-development and actively work on improving their lives—whether through education, personal growth, or professional ambition—they have the potential to thrive, especially in modern times where originality and innovation are highly valued.
+
+They possess a unique combination of intuition, impulsiveness, and idealism—often blending logic with imagination. This creates a personality that can be both visionary and unpredictable.
+
+Their nature is often strong-willed and rebellious. They tend to question authority, think independently, and usually have an answer for everything. This makes them capable of handling complex life situations, but also draws attention to them—both positive and negative.
+
+Emotionally, they can be highly sensitive, sometimes expressing a refined or even overly detailed emotional nature. However, one of their main challenges is indecision. When faced with important life choices, they may hesitate or become uncertain, which can slow their progress.
+
+Because of this, it is essential for them to define clear priorities and stay focused on their path. They should also avoid excessive perfectionism or overanalyzing small details, as this can lead to unnecessary stress and wasted energy.
+
+In professional life, they are not naturally inclined toward routine or repetitive work, especially under strict structures. While they desire success and stability, they may lack the patience or motivation for conventional career paths.
+
+They function best in independent, creative, or unconventional roles—where freedom, originality, and flexibility are present. In such environments, their financial success can significantly improve.
+
+Fields such as art, creativity, media, and public work are particularly favorable, as many of them possess strong imagination, vision, and the ability to turn ideas into reality—sometimes even achieving recognition or fame.
+
+It is extremely important for them to carefully choose their environment. Surrounding themselves with ambitious, successful, and inspiring individuals can greatly influence their development.
+
+In relationships and partnerships—whether personal or professional—they should be cautious. Entering commitments without proper balance or compatibility may lead to emotional strain, financial loss, or stress. Whenever possible, they should ensure stability and clarity in agreements.
+
+At their core, they are independent and driven toward self-reliance. However, if their negative traits dominate, they may experience increased psychological tension, instability, or difficulty taking concrete action. In such cases, dissatisfaction may lead to escapist behavior or poor financial decisions.
+
+The root of these challenges often lies in strong inner conflicts created by life circumstances. This can lead them to question their path, feeling as though life brings more obstacles than ease.
+
+Overall, this number represents vision, originality, and transformation—but only when guided by focus, discipline, and inner balance.`,
+    
+
+12: `Those born on the 12th day of any month, often associated with the Pisces degree, are connected to sacrifice, service, hidden processes, and situations that unfold behind the scenes. Their life path may involve secrecy, subtle influence, or working in environments where not everything is openly visible.
+
+They possess courage, independence, and diligence, and are often well-received in social settings. Many of them naturally take initiative and can become leaders of various activities. However, they do not tolerate being subordinate, which makes independent work or self-driven paths the most suitable for them.
+
+At their core, they are meant to develop wisdom, structure, and respect. Yet in practice, their nature can sometimes shift toward impatience, impulsiveness, and direct reactions, which may disrupt their plans if not controlled.
+
+They often have a strong personal presence and can influence others significantly—especially through communication. When they use their words wisely, their impact on individuals or groups can be powerful.
+
+However, it is essential for them to act with integrity and remain on the side of fairness and legality. If they move away from this path, they may encounter ongoing challenges related to authority or external systems. For this reason, they are advised to avoid dishonest environments and people who operate outside ethical boundaries.
+
+This number also carries the theme of sacrifice. They may find themselves doing things that are not always visible to others, or contributing in ways that remain unrecognized. Because of this, they must be careful not to overpromise or act without proper planning and preparation.
+
+If they make rushed decisions or act impulsively, it can lead to inner anxiety, instability, and unnecessary complications. Therefore, developing structure, time management, and consistency is essential.
+
+They must learn to organize their responsibilities effectively and remain committed to their plans, rather than constantly changing direction and creating confusion in their own life and for others.
+
+Their strengths lie in their talents—many of which are connected to art, creativity, or communication. When properly developed, these abilities can bring them both satisfaction and success.
+
+They often lead a unique lifestyle, but they must avoid becoming too comfortable or careless. Even small mistakes can have larger consequences if they are not attentive.
+
+It is important for them to stay alert and aware of their surroundings. If they become overly trusting or passive, they may encounter situations where others take advantage of them.
+
+Because of this, they should avoid being overly accommodating and learn to set clear boundaries. At the same time, support from authority figures or experienced individuals can be very beneficial, helping them progress further in life.
+
+Financially, they may have opportunities to earn from multiple sources. However, they must remain cautious, as there is often someone in their environment who may rely on or influence their financial resources.
+
+Overall, this number represents hidden strength, adaptability, and sacrifice—but also the need for discipline, clarity, and conscious decision-making.`,
+
+
+13: `Those born on the 13th day of any month, often associated with the Aries degree, carry strong, intense, and dynamic energy. They are fast, direct, expressive, and often act with powerful emotional reactions. This number can also indicate physical sensitivity—such as susceptibility to injuries, inflammation, or situations that require intervention and recovery. It often produces disciplined, resilient individuals, sometimes with a “uniformed” or structured approach to life.
+
+They naturally attract attention. Others may either admire them or feel challenged by their presence. Within them exists a noticeable contrast—at times showing brilliance and originality, while at other times displaying completely opposite traits.
+
+They may initially appear calm, gentle, or approachable, but over time reveal a much stronger, more intense personality. This shift can create misunderstandings or conflicts, especially in close relationships.
+
+They are capable of presenting themselves as more successful or established than they truly are, and some may even enjoy displaying a more extravagant or expressive lifestyle. Although they have strong potential for financial stability, their desires are often high, and they may feel that what they have is never quite enough.
+
+Because of this, they are advised not to force material success or focus excessively on financial gain, as this can lead to complications. Instead, their ideas, innovations, and creative efforts are best directed toward broader environments—such as international connections or ambitious circles.
+
+They are naturally organized, hardworking, and ambitious, with strong leadership potential. They are expected to be responsible, reliable, and practical in their approach to life.
+
+However, if they move in the wrong direction—through disorganization or lack of structure—they may begin to express negative traits such as egocentrism, stubbornness, dominance, or unrealistic expectations. There can also be a tendency to overestimate their abilities or become overly focused on details and perfection.
+
+Their pursuit of excellence, precision, and high standards applies both to themselves and to others. This can lead to frequent disagreements or conflicts if not balanced with patience and diplomacy.
+
+For them, learning tact, calmness, and emotional control is essential. These qualities are the key to both inner peace and long-term success.
+
+When life does not go as planned, they should avoid withdrawing or isolating themselves. Instead, they are encouraged to remain socially active, communicate openly, and maintain connection with others in order to overcome periods of pessimism or frustration.
+
+They may also encounter confusion or challenging relationships—whether emotional, social, or professional—which can affect their emotional state. One of the deeper reasons behind this is a hidden fear of being hurt, which they rarely acknowledge.
+
+As parents, they may have a complex relationship with children, as their fluctuating moods and strong personality can be difficult to understand or follow. It is important that they avoid projecting their own dissatisfaction or pessimism onto others, especially their children.
+
+Overall, this number represents strong will, intensity, transformation, and leadership—but requires balance, emotional awareness, and discipline to reach its full potential.`,
+
+
+14: `Those born on the 14th day of any month, often associated with the Taurus degree, are strongly connected to pleasure, comfort, and material enjoyment. They know how to create a sense of comfort for themselves and often find fulfillment through lifestyle, food, financial stability, and family.
+
+Their success is not immediate, but comes over time through continuous effort, self-development, and persistence. Whether through education, skill-building, or life experience, they have the potential to become highly capable both in communication and practical execution. The key for them is consistency—results come gradually, but can lead to a stable and secure position.
+
+However, this number also carries a dual nature. On one side, it can produce respected and successful individuals. On the other, it may lead toward excess, overindulgence, or risky behavior. There may be tendencies toward unhealthy habits, impulsive decisions, or lifestyle choices that can damage reputation if not controlled.
+
+This duality also reflects in relationships. The partner they choose plays a major role in shaping their life path. They are naturally drawn to stability and security, but must avoid rushing into relationships before emotional maturity is achieved.
+
+If a relationship does not meet their needs, they must learn to walk away in time. Otherwise, prolonged imbalance can create heavy emotional consequences over time.
+
+They should avoid rigid thinking and overly fixed attitudes. Poor judgment, unnecessary risks, or repeated mistakes can lead them into difficult situations that could have been avoided with more awareness and patience.
+
+When they organize their life properly, set clear priorities, and remain focused, they have strong potential to stand out, succeed, and even take on leadership roles. Their presence can be highly attractive, and people are often drawn to their energy—especially when they are operating at a higher level of awareness.
+
+In relationships, especially for women, a passive role is not advised. They must establish their value and position from the beginning, otherwise they may find themselves in a subordinate dynamic.
+
+There may also be challenges related to the father figure—whether through emotional distance, strictness, absence, or unresolved dynamics. These experiences can influence their emotional development and later relationship choices.
+
+Because of this, they often seek security and stability in partners, sometimes placing this need above all else.
+
+Life may bring periods of physical distance from family, often due to career or professional responsibilities.
+
+Financially, they are best suited for dynamic fields that involve movement, creativity, innovation, or competition. Passive roles do not suit them. Business, entrepreneurship, and independent ventures can bring strong results—but only if they are ready for change, effort, and sacrifice.
+
+They can earn well, but may struggle to maintain money consistently. However, they rarely fall into complete financial instability, as there is also a tendency toward caution and preservation.
+
+They must avoid comparing themselves to others or competing unnecessarily, as this drains their energy and blocks progress. Their focus should remain on personal growth and long-term goals.
+
+As parents, they can be adaptable and flexible, especially later in life. However, they must be careful not to project their own frustrations or expectations onto their children. Discipline should exist, but with balance and understanding.
+
+Overall, this number represents a path of material experience, growth through effort, and balancing pleasure with responsibility—where success comes through awareness, discipline, and correct choices.`,
+
+
+15: `Those born on the 15th day of any month, often associated with the Gemini degree, are strongly connected to communication, movement, learning, and interaction. Their life path involves exchange of ideas, social dynamics, and adaptability.
+
+One of their main tasks is to work on their psychological balance. They should avoid irritability, resentment, mood swings, and excessive pride, as these traits can create inner tension and negatively affect their life path. There is often a strong sense of personal pride and firmness in their thinking, which, if not balanced, can turn into rigidity.
+
+They must be careful not to overextend themselves by worrying about everything and everyone. Giving too much of their energy without limits can lead to mental exhaustion, especially over time. Their tendency toward overthinking and detail can put pressure on their nervous system.
+
+Because of this, they are advised to develop a more relaxed approach to life. If they fail to do so, they may become frustrated—not only with others, but also with themselves.
+
+They are naturally cooperative and can expect support from others, especially when they express their more positive, open, and approachable side. However, they must be cautious of being taken advantage of—particularly in partnerships, both emotional and professional.
+
+This number carries a strong element of originality and creativity. Many individuals born on this day have the potential for artistic or intellectual expression—especially in fields such as writing, music, or communication. However, only a small number fully recognize and use these talents in practice.
+
+They are generally youthful in spirit, energetic, and drawn to interaction and enjoyment of life. Freedom is extremely important to them, especially freedom of choice. However, this desire for freedom can become excessive, leading to instability in relationships or a tendency toward avoiding long-term commitments.
+
+Their nature represents a combination of intelligence, spirituality, material ambition, movement, and social connection—but also immaturity, impulsiveness, and unpredictability if not properly balanced.
+
+They are warm and friendly individuals, often driven by a desire to feel useful and appreciated. However, they must learn to set boundaries and understand how much of themselves they should give to others.
+
+In modern times, they have far greater opportunities for growth and success, especially if they adapt to the pace of change and remain flexible. Holding onto outdated beliefs or rigid thinking may block their progress.
+
+They should develop strong communication skills, diplomacy, and a relaxed, confident way of expressing themselves. If they appear tense or closed, they may unintentionally create distance between themselves and others.
+
+At a deeper level, this number carries certain limitations rooted in past patterns, which may manifest as unexplained dissatisfaction or inner resistance.
+
+Financially, they should be cautious—especially in environments with lower economic stability. Poor financial planning or impulsive spending may lead to instability if not controlled.
+
+As parents, they tend to build more natural and friendly relationships with children, especially those born on the 2nd, 3rd, or 6th day of the month. However, with stronger personalities (such as 1 or 4), challenges may arise, requiring more patience and understanding.
+
+Overall, this number represents communication, creativity, freedom, and adaptability—but requires balance, discipline, and emotional awareness to fully express its potential.`,
+
+
+16: `Those born on the 16th day of any month, often associated with the Cancer degree, are deeply connected to home, family, and emotional security. Although they may change their place of living throughout life, there is always a tendency to return to their roots sooner or later.
+
+They are often naturally aligned with fortunate outcomes, as if life tends to offer them opportunities for positive resolution. However, many of them are not fully aware of this potential.
+
+A strong characteristic of this number is perfectionism. They pay close attention to details—sometimes excessively. While this can be a strength, it can also become a weakness. Overanalyzing and focusing too much on small things may actually block their progress and distance them from favorable outcomes.
+
+They must understand that balance is essential. Excessive control, emotional tension, or overprotectiveness—especially in relationships—can negatively affect both their personal and financial development.
+
+They possess strong concentration and the ability to succeed in highly specialized fields. When they follow their natural talents and interests, they can achieve both professional success and financial stability, even reaching a comfortable and prosperous lifestyle.
+
+They are encouraged to rely on their intuition, which is often highly developed, and to consider independent work over group structures whenever possible.
+
+However, when things do not go according to their expectations, they may become tense, irritable, or even arrogant. Despite internal struggles, they often maintain an external image of control and stability, hiding their true emotions from others.
+
+One of their key life lessons is to take responsibility for their own outcomes. Many of their challenges stem from repeated patterns or habits that they are reluctant to change.
+
+They are meant to use their perfectionism constructively—to become experts in their chosen field—but through calmness, patience, and harmony, rather than force or intensity.
+
+Their primary task is self-development. Instead of focusing on other people’s lives and problems, they must turn inward and work on themselves. This shift can significantly improve their overall life path.
+
+In family life, especially as parents, they may face challenges. Their need for peace and quiet can conflict with the demands of children, creating stress or emotional distance. Certain personalities may be particularly challenging, requiring patience and understanding.
+
+They are advised to maintain open communication and emotional presence in family relationships, especially with children, as these connections often serve as important life lessons.
+
+Decision-making can also be difficult for them. They may struggle with hesitation and doubt, often due to underlying fears. When operating at a higher level of awareness, they become calmer, more balanced, and more decisive.
+
+If not, they may express more extreme or reactive behavior, which can affect their emotional and relational stability.
+
+Their emotional life can be complex, sometimes influenced by unresolved dynamics, including challenges in relation to authority figures or the father.
+
+In relationships, especially for women, it is important not to rush into commitments. Choosing the right partner requires time, clarity, and emotional maturity. They should avoid partners who are irresponsible, unstable, or lacking direction.
+
+Overall, this number represents emotional depth, intuition, perfectionism, and inner transformation—but requires self-awareness, balance, and conscious change to unlock its full potential.`,
+
+
+17: `Those born on the 17th day of any month, often associated with the Leo degree, are connected to movement, communication, education, and dynamic life experiences. Psychologically, they do not thrive in static environments and require change, interaction, and personal growth.
+
+In emotional life, particularly for women, there may be a tendency to become involved with partners who are unavailable, already committed, or recently out of long-term relationships. If supported by other influences, this can lead to sudden disruptions in relationships, as well as challenges involving authority figures or family dynamics.
+
+One of the key reasons behind such experiences is impulsiveness. They may act quickly without fully considering consequences, and are often highly sensitive to criticism. When challenged, they tend to trust their own judgment above all else.
+
+They are advised to avoid unstable or unreliable partners, as well as situations where they may be taken advantage of—especially emotionally or financially.
+
+Many of them carry strong confidence and leadership energy, often seeking, consciously or unconsciously, to assert influence over others—particularly on an intellectual level. However, when faced with betrayal or disappointment, they can react intensely, as they strongly dislike feeling underestimated.
+
+They can be generous, but this generosity is not always directed toward the right people, especially in emotional relationships. While generally honest, they often have a complex and sometimes unpredictable nature.
+
+To others, they may appear ambitious, brave, and even fortunate. However, behind this image lies a demanding life path, often filled with obstacles, delays, and inner conflicts. Their journey toward success is rarely easy.
+
+They are given a serious life task—to work on themselves, develop discipline, and create meaningful results. When they focus on personal growth and inner development, they gain the strength to overcome life’s challenges more effectively.
+
+In some cases, they may encounter individuals who possess deeper spiritual awareness, which can significantly influence their path.
+
+If they do not develop focus and consistency, they may become easily influenced by others, lose direction, or leave things unfinished.
+
+Those operating at a higher level of awareness are capable of solving complex problems. They are rational, constructive, kind, and capable of earning respect, as well as achieving financial stability—often more noticeably later in life.
+
+Delays are common in various life areas, including career, finances, and relationships. Greater stability and success tend to appear after the age of 30, with stronger progress in later years.
+
+Despite professional potential, emotional and family life may bring more challenges and painful experiences. Because of this, they are advised not to rush into important life decisions.
+
+On a lower level of awareness, they may become manipulative, overly materialistic, or envious, sometimes seeking shortcuts instead of steady progress. This can attract similar individuals into their lives.
+
+They are encouraged to focus more on family and inner stability, rather than being overly influenced by external environments or other people’s opinions.
+
+From a deeper perspective, this number may carry karmic patterns related to past actions, which can manifest as challenges or situations where they must learn balance, fairness, and responsibility.
+
+Overall, this number represents strength, ambition, delayed success, and inner transformation—but requires discipline, awareness, and emotional maturity to reach its full potential.`,
+
+
+18: `Those born on the 18th day of any month, often associated with the Virgo degree, are strongly connected to responsibility, work, family, and health. These areas play a central role throughout their life.
+
+This number carries very intense energy, often expressed through extremes—either highly constructive or highly destructive, depending on how it is used. These individuals possess strong inner power, determination, and presence, especially when operating at a higher level of awareness.
+
+They are meant to face various challenges, obstacles, and life tests. Internal conflicts may arise, often as a result of their own reactions, decisions, and behavior. Their strong energy must be handled carefully, as acting impulsively or without awareness can create unnecessary complications.
+
+Because of their intensity, they should avoid directing negative energy toward close relationships—especially family or those weaker than themselves. Instead, they are encouraged to channel their energy into constructive outlets such as physical activity, discipline-based work, or focused goals.
+
+Many of them place strong importance on material success and career development. They are driven to achieve something meaningful and to build a stable position in life. However, this ambition must be guided by integrity.
+
+If they choose unethical paths or attempt to achieve success through questionable means, it can lead to serious consequences, disappointment, and loss of stability. On the other hand, when they act with balance and responsibility, they can develop exceptional abilities—especially in generating income, managing resources, and supporting others.
+
+In such cases, they can reach high social positions, often becoming influential figures or leaders. Their energy naturally carries authority and the potential to inspire others.
+
+They are capable of handling multiple responsibilities at once and may even benefit from managing several projects or roles simultaneously. Their work ethic and ambition can bring significant financial success over time.
+
+However, they should be cautious with spending, as there can be a tendency toward financial imbalance if discipline is not maintained.
+
+Professions connected to public life, leadership, service, or impact are particularly suitable—such as sports, law enforcement, medicine, social work, or creative fields.
+
+From a practical perspective, they are advised to avoid high-risk environments or situations involving unnecessary danger. Awareness and caution are essential.
+
+Health-wise, they often possess strong vitality and resilience, especially when living in balance. However, attention should be given to inherited patterns and overall well-being, particularly under stress.
+
+As parents, they may expect strength, discipline, and resilience from their children, reflecting their own nature. However, it is important to recognize that not all individuals develop in the same way, and patience is necessary.
+
+Overall, this number represents power, responsibility, ambition, and transformation—but requires discipline, ethical direction, and self-control to fully express its highest potential.`,
+
+
+19: `Those born on the 19th day of any month, often associated with the Libra degree, are connected to balance, relationships, harmony, and personal expression. Despite this outward theme, their inner world is often complex and quite different from others.
+
+They carry a strong inner feeling of being unique or set apart, and this awareness tends to grow stronger over time. Their personality is layered and uncommon, making them difficult to fully understand. Because of this, they do not tolerate control, pressure, or domination from others.
+
+They can appear warm, polite, and attentive, yet at the same time unpredictable, stubborn, and emotionally selective. This creates a dual nature—one that can shift between openness and resistance depending on circumstances.
+
+Many of them go through challenging life experiences, especially in earlier stages. These experiences often serve as turning points, leading them to realize that many of their struggles originate from their own patterns, reactions, or choices.
+
+Financially, they are advised to be very cautious. Borrowing money is not recommended, and relying on chance-based gains or risky financial decisions can lead to loss. Instead, they should focus on discipline, rational spending, and maintaining financial reserves.
+
+They must also be careful not to become overly focused on material success, status, or accumulation. If ambition turns into obsession, they may lose balance and move away from integrity.
+
+Even if they do not reach high positions, they are often valuable, reliable, and enthusiastic collaborators—especially when operating at a higher level of awareness.
+
+In contrast to their professional potential, their emotional or family life may present more challenges. There can be obstacles, misunderstandings, sacrifices, or situations that are not fully visible to others. They often carry private aspects of their life that remain hidden from the public.
+
+Their path requires balance between independence and connection, ambition and ethics, outer success and inner peace.
+
+Overall, this number represents individuality, inner complexity, resilience, and growth through experience—but demands self-awareness, discipline, and emotional maturity to reach stability.`,
+
+
+20: `Those born on the 20th day of any month, often associated with the Scorpio degree, carry deep emotional intensity, transformation, and strong inner sensitivity. This number reflects extremes—situations of “all or nothing,” powerful life changes, and inner rebirth through experience.
+
+At their core, they are natural peacemakers. They often attract love, attention, and respect from others due to their calm presence and understanding nature. Because of this, they are well-suited for roles connected to mediation, guidance, education, or any field where balance between people is required.
+
+However, despite being surrounded by others, they may often feel internally isolated. They carry a strong sense that they understand others deeply, while few truly understand them.
+
+They are highly perceptive and intuitive—very little escapes their attention. Their concentration and mental sharpness allow them to analyze situations with great depth. Harmony, beauty, and emotional balance are essential for their well-being. Without these, they may feel dissatisfaction, inner tension, or even physical imbalance over time.
+
+Their environment plays a crucial role in their life. Being surrounded by negative, toxic, or unstable individuals can significantly affect their mental and physical state. Because of this, they must be very selective about the people they allow into their personal and professional space.
+
+One of their greatest strengths lies in diplomacy. Through kindness, tact, and emotional intelligence, they are capable of achieving a great deal in life—often gaining trust and support from others with ease.
+
+At the same time, they may carry responsibilities and social expectations that can become mentally exhausting. They often give more than they receive, especially if they do not set clear boundaries.
+
+When balanced, they are caring, supportive, and deeply respected individuals. Their presence can calm others and create a sense of trust and harmony.
+
+Professionally, they may experience delays or slower progress than expected. Their goals may not always materialize immediately, which can create inner restlessness—especially regarding financial stability.
+
+In personal life, relationships and family may bring challenges. Some may delay forming a family due to career focus or material concerns, while others may experience imbalance between emotional and practical needs.
+
+If their negative side becomes dominant, they may experience anxiety, nervous tension, or inner dissatisfaction. This can manifest through restlessness, difficulty staying still, or constant mental activity.
+
+They must understand that the life they desire requires patience and inner alignment. Quick solutions or shortcuts are not suitable for them and may lead to further complications.
+
+They are best suited for independent paths, where they can maintain control over their environment and decisions. At the same time, they must work on trust, as excessive doubt or suspicion can create additional stress.
+
+A recurring theme in their life is the fear of loneliness or emotional isolation, which they must learn to accept and overcome through inner strength and self-awareness.
+
+Overall, this number represents emotional depth, intuition, diplomacy, and transformation—but requires balance, healthy boundaries, and inner stability to fully express its potential.`,
+
+
+21: `Those born on the 21st day of any month, often associated with the Sagittarius degree, are connected to expansion, travel, knowledge, and broader life perspectives. Their path is linked with growth, optimism, education, and often opportunities related to foreign environments.
+
+This number generally supports success, economic stability, and the potential for high personal and social status. However, their early life may not be easy. Many experience challenges, family difficulties, or emotional struggles during youth, while improvement comes gradually over time.
+
+They are advised not to keep their knowledge, success, or abilities only for themselves. Sharing what they know and contributing to others is essential for their progress. If they become too self-focused, stagnation and dissatisfaction may follow.
+
+A recurring pattern in their life is giving more than they receive. In many cases, this happens because they lack proper direction or guidance. For this reason, having a mentor or someone who can help guide their path can be highly beneficial.
+
+They are expected to develop a social, open, and generous nature. Success often comes when they are connected to others—especially through collaboration or interaction with the opposite gender. In many cases, support from women (mother, partner, or female figures) plays a significant role in their development.
+
+They often possess a natural charm and presence that attracts others. When they become aware of their abilities, they can easily form connections, both socially and emotionally.
+
+In professional life, progress may be slower than expected. Delays, inconsistency, or difficulty maintaining success can be challenges they must overcome.
+
+However, they are capable of navigating obstacles successfully, especially when they learn to position themselves wisely in different situations.
+
+Their main obstacles tend to be inner—nervousness, ego, doubt, and suspicion can all interfere with their progress.
+
+For them, patience is essential. With discipline, openness, and the right mindset, they can achieve long-term success and stability.
+
+Overall, this number represents growth, opportunity, charisma, and expansion—but requires patience, consistency, and a willingness to share in order to fully reach its potential.`,
+
+
+22: `Those born on the 22nd day of any month carry a powerful and complex vibration, often associated with extremes, responsibility, and long-term development. Their life path is marked by significant highs and lows, which shape their character and inner strength over time.
+
+Because of these fluctuations, they may develop a certain level of distrust or inner insecurity. However, despite everything they go through, many of them endure challenges with dignity, resilience, and emotional control.
+
+They are persistent, strong-willed, and capable of enduring pressure, although they may sometimes appear rigid or inflexible in their attitudes.
+
+They often stand on the side of fairness and tend to support those who are weaker, showing a strong sense of justice. In friendships, they can be reliable and loyal individuals.
+
+Recognition and rewards for their effort usually come later in life—often in their late 30s or early 40s. While success can appear earlier, the true stability and growth tend to build gradually over time, both materially and professionally.
+
+A key requirement for them is to live with integrity and ethical awareness. If they deviate from this path, they may encounter serious life challenges or consequences that force them to correct their direction.
+
+Their life often includes repetition—having to go through similar situations more than once until lessons are learned. There may also be periods of separation from family or emotional distance, which can affect their sense of stability.
+
+Professionally, they face strong pressure and must rely primarily on themselves. External help may be limited or unreliable, meaning they must build their path through personal effort and persistence.
+
+They are required to adapt to changes that are sometimes beyond their control. Resistance to structure or rules—especially in more independent personalities—can create additional obstacles if not balanced with discipline.
+
+However, if they develop consistency, reliability, organization, and strategic thinking, they can achieve significant success and recognition.
+
+They must be careful not to become overly consumed by work or responsibilities, as this can reduce their social life and affect their mental well-being. Maintaining social interaction is important for their psychological balance.
+
+In emotional life, challenges in relationships are possible, particularly in long-term commitments. They must choose partners carefully and avoid rigid or uncompromising behavior.
+
+Their strong personality and firm attitudes can sometimes make them appear difficult or hard to approach, which may create distance in relationships.
+
+Health-wise, they should pay attention to stress and tension. Regular rest, balance, and recovery are essential to prevent exhaustion and maintain overall well-being.
+
+Overall, this number represents strength, endurance, responsibility, and delayed success—but requires discipline, emotional balance, and ethical alignment to fully reach its highest potential.`,
+
+
+23: `Those born on the 23rd day of any month, often associated with the Aquarius degree, are characterized by individuality, innovation, and a strong desire for freedom. They are often seen as different from others—reformers, independent thinkers, and people who challenge established norms.
+
+This number carries a highly positive and dynamic energy, and is often considered one of the strongest two-digit numbers in numerology. It brings significant opportunities for financial success, as well as connections with influential, educated, or publicly recognized individuals.
+
+They are naturally drawn to movement, change, and new ideas, and do not function well in static or restrictive environments. Their openness and adaptability allow them to evolve quickly, but they must be careful not to act impulsively.
+
+To fully realize their potential, they are advised to surround themselves with intelligent, positive, and forward-thinking individuals. Being in the right environment is crucial for their success.
+
+They should actively invest in their personal development—especially education, skills, and talents. At the same time, they must avoid negative or toxic influences, as such environments can block their progress.
+
+They are optimistic, energetic, and mentally active individuals who often enjoy a greater sense of freedom compared to others. This freedom supports their psychological well-being and creative expression.
+
+Professionally, they have strong potential to achieve high social status, regardless of the field they choose. However, their need for independence can sometimes turn into rebellion, impulsiveness, or inconsistency if not properly balanced.
+
+Because of this, they must focus on discipline, planning, and setting clear priorities. When they combine their natural talent with structure and persistence, success becomes highly achievable.
+
+Support from others is often present in their lives, but they must also take initiative and remain proactive in their efforts.
+
+One of their challenges is maintaining focus. They may lose interest quickly or become easily distracted, making it difficult to stay committed to one path—especially in emotional relationships.
+
+In relationships, they value freedom and independence, which can sometimes create instability. They may be drawn to unconventional partnerships or avoid traditional structures if they feel restricted.
+
+Others may not always understand them, but those who are similar in mindset will recognize their true depth and sensitivity.
+
+Overall, this number represents freedom, intelligence, opportunity, and innovation—but requires discipline, focus, and emotional balance to reach its full potential.`,
+
+
+24: `Those born on the 24th day of any month, often associated with the Pisces degree, carry themes of responsibility, sacrifice, and emotional depth. Their life path often involves situations that require discretion, trust, and, at times, working behind the scenes.
+
+They are energetic and highly responsible individuals. However, it is essential for them to recognize their limits and avoid forcing outcomes that are beyond their current capacity. When driven by stubbornness or emotional reactions, they may push themselves too far, which can lead to unnecessary strain.
+
+For this reason, they are advised to set realistic goals and approach their work with patience. Success is achievable, but it comes through persistence and steady effort rather than shortcuts.
+
+Their path is rarely easy. They often face obstacles, delays, or responsibilities that feel imposed upon them. However, these challenges are not without purpose—they are meant to build strength, discipline, and resilience, ultimately leading to greater rewards.
+
+They are expected to develop emotional strength, seriousness, and the ability to support others. Many of them are naturally trustworthy and capable of keeping confidences, making them reliable individuals in both personal and professional relationships.
+
+In emotional life, they may receive support or benefits through partners or authority figures. However, jealousy and emotional intensity can become challenges if not properly managed.
+
+Family life may bring pressure, obligations, or complex dynamics. At times, they may feel burdened by responsibilities connected to family members or circumstances beyond their control.
+
+They must work on reducing stubbornness and avoiding the need to impose their views on others. They tend to remember everything deeply, which can lead to holding onto past grievances if not consciously released.
+
+Strengthening their psychological stability and self-control is essential, especially during more difficult periods when emotions intensify.
+
+They may also encounter situations in life that feel unfair, particularly in material or financial matters. These experiences require acceptance, awareness, and careful decision-making.
+
+Because of this, they are advised to act with honesty and integrity in all situations. Avoiding questionable actions or manipulation is crucial, as such behavior can lead to long-term consequences affecting their personal life and relationships.
+
+Overall, this number represents responsibility, emotional depth, endurance, and growth through challenges—but requires self-control, patience, and ethical awareness to reach stability and fulfillment.`,
+
+
+25: `Those born on the 25th day of any month, associated with the Aries degree, carry strong, direct, and dynamic energy. They are fast, expressive, open, and emotionally reactive, with a tendency toward intensity in both behavior and life experiences.
+
+Those specifically born on the 25th day often present themselves as quiet, reserved, or even withdrawn. They can appear mysterious, both to others and themselves. Many of them are deeply emotional, intuitive, and spiritually inclined.
+
+Their life path often includes emotional disappointments, especially in love, frequently connected to trust or loyalty issues. These experiences shape their inner world and contribute to their personal growth.
+
+They are naturally kind, generous, and inclined to help others. However, excessive giving can drain their energy, so it is essential for them to establish clear boundaries and protect their emotional balance.
+
+Early life circumstances may not always be favorable, often due to their dreamy, changeable nature. Many retain a youthful spirit throughout life, which can be both a strength and a challenge.
+
+Communication may sometimes be misunderstood. Even when their intentions are good, others may interpret their words in different ways, creating confusion or distance.
+
+Their true success lies in personal transformation. By learning from their own mistakes and experiences, they gradually build their own system of values—often different from traditional norms, but deeply meaningful to them.
+
+They are shaped by experience more than anything else. While they may repeat certain mistakes, these lessons ultimately contribute to their growth and maturity.
+
+Professionally, they possess strong initiative and creative potential. They are encouraged to develop their talents and work with people, as their abilities tend to gain recognition over time—whether in art, communication, or other fields.
+
+This number represents a connection between intelligence, spirituality, productivity, and continuous personal evolution. They are persistent individuals who rarely give up and tend to complete what they start.
+
+They are advised to move through life steadily and carefully, avoiding unnecessary risks. With patience and effort, they can achieve a stable and secure position over time.
+
+If they do not work on themselves, they may develop tendencies toward self-doubt, criticism, nervousness, or impulsive reactions.
+
+This number is often linked to professions such as writing, philosophy, music, healthcare, trade, fashion, or any field involving creativity and interaction with people.
+
+Their strongest period of development and success often comes between the ages of 25 and 35, especially when combined with consistent effort and personal discipline.
+
+Overall, this number represents inner depth, transformation, creativity, and persistence—but requires emotional balance, self-awareness, and steady progress to reach its full potential.`,
+
+
+26: `Those born on the 26th day of any month, often associated with the Taurus degree, are strongly connected to material enjoyment, comfort, family, and stability. They value security, pleasure, and tangible results, often combining emotional and material needs in their life path.
+
+Those born on the 26th day carry a more complex and demanding vibration. Their life path often teaches them independence, responsibility, and careful decision-making—especially in relationships and partnerships.
+
+They are advised to be extremely cautious when entering partnerships of any kind—whether emotional, financial, or professional. Relying too much on others or investing trust, energy, or resources into the wrong people can lead to disappointment or loss.
+
+For this reason, they achieve the best results when they rely on themselves and build their path independently. External collaborations must be approached with clear judgment and boundaries.
+
+They often carry a strong hedonistic nature—a desire for pleasure, comfort, and material satisfaction. If not balanced, this tendency can turn into excess or unhealthy patterns over time.
+
+They are also highly aware of their image and how they are perceived by others. Maintaining a certain impression—especially in social or family contexts—is important to them.
+
+Financially, they must be very careful with investments and financial decisions. Even small misjudgments can lead to losses if they act impulsively or without proper evaluation.
+
+They are often deeply concerned with the well-being and security of their family and those they care about, which can become a source of pressure or responsibility.
+
+Choosing the right environment and social circle is essential. When surrounded by stable, positive, and reliable people, their life becomes significantly easier and more successful. In negative or unstable environments, they may be drawn into situations that lead to loss or imbalance.
+
+This number is also connected to large-scale endeavors, property, management, and influence. They may feel drawn toward significant projects or positions of responsibility.
+
+However, they must avoid involvement in unclear, secretive, or ethically questionable structures, as these can bring serious consequences.
+
+Although success and stability are possible, they often come later in life—especially when they adopt a disciplined, ethical, and balanced approach. Early life may include challenges that teach them resilience and self-reliance.
+
+They should be aware that external influences—especially from close relationships—can strongly affect their life direction. Maintaining independence is therefore essential.
+
+Despite their ambitions, some may struggle with consistency or motivation. Learning discipline and persistence is key to achieving the material security they desire.
+
+Overall, this number represents material ambition, responsibility, independence, and life lessons through experience—but requires strong judgment, self-control, and the right environment to reach long-term success.`,
+
+
+27: `Those born on the 27th day of any month, often associated with the Gemini degree, are connected to movement, communication, learning, and constant mental activity. They possess a restless spirit and are rarely still—always engaged in something, physically or mentally.
+
+They often live in extremes. Their life path can include emotional fluctuations, changes, and periods of instability, especially in earlier stages. Many of them, particularly women, become independent at a young age—either financially or through early life responsibilities.
+
+Their life journey is marked by ups and downs, but their true success tends to develop later—often around the age of 40—provided they have worked on themselves and maintained persistence.
+
+They may appear confident, distant, or even uninterested on the surface, but beneath that exterior lies a deeply emotional and sensitive nature.
+
+They are advised not to delay action. Procrastination can cost them important opportunities. Life will bring them various experiences and challenges, some of which may feel beyond their control. Sudden changes and unexpected turns are part of their path.
+
+Because of this, they must learn to recognize opportunities and act decisively. Consistency and persistence are essential—otherwise, they risk missing important chances for growth.
+
+They should be very careful in choosing the people around them. Emotional attachment can make them vulnerable to manipulation or exploitation, sometimes even by those closest to them.
+
+They are naturally drawn to groups, communities, and social interaction, but at the same time they require personal space and emotional balance. Without this, they may feel mentally overwhelmed.
+
+They are highly intelligent, intuitive, and perceptive individuals, though often misunderstood by others. Their inner world is complex, combining strong emotions with deep analytical thinking.
+
+They possess initiative, creativity, and strong planning abilities. When they operate from a balanced state, they can be kind, supportive, responsible, and capable of leading others.
+
+However, due to emotional intensity, they may sometimes react impulsively, especially under stress. Nervous tension and emotional imbalance can affect their relationships—both personal and professional.
+
+They are advised to maintain a positive, constructive mindset, to build independence, and to develop confidence in their own decisions.
+
+This number carries strong intellectual and creative potential, often connected to fields such as research, communication, medicine, sports, or creative and analytical professions.
+
+Continuous learning is essential for them. Expanding knowledge is one of their main life purposes.
+
+When balanced, they can become highly successful, respected, and even influential individuals. However, if surrounded by the wrong environment or influenced by negative patterns, they may struggle with poor decisions and instability.
+
+Overall, this number represents intelligence, intuition, movement, and evolution—but requires focus, emotional balance, and the right environment to achieve lasting success.`,
+
+
+28: `Those born on the 28th day of any month, often associated with the Cancer degree, are deeply connected to home, family, and emotional roots. Despite a tendency to change environments or move frequently, they often return to their origins—physically or emotionally—sooner or later.
+
+They possess an intense, active, and sometimes explosive inner nature. These individuals carry strong willpower and a powerful inner drive, but they must learn to control their impulses, passions, and reactions.
+
+If they work on themselves—developing patience, forgiveness, and emotional balance—this will bring significant rewards over time, especially in career and relationships. In such cases, they have strong potential for leadership roles, though they must act carefully, as even small mistakes can carry serious consequences.
+
+Trust is one of their key life challenges. They have the ability to influence others and gain trust easily, but they must be extremely cautious about whom they trust in return, as they are prone to misjudgment in this area.
+
+Life will present them with numerous challenges, obstacles, and even opposition from others. Because of this, they must learn to overcome difficulties through wisdom, strategy, and diplomacy rather than force.
+
+They are advised to be cautious when dealing with legal matters, as this area may bring complications or unexpected losses. However, paradoxically, they may also possess strong potential for success in legal or system-based professions, where laws, structure, and authority are involved.
+
+They are naturally innovative and often generate original ideas. In business, they may achieve better results through cooperation with the right, trustworthy partner, although many of them prefer to work independently due to a strong sense of self-reliance and difficulty with compromise.
+
+This number is strongly connected to large investments and ambitious ventures, but only when decisions are made carefully and with proper evaluation. In modern times, it carries a strong drive toward power, influence, status, and financial success.
+
+However, they must never trust people impulsively. Poor judgment in relationships—both personal and professional—can lead to significant losses.
+
+Their life path is not one of ease. Success is possible, but it comes through experience, challenges, and lessons that must be faced directly. It is important for them to resolve issues early, rather than allowing problems to grow over time.
+
+If they develop arrogance or believe themselves to be above others, they risk losing relationships, support systems, and even material stability. Balance is essential.
+
+When aligned properly, this number can lead to significant success, authority, and influence. It represents strong individual power and the ability to reach high positions in society.
+
+Emotionally, however, this number carries challenges. It is associated with separation, conflicts, breakups, and instability in relationships. It may manifest as emotional division, internal conflict, or difficulties in maintaining long-term partnerships.
+
+For this reason, emotional maturity, patience, and conscious relationship building are critical for long-term stability and fulfillment.`,
+
+29: `Those born on the 29th day of any month, often associated with the Leo degree, are linked to movement, communication, travel, education, and dynamic interaction with people. On a psychological level, remaining in one place for too long does not suit them—they need change, motion, and stimulation.
+
+They are often considered highly intuitive individuals, sometimes even possessing strong extrasensory perception. Their nature tends to operate in extremes—they are either fully committed to something or connected to endings, closures, and transformations.
+
+Emotionally, this number does not carry particularly stable vibrations. Relationships can be complex, often marked by misunderstandings, illusions, deception, or disappointment. Because of this, they must be extremely careful when choosing partners, especially for long-term or marital commitments. They may encounter infidelity, false friendships, or emotionally confusing situations, which is why discernment is essential.
+
+One of their main challenges is psychological instability or inner tension. Many tend to withdraw into themselves, hiding emotions and internal struggles. However, excessive isolation can negatively impact their mental state. They benefit from controlled solitude—taking time alone to reset—while still maintaining connection with the outside world.
+
+This is a deeply sensitive and complex emotional structure. They have the ability to either channel their inner intensity into destructive habits or elevate it through spirituality, self-awareness, and personal growth. Their path largely depends on which direction they choose.
+
+Despite emotional challenges, this number carries strong potential for high social status and influence. However, success is often accompanied by periods of loneliness or emotional distance.
+
+Professionally, number 29 is strongly connected to all forms of art, creativity, and expression. These individuals can have a magnetic influence on others, especially if they develop their natural talents. They often attract attention, followers, or admirers—sometimes without even trying.
+
+They possess a rare ability to deeply understand other people’s emotions and inner states. This empathy allows them to connect on a profound level, making them impactful in any field involving human interaction.
+
+With proper education or self-development, they can rise to prominent positions and become highly respected, even on a global level. However, early life may bring uncertainty, wrong choices, and emotional or practical setbacks.
+
+Their personality is complex—they may swing between being overly adaptable and excessively rigid. Finding balance is crucial for their long-term stability and success.
+
+Throughout life, they will face strong temptations, especially from unhealthy environments or destructive influences. Their core life task is to develop discipline, avoid extremes, and find a stable middle path.
+
+The environment they choose—especially in youth—plays a decisive role in shaping their destiny. Surrounded by the right people, they can achieve remarkable success. In the wrong environment, they risk falling into patterns that lead to dissatisfaction and inner conflict.`,
+
+
+30: `Those born on the 30th day of any month often begin life from modest or challenging circumstances. Their early path may be marked by struggle, but over time they hold strong potential to achieve significant success—both materially and intellectually. However, this path can also go in the opposite direction, leading to instability or lack of development, depending entirely on personal choices and effort.
+
+They are natural travelers, often drawn to movement, foreign countries, and new experiences. Life may bring many opportunities connected to travel or living abroad, which can play a key role in their financial and personal growth.
+
+Their ambitions are high, and their potential is directly tied to their own discipline and persistence. Success does not come easily—they must invest effort, time, and focus to fully express their abilities. It is especially important for them to define their life direction early, ideally by their early 30s, as delays in this process can lead to confusion, insecurity, and prolonged instability.
+
+Despite appearances, their achievements are rarely the result of luck. Others may perceive their success as effortless, but behind it lies persistence and personal struggle.
+
+One of their main weaknesses is inconsistency—starting many things but failing to complete them. Because of this, discipline and follow-through are essential for long-term success. Without structure, they may drift into overthinking or develop a purely theoretical approach to life without real results.
+
+They often develop a unique personal philosophy shaped by early life experiences. While this gives them depth, it can also make them resistant to advice or different perspectives. Their direct communication style may sometimes be misunderstood by others.
+
+Professionally, they can thrive in environments that combine structure with creativity—such as public institutions or roles that require talent, originality, and communication skills.
+
+In their negative expression, they may show traits such as selfishness (ranging from extreme self-focus to excessive generosity), rigidity in beliefs, dominance, obsession, lack of consistency, and difficulty cooperating with others.
+
+Emotionally, partners can have a strong influence on their life—either as a source of growth or instability. Relationships play a significant role in shaping their overall direction.
+
+Financially, they often have opportunities to earn from multiple sources, supported by their optimistic outlook and adaptability.
+
+They are naturally creative, observant, and capable of handling multiple tasks at once—especially when they are engaged in something that genuinely interests them. Otherwise, they may lack motivation and perform only at a minimal level.
+
+At their core, they strive for progress, comfort, and a stable, fulfilling life. However, if they choose destructive habits or unethical paths, they risk serious consequences. Their advantage is resilience—they often find a way to recover and move forward.
+
+They are strongly connected to family, often guided more by emotion than logic, and tend to seek pleasure, comfort, and enjoyment in life. Finding balance between discipline and enjoyment is key to their long-term success and stability.`,
+
+
+31: `Those born on the 31st day of any month carry strong potential for authority, recognition, and support from influential figures. They are highly practical, grounded, and realistic individuals. However, they must be careful not to overestimate their abilities or let ego drive their decisions, as impulsive actions can lead to serious consequences—especially in relation to authority or institutional structures.
+
+This number is strongly connected to material ambition and the pursuit of a comfortable life. Many highly successful individuals, including those with great wealth, are associated with this vibration. However, shortcuts are strongly discouraged—success must be built through discipline, patience, and consistent effort.
+
+They are natural organizers with exceptional leadership potential. They prefer independence and do not tolerate interference, especially in their personal life, relationships, or career decisions. Despite this strength, they may often feel misunderstood, isolated, or emotionally distant, as they tend to live in their own internal world, making it difficult for others to fully understand them.
+
+A recurring challenge in their life is dealing with unreliable people—false friends, hidden enemies, or deceptive partners. Even close individuals may struggle to understand their vision and intentions. Because of this, they may experience periods of loneliness, emotional heaviness, or inner dissatisfaction.
+
+Many of them possess a rebellious nature, often driven by a strong sense of justice. They may challenge systems, oppose authority, or stand for ideas that are not widely accepted. In its negative form, this can lead to resistance, conflict, social rejection, or unprofessional behavior.
+
+If not balanced, their traits may manifest as isolation, stubbornness, dominance, or even aggressive tendencies. However, when they develop self-control, emotional awareness, and persistence, they can become exceptionally strong and respected leaders.
+
+They are drawn to modern ideas, innovation, and progress, often rejecting outdated systems or traditional limitations. However, in their pursuit of justice, they must ensure that their methods remain ethical and constructive.
+
+These individuals are hardworking, but their path often requires significant effort before recognition is achieved. Their uniqueness sets them apart from others, which can bring both success and challenges—especially in the form of sudden life changes or shifts in direction.
+
+Relationships require special attention. Lack of harmony in social connections can easily extend into family life, so it is important for them to develop patience, tolerance, and emotional understanding toward those close to them.
+
+They possess strong creative potential and original ideas. Their success depends on how well they channel these qualities through practical action, responsibility, and consistency.
+
+The key to their success lies in balance—remaining grounded, disciplined, and emotionally aware, while not taking every obstacle or difficulty too personally. When aligned, they can reach high social status, influence, and long-term stability.`,
+
+  };
+
+   let text = texts[day] || "Coming soon...";
+
+  let el = document.getElementById("spiritDetailText");
+
+  el.innerText = "DAY " + day + "\n\n" + text;
+
+  showTab("spiritDetail");
+}
+
 </script>
 
 
@@ -1955,8 +3066,10 @@ window.onload = function(){
     <div>IT Research & Development</div>
     <br>
     <div>Concept, design and realization by our team.</div>
-    <div>© 2025 G-Lab – All rights reserved.</div>
+    <div>© 2025 G-Lab – Dragan Milošević</div>
+    <div><b>All rights reserved.</b></div>
     <div><b>Beta Version – Not a Final Release</b></div>
+    
   </div>
 
 </div>
