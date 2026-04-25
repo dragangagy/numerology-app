@@ -7,6 +7,63 @@
 
 <style>
 
+  /* osnovni centar */
+.store-links div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1/1;
+  background: #0f172a;
+}
+
+/* veličine po slici */
+.logo1 { width: 80%; }
+.logo2 { width: 75%; }
+.logo3 { width: 70%; }
+.logo4 { width: 85%; }
+.logo5 { width: 65%; }
+.logo6 { width: 60%; }
+
+/* 🔒 coming soon efekat */
+.coming {
+  position: relative;
+  opacity: 0.4;
+  filter: grayscale(100%);
+  pointer-events: none;
+}
+
+/* sticker */
+.coming::after {
+  content: "COMING SOON...";
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-20deg);
+
+  width: 120%;
+  text-align: center;
+
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 2px;
+
+  /* 🔥 PRAVI GOLD */
+  color: #FFD700;
+
+  background: rgba(0,0,0,0.9);
+  padding: 10px 0;
+
+  /* 🔥 JAK GOLD GLOW */
+  text-shadow:
+    0 0 5px #FFD700,
+    0 0 10px #FFD700,
+    0 0 20px #FFD700,
+    0 0 40px rgba(255,215,0,1);
+
+  z-index: 999;
+}
+
   .store-links {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -941,7 +998,7 @@ onclick="window.location.href='free.pdf'">
     <img src="images/link1.jpg">
   </div>
 
-  <div onclick="openLink('link2')">
+  <div class="coming">
     <img src="images/link2.jpg">
   </div>
 
@@ -949,15 +1006,15 @@ onclick="window.location.href='free.pdf'">
     <img src="images/link3.jpg">
   </div>
 
-  <div onclick="openLink('link4')">
+ <div class="coming">
     <img src="images/link4.jpg">
   </div>
 
-  <div onclick="openLink('link5')">
+  <div class="coming">
     <img src="images/link5.jpg">
   </div>
 
-  <div onclick="openLink('link6')">
+  <div class="coming">
     <img src="images/link6.jpg">
   </div>
 
@@ -1060,7 +1117,7 @@ onclick="window.location.href='free.pdf'">
 function openLink(type){
 
   let links = {
-    link1: "https://example.com/1",
+    link1: "https://leanpub.com/howtodiscoverhistype-s0",
     link2: "https://example.com/2",
     link3: "https://example.com/3",
     link4: "https://example.com/4",
