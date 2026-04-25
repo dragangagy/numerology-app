@@ -99,20 +99,25 @@ body.detail-active .title {
 
 
 .back-arrow {
-     display: block;
-  text-align: left;
-  width: 100%;
-    font-size: 22px;              /* veće */
-    color: #38bdf8;               /* plava */
-    font-weight: bold;
-    cursor: pointer;
-    
-    text-shadow:
-        0 0 5px #3b82f6,
-        0 0 10px #3b82f6,
-        0 0 20px #60a5fa;         /* glow efekat */
+  position: fixed;
+  top: 15px;
+  left: 15px;
 
-    transition: 0.3s;
+  font-size: 22px;
+  color: #38bdf8;
+  cursor: pointer;
+
+  z-index: 99999;
+
+  text-shadow:
+    0 0 6px #38bdf8,
+    0 0 12px rgba(56,189,248,0.7);
+}
+
+#spiritDetail,
+#detail,
+#about {
+  padding-top: 50px;
 }
 
 .back-arrow:hover {
@@ -177,10 +182,14 @@ body {
   background: transparent;
   border: none;
   outline: none;
+
   font-size: 18px;
-  padding: 12px;
+  height: 50px;           /* 🔥 fiksna visina */
+  line-height: 50px;      /* 🔥 vertikalni centar */
+
   color: white;
   text-align: center;
+  padding: 0;             /* 🔥 uklanja pomeranje */
 }
 
 .analyze-btn {
@@ -416,7 +425,7 @@ body {
   background: #0f172a;
   border-top: 1px solid #334155;
   padding: 10px 5px;
-  display: flex;
+  display: none; /* 🔥 BITNO */
   align-items: center;
   justify-content: center;
   gap: 15px;
@@ -570,6 +579,17 @@ body {
     <input type="text" id="input" placeholder="DD.MM.YYYY"
 onkeypress="if(event.key === 'Enter'){ generate(); }">
   </div>
+
+<div style="
+  margin-top:6px;
+  font-size:12px;
+  color:white;
+  opacity:0.8;
+  text-shadow:
+    0 0 6px rgba(255,255,255,0.5);
+">
+  (enter your date of birth)
+</div>
 
   <button class="analyze-btn" onclick="generate()">ANALYZE</button>
 
@@ -749,43 +769,30 @@ For example, being born on the 29th carries a different meaning depending on whe
   </div>
 
   <!-- 🔥 NOVI INPUT -->
-  <div class="input-wrap" style="margin-top:20px;">
-  <input type="text" id="analysisInput" placeholder="DD.MM.YYYY"
-onkeypress="if(event.key === 'Enter'){ calculateDifference(); }">
+<div class="input-wrap" style="margin-top:20px;">
+   <input type="text" id="analysisInput" placeholder="DD.MM.YYYY"
+   onkeypress="if(event.key === 'Enter'){ calculateDifference(); }">
 </div>
 
 <button class="analyze-btn" onclick="calculateDifference()">CALCULATE</button>
-
-  <div class="analysis-box" id="analysisText"></div>
-
+   <div class="analysis-box" id="analysisText"></div>
 </div>
 
  <!-- 🔥 INVISIBLE TAB -->
 
  <div id="spiritDetail" class="section">
-
-  <div class="back-arrow" onclick="showTab('spirit')">❮ BACK</div>
-
-  <div id="spiritDetailText" style="margin-top:20px; text-align:left;"></div>
-
+   <div class="back-arrow" onclick="goBack()">❮ BACK</div>
+   <div id="spiritDetailText" style="margin-top:20px; text-align:left;"></div>
 </div>
-
 
 <div id="detail" class="section">
     <div class="back-arrow" onclick="goBack()">❮ BACK</div>
-
-
-  <div id="detailText" style="margin-top:20px;"></div>
-
-
+    <div id="detailText" style="margin-top:20px;"></div>
 </div>
 
 <div id="about" class="section">
-
   <div style="padding:20px; text-align:left; line-height:1.6;">
-
     <h3 style="color:#38bdf8; text-align:center;">ABOUT AUTHORS</h3>
-
     <p style="line-height:1.6; text-align:left; white-space:pre-line;">
 
 Suzy Q & G Lab Research is not built around personalities.
@@ -825,13 +832,11 @@ Understand the number — understand the man.
 
 
 Suzy Q & G Lab Research
-
 </p>
 
-  </div>
 
-  <button onclick="goBack()" class="back-btn">BACK</button>
-
+</div>
+  <div class="back-arrow" onclick="goBack()">❮ BACK</div>
 </div>
 
 
@@ -1023,6 +1028,8 @@ onclick="window.location.href='free.pdf'">
 
 
 <script>
+
+
  //ASPEKT//
    function loadAspectYears(){
 
@@ -1075,6 +1082,11 @@ onclick="window.location.href='free.pdf'">
 
   markAspectInPyramid(age);
 
+}
+
+function closeAspectDetail(){
+  document.body.classList.remove("detail-active");
+  showTab("pyramid");
 }
 
 function markAspectInPyramid(steps){
@@ -1439,6 +1451,11 @@ function goBack(){
   showTab("home");
 }
 
+function closeSpiritDetail(){
+  document.body.classList.remove("detail-active");
+  showTab("spirit");
+}
+
 function playStoreVideo(){
 
 
@@ -1507,6 +1524,12 @@ if(id === "pyramid"){
 
 if(id === "spirit"){
   loadSpirit();
+}
+
+// 🔥 FOOTER CONTROL (SAMO HOME)
+let footer = document.querySelector(".footer");
+if(footer){
+  footer.style.display = "none";
 }
 
 }
@@ -1786,6 +1809,12 @@ let intro = document.getElementById("introContainer");
 if(intro){
   intro.style.display = "none";
 }
+
+// 🔥 SAKRIJ FOOTER ODMAH
+  let footer = document.querySelector(".footer");
+  if(footer){
+    footer.style.display = "none";
+  }
 
   let inputVal=document.getElementById("input").value;
   // 🔥 UBACI OVDE
@@ -2210,6 +2239,8 @@ function showSpiritNumber(day){
 }
 
 function openSpiritDetail(day){
+
+  document.body.classList.add("detail-active"); // 👈 OVDE IDE
 
   let texts = {
 
@@ -3055,6 +3086,17 @@ The key to their success lies in balance—remaining grounded, disciplined, and 
 
   showTab("spiritDetail");
 }
+
+
+
+
+window.addEventListener("DOMContentLoaded", () => {
+  let footer = document.querySelector(".footer");
+
+  if(footer){
+    footer.style.display = "flex"; // ✅ vidi se na startu
+  }
+});
 
 </script>
 
