@@ -262,28 +262,28 @@ body {
   margin: 0 auto;
   background: #1e293b;
   border-radius: 14px;
-  padding: 5px;
+  padding: 2px;
 }
 
 .input-wrap input {
-  width: 50%;
+  width: 100%;            /* 🔥 mora 100% */
   background: transparent;
   border: none;
   outline: none;
 
-  font-size: 18px;
-  height: 50px;           /* 🔥 fiksna visina */
-  line-height: 50px;      /* 🔥 vertikalni centar */
+  font-size: 20px;        /* malo smanjeno */
+  height: 30px;           /* malo niže */
+  line-height: 30px;
 
   color: white;
   text-align: center;
-  padding: 0;             /* 🔥 uklanja pomeranje */
+  padding: 0;
 }
 
 .analyze-btn {
   width: 90%;
-  padding: 10px;
-  margin-top: 15px;
+  padding: 5px;
+  margin-top: 10px;
   border-radius: 14px;
   border: none;
   background: linear-gradient(135deg, #38bdf8, #0ea5e9);
@@ -840,29 +840,39 @@ For example, being born on the 29th carries a different meaning depending on whe
 </div>
 
 <!-- ANALYSIS -->
+
+
+
 <div id="analysis" class="section">
 
-  <div class="analysis-box">
-    <h3 style="color:#38bdf8;">PYRAMID</h3>
-    <div id="analysisPyramid"></div>
-    <div style="
-  margin-top:10px;
-  font-size:12px;
-  color:white;
-  opacity:0.8;
-">
-  (Calculate specific code for day, month or year)
-</div>
+  <!-- 🔝 INPUT -->
+  <div class="input-wrap" style="margin-top:20px;">
+    <input type="text" id="analysisInput" placeholder="DD.MM.YYYY"
+    onkeypress="if(event.key === 'Enter'){ calculateDifference(); }">
   </div>
 
-  <!-- 🔥 NOVI INPUT -->
-<div class="input-wrap" style="margin-top:20px;">
-   <input type="text" id="analysisInput" placeholder="DD.MM.YYYY"
-   onkeypress="if(event.key === 'Enter'){ calculateDifference(); }">
-</div>
+  <button class="analyze-btn" onclick="calculateDifference()">CALCULATE</button>
 
-<button class="analyze-btn" onclick="calculateDifference()">CALCULATE</button>
-   <div class="analysis-box" id="analysisText"></div>
+  <!-- 🔽 PIRAMIDA -->
+  <div class="analysis-box">
+    <h3 style="color:#38bdf8;">PYRAMID</h3>
+<div style="
+      margin-top:10px;
+      margin-bottom: 15px;
+      font-size:12px;
+      color:white;
+      opacity:0.8;
+    ">
+      (Calculate specific code for day, month or year)
+    </div>
+    <div id="analysisPyramid"></div>
+
+    
+  </div>
+
+  <!-- 🔻 TIME DIFFERENCE NA KRAJU -->
+  <div class="analysis-box" id="analysisText" style="margin-top:20px;"></div>
+
 </div>
 
  <!-- 🔥 INVISIBLE TAB -->
@@ -2026,7 +2036,7 @@ function generateFromAnalysis(){
 
   codesPyramid.innerHTML="";
 
-  let labels=["Life Path","Core Essence","Marriage","Children","Connections","Pyramidal Code","Pyramidal Code"];
+  let labels=["Life Path","Core Essence","Marriage","Children","Connections","Pyramidal Code",""];
 
   rows.slice(1).forEach((r,i)=>{
     let line=document.createElement("div");
