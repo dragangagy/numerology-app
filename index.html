@@ -95,21 +95,64 @@
   display: block;
 }
 
-.contact-item {
-  width: 200px;
-  padding: 12px;
-  background: #1e293b;
-  border-radius: 10px;
-  text-align: center;
-  cursor: pointer;
-  transition: 0.3s;
-
-  box-shadow: 0 0 10px rgba(56,189,248,0.4);
+.contact-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
 }
 
-.contact-item:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px rgba(56,189,248,0.8);
+.contact-icons {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.contact-icons img {
+  width: 40px;
+  height: 40px;
+  transition: 0.3s;
+}
+
+.contact-icons img:hover {
+  transform: scale(1.2);
+}
+
+.contact-buttons {
+  display: flex;
+  width: 220px;
+  gap: 10px;
+}
+
+.contact-buttons .btn {
+  flex: 1;
+  text-align: center;
+  padding: 10px 0;
+  border: 1px solid #f6cb71;
+  color: #f6cb71;
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+.contact-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;            /* manji razmak */
+  margin-top: 25px;
+  color: #94a3b8;
+  font-size: 10px;     /* manji tekst */
+  text-align: left;
+  opacity: 0.85;
+}
+
+.footer-logo {
+  width: 40px;         /* manji logo */
+  height: auto;
+}
+
+.footer-text {
+  line-height: 1.2;    /* zbijen tekst */
 }
 
     .seasonBtn {
@@ -474,8 +517,8 @@ body {
 }
 
 .analysis-box {
-  margin-top:20px;
-  padding:10px;
+  margin-top:10px;
+  padding:5px;
   background:#1e293b;
   border-radius:10px;
 }
@@ -758,7 +801,7 @@ For example, being born on the 29th carries a different meaning depending on whe
   <div id="calendar-controls" style="margin-top:20px; text-align:center;">
 
   <div style="
-    margin-bottom:5px;
+    margin-bottom:15px;
     font-size:11px;
     letter-spacing:2px;
     color:#38bdf8;
@@ -821,6 +864,18 @@ For example, being born on the 29th carries a different meaning depending on whe
   <div id="result"></div>
 </div>
 
+<div id="aspectBottomText" style="
+  margin-top:20px;
+  font-size:12px;
+  color:#38bdf8;
+  opacity:0.8;
+  text-align:center;
+  line-height:1.5;
+">
+  Pyramidal aspects interpret numbers by arranging them into a pyramid structure. Each number (1–9 and 0) carries its own energy, and their combination reveals life phases, changes, and key events over time.
+</div>
+
+
   <div id="result"></div>
 </div>
 
@@ -857,7 +912,7 @@ For example, being born on the 29th carries a different meaning depending on whe
   <div class="analysis-box">
     <h3 style="color:#38bdf8;">PYRAMID</h3>
 <div style="
-      margin-top:10px;
+      margin-top:5px;
       margin-bottom: 15px;
       font-size:12px;
       color:white;
@@ -1082,41 +1137,66 @@ onclick="window.location.href='free.pdf'">
 
 </div>
 
-<!-- contaks -->
-
+<!-- CONTACTS TAB -->
 <div id="contacts" class="section">
 
   <div style="margin-top:20px;">
 
     <h2 style="
-      color:#38bdf8;
+      color:#f6cb71;
       text-align:center;
-      text-shadow:0 0 10px #38bdf8;
+      text-shadow:
+        0 0 10px gold,
+        0 0 20px gold,
+        0 0 30px rgba(255,215,0,0.8);
     ">
       CONTACT
     </h2>
 
-    <div style="
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:15px;
-      margin-top:25px;
-    ">
+    <!-- WRAPPER -->
+    <div class="contact-wrapper">
 
-      <div class="contact-item" onclick="openEmail()">
-        📧 Email
+      <!-- IKONICE -->
+      <div class="contact-icons">
+        <a href="https://www.tiktok.com/@tvojprofil" target="_blank">
+          <img src="images/tiktok.png" alt="TikTok">
+        </a>
+
+        <a href="https://www.instagram.com/tvojprofil" target="_blank">
+          <img src="images/instagram.png" alt="Instagram">
+        </a>
+
+        <a href="https://www.facebook.com/tvojprofil" target="_blank">
+          <img src="images/facebook.png" alt="Facebook">
+        </a>
+
+        <a href="https://x.com/tvojprofil" target="_blank">
+          <img src="images/x.png" alt="X">
+        </a>
       </div>
 
-      <div class="contact-item" onclick="openInsta()">
-        📱 Instagram
-      </div>
-
-      <div class="contact-item" onclick="openSite()">
-        🌐 Website
+      <!-- DUGMAD -->
+      <div class="contact-buttons">
+        <a href="mailto:your@email.com" class="btn">Email</a>
+        <a href="https://www.yoursite.com" target="_blank" class="btn">Website</a>
       </div>
 
     </div>
+
+    <!-- INFO BLOK (nije footer, samo info) -->
+    <div class="contact-info">
+  <img src="images/logo.png" class="footer-logo">
+
+  <div class="footer-text">
+    <div>G-Lab Team</div>
+    <div>IT Research & Development</div>
+    <br>
+    <div>Concept, design and realization by our team.</div>
+    <div>© 2025 G-Lab – Dragan Milošević</div>
+    <div><b>All rights reserved.</b></div>
+    <div><b>Beta Version – Not a Final Release</b></div>
+  </div>
+</div>
 
   </div>
 
@@ -1845,8 +1925,8 @@ if(old) old.remove();
 // napravi novi
 let result = document.createElement("div");
 result.id = "resultBlock";
-result.style.marginTop = "15px";
-result.style.fontSize = "18px";
+result.style.marginTop = "10px";
+result.style.fontSize = "12px";
 
 // YEAR (crveno)
 let yearLine = document.createElement("div");
