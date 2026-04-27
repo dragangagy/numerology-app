@@ -7,6 +7,57 @@
 
 <style>
 
+#contactCollage {
+  position: relative;
+  width: 100%;
+  max-width: 220px;
+  height: 180px; /* malo manji da bude zbijeno */
+  margin: 20px auto;
+}
+
+/* slike */
+.cimg {
+  position: absolute;
+  width: 60px;
+  height: auto;
+  touch-action: none;     /* 🔥 bitno za mobile */
+  cursor: grab;
+  border-radius: 6px; /* 🔥 ispravljeno (ne može -2px) */
+
+  box-shadow:
+    0 10px 20px rgba(0,0,0,0.5),
+    0 0 10px rgba(56,189,248,0.4);
+
+  transition: 0.3s;
+}
+
+.cimg.dragging {
+  cursor: grabbing;
+  z-index: 999;
+  transform: scale(1.1) !important;
+}
+
+/* hover */
+.cimg:hover {
+  transform: scale(1.15) rotate(0deg) !important;
+  z-index: 20;
+}
+
+/* 🔥 STACK RASPORED (preklapanje) */
+
+.c1 { top: 20px; left: 30px; transform: rotate(-12deg); z-index: 1; }
+.c2 { top: 10px; left: 70px; transform: rotate(8deg); z-index: 2; }
+.c3 { top: 25px; left: 110px; transform: rotate(-6deg); z-index: 3; }
+
+.c4 { top: 60px; left: 20px; transform: rotate(10deg); z-index: 4; }
+.c5 { top: 50px; left: 65px; transform: rotate(-4deg); z-index: 5; }
+.c6 { top: 65px; left: 110px; transform: rotate(6deg); z-index: 6; }
+
+.c7 { top: 95px; left: 35px; transform: rotate(-8deg); z-index: 7; }
+.c8 { top: 100px; left: 80px; transform: rotate(12deg); z-index: 8; }
+.c9 { top: 90px; left: 120px; transform: rotate(-10deg); z-index: 9; }
+
+
   /* osnovni centar */
 .store-links div {
   display: flex;
@@ -677,6 +728,34 @@ body {
   font-size: 13px;
 }
 
+/* 🔸 TEKST – ZLATAN */
+.spirit-text {
+  font-size: 14px;
+  color: #f6cb71;
+  opacity: 0.9;
+
+  text-shadow:
+    0 0 5px #FFD700,
+    0 0 10px rgba(255,215,0,0.6);
+}
+
+/* 🔥 BROJ – ZLATAN + PULS */
+.spirit-number {
+  font-size: 32px;
+  font-weight: bold;
+  color: #f6cb71;
+
+  text-shadow:
+    0 0 10px #FFD700,
+    0 0 20px #FFD700,
+    0 0 40px rgba(255,215,0,1);
+
+  animation: goldPulse 1.2s infinite alternate;
+}
+
+
+
+
 </style>
 </head>
 
@@ -790,6 +869,18 @@ For example, being born on the 29th carries a different meaning depending on whe
   <div class="spirit-hint" style="margin-top:10px;">
   Tap the number to reveal<br>
   the meaning of your spiritual number
+</div>
+
+<div id="spiritCodeWrap" style="margin-top:20px; text-align:center;">
+
+  <div class="spirit-text">
+    “Birth degree is a numerological code that shows how you act in real life, based on your birth date.”
+  </div>
+
+  <div id="spiritCode" class="spirit-number">
+    0
+  </div>
+
 </div>
 
 </div>
@@ -1182,6 +1273,21 @@ onclick="window.location.href='free.pdf'">
       </div>
 
     </div>
+
+    <div id="contactCollage">
+
+  <img src="images/s3-b1.png" class="cimg c1">
+  <img src="images/s3-b2.png" class="cimg c2">
+  <img src="images/s3-b3.png" class="cimg c3">
+  <img src="images/s3-b4.png" class="cimg c4">
+  <img src="images/s3-b5.png" class="cimg c5">
+  <img src="images/s3-b6.png" class="cimg c6">
+  <img src="images/s3-b7.png" class="cimg c7">
+  <img src="images/s3-b8.png" class="cimg c8">
+  <img src="images/s3-b9.png" class="cimg c9">
+
+</div>
+
 
     <!-- INFO BLOK (nije footer, samo info) -->
     <div class="contact-info">
@@ -1720,11 +1826,14 @@ if(id === "spirit"){
 
 // 🔥 FOOTER CONTROL (SAMO HOME)
 let footer = document.querySelector(".footer");
-if(footer){
-  footer.style.display = "none";
-}
 
-}
+if(footer){
+  if(id === "home"){
+    footer.style.display = "flex";
+  } else {
+    footer.style.display = "none";
+  }
+}}
 
 function toggleSeason(seasonId, el){
 
@@ -2361,12 +2470,10 @@ window.onload = function(){
   let video = document.getElementById("introVideo");
   if(!video) return;
 
-  // 🔥 probaj autoplay
   let playPromise = video.play();
 
   if(playPromise !== undefined){
     playPromise.catch(() => {
-      // 🔥 fallback ako browser blokira autoplay
       video.controls = true;
     });
   }
@@ -2375,7 +2482,16 @@ window.onload = function(){
     video.pause();
   };
 
+  // 🔥 DODAJ OVO
+  showTab("home");
 };
+  
+
+  video.onended = function(){
+    video.pause();
+  };
+
+
 
 function openEmail(){
   window.location.href = "mailto:your@email.com";
@@ -2428,7 +2544,14 @@ function showSpiritNumber(day){
   el.onclick = function(){
     openSpiritDetail(day);
   };
+  // 🔥 DODAJ OVO (OVO TI FALI)
+  let code = getSpiritualCode(day);
+  document.getElementById("spiritCode").innerText = code;
 }
+
+
+
+
 
 function openSpiritDetail(day){
 
@@ -3279,6 +3402,23 @@ The key to their success lies in balance—remaining grounded, disciplined, and 
   showTab("spiritDetail");
 }
 
+function getSpiritualCode(day){
+  let table = {
+    1:8, 2:6, 3:5, 4:2, 5:1,
+    6:5, 7:6, 8:0, 9:3, 10:4,
+    11:7, 12:9, 13:8, 14:6, 15:5,
+    16:2, 17:1, 18:5, 19:6, 20:0,
+    21:3, 22:4, 23:7, 24:9, 25:8,
+    26:6, 27:5, 28:2, 29:1, 30:0,
+    31:7
+  };
+
+  return table[day] || 0;
+}
+
+let code = getSpiritualCode(day);
+document.getElementById("spiritCode").innerText = code;
+
 
 
 
@@ -3286,9 +3426,73 @@ window.addEventListener("DOMContentLoaded", () => {
   let footer = document.querySelector(".footer");
 
   if(footer){
-    footer.style.display = "flex"; // ✅ vidi se na startu
+    footer.style.display = "none"; // ✅ vidi se na startu
   }
 });
+
+document.addEventListener("DOMContentLoaded", function(){
+  showTab("home");
+});
+
+function enableDrag(){
+
+  let items = document.querySelectorAll(".cimg");
+
+  items.forEach(el => {
+
+    let offsetX = 0;
+    let offsetY = 0;
+    let isDragging = false;
+
+    // START (mouse + touch)
+    function start(e){
+      isDragging = true;
+      el.classList.add("dragging");
+
+      let rect = el.getBoundingClientRect();
+
+      let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+      offsetX = clientX - rect.left;
+      offsetY = clientY - rect.top;
+    }
+
+    // MOVE
+    function move(e){
+      if(!isDragging) return;
+
+      let parent = el.parentElement.getBoundingClientRect();
+
+      let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+      let x = clientX - parent.left - offsetX;
+      let y = clientY - parent.top - offsetY;
+
+      el.style.left = x + "px";
+      el.style.top = y + "px";
+    }
+
+    // END
+    function end(){
+      isDragging = false;
+      el.classList.remove("dragging");
+    }
+
+    // EVENTI
+    el.addEventListener("mousedown", start);
+    document.addEventListener("mousemove", move);
+    document.addEventListener("mouseup", end);
+
+    el.addEventListener("touchstart", start);
+    document.addEventListener("touchmove", move);
+    document.addEventListener("touchend", end);
+  });
+}
+
+// 🔥 pokreni kad se učita
+document.addEventListener("DOMContentLoaded", enableDrag);
 
 </script>
 
