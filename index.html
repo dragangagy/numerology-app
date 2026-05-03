@@ -1096,7 +1096,7 @@ Suzy Q & G Lab Research
 <div class="seasonBtn" onclick="toggleSeason('s1', this)">SEASON 1</div>
 <div class="seasonBtn" onclick="toggleSeason('s2', this)">SEASON 2</div>
 <div class="seasonBtn" onclick="toggleSeason('s3', this)">SEASON 3</div>
-<div class="seasonBtn disabled">SEASON 4</div>
+<div class="seasonBtn" onclick="toggleSeason('s4', this)">SEASON 4</div>
 
 </div>
 
@@ -1207,6 +1207,16 @@ onclick="window.location.href='free.pdf'">
     <div class="grid" id="s3-r2"></div>
     <div class="grid" id="s3-r3"></div>
     <div class="grid" id="s3-r4"></div>
+  </div>
+</div>
+
+<div class="season">
+
+  <div class="season-content" id="s4" style="display:none;">
+    <div class="grid" id="s4-r1"></div>
+    <div class="grid" id="s4-r2"></div>
+    <div class="grid" id="s4-r3"></div>
+    <div class="grid" id="s4-r4"></div>
   </div>
 </div>
 </div>
@@ -1881,11 +1891,12 @@ function showRecommendedBooks(mainNum){
   let container = document.getElementById("recommendedBooks");
   container.innerHTML = "";
 
-  let books = [
-    `s1-b${mainNum}`,
-    `s2-b${mainNum}`,
-    `s3-b${mainNum}`
-  ];
+let books = [
+  `s1-b${mainNum}`,
+  `s2-b${mainNum}`,
+  `s3-b${mainNum}`,
+  `s4-b${mainNum}` // 🔥 OVO FALI
+];
 
   books.forEach(id => {
 
@@ -2309,12 +2320,24 @@ function loadBooks(){
     "s3-b7": "https://www.amazon.com/dp/B0GX34PJPS",
     "s3-b8": "https://www.amazon.com/dp/B0GZ8RY4XP",
     "s3-b9": "https://www.amazon.com/dp/B0GX346J9L",
-    "s3-b10": "UNESI_LINK"
+    "s3-b10": "UNESI_LINK",
+
+    // SEASON 4
+    "s4-b1": "LINK",
+    "s4-b2": "LINK",
+    "s4-b3": "LINK",
+    "s4-b4": "LINK",
+    "s4-b5": "LINK",
+    "s4-b6": "LINK",
+    "s4-b7": "LINK",
+    "s4-b8": "LINK",
+    "s4-b9": "LINK",
+   "s4-b10": "LINK"
   };
 
   let layout = [4,3,2];
 
-  for(let s=1; s<=3; s++){
+  for(let s=1; s<=4; s++){
 
     let bookNum = 1;
 
