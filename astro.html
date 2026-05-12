@@ -1,0 +1,620 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astro Chart</title>
+
+<script src="https://cdn.jsdelivr.net/npm/swisseph-v2@latest/dist/swisseph.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
+
+<style>
+
+body{
+  margin:0;
+  padding:0;
+  background:#0f172a;
+  color:white;
+  font-family:Arial, sans-serif;
+}
+
+.container{
+  width:100%;
+  max-width:900px;
+  margin:0 auto;
+  padding:20px;
+  box-sizing:border-box;
+}
+
+.header{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.title{
+  font-size:28px;
+  color:#FFD700;
+  margin-bottom:10px;
+}
+
+.subtitle{
+  color:#38bdf8;
+  font-size:14px;
+}
+
+.back-btn{
+  position:fixed;
+  top:15px;
+  left:15px;
+  background:#1e293b;
+  color:#38bdf8;
+  border:none;
+  padding:10px 14px;
+  border-radius:10px;
+  cursor:pointer;
+  z-index:999;
+  box-shadow:0 0 10px rgba(56,189,248,0.4);
+}
+
+.card{
+  background:#1e293b;
+  border-radius:16px;
+  padding:20px;
+  margin-top:20px;
+  box-shadow:0 0 20px rgba(56,189,248,0.15);
+}
+
+.section-title{
+  color:#FFD700;
+  font-size:20px;
+  margin-bottom:15px;
+}
+
+.planet-row{
+  display:flex;
+  justify-content:space-between;
+  padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  font-size:14px;
+}
+
+.aspect-row{
+  padding:8px 0;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  font-size:13px;
+}
+
+svg{
+  width:100%;
+  height:auto;
+}
+
+.loading{
+  text-align:center;
+  padding:80px 20px;
+  color:#38bdf8;
+  font-size:18px;
+}
+
+.error{
+  color:#ef4444;
+  text-align:center;
+  margin-top:30px;
+}
+
+@media(max-width:600px){
+
+  .planet-row{
+    flex-direction:column;
+    gap:5px;
+    align-items:flex-start;
+  }
+
+}
+
+</style>
+</head>
+<body>
+
+<button class="back-btn" onclick="goBack()">❮ BACK</button>
+
+<div class="container">
+
+  <div class="header">
+    <div class="title">NATAL CHART</div>
+    <div id="birthInfo" class="subtitle"></div>
+  </div>
+
+  <div id="loading" class="loading">
+    Loading Swiss Ephemeris...
+  </div>
+
+  <div id="app" style="display:none;">
+
+    <div class="card">
+      <div id="chartWheel"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">ASCENDANT</div>
+      <div id="ascendantText"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">PLANETS</div>
+      <div id="planetList"></div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">ASPECTS</div>
+      <div id="aspectList"></div>
+    </div>
+
+  </div>
+
+  <div id="errorBox" class="error"></div>
+
+</div>
+
+<script>
+
+let astroReady = false;
+
+const zodiacSigns = [
+  "Aries",
+  "Taurus",
+  "Gemini",
+  "Cancer",
+  "Leo",
+  "Virgo",
+  "Libra",
+  "Scorpio",
+  "Sagittarius",
+  "Capricorn",
+  "Aquarius",
+  "Pisces"
+];
+
+const zodiacSymbols = [
+  "♈","♉","♊","♋","♌","♍",
+  "♎","♏","♐","♑","♒","♓"
+];
+
+const PLANETS = [
+  { name:"Sun", id:Swe.SE_SUN, symbol:"☉" },
+  { name:"Moon", id:Swe.SE_MOON, symbol:"☽" },
+  { name:"Mercury", id:Swe.SE_MERCURY, symbol:"☿" },
+  { name:"Venus", id:Swe.SE_VENUS, symbol:"♀" },
+  { name:"Mars", id:Swe.SE_MARS, symbol:"♂" },
+  { name:"Jupiter", id:Swe.SE_JUPITER, symbol:"♃" },
+  { name:"Saturn", id:Swe.SE_SATURN, symbol:"♄" },
+  { name:"Uranus", id:Swe.SE_URANUS, symbol:"♅" },
+  { name:"Neptune", id:Swe.SE_NEPTUNE, symbol:"♆" },
+  { name:"Pluto", id:Swe.SE_PLUTO, symbol:"♇" }
+];
+
+function goBack(){
+  history.back();
+}
+
+function getParams(){
+
+  const params = new URLSearchParams(window.location.search);
+
+  return {
+    date: params.get("date"),
+    time: params.get("time"),
+    city: params.get("city")
+  };
+}
+
+function getZodiac(longitude){
+  return zodiacSigns[Math.floor(longitude / 30)];
+}
+
+function getZodiacSymbol(longitude){
+  return zodiacSymbols[Math.floor(longitude / 30)];
+}
+
+function getDegree(longitude){
+  return Math.floor(longitude % 30);
+}
+
+const CITY_TIMEZONES = {
+  "Belgrade":"Europe/Belgrade",
+  "New York":"America/New_York",
+  "Los Angeles":"America/Los_Angeles",
+  "Chicago":"America/Chicago",
+  "London":"Europe/London",
+  "Paris":"Europe/Paris",
+  "Berlin":"Europe/Berlin",
+  "Moscow":"Europe/Moscow",
+  "Tokyo":"Asia/Tokyo",
+  "Dubai":"Asia/Dubai",
+  "Sydney":"Australia/Sydney",
+  "Toronto":"America/Toronto",
+  "Rome":"Europe/Rome",
+  "Madrid":"Europe/Madrid",
+  "Vienna":"Europe/Vienna",
+  "Budapest":"Europe/Budapest",
+  "Athens":"Europe/Athens",
+  "Istanbul":"Europe/Istanbul"
+};
+
+async function getCoordinates(city){
+
+  const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}`;
+
+  const response = await fetch(url, {
+    headers:{
+      "Accept":"application/json"
+    }
+  });
+
+  const data = await response.json();
+
+  if(!data.length){
+    throw new Error("City not found");
+  }
+
+  return {
+    lat: parseFloat(data[0].lat),
+    lon: parseFloat(data[0].lon)
+  };
+}
+
+function getJulianDay(year, month, day, hourDecimal){
+
+  return Swe.swe_julday(
+    year,
+    month,
+    day,
+    hourDecimal,
+    Swe.SE_GREG_CAL
+  );
+}
+
+function convertToUTC(year, month, day, hour, minute, timezone){
+
+  const DateTime = luxon.DateTime;
+
+  const local = DateTime.fromObject({
+    year,
+    month,
+    day,
+    hour,
+    minute
+  },{
+    zone: timezone
+  });
+
+  const utc = local.toUTC();
+
+  return {
+    year: utc.year,
+    month: utc.month,
+    day: utc.day,
+    hourDecimal:
+      utc.hour +
+      utc.minute / 60 +
+      utc.second / 3600
+  };
+}
+
+async function calculatePlanet(jd, planetId){
+
+  const flags =
+    Swe.SEFLG_SWIEPH |
+    Swe.SEFLG_SPEED;
+
+  const result = Swe.swe_calc_ut(
+    jd,
+    planetId,
+    flags
+  );
+
+  return {
+    longitude: result.longitude,
+    latitude: result.latitude,
+    speed: result.longitudeSpeed,
+    retrograde: result.longitudeSpeed < 0
+  };
+}
+
+function calculateAspect(a,b){
+
+  let diff = Math.abs(a-b);
+
+  if(diff > 180)
+    diff = 360 - diff;
+
+  if(Math.abs(diff-0)<=8) return "Conjunction";
+  if(Math.abs(diff-60)<=6) return "Sextile";
+  if(Math.abs(diff-90)<=8) return "Square";
+  if(Math.abs(diff-120)<=8) return "Trine";
+  if(Math.abs(diff-180)<=8) return "Opposition";
+
+  return null;
+}
+
+async function initAstro(){
+
+  try{
+
+    await Swe.initSwissEph({
+      locateFile:file=>`https://cdn.jsdelivr.net/npm/swisseph-v2@latest/dist/${file}`
+    });
+
+    astroReady = true;
+
+    startChart();
+
+  }catch(err){
+
+    console.error(err);
+
+    document.getElementById("loading").innerHTML = "Swiss Ephemeris failed to load";
+  }
+}
+
+async function startChart(){
+
+  try{
+
+    const params = getParams();
+
+    if(!params.date || !params.time || !params.city){
+
+      throw new Error("Missing parameters");
+    }
+
+    document.getElementById("birthInfo").innerHTML =
+      `${params.date} • ${params.time} • ${params.city}`;
+
+    const parts = params.date.split(".");
+
+    const day = parseInt(parts[0]);
+    const month = parseInt(parts[1]);
+    const year = parseInt(parts[2]);
+
+    const timeParts = params.time.split(":");
+
+    const hour = parseInt(timeParts[0]);
+    const minute = parseInt(timeParts[1]);
+
+    const coords = await getCoordinates(params.city);
+
+    const timezone =
+      CITY_TIMEZONES[params.city] ||
+      Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    const utc = convertToUTC(
+      year,
+      month,
+      day,
+      hour,
+      minute,
+      timezone
+    );
+
+    const jd = getJulianDay(
+      utc.year,
+      utc.month,
+      utc.day,
+      utc.hourDecimal
+    );
+
+    const houses = Swe.swe_houses(
+      jd,
+      coords.lat,
+      coords.lon,
+      'P'
+    );
+
+    const planets = [];
+
+    for(const p of PLANETS){
+
+      const calc = await calculatePlanet(jd, p.id);
+
+      planets.push({
+        name:p.name,
+        symbol:p.symbol,
+        longitude:calc.longitude,
+        retrograde:calc.retrograde,
+        sign:getZodiac(calc.longitude),
+        signSymbol:getZodiacSymbol(calc.longitude),
+        degree:getDegree(calc.longitude)
+      });
+    }
+
+    renderChart(planets, houses);
+
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("app").style.display = "block";
+
+  }catch(err){
+
+    console.error(err);
+
+    document.getElementById("loading").style.display = "none";
+
+    document.getElementById("errorBox").innerHTML = err.message;
+  }
+}
+
+function renderChart(planets, houses){
+
+  renderWheel(planets);
+  renderAscendant(houses);
+  renderPlanets(planets);
+  renderAspects(planets);
+}
+
+function renderWheel(planets){
+
+  const center = 350;
+  const radius = 270;
+
+  let svg = `
+  <svg viewBox="0 0 700 700">
+
+    <circle
+      cx="350"
+      cy="350"
+      r="310"
+      fill="#0f172a"
+      stroke="#38bdf8"
+      stroke-width="2"
+    />
+  `;
+
+  for(let i=0;i<12;i++){
+
+    const angle = ((i*30)-90) * Math.PI/180;
+
+    const x = center + Math.cos(angle)*radius;
+    const y = center + Math.sin(angle)*radius;
+
+    svg += `
+      <line
+        x1="350"
+        y1="350"
+        x2="${x}"
+        y2="${y}"
+        stroke="#334155"
+        stroke-width="1"
+      />
+    `;
+
+    const signAngle = ((i*30)+15-90) * Math.PI/180;
+
+    const sx = center + Math.cos(signAngle)*290;
+    const sy = center + Math.sin(signAngle)*290;
+
+    svg += `
+      <text
+        x="${sx}"
+        y="${sy}"
+        fill="#FFD700"
+        font-size="24"
+        text-anchor="middle"
+      >
+        ${zodiacSymbols[i]}
+      </text>
+    `;
+  }
+
+  planets.forEach(p=>{
+
+    const angle = (p.longitude-90)*Math.PI/180;
+
+    const x = center + Math.cos(angle)*220;
+    const y = center + Math.sin(angle)*220;
+
+    svg += `
+      <circle
+        cx="${x}"
+        cy="${y}"
+        r="16"
+        fill="#1e293b"
+        stroke="#FFD700"
+        stroke-width="1"
+      />
+
+      <text
+        x="${x}"
+        y="${y+7}"
+        fill="#FFD700"
+        font-size="20"
+        text-anchor="middle"
+      >
+        ${p.symbol}
+      </text>
+    `;
+  });
+
+  svg += `</svg>`;
+
+  document.getElementById("chartWheel").innerHTML = svg;
+}
+
+function renderAscendant(houses){
+
+  const asc = getZodiac(houses.ascendant);
+  const degree = getDegree(houses.ascendant);
+
+  document.getElementById("ascendantText").innerHTML = `
+    <div style="font-size:28px; color:#38bdf8;">
+      ${asc} ${degree}°
+    </div>
+  `;
+}
+
+function renderPlanets(planets){
+
+  let html = "";
+
+  planets.forEach(p=>{
+
+    html += `
+      <div class="planet-row">
+
+        <div>
+          ${p.symbol} ${p.name}
+        </div>
+
+        <div>
+          ${p.signSymbol} ${p.sign} ${p.degree}°
+          ${p.retrograde ? '℞' : ''}
+        </div>
+
+      </div>
+    `;
+  });
+
+  document.getElementById("planetList").innerHTML = html;
+}
+
+function renderAspects(planets){
+
+  let html = "";
+
+  for(let i=0;i<planets.length;i++){
+
+    for(let j=i+1;j<planets.length;j++){
+
+      const aspect = calculateAspect(
+        planets[i].longitude,
+        planets[j].longitude
+      );
+
+      if(aspect){
+
+        html += `
+          <div class="aspect-row">
+            ${planets[i].symbol} ${planets[i].name}
+            —
+            ${planets[j].symbol} ${planets[j].name}
+            :
+            <span style="color:#38bdf8;">
+              ${aspect}
+            </span>
+          </div>
+        `;
+      }
+    }
+  }
+
+  document.getElementById("aspectList").innerHTML = html;
+}
+
+initAstro();
+
+</script>
+
+</body>
+</html>
+
+

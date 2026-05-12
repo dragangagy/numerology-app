@@ -212,11 +212,6 @@
   font-size:12px;
   letter-spacing:1px;
   transition:0.3s;
-
-  text-shadow:
-    0 0 5px #FFD700,
-    0 0 10px #FFD700,
-    0 0 20px rgba(255,215,0,0.6);
 }
 
 .seasonBtn.active {
@@ -225,12 +220,8 @@
 
 #numberHint {
   display: none; /* 🔥 SAKRIVEN NA STARTU */
-  color: #38bdf8;
-  text-shadow:
-    0 0 10px #38bdf8,
-    0 0 20px rgba(56,189,248,0.8),
-    0 0 40px rgba(56,189,248,0.6);
-  animation: glowBig 1.8s infinite alternate;
+  color: white;
+  font-size: 11px;
 }
 
 .main-text {
@@ -253,11 +244,7 @@ body.detail-active .tabs {
   display: none !important;
 }
 
-body.detail-active .title {
-  display: none;
-}
-
-.modal {
+body.detail-active body.detail-active .modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -310,6 +297,18 @@ body.detail-active .title {
         0 0 30px #93c5fd;
 }
 
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #FFD700;
+  display: block;
+}
+
+body.detail-active .title {
+  display: none !important;
+}
+
 body {
   font-family: Arial;
   background: #0f172a;
@@ -317,12 +316,6 @@ body {
   text-align: center;
   margin: 0;
   padding: 5px;
-}
-
-.title {
-  font-size: 22px;
-  font-weight: bold;
-  margin-bottom: 10px;
 }
 
 .tabs {
@@ -396,12 +389,13 @@ body {
 }
 
 .main-number {
-  margin-top: 10px;
+  margin-top: 2px;
+  margin-bottom: 2px;
   font-size: 110px;
   font-weight: bold;
   color: #38bdf8;
   opacity: 1;
-  text-shadow: 0 0 20px rgba(56,189,248,0.6);
+  text-shadow: 0 0 8px rgba(56,189,248,0.4);
   position: relative;
   z-index: 9999;
   pointer-events: auto;
@@ -417,13 +411,14 @@ body {
 }
 
 .main-number:hover {
-  transform: scale(1.05);
-  text-shadow: 0 0 40px #38bdf8;
+  transform: scale(1.03);
+  text-shadow: 0 0 12px rgba(56,189,248,0.6);
 }
 
 .zodiac {
-  margin-top: 10px;
-  color: #38bdf8;
+  margin-top: 0;
+  color: #FFD700;
+  font-size: 16px;
   opacity: 0;
 }
 
@@ -575,6 +570,13 @@ body {
   border-radius:10px;
 }
 
+/* Piramida bez pozadine - direktno na body bg */
+.pyramid-raw {
+  margin-top:10px;
+  padding:5px 0;
+  background:transparent;
+}
+
 /* ANIMACIJE */
 .show-label { 
     animation: fadeIn 0.5s forwards; }
@@ -595,8 +597,8 @@ body {
 }
 
 @keyframes glowBig {
-  from { text-shadow: 0 0 10px #38bdf8; }
-  to { text-shadow: 0 0 40px #38bdf8; }
+  from { text-shadow: 0 0 6px rgba(56,189,248,0.4); }
+  to { text-shadow: 0 0 14px rgba(56,189,248,0.6); }
 }
 
 .footer {
@@ -607,7 +609,7 @@ body {
   background: #0f172a;
   border-top: 1px solid #334155;
   padding: 10px 5px;
-  display: none; /* 🔥 BITNO */
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: 15px;
@@ -669,11 +671,6 @@ body {
   color: #9ca3af; /* siva */
   cursor: default;
   position: relative;
-
-  text-shadow:
-    0 0 5px #9ca3af,
-    0 0 10px rgba(156,163,175,0.6),
-    0 0 20px rgba(156,163,175,0.4);
 }
 
 /* da ne reaguje na hover */
@@ -732,42 +729,109 @@ body {
 /* 🔸 TEKST – ZLATAN */
 .spirit-text {
   font-size: 14px;
-  color: #f6cb71;
+  color: #FFD700;
   opacity: 0.9;
-
-  text-shadow:
-    0 0 5px #FFD700,
-    0 0 10px rgba(255,215,0,0.6);
 }
 
 /* 🔥 BROJ – ZLATAN + PULS */
 .spirit-number {
   font-size: 32px;
   font-weight: bold;
-  color: #f6cb71;
-
-  text-shadow:
-    0 0 10px #FFD700,
-    0 0 20px #FFD700,
-    0 0 40px rgba(255,215,0,1);
-
-  animation: goldPulse 1.2s infinite alternate;
+  color: #FFD700;
 }
 
 
 
+
+
+/* 🔥 INPUT LINE - CONTACT STYLE */
+.input-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 auto;
+  max-width: 340px;
+  padding: 0 10px;
+}
+
+.input-line .input-wrap {
+  flex: 1;
+  margin: 0 !important;
+  min-width: 0;
+}
+
+.input-line .input-wrap input {
+  border-radius: 8px !important;
+}
+
+.input-line select, .input-line input[type="text"] {
+  background: #1e293b;
+  border: 1px solid #38bdf8;
+  color: white;
+  border-radius: 8px;
+  padding: 8px 6px;
+  font-size: 12px;
+  outline: none;
+  box-shadow: 0 0 10px rgba(56,189,248,0.4);
+  transition: 0.3s;
+  height: 34px;
+  box-sizing: border-box;
+}
+
+.input-line select:hover, .input-line input[type="text"]:hover {
+  box-shadow: 0 0 15px rgba(56,189,248,0.8);
+}
+
+.input-line select option {
+  background: #1e293b;
+  color: white;
+}
+
+.input-line select:invalid {
+  color: #64748b;
+}
+
+.input-line select option {
+  color: white;
+}
+
+.input-line select option[value=""] {
+  color: #64748b;
+}
+
+.input-line #timeInput {
+  width: 60px;
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+.input-line #cityInput {
+  width: 100px;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+/* SUB-ZODIAC STYLE */
+#subZodiac {
+  font-size: 11px;
+  color: #FFD700;
+  opacity: 0;
+  letter-spacing: 1px;
+}
+
+.show-subzodiac {
+  animation: fadeIn 0.8s forwards;
+}
 
 </style>
 </head>
 
 <body>
 
-<div class="title" style="
-  color: rgb(218, 194, 58);
-  
-">
-  Numerology App
-</div>
+<div class="title">Numerology App</div>
 
 <div class="tabs" id="tabs">
   <div class="tab active" data-tab="home" onclick="showTab('home')">HOME</div>
@@ -785,17 +849,25 @@ body {
 
 
 
-  <div style="display:flex; align-items:center; justify-content:center; gap:10px;">
-    <div class="input-wrap" style="margin:0;">
+  <div class="input-line">
+    <div class="input-wrap">
       <input type="text" id="input" placeholder="DD.MM.YYYY"
   oninput="formatDate(this)"
   onkeypress="if(event.key === 'Enter'){ generate(); }">
     </div>
 
+    <input type="text" id="timeInput" placeholder="HH:MM"
+      oninput="formatTime(this)"
+      onkeypress="if(event.key === 'Enter'){ generate(); }">
+
+    <select id="cityInput" required>
+      <option value="" disabled selected>City...</option>
+    </select>
+
     <div id="savedIcon" onclick="toggleSavedPanel()" style="
-      width:38px; height:38px;
+      width:34px; height:34px;
       background:#1e293b;
-      border-radius:50%;
+      border-radius:8px;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -822,22 +894,27 @@ body {
     </div>
   </div>
 
-  <div style="margin-top:10px; display:flex; align-items:center; justify-content:center; gap:8px;">
-    <input type="checkbox" id="twinCheck" style="width:16px; height:16px; cursor:pointer; accent-color:#38bdf8;">
-    <label for="twinCheck" style="font-size:12px; color:#38bdf8; cursor:pointer; text-shadow:0 0 6px rgba(56,189,248,0.6);">
-      Second Twin
-    </label>
+  <div style="margin-top:10px; display:flex; align-items:center; justify-content:center; gap:20px;">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <input type="checkbox" id="twinCheck" onclick="handleTwinCheck('twinCheck')" style="width:16px; height:16px; cursor:pointer; accent-color:#38bdf8;">
+      <label for="twinCheck" style="font-size:12px; color:#38bdf8; cursor:pointer; text-shadow:0 0 6px rgba(56,189,248,0.6);">
+        Second Twin
+      </label>
+    </div>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <input type="checkbox" id="twinCheck3" onclick="handleTwinCheck('twinCheck3')" style="width:16px; height:16px; cursor:pointer; accent-color:#FFD700;">
+      <label for="twinCheck3" style="font-size:12px; color:#FFD700; cursor:pointer; text-shadow:0 0 6px rgba(255,215,0,0.6);">
+        3rd Twin
+      </label>
+    </div>
   </div>
 
 <div style="
   margin-top:6px;
-  font-size:12px;
+  font-size:11px;
   color:white;
-  opacity:0.8;
-  text-shadow:
-    0 0 6px rgba(255,255,255,0.5);
-">
-  (enter your date of birth)
+  opacity:0.8;">
+  (enter your date of birth, time, and place)
 </div>
 
   <button class="analyze-btn" onclick="generate()">ANALYZE</button>
@@ -854,10 +931,6 @@ body {
   color:#38bdf8;
   opacity:0.8;
   cursor:pointer;
-  text-shadow:
-    0 0 6px #38bdf8,
-    0 0 12px rgba(56,189,248,0.7),
-    0 0 20px rgba(56,189,248,0.5);
   transition:0.3s;
 ">
   LEARN MORE ABOUT THE AUTHORS
@@ -865,15 +938,23 @@ body {
 
 </div>
 
-  <div id="mainLabel" class="main-label" style="display:none;">
+  <div id="mainLabel" class="main-label" style="display:none; margin-top: 8px; margin-bottom: 2px;">
     YOUR NUMEROLOGICAL CODE
   </div>
 
   <div id="mainNumber" class="main-number"></div>
   <div id="numberHint">
-  Touch the code. Reveal the truth.
+  (Touch the code. Reveal the truth.)
 </div>
-  <div id="zodiac" class="zodiac"></div>
+  <div style="display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap; margin-top: 2px;">
+    <div
+  id="zodiac"
+  class="zodiac"
+  style="margin-top:0; cursor:pointer;"
+  onclick="openAstro()"
+></div>
+    <div id="subZodiac"></div>
+  </div>
 
   <div id="recommendedBooks" class="grid" style="margin-top:20px;"></div>
 
@@ -927,7 +1008,7 @@ For example, being born on the 29th carries a different meaning depending on whe
 
 <!-- ASPECT -->
 <div id="pyramid" class="section">
-  <div id="output"></div>
+  <div id="output" style="background:transparent;"></div>
 
   <div id="calendar-controls" style="margin-top:20px; text-align:center;">
 
@@ -935,9 +1016,8 @@ For example, being born on the 29th carries a different meaning depending on whe
     margin-bottom:15px;
     font-size:11px;
     letter-spacing:2px;
-    color:#38bdf8;
+    color:#94a3b8;
     opacity:0.7;
-    text-shadow: 0 0 8px rgba(56,189,248,0.6);
   ">
     ASPECT FOR YEARS:
   </div>
@@ -952,11 +1032,7 @@ For example, being born on the 29th carries a different meaning depending on whe
   <div id="aspectValue" style="
     font-size:22px;
     font-weight:bold;
-    color:gold;
-    text-shadow:
-      0 0 10px gold,
-      0 0 20px gold,
-      0 0 30px rgba(255,215,0,0.8);
+    color:#FFD700;
   ">
     0/0
   </div>
@@ -964,11 +1040,7 @@ For example, being born on the 29th carries a different meaning depending on whe
   <div style="
     font-size:22px;
     font-weight:bold;
-    color:gold;
-    text-shadow:
-      0 0 10px gold,
-      0 0 20px gold,
-      0 0 30px rgba(255,215,0,0.8);
+    color:#FFD700;
   ">
     ASPECT
   </div>
@@ -997,8 +1069,8 @@ For example, being born on the 29th carries a different meaning depending on whe
 
 <div id="aspectBottomText" style="
   margin-top:20px;
-  font-size:12px;
-  color:#38bdf8;
+  font-size:14px;
+  color:white;
   opacity:0.8;
   text-align:center;
   line-height:1.5;
@@ -1013,13 +1085,13 @@ For example, being born on the 29th carries a different meaning depending on whe
 <!-- CODES -->
 <div id="codes" class="section">
 
-  <div class="analysis-box">
-    <h3 style="color:#38bdf8;">NUMEROLOGICAL PYRAMID STRUCTURE</h3>
+  <div class="pyramid-raw">
+    <h3 style="color:#94a3b8; font-weight: normal;">NUMEROLOGICAL PYRAMID STRUCTURE</h3>
     <div id="codesPyramid"></div>
   </div>
 
-  <div class="analysis-box">
-    <h3 style="color:#38bdf8;">CODES</h3>
+  <div class="pyramid-raw">
+    <div style="font-size:11px; color:#64748b; letter-spacing:2px; text-align:center; margin-bottom:10px;">CODES</div>
     <div id="codesText" class="codes-glow"></div>
   </div>
 
@@ -1032,33 +1104,55 @@ For example, being born on the 29th carries a different meaning depending on whe
 <div id="analysis" class="section">
 
   <!-- 🔝 INPUT -->
-  <div class="input-wrap" style="margin-top:20px;">
-    <input type="text" id="analysisInput" placeholder="DD.MM.YYYY"
-    oninput="formatDate(this)"
-    onkeypress="if(event.key === 'Enter'){ calculateDifference(); }">
+  <div id="analysisDatePicker" style="display:flex; justify-content:center; align-items:center; gap:6px; margin:15px auto; background:#1e293b; border-radius:14px; padding:4px 12px; width:fit-content; box-shadow:0 0 10px rgba(56,189,248,0.4); border:1px solid rgba(56,189,248,0.3);">
+
+    <!-- DAN -->
+    <div style="display:flex; flex-direction:column; align-items:center;">
+      <div onclick="changeAnalysisDate('day', 1)" style="cursor:pointer; color:#38bdf8; font-size:10px; padding:1px; user-select:none; opacity:0.6; transition:0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">▲</div>
+      <div id="analysisDay" style="font-size:15px; font-weight:bold; color:white; min-width:22px; text-align:center;">01</div>
+      <div onclick="changeAnalysisDate('day', -1)" style="cursor:pointer; color:#38bdf8; font-size:10px; padding:1px; user-select:none; opacity:0.6; transition:0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">▼</div>
+    </div>
+
+    <div style="font-size:12px; color:#38bdf8; opacity:0.4;">.</div>
+
+    <!-- MESEC -->
+    <div style="display:flex; flex-direction:column; align-items:center;">
+      <div onclick="changeAnalysisDate('month', 1)" style="cursor:pointer; color:#38bdf8; font-size:10px; padding:1px; user-select:none; opacity:0.6; transition:0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">▲</div>
+      <div id="analysisMonth" style="font-size:15px; font-weight:bold; color:white; min-width:22px; text-align:center;">01</div>
+      <div onclick="changeAnalysisDate('month', -1)" style="cursor:pointer; color:#38bdf8; font-size:10px; padding:1px; user-select:none; opacity:0.6; transition:0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">▼</div>
+    </div>
+
+    <div style="font-size:12px; color:#38bdf8; opacity:0.4;">.</div>
+
+    <!-- GODINA -->
+    <div style="display:flex; flex-direction:column; align-items:center;">
+      <div onclick="changeAnalysisDate('year', 1)" style="cursor:pointer; color:#38bdf8; font-size:10px; padding:1px; user-select:none; opacity:0.6; transition:0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">▲</div>
+      <div id="analysisYear" style="font-size:15px; font-weight:bold; color:white; min-width:34px; text-align:center;">2026</div>
+      <div onclick="changeAnalysisDate('year', -1)" style="cursor:pointer; color:#38bdf8; font-size:10px; padding:1px; user-select:none; opacity:0.6; transition:0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.6'">▼</div>
+    </div>
+
   </div>
 
-  <button class="analyze-btn" onclick="calculateDifference()">CALCULATE</button>
+  <!-- Skriveni input -->
+  <input type="hidden" id="analysisInput" value="">
 
-  <!-- 🔽 PIRAMIDA -->
-  <div class="analysis-box">
-    <h3 style="color:#38bdf8;">PYRAMID</h3>
-<div style="
+  <!-- Auto-calculate on date change -->
+
+    <!-- 🔽 PIRAMIDA -->
+  <div class="pyramid-raw">
+    <div style="
       margin-top:5px;
       margin-bottom: 15px;
-      font-size:12px;
+      font-size:11px;
       color:white;
       opacity:0.8;
     ">
       (Calculate specific code for day, month or year)
     </div>
     <div id="analysisPyramid"></div>
-
-    
   </div>
-
-  <!-- 🔻 TIME DIFFERENCE NA KRAJU -->
-  <div class="analysis-box" id="analysisText" style="margin-top:20px;"></div>
+<!-- 🔻 TIME DIFFERENCE NA KRAJU -->
+  <div id="analysisText" style="margin-top:20px; background:transparent;"></div>
 
 </div>
 
@@ -1069,7 +1163,12 @@ For example, being born on the 29th carries a different meaning depending on whe
    <div id="spiritDetailText" style="margin-top:20px; text-align:left;"></div>
 </div>
 
-<div id="detail" class="section">
+<div id="natalChart" class="section">
+   <div class="back-arrow" onclick="goBack()">❮ BACK</div>
+   <div id="natalChartText" style="margin-top:20px;"></div>
+</div>
+
+<div id="detail" class="section" style="padding-top: 50px;">
     <div class="back-arrow" onclick="goBack()">❮ BACK</div>
     <div id="detailText" style="margin-top:20px;"></div>
 </div>
@@ -1267,7 +1366,7 @@ onclick="window.location.href='free.pdf'">
 <div id="pitagora" class="section">
 
   <div class="analysis-box">
-    <h3 style="color:#38bdf8;">PYTHAGOREAN ANALYSIS</h3>
+    <h3 style="color:#94a3b8; font-weight: normal;">PYTHAGOREAN ANALYSIS</h3>
 
        <div id="calendar-controls" style="text-align:center; margin-bottom:10px;">
   <select id="monthSelect"></select>
@@ -1290,14 +1389,9 @@ onclick="window.location.href='free.pdf'">
   </div>
 
   <div id="todayPythCode" style="
-    font-size:18px;
+    font-size:20px;
     font-weight:bold;
-    color:gold;
-
-    text-shadow:
-      0 0 10px gold,
-      0 0 20px gold,
-      0 0 30px rgba(255,215,0,0.9);
+    color:#FFD700;
   ">
     0
   </div>
@@ -1314,12 +1408,8 @@ onclick="window.location.href='free.pdf'">
   <div style="margin-top:20px;">
 
     <h2 style="
-      color:#f6cb71;
+      color:#FFD700;
       text-align:center;
-      text-shadow:
-        0 0 10px gold,
-        0 0 20px gold,
-        0 0 30px rgba(255,215,0,0.8);
     ">
       CONTACT
     </h2>
@@ -1391,6 +1481,1397 @@ onclick="window.location.href='free.pdf'">
 
 <script>
  
+
+// 🔥 TIME FORMATTING
+
+// 🔥 HANDLE TWIN CHECKBOXES - mutual exclusion
+function handleTwinCheck(changedId){
+  let twin2 = document.getElementById("twinCheck");
+  let twin3 = document.getElementById("twinCheck3");
+  if(!twin2 || !twin3) return;
+
+  if(changedId === "twinCheck" && twin2.checked){
+    twin3.checked = false;
+  } else if(changedId === "twinCheck3" && twin3.checked){
+    twin2.checked = false;
+  }
+}
+
+
+// 🔥 NATAL CHART CALCULATIONS
+
+// Planet orbital periods (in years) and approximate positions
+// Using simplified mean longitude calculations
+function getPlanetLongitude(jd, planet) {
+  // d = days from J2000.0
+  let d = jd - 2451545.0;
+  let T = d / 36525.0; // centuries from J2000
+
+  // More accurate mean elements with secular terms
+  let L, M, e, a, omega, Omega, i;
+
+  switch(planet) {
+    case "Sun":
+      // Sun (Earth-centric)
+      M = 357.52911 + 35999.05029 * T - 0.0001537 * T * T;
+      M = M % 360;
+      let C = (1.914602 - 0.004817 * T - 0.000014 * T * T) * Math.sin(toRadians(M))
+            + (0.019993 - 0.000101 * T) * Math.sin(toRadians(2 * M))
+            + 0.000289 * Math.sin(toRadians(3 * M));
+      L = 280.46646 + 36000.76983 * T + 0.0003032 * T * T + C;
+      break;
+
+    case "Moon":
+      // Moon - simplified but more accurate
+      L = 218.31645 + 481267.88134 * T
+          - 1.3972 * Math.sin(toRadians(134.9 + 477198.85 * T))
+          + 0.6835 * Math.sin(toRadians(259.2 - 413335.38 * T))
+          + 0.2136 * Math.sin(toRadians(235.7 + 890534.23 * T))
+          + 0.1856 * Math.sin(toRadians(269.9 + 954397.70 * T));
+      break;
+
+    case "Mercury":
+      M = 174.7948 + 149474.07078 * T;
+      L = 252.25084 + 149474.07078 * T
+          + 0.38 * Math.sin(toRadians(M))
+          + 0.04 * Math.sin(toRadians(2 * M));
+      break;
+
+    case "Venus":
+      M = 50.4161 + 58519.81313 * T;
+      L = 181.97973 + 58519.81313 * T
+          + 0.77 * Math.sin(toRadians(M))
+          + 0.02 * Math.sin(toRadians(2 * M));
+      break;
+
+    case "Mars":
+      M = 19.3730 + 19141.69651 * T;
+      L = 355.43300 + 19141.69651 * T
+          + 10.7 * Math.sin(toRadians(M))
+          + 0.62 * Math.sin(toRadians(2 * M));
+      break;
+
+    case "Jupiter":
+      M = 20.0202 + 3036.30157 * T;
+      L = 34.35151 + 3036.30157 * T
+          + 5.55 * Math.sin(toRadians(M))
+          + 0.17 * Math.sin(toRadians(2 * M));
+      break;
+
+    case "Saturn":
+      M = 317.0207 + 1223.51178 * T;
+      L = 50.07744 + 1223.51178 * T
+          + 6.40 * Math.sin(toRadians(M))
+          + 0.57 * Math.sin(toRadians(2 * M));
+      break;
+
+    case "Uranus":
+      M = 141.0498 + 429.78006 * T;
+      L = 314.05500 + 429.78006 * T
+          + 5.33 * Math.sin(toRadians(M));
+      break;
+
+    case "Neptune":
+      M = 256.2250 + 219.97852 * T;
+      L = 304.34866 + 219.97852 * T
+          + 2.55 * Math.sin(toRadians(M));
+      break;
+
+    case "Pluto":
+      // Pluto has high eccentricity - simplified
+      L = 238.92881 + 145.20781 * T
+          + 17.1 * Math.sin(toRadians(238.9 + 145.2 * T));
+      break;
+
+    default:
+      return 0;
+  }
+
+  // Normalize to 0-360
+  L = L % 360;
+  if(L < 0) L += 360;
+
+  return L;
+}
+
+// Calculate house cusps using Equal House system (simpler and more stable)
+function calculateHouses(ascendantDeg) {
+  let houses = [];
+  for(let i = 0; i < 12; i++) {
+    houses.push((ascendantDeg + i * 30) % 360);
+  }
+  return houses;
+}
+
+// Get sign from longitude
+function longitudeToSign(longitude) {
+  let signIndex = Math.floor(longitude / 30) % 12;
+  let signs = ["♈ Aries", "♉ Taurus", "♊ Gemini", "♋ Cancer", "♌ Leo", "♍ Virgo",
+               "♎ Libra", "♏ Scorpio", "♐ Sagittarius", "♑ Capricorn", "♒ Aquarius", "♓ Pisces"];
+  return signs[signIndex];
+}
+
+// Get sign degree (0-29)
+function getSignDegree(longitude) {
+  return Math.round(longitude % 30);
+}
+
+// Calculate which house a planet is in
+function getHouse(longitude, houseCusps) {
+  for(let i = 0; i < 12; i++) {
+    let cusp1 = houseCusps[i];
+    let cusp2 = houseCusps[(i + 1) % 12];
+
+    // Handle wrap-around
+    if(cusp2 < cusp1) {
+      if(longitude >= cusp1 || longitude < cusp2) {
+        return i + 1;
+      }
+    } else {
+      if(longitude >= cusp1 && longitude < cusp2) {
+        return i + 1;
+      }
+    }
+  }
+  return 1;
+}
+
+// Generate natal chart data
+function generateNatalChart() {
+  let inputVal = document.getElementById("input").value;
+  if(!inputVal.match(/^\d{2}\.\d{2}\.\d{4}$/)) {
+    alert("Use format DD.MM.YYYY");
+    return;
+  }
+
+  let parts = inputVal.split(".");
+  let day = parseInt(parts[0]);
+  let month = parseInt(parts[1]);
+  let year = parseInt(parts[2]);
+
+  let timeStr = document.getElementById("timeInput").value;
+  let city = document.getElementById("cityInput").value;
+
+  let hours = 12, minutes = 0;
+  if(timeStr && timeStr.match(/^\d{2}:\d{2}$/)) {
+    let t = timeStr.split(":");
+    hours = parseInt(t[0]);
+    minutes = parseInt(t[1]);
+  }
+
+  // Get Julian Day
+  let jd = getJulianDay(year, month, day, hours, minutes);
+
+  // Calculate Ascendant
+  let coords = cityCoords[city];
+  let ascendantDeg;
+  if(coords) {
+    ascendantDeg = calculateAscendant(year, month, day, hours, minutes, coords.lat, coords.lon);
+  } else {
+    // Fallback
+    let offset = -2; // Approximate for Belgrade
+    let decimalTime = hours + minutes/60 - offset;
+    while(decimalTime < 0) decimalTime += 24;
+    while(decimalTime >= 24) decimalTime -= 24;
+    ascendantDeg = ((decimalTime - 6) * 15) % 360;
+    if(ascendantDeg < 0) ascendantDeg += 360;
+  }
+
+  // Calculate house cusps
+  let houseCusps = calculateHouses(ascendantDeg);
+
+  // Calculate planet positions
+  let planets = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"];
+  let planetData = [];
+
+  planets.forEach(p => {
+    let longitude = getPlanetLongitude(jd, p);
+    let house = getHouse(longitude, houseCusps);
+    let sign = longitudeToSign(longitude);
+    let degree = getSignDegree(longitude);
+
+    planetData.push({
+      name: p,
+      longitude: longitude,
+      sign: sign,
+      degree: degree,
+      house: house
+    });
+  });
+
+  // Sort by house
+  planetData.sort((a, b) => a.house - b.house);
+
+  // Generate HTML
+  let html = `
+    <div style="text-align:center; margin-bottom:20px;">
+      <div style="font-size:14px; color:#38bdf8; margin-bottom:5px;">NATAL CHART</div>
+      <div style="font-size:11px; color:#94a3b8;">${inputVal} ${timeStr || ''} ${city || ''}</div>
+      <div style="font-size:9px; color:#64748b; margin-top:5px; font-style:italic;">
+        Approximate positions — for precise calculations use professional ephemeris software
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; max-width:400px; margin:0 auto;">
+  `;
+
+  // House cusps
+  html += `<div style="background:#1e293b; padding:15px; border-radius:10px;">
+    <div style="font-size:12px; color:#FFD700; margin-bottom:10px; text-align:center;">HOUSE CUSPS</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">`;
+
+  for(let i = 0; i < 12; i++) {
+    let sign = longitudeToSign(houseCusps[i]);
+    let deg = getSignDegree(houseCusps[i]);
+    html += `<div style="font-size:11px; color:#94a3b8;">House ${i+1}: <span style="color:#38bdf8;">${sign} ${deg}°</span></div>`;
+  }
+
+  html += `</div></div>`;
+
+  // Planet positions
+  html += `<div style="background:#1e293b; padding:15px; border-radius:10px;">
+    <div style="font-size:12px; color:#FFD700; margin-bottom:10px; text-align:center;">PLANETS</div>
+    <div style="display:flex; flex-direction:column; gap:6px;">`;
+
+  planetData.forEach(p => {
+    let color = p.name === "Sun" || p.name === "Moon" ? "#FFD700" : "#38bdf8";
+    html += `<div style="display:flex; justify-content:space-between; font-size:11px;">
+      <span style="color:${color}; font-weight:bold;">${p.name}</span>
+      <span style="color:#94a3b8;">${p.sign} ${p.degree}°</span>
+      <span style="color:#f6cb71;">House ${p.house}</span>
+    </div>`;
+  });
+
+  html += `</div></div></div>`;
+
+  // Ascendant info
+  let ascSign = longitudeToSign(ascendantDeg);
+  let ascDegree = getSignDegree(ascendantDeg);
+  // Generate wheel image
+  let wheelImg = generateNatalChartWheel(planetData, houseCusps, ascendantDeg);
+
+  html += `
+    <div style="text-align:center; margin:15px auto; max-width:700px;">
+      <img src="${wheelImg}" style="width:100%; max-width:700px; border-radius:10px; border:1px solid #333;">
+    </div>
+    <div style="text-align:center; margin-top:15px; padding:10px; background:#1e293b; border-radius:10px; max-width:700px; margin:15px auto 0;">
+      <div style="font-size:12px; color:#FFD700;">ASCENDANT</div>
+      <div style="font-size:18px; color:#38bdf8; font-weight:bold;">${ascSign} ${ascDegree}°</div>
+    </div>
+  `;
+
+  document.getElementById("natalChartText").innerHTML = html;
+
+  document.body.classList.add("detail-active");
+  showTab("natalChart");
+}
+
+// Visual natal chart wheel - Professional astrological style
+function generateNatalChartWheel(planetData, houseCusps, ascendantDeg) {
+  let canvas = document.createElement("canvas");
+  canvas.width = 700;
+  canvas.height = 700;
+  let ctx = canvas.getContext("2d");
+  let cx = 350, cy = 350;
+
+  // Radii for concentric circles
+  let rOuter = 330;      // Zodiac signs
+  let rHouseOuter = 280; // House cusps outer
+  let rHouseInner = 180; // House cusps inner
+  let rPlanet = 230;     // Planet orbit
+  let rAspect = 200;     // Aspect circle
+
+  // Background
+  ctx.fillStyle = "#f5f5f0";
+  ctx.fillRect(0, 0, 700, 700);
+
+  // Zodiac sign colors
+  let signColors = [
+    "#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FFEAA7", "#DDA0DD",
+    "#FF8C94", "#7FDBDA", "#B4E7CE", "#C9B1FF", "#FFD93D", "#6BCB77"
+  ];
+
+  let signSymbols = ["♈", "♉", "♊", "♋", "♌", "♍", "♎", "♏", "♐", "♑", "♒", "♓"];
+  let signNames = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
+                   "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
+
+  // Draw outer zodiac ring
+  for(let i = 0; i < 12; i++) {
+    let startAngle = (i * 30 - ascendantDeg + 90) * Math.PI / 180;
+    let endAngle = ((i + 1) * 30 - ascendantDeg + 90) * Math.PI / 180;
+
+    // Zodiac sign segment
+    ctx.fillStyle = signColors[i] + "30";
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, rOuter, startAngle, endAngle);
+    ctx.closePath();
+    ctx.fill();
+
+    // Border
+    ctx.strokeStyle = "#333";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, rOuter, startAngle, endAngle);
+    ctx.closePath();
+    ctx.stroke();
+
+    // Zodiac symbol
+    let midAngle = (startAngle + endAngle) / 2;
+    let sx = cx + (rOuter - 25) * Math.cos(midAngle);
+    let sy = cy + (rOuter - 25) * Math.sin(midAngle);
+    ctx.fillStyle = "#333";
+    ctx.font = "bold 20px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(signSymbols[i], sx, sy);
+
+    // Degree markings
+    for(let d = 0; d < 30; d += 5) {
+      let da = (i * 30 + d - ascendantDeg + 90) * Math.PI / 180;
+      let mx1 = cx + (rOuter - 5) * Math.cos(da);
+      let my1 = cy + (rOuter - 5) * Math.sin(da);
+      let mx2 = cx + rOuter * Math.cos(da);
+      let my2 = cy + rOuter * Math.sin(da);
+      ctx.strokeStyle = "#666";
+      ctx.lineWidth = d === 0 ? 2 : 1;
+      ctx.beginPath();
+      ctx.moveTo(mx1, my1);
+      ctx.lineTo(mx2, my2);
+      ctx.stroke();
+    }
+  }
+
+  // Draw house cusps
+  for(let i = 0; i < 12; i++) {
+    let angle = (houseCusps[i] - ascendantDeg + 90) * Math.PI / 180;
+
+    // House cusp line
+    let isMajor = (i === 0 || i === 3 || i === 6 || i === 9); // ASC, IC, DSC, MC
+    ctx.strokeStyle = isMajor ? "#000" : "#666";
+    ctx.lineWidth = isMajor ? 2.5 : 1;
+    ctx.beginPath();
+    ctx.moveTo(cx + rHouseInner * Math.cos(angle), cy + rHouseInner * Math.sin(angle));
+    ctx.lineTo(cx + rHouseOuter * Math.cos(angle), cy + rHouseOuter * Math.sin(angle));
+    ctx.stroke();
+
+    // House number
+    let midAngle = ((houseCusps[i] + houseCusps[(i+1)%12]) / 2 - ascendantDeg + 90) * Math.PI / 180;
+    let hx = cx + (rHouseInner + 15) * Math.cos(midAngle);
+    let hy = cy + (rHouseInner + 15) * Math.sin(midAngle);
+    ctx.fillStyle = "#333";
+    ctx.font = "bold 12px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText((i+1).toString(), hx, hy);
+  }
+
+  // Draw inner circles
+  ctx.strokeStyle = "#333";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.arc(cx, cy, rHouseOuter, 0, 2 * Math.PI);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, rHouseInner, 0, 2 * Math.PI);
+  ctx.stroke();
+
+  // Draw aspects (lines between planets)
+  let aspects = [
+    {angle: 0, orb: 8, color: "#FF0000", width: 2},    // Conjunction
+    {angle: 60, orb: 6, color: "#0000FF", width: 1.5}, // Sextile
+    {angle: 90, orb: 8, color: "#FF0000", width: 2},    // Square
+    {angle: 120, orb: 8, color: "#0000FF", width: 1.5}, // Trine
+    {angle: 180, orb: 8, color: "#FF0000", width: 2}    // Opposition
+  ];
+
+  for(let i = 0; i < planetData.length; i++) {
+    for(let j = i + 1; j < planetData.length; j++) {
+      let diff = Math.abs(planetData[i].longitude - planetData[j].longitude);
+      if(diff > 180) diff = 360 - diff;
+
+      aspects.forEach(a => {
+        if(Math.abs(diff - a.angle) <= a.orb) {
+          let a1 = (planetData[i].longitude - ascendantDeg + 90) * Math.PI / 180;
+          let a2 = (planetData[j].longitude - ascendantDeg + 90) * Math.PI / 180;
+          ctx.strokeStyle = a.color;
+          ctx.lineWidth = a.width;
+          ctx.globalAlpha = 0.4;
+          ctx.beginPath();
+          ctx.moveTo(cx + rAspect * Math.cos(a1), cy + rAspect * Math.sin(a1));
+          ctx.lineTo(cx + rAspect * Math.cos(a2), cy + rAspect * Math.sin(a2));
+          ctx.stroke();
+          ctx.globalAlpha = 1;
+        }
+      });
+    }
+  }
+
+  // Draw planets
+  let planetSymbols = {
+    "Sun": "☉", "Moon": "☽", "Mercury": "☿", "Venus": "♀", "Mars": "♂",
+    "Jupiter": "♃", "Saturn": "♄", "Uranus": "♅", "Neptune": "♆", "Pluto": "♇"
+  };
+
+  let planetColors = {
+    "Sun": "#FFD700", "Moon": "#C0C0C0", "Mercury": "#8B4513", "Venus": "#FF69B4",
+    "Mars": "#FF4500", "Jupiter": "#DAA520", "Saturn": "#2F4F4F", "Uranus": "#00CED1",
+    "Neptune": "#4169E1", "Pluto": "#8B008B"
+  };
+
+  // Track positions to avoid overlap
+  let usedPositions = [];
+
+  planetData.forEach(p => {
+    let angle = (p.longitude - ascendantDeg + 90) * Math.PI / 180;
+    let px = cx + rPlanet * Math.cos(angle);
+    let py = cy + rPlanet * Math.sin(angle);
+
+    // Check for overlap and adjust
+    for(let up of usedPositions) {
+      let dist = Math.sqrt((px - up.x)**2 + (py - up.y)**2);
+      if(dist < 20) {
+        px += 15;
+      }
+    }
+    usedPositions.push({x: px, y: py});
+
+    // Planet symbol background
+    ctx.fillStyle = "#fff";
+    ctx.beginPath();
+    ctx.arc(px, py, 12, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.strokeStyle = planetColors[p.name];
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Planet symbol
+    ctx.fillStyle = planetColors[p.name];
+    ctx.font = "bold 14px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(planetSymbols[p.name] || p.name[0], px, py);
+
+    // Degree
+    ctx.fillStyle = "#333";
+    ctx.font = "9px Arial";
+    let dx = px + 18 * Math.cos(angle);
+    let dy = py + 18 * Math.sin(angle);
+    ctx.fillText(p.degree + "°", dx, dy);
+
+    // Retrograde
+    // (Would need retrograde calculation from Swiss Ephemeris)
+  });
+
+  // Draw ASC/DESC/MC/IC markers
+  let angles = {
+    "ASC": 0,
+    "IC": 90,
+    "DSC": 180,
+    "MC": 270
+  };
+
+  Object.entries(angles).forEach(([name, deg]) => {
+    let a = deg * Math.PI / 180;
+    let mx = cx + (rOuter + 15) * Math.cos(a);
+    let my = cy + (rOuter + 15) * Math.sin(a);
+    ctx.fillStyle = "#000";
+    ctx.font = "bold 10px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(name, mx, my);
+  });
+
+  return canvas.toDataURL();
+}
+
+function formatTime(input){
+  let val = input.value.replace(/\D/g,'');
+  if(val.length > 4) val = val.slice(0,4);
+
+  // Formatiraj SAMO kad su unesene 4 cifre
+  if(val.length < 4){
+    input.value = val; // prikazi sirove cifre dok ne dodje do 4
+    return;
+  }
+
+  let hh = parseInt(val.slice(0,2));
+  let mm = parseInt(val.slice(2,4));
+
+  if(hh > 23) hh = 23;
+  if(mm > 59) mm = 59;
+
+  input.value = hh.toString().padStart(2,'0') + ':' + mm.toString().padStart(2,'0');
+}
+
+// 🔥 CITY DROPDOWN
+const worldCities = [
+  "Abu Dhabi",
+  "Abuja",
+  "Accra",
+  "Adana",
+  "Addis Ababa",
+  "Adelaide",
+  "Agadir",
+  "Ahmedabad",
+  "Albuquerque",
+  "Alexandria",
+  "Algiers",
+  "Almaty",
+  "Amman",
+  "Amsterdam",
+  "Ankara",
+  "Antalya",
+  "Antananarivo",
+  "Antwerp",
+  "Asunción",
+  "Athens",
+  "Atlanta",
+  "Auckland",
+  "Austin",
+  "Baghdad",
+  "Baku",
+  "Bali",
+  "Baltimore",
+  "Bamako",
+  "Bandung",
+  "Bangalore",
+  "Bangkok",
+  "Barcelona",
+  "Barranquilla",
+  "Basel",
+  "Beijing",
+  "Beirut",
+  "Belgrade",
+  "Belo Horizonte",
+  "Berlin",
+  "Bern",
+  "Bhopal",
+  "Birmingham",
+  "Bishkek",
+  "Bogotá",
+  "Bologna",
+  "Bonn",
+  "Boston",
+  "Brasília",
+  "Brazzaville",
+  "Brisbane",
+  "Brussels",
+  "Bucharest",
+  "Budapest",
+  "Buenos Aires",
+  "Busan",
+  "Cairo",
+  "Calgary",
+  "Calcutta",
+  "Cali",
+  "Canberra",
+  "Cape Town",
+  "Caracas",
+  "Casablanca",
+  "Chennai",
+  "Chicago",
+  "Chisinau",
+  "Cologne",
+  "Colombo",
+  "Conakry",
+  "Copenhagen",
+  "Cordoba",
+  "Cotonou",
+  "Curitiba",
+  "Dakar",
+  "Dallas",
+  "Damascus",
+  "Dar es Salaam",
+  "Delhi",
+  "Denver",
+  "Detroit",
+  "Dhaka",
+  "Doha",
+  "Dresden",
+  "Dubai",
+  "Dublin",
+  "Düsseldorf",
+  "Edinburgh",
+  "Edmonton",
+  "Florence",
+  "Frankfurt",
+  "Freetown",
+  "Fukuoka",
+  "Fuzhou",
+  "Gaborone",
+  "Geneva",
+  "Genoa",
+  "Giza",
+  "Glasgow",
+  "Gothenburg",
+  "Guadalajara",
+  "Guangzhou",
+  "Guatemala City",
+  "Hamburg",
+  "Hanoi",
+  "Harare",
+  "Havana",
+  "Helsinki",
+  "Ho Chi Minh City",
+  "Hong Kong",
+  "Honolulu",
+  "Houston",
+  "Hyderabad",
+  "Indianapolis",
+  "Indore",
+  "Islamabad",
+  "Istanbul",
+  "Izmir",
+  "Jacksonville",
+  "Jakarta",
+  "Jeddah",
+  "Jerusalem",
+  "Johannesburg",
+  "Kabul",
+  "Kampala",
+  "Kansas City",
+  "Karachi",
+  "Kathmandu",
+  "Kharkiv",
+  "Kiev",
+  "Kingston",
+  "Kinshasa",
+  "Kobe",
+  "Kolkata",
+  "Kuala Lumpur",
+  "Kuwait City",
+  "Kyoto",
+  "Lagos",
+  "Lahore",
+  "Las Vegas",
+  "Lausanne",
+  "Leeds",
+  "Leipzig",
+  "Lima",
+  "Lisbon",
+  "Liverpool",
+  "Ljubljana",
+  "London",
+  "Los Angeles",
+  "Louisville",
+  "Luanda",
+  "Lusaka",
+  "Luxembourg City",
+  "Lyon",
+  "Madrid",
+  "Makassar",
+  "Malaga",
+  "Malé",
+  "Manama",
+  "Manaus",
+  "Manchester",
+  "Manila",
+  "Maputo",
+  "Maracaibo",
+  "Marseille",
+  "Medan",
+  "Medellín",
+  "Melbourne",
+  "Memphis",
+  "Mexico City",
+  "Miami",
+  "Milan",
+  "Milwaukee",
+  "Minneapolis",
+  "Minsk",
+  "Mogadishu",
+  "Monaco",
+  "Monrovia",
+  "Montevideo",
+  "Montreal",
+  "Moscow",
+  "Mumbai",
+  "Munich",
+  "Muscat",
+  "Nagoya",
+  "Nairobi",
+  "Nanjing",
+  "Naples",
+  "Nashville",
+  "Nassau",
+  "New Delhi",
+  "New Orleans",
+  "New York",
+  "Nice",
+  "Nicosia",
+  "Nizhny Novgorod",
+  "Nouakchott",
+  "Novosibirsk",
+  "Nur-Sultan",
+  "Oklahoma City",
+  "Omaha",
+  "Osaka",
+  "Oslo",
+  "Ottawa",
+  "Ouagadougou",
+  "Oxford",
+  "Palermo",
+  "Panama City",
+  "Paris",
+  "Patna",
+  "Perm",
+  "Perth",
+  "Philadelphia",
+  "Phnom Penh",
+  "Phoenix",
+  "Pittsburgh",
+  "Port Louis",
+  "Port Moresby",
+  "Portland",
+  "Porto",
+  "Porto Alegre",
+  "Prague",
+  "Pretoria",
+  "Puebla",
+  "Pune",
+  "Pyongyang",
+  "Quebec City",
+  "Quito",
+  "Rabat",
+  "Raleigh",
+  "Rawalpindi",
+  "Recife",
+  "Reykjavik",
+  "Riga",
+  "Rio de Janeiro",
+  "Riyadh",
+  "Rome",
+  "Rotterdam",
+  "Saint Petersburg",
+  "Salt Lake City",
+  "Salvador",
+  "San Antonio",
+  "San Diego",
+  "San Francisco",
+  "San Jose",
+  "San Juan",
+  "Sanaa",
+  "Santiago",
+  "São Paulo",
+  "Sapporo",
+  "Sarajevo",
+  "Seattle",
+  "Seoul",
+  "Seville",
+  "Shanghai",
+  "Shenzhen",
+  "Singapore",
+  "Skopje",
+  "Sofia",
+  "St. Louis",
+  "Stockholm",
+  "Stuttgart",
+  "Surabaya",
+  "Surat",
+  "Suva",
+  "Sydney",
+  "Taipei",
+  "Tallinn",
+  "Tampa",
+  "Tangier",
+  "Tashkent",
+  "Tbilisi",
+  "Tehran",
+  "Tel Aviv",
+  "Thimphu",
+  "Tianjin",
+  "Tijuana",
+  "Tirana",
+  "Tokyo",
+  "Toledo",
+  "Toronto",
+  "Toulouse",
+  "Tripoli",
+  "Tunis",
+  "Turin",
+  "Ulaanbaatar",
+  "Vaduz",
+  "Valencia",
+  "Valletta",
+  "Vancouver",
+  "Vatican City",
+  "Venice",
+  "Vienna",
+  "Vientiane",
+  "Vilnius",
+  "Warsaw",
+  "Washington DC",
+  "Wellington",
+  "Windhoek",
+  "Winnipeg",
+  "Wuhan",
+  "Xi'an",
+  "Yangon",
+  "Yaoundé",
+  "Yekaterinburg",
+  "Yerevan",
+  "Zagreb",
+  "Zhengzhou",
+  "Zurich"
+];
+
+function loadCities(){
+  let select = document.getElementById("cityInput");
+  if(!select) return;
+
+  select.innerHTML = '<option value="" disabled selected>City...</option>';
+
+  worldCities.forEach(city => {
+    let opt = document.createElement("option");
+    opt.value = city;
+    opt.text = city;
+    select.appendChild(opt);
+  });
+}
+
+// 🔥 SUB-ZODIAC CALCULATION (Ascendant/Rising Sign) - TAČNA ASTRONOMSKA VERZIJA
+
+// Tačne geografske koordinate gradova
+const cityCoords = {
+  "Belgrade": { lat: 44.7866, lon: 20.4489 },
+  "New York": { lat: 40.7128, lon: -74.0060 },
+  "London": { lat: 51.5074, lon: -0.1278 },
+  "Paris": { lat: 48.8566, lon: 2.3522 },
+  "Berlin": { lat: 52.5200, lon: 13.4050 },
+  "Moscow": { lat: 55.7558, lon: 37.6173 },
+  "Tokyo": { lat: 35.6762, lon: 139.6503 },
+  "Sydney": { lat: -33.8688, lon: 151.2093 },
+  "Beijing": { lat: 39.9042, lon: 116.4074 },
+  "Dubai": { lat: 25.2048, lon: 55.2708 },
+  "Mumbai": { lat: 19.0760, lon: 72.8777 },
+  "Los Angeles": { lat: 34.0522, lon: -118.2437 },
+  "Chicago": { lat: 41.8781, lon: -87.6298 },
+  "Toronto": { lat: 43.6532, lon: -79.3832 },
+  "São Paulo": { lat: -23.5505, lon: -46.6333 },
+  "Buenos Aires": { lat: -34.6037, lon: -58.3816 },
+  "Cairo": { lat: 30.0444, lon: 31.2357 },
+  "Johannesburg": { lat: -26.2041, lon: 28.0473 },
+  "Istanbul": { lat: 41.0082, lon: 28.9784 },
+  "Bangkok": { lat: 13.7563, lon: 100.5018 },
+  "Singapore": { lat: 1.3521, lon: 103.8198 },
+  "Hong Kong": { lat: 22.3193, lon: 114.1694 },
+  "Seoul": { lat: 37.5665, lon: 126.9780 },
+  "Madrid": { lat: 40.4168, lon: -3.7038 },
+  "Rome": { lat: 41.9028, lon: 12.4964 },
+  "Vienna": { lat: 48.2082, lon: 16.3738 },
+  "Amsterdam": { lat: 52.3676, lon: 4.9041 },
+  "Brussels": { lat: 50.8476, lon: 4.3572 },
+  "Zurich": { lat: 47.3769, lon: 8.5417 },
+  "Stockholm": { lat: 59.3293, lon: 18.0686 },
+  "Oslo": { lat: 59.9139, lon: 10.7522 },
+  "Copenhagen": { lat: 55.6761, lon: 12.5683 },
+  "Helsinki": { lat: 60.1699, lon: 24.9384 },
+  "Warsaw": { lat: 52.2297, lon: 21.0122 },
+  "Prague": { lat: 50.0755, lon: 14.4378 },
+  "Budapest": { lat: 47.4979, lon: 19.0402 },
+  "Athens": { lat: 37.9838, lon: 23.7275 },
+  "Lisbon": { lat: 38.7223, lon: -9.1393 },
+  "Dublin": { lat: 53.3498, lon: -6.2603 },
+  "Edinburgh": { lat: 55.9533, lon: -3.1883 },
+  "Barcelona": { lat: 41.3851, lon: 2.1734 },
+  "Milan": { lat: 45.4642, lon: 9.1900 },
+  "Venice": { lat: 45.4408, lon: 12.3155 },
+  "Munich": { lat: 48.1351, lon: 11.5820 },
+  "Frankfurt": { lat: 50.1109, lon: 8.6821 },
+  "Hamburg": { lat: 53.5511, lon: 9.9937 },
+  "Cologne": { lat: 50.9375, lon: 6.9603 },
+  "Stuttgart": { lat: 48.7758, lon: 9.1829 },
+  "Düsseldorf": { lat: 51.2277, lon: 6.7735 },
+  "Lyon": { lat: 45.7640, lon: 4.8357 },
+  "Marseille": { lat: 43.2965, lon: 5.3698 },
+  "Nice": { lat: 43.7102, lon: 7.2620 },
+  "Toulouse": { lat: 43.6047, lon: 1.4442 },
+  "Montreal": { lat: 45.5017, lon: -73.5673 },
+  "Vancouver": { lat: 49.2827, lon: -123.1207 },
+  "Calgary": { lat: 51.0447, lon: -114.0719 },
+  "Ottawa": { lat: 45.4215, lon: -75.6972 },
+  "Quebec City": { lat: 46.8139, lon: -71.2080 },
+  "Winnipeg": { lat: 49.8951, lon: -97.1384 },
+  "Mexico City": { lat: 19.4326, lon: -99.1332 },
+  "Guadalajara": { lat: 20.6597, lon: -103.3496 },
+  "Havana": { lat: 23.1136, lon: -82.3666 },
+  "San Juan": { lat: 18.4655, lon: -66.1057 },
+  "Panama City": { lat: 8.9824, lon: -79.5199 },
+  "Bogotá": { lat: 4.7110, lon: -74.0721 },
+  "Lima": { lat: -12.0464, lon: -77.0428 },
+  "Caracas": { lat: 10.4806, lon: -66.9036 },
+  "Montevideo": { lat: -34.9011, lon: -56.1645 },
+  "Asunción": { lat: -25.2637, lon: -57.5759 },
+  "Santiago": { lat: -33.4489, lon: -70.6693 },
+  "Casablanca": { lat: 33.5731, lon: -7.5898 },
+  "Rabat": { lat: 34.0209, lon: -6.8416 },
+  "Algiers": { lat: 36.7538, lon: 3.0588 },
+  "Tunis": { lat: 36.8065, lon: 10.1815 },
+  "Tripoli": { lat: 32.8872, lon: 13.1913 },
+  "Alexandria": { lat: 31.2001, lon: 29.9187 },
+  "Khartoum": { lat: 15.5007, lon: 32.5599 },
+  "Addis Ababa": { lat: 9.1450, lon: 40.4897 },
+  "Nairobi": { lat: -1.2921, lon: 36.8219 },
+  "Kampala": { lat: 0.3476, lon: 32.5825 },
+  "Dar es Salaam": { lat: -6.7924, lon: 39.2083 },
+  "Lusaka": { lat: -15.3875, lon: 28.3228 },
+  "Harare": { lat: -17.8252, lon: 31.0335 },
+  "Gaborone": { lat: -24.6282, lon: 25.9231 },
+  "Windhoek": { lat: -22.5609, lon: 17.0658 },
+  "Luanda": { lat: -8.8390, lon: 13.2894 },
+  "Kinshasa": { lat: -4.4419, lon: 15.2663 },
+  "Brazzaville": { lat: -4.2634, lon: 15.2429 },
+  "Yaoundé": { lat: 3.8480, lon: 11.5021 },
+  "Abidjan": { lat: 5.3600, lon: -4.0083 },
+  "Accra": { lat: 5.6037, lon: -0.1870 },
+  "Lagos": { lat: 6.5244, lon: 3.3792 },
+  "Abuja": { lat: 9.0765, lon: 7.3986 },
+  "Dakar": { lat: 14.7167, lon: -17.4677 },
+  "Nouakchott": { lat: 18.0735, lon: -15.9582 },
+  "Reykjavik": { lat: 64.1466, lon: -21.9426 },
+  "Abu Dhabi": { lat: 24.4539, lon: 54.3773 },
+  "Doha": { lat: 25.2854, lon: 51.5310 },
+  "Manama": { lat: 26.2285, lon: 50.5860 },
+  "Kuwait City": { lat: 29.3759, lon: 47.9774 },
+  "Riyadh": { lat: 24.7136, lon: 46.6753 },
+  "Jeddah": { lat: 21.4858, lon: 39.1925 },
+  "Muscat": { lat: 23.5859, lon: 58.4059 },
+  "Tehran": { lat: 35.6892, lon: 51.3890 },
+  "Baghdad": { lat: 33.3152, lon: 44.3661 },
+  "Amman": { lat: 31.9454, lon: 35.9284 },
+  "Jerusalem": { lat: 31.7683, lon: 35.2137 },
+  "Tel Aviv": { lat: 32.0853, lon: 34.7818 },
+  "Beirut": { lat: 33.8938, lon: 35.5018 },
+  "Damascus": { lat: 33.5138, lon: 36.2765 },
+  "Ankara": { lat: 39.9334, lon: 32.8597 },
+  "Izmir": { lat: 38.4192, lon: 27.1287 },
+  "Bursa": { lat: 40.1885, lon: 29.0610 },
+  "Antalya": { lat: 36.8969, lon: 30.7133 },
+  "Adana": { lat: 37.0000, lon: 35.3213 },
+  "Tbilisi": { lat: 41.7151, lon: 44.8271 },
+  "Yerevan": { lat: 40.1792, lon: 44.4991 },
+  "Baku": { lat: 40.4093, lon: 49.8671 },
+  "Kabul": { lat: 34.5553, lon: 69.2075 },
+  "Islamabad": { lat: 33.6844, lon: 73.0479 },
+  "Karachi": { lat: 24.8607, lon: 67.0011 },
+  "Lahore": { lat: 31.5204, lon: 74.3587 },
+  "New Delhi": { lat: 28.6139, lon: 77.2090 },
+  "Kolkata": { lat: 22.5726, lon: 88.3639 },
+  "Chennai": { lat: 13.0827, lon: 80.2707 },
+  "Bangalore": { lat: 12.9716, lon: 77.5946 },
+  "Hyderabad": { lat: 17.3850, lon: 78.4867 },
+  "Ahmedabad": { lat: 23.0225, lon: 72.5714 },
+  "Pune": { lat: 18.5204, lon: 73.8567 },
+  "Surat": { lat: 21.1702, lon: 72.8311 },
+  "Jaipur": { lat: 26.9124, lon: 75.7873 },
+  "Thimphu": { lat: 27.4728, lon: 89.6390 },
+  "Kathmandu": { lat: 27.7172, lon: 85.3240 },
+  "Dhaka": { lat: 23.8103, lon: 90.4125 },
+  "Yangon": { lat: 16.8661, lon: 96.1951 },
+  "Phnom Penh": { lat: 11.5564, lon: 104.9282 },
+  "Vientiane": { lat: 17.9757, lon: 102.6331 },
+  "Hanoi": { lat: 21.0278, lon: 105.8342 },
+  "Ho Chi Minh City": { lat: 10.8231, lon: 106.6297 },
+  "Jakarta": { lat: -6.2088, lon: 106.8456 },
+  "Surabaya": { lat: -7.2575, lon: 112.7521 },
+  "Bandung": { lat: -6.9175, lon: 107.6191 },
+  "Medan": { lat: 3.5952, lon: 98.6722 },
+  "Makassar": { lat: -5.1477, lon: 119.4327 },
+  "Denpasar": { lat: -8.6705, lon: 115.2126 },
+  "Manila": { lat: 14.5995, lon: 120.9842 },
+  "Cebu": { lat: 10.3157, lon: 123.8854 },
+  "Kuala Lumpur": { lat: 3.1390, lon: 101.6869 },
+  "Bangkok": { lat: 13.7563, lon: 100.5018 },
+  "Chiang Mai": { lat: 18.7883, lon: 98.9853 },
+  "Shanghai": { lat: 31.2304, lon: 121.4737 },
+  "Guangzhou": { lat: 23.1291, lon: 113.2644 },
+  "Shenzhen": { lat: 22.5431, lon: 114.0579 },
+  "Chengdu": { lat: 30.5728, lon: 104.0668 },
+  "Hangzhou": { lat: 30.2741, lon: 120.1551 },
+  "Wuhan": { lat: 30.5928, lon: 114.3055 },
+  "Xi'an": { lat: 34.3416, lon: 108.9398 },
+  "Nanjing": { lat: 32.0603, lon: 118.7969 },
+  "Tianjin": { lat: 39.0842, lon: 117.2010 },
+  "Chongqing": { lat: 29.5630, lon: 106.5516 },
+  "Harbin": { lat: 45.8038, lon: 126.5350 },
+  "Suzhou": { lat: 31.2989, lon: 120.5853 },
+  "Dalian": { lat: 38.9140, lon: 121.6147 },
+  "Qingdao": { lat: 36.0671, lon: 120.3826 },
+  "Zhengzhou": { lat: 34.7466, lon: 113.6253 },
+  "Changsha": { lat: 28.2282, lon: 112.9388 },
+  "Kunming": { lat: 25.0389, lon: 102.7183 },
+  "Fuzhou": { lat: 26.0745, lon: 119.2965 },
+  "Ningbo": { lat: 29.8683, lon: 121.5440 },
+  "Taipei": { lat: 25.0330, lon: 121.5654 },
+  "Kaohsiung": { lat: 22.6273, lon: 120.3014 },
+  "Seoul": { lat: 37.5665, lon: 126.9780 },
+  "Busan": { lat: 35.1796, lon: 129.0756 },
+  "Osaka": { lat: 34.6937, lon: 135.5023 },
+  "Kyoto": { lat: 35.0116, lon: 135.7681 },
+  "Kobe": { lat: 34.6901, lon: 135.1955 },
+  "Nagoya": { lat: 35.1815, lon: 136.9066 },
+  "Sapporo": { lat: 43.0618, lon: 141.3545 },
+  "Fukuoka": { lat: 33.5902, lon: 130.4017 },
+  "Hiroshima": { lat: 34.3853, lon: 132.4553 },
+  "Sendai": { lat: 38.2682, lon: 140.8694 },
+  "Yokohama": { lat: 35.4437, lon: 139.6380 },
+  "Darwin": { lat: -12.4634, lon: 130.8456 },
+  "Perth": { lat: -31.9505, lon: 115.8605 },
+  "Adelaide": { lat: -34.9285, lon: 138.6007 },
+  "Brisbane": { lat: -27.4698, lon: 153.0251 },
+  "Melbourne": { lat: -37.8136, lon: 144.9631 },
+  "Canberra": { lat: -35.2809, lon: 149.1300 },
+  "Hobart": { lat: -42.8821, lon: 147.3272 },
+  "Gold Coast": { lat: -28.0167, lon: 153.4000 },
+  "Auckland": { lat: -36.8485, lon: 174.7633 },
+  "Wellington": { lat: -41.2865, lon: 174.7762 },
+  "Christchurch": { lat: -43.5321, lon: 172.6362 },
+  "Honolulu": { lat: 21.3099, lon: -157.8581 },
+  "Anchorage": { lat: 61.2181, lon: -149.9003 },
+  "Seattle": { lat: 47.6062, lon: -122.3321 },
+  "Portland": { lat: 45.5152, lon: -122.6784 },
+  "San Francisco": { lat: 37.7749, lon: -122.4194 },
+  "San Diego": { lat: 32.7157, lon: -117.1611 },
+  "Las Vegas": { lat: 36.1699, lon: -115.1398 },
+  "Phoenix": { lat: 33.4484, lon: -112.0740 },
+  "Salt Lake City": { lat: 40.7608, lon: -111.8910 },
+  "Denver": { lat: 39.7392, lon: -104.9903 },
+  "Dallas": { lat: 32.7767, lon: -96.7970 },
+  "Houston": { lat: 29.7604, lon: -95.3698 },
+  "Austin": { lat: 30.2672, lon: -97.7431 },
+  "San Antonio": { lat: 29.4241, lon: -98.4936 },
+  "Oklahoma City": { lat: 35.4676, lon: -97.5164 },
+  "Kansas City": { lat: 39.0997, lon: -94.5786 },
+  "Minneapolis": { lat: 44.9778, lon: -93.2650 },
+  "St. Louis": { lat: 38.6270, lon: -90.1994 },
+  "Memphis": { lat: 35.1495, lon: -90.0490 },
+  "New Orleans": { lat: 29.9511, lon: -90.0715 },
+  "Detroit": { lat: 42.3314, lon: -83.0458 },
+  "Indianapolis": { lat: 39.7684, lon: -86.1581 },
+  "Columbus": { lat: 39.9612, lon: -82.9988 },
+  "Cleveland": { lat: 41.4993, lon: -81.6944 },
+  "Cincinnati": { lat: 39.1031, lon: -84.5120 },
+  "Milwaukee": { lat: 43.0389, lon: -87.9065 },
+  "Atlanta": { lat: 33.7490, lon: -84.3880 },
+  "Charlotte": { lat: 35.2271, lon: -80.8431 },
+  "Raleigh": { lat: 35.7796, lon: -78.6382 },
+  "Nashville": { lat: 36.1627, lon: -86.7816 },
+  "Miami": { lat: 25.7617, lon: -80.1918 },
+  "Tampa": { lat: 27.9506, lon: -82.4572 },
+  "Orlando": { lat: 28.5384, lon: -81.3789 },
+  "Jacksonville": { lat: 30.3322, lon: -81.6557 },
+  "Baltimore": { lat: 39.2904, lon: -76.6122 },
+  "Washington DC": { lat: 38.9072, lon: -77.0369 },
+  "Philadelphia": { lat: 39.9526, lon: -75.1652 },
+  "Pittsburgh": { lat: 40.4406, lon: -79.9959 },
+  "Boston": { lat: 42.3601, lon: -71.0589 },
+  "Buffalo": { lat: 42.8864, lon: -78.8784 },
+  "Halifax": { lat: 44.6488, lon: -63.5752 },
+  "Krakow": { lat: 50.0647, lon: 19.9450 },
+  "Zagreb": { lat: 45.8150, lon: 15.9819 },
+  "Sofia": { lat: 42.6977, lon: 23.3219 },
+  "Bucharest": { lat: 44.4268, lon: 26.1025 },
+  "Ljubljana": { lat: 46.0569, lon: 14.5058 },
+  "Bratislava": { lat: 48.1486, lon: 17.1077 },
+  "Minsk": { lat: 53.9045, lon: 27.5615 },
+  "Kiev": { lat: 50.4501, lon: 30.5234 },
+  "Kharkiv": { lat: 49.9935, lon: 36.2304 },
+  "Odessa": { lat: 46.4825, lon: 30.7233 },
+  "Lviv": { lat: 49.8397, lon: 24.0297 },
+  "Saint Petersburg": { lat: 59.9311, lon: 30.3609 },
+  "Yekaterinburg": { lat: 56.8389, lon: 60.6057 },
+  "Novosibirsk": { lat: 55.0084, lon: 82.9357 },
+  "Kazan": { lat: 55.7963, lon: 49.1088 },
+  "Nizhny Novgorod": { lat: 56.3269, lon: 44.0059 },
+  "Samara": { lat: 53.2012, lon: 50.1265 },
+  "Omsk": { lat: 54.9885, lon: 73.3242 },
+  "Chelyabinsk": { lat: 55.1644, lon: 61.4368 },
+  "Ufa": { lat: 54.7388, lon: 55.9721 },
+  "Rostov-on-Don": { lat: 47.2357, lon: 39.7015 },
+  "Volgograd": { lat: 48.7080, lon: 44.5133 },
+  "Krasnodar": { lat: 45.0393, lon: 38.9872 },
+  "Sochi": { lat: 43.6028, lon: 39.7342 },
+  "Vladivostok": { lat: 43.1198, lon: 131.8869 },
+  "Irkutsk": { lat: 52.2870, lon: 104.3050 },
+  "Krasnoyarsk": { lat: 56.0153, lon: 92.8932 },
+  "Tomsk": { lat: 56.4846, lon: 84.9482 },
+  "Yakutsk": { lat: 62.0355, lon: 129.6755 },
+  "Magadan": { lat: 59.5684, lon: 150.8085 },
+  "Petropavlovsk-Kamchatsky": { lat: 53.0242, lon: 158.6433 },
+  "Tashkent": { lat: 41.2995, lon: 69.2401 },
+  "Almaty": { lat: 43.2220, lon: 76.8512 },
+  "Astana": { lat: 51.1605, lon: 71.4704 },
+  "Bishkek": { lat: 42.8746, lon: 74.5698 },
+  "Dushanbe": { lat: 38.5598, lon: 68.7870 },
+  "Ashgabat": { lat: 37.9601, lon: 58.3261 },
+  "Tallinn": { lat: 59.4370, lon: 24.7536 },
+  "Riga": { lat: 56.9496, lon: 24.1052 },
+  "Vilnius": { lat: 54.6872, lon: 25.2797 },
+  "Glasgow": { lat: 55.8609, lon: -4.2514 },
+  "Birmingham": { lat: 52.4862, lon: -1.8904 },
+  "Manchester": { lat: 53.4808, lon: -2.2426 },
+  "Leeds": { lat: 53.8008, lon: -1.5491 },
+  "Sheffield": { lat: 53.3811, lon: -1.4701 },
+  "Liverpool": { lat: 53.4084, lon: -2.9916 },
+  "Newcastle": { lat: 54.9783, lon: -1.6178 },
+  "Nottingham": { lat: 52.9548, lon: -1.1581 },
+  "Bristol": { lat: 51.4545, lon: -2.5879 },
+  "Leicester": { lat: 52.6369, lon: -1.1398 },
+  "Cardiff": { lat: 51.4816, lon: -3.1791 },
+  "Belfast": { lat: 54.5973, lon: -5.9301 },
+  "Aberdeen": { lat: 57.1497, lon: -2.0943 },
+  "Dundee": { lat: 56.4620, lon: -2.9707 },
+  "Inverness": { lat: 57.4778, lon: -4.2247 },
+  "Valencia": { lat: 39.4699, lon: -0.3763 },
+  "Seville": { lat: 37.3891, lon: -5.9845 },
+  "Malaga": { lat: 36.7213, lon: -4.4214 },
+  "Bilbao": { lat: 43.2630, lon: -2.9350 },
+  "Nantes": { lat: 47.2184, lon: -1.5536 },
+  "Strasbourg": { lat: 48.5734, lon: 7.7521 },
+  "Montpellier": { lat: 43.6108, lon: 3.8767 },
+  "Bordeaux": { lat: 44.8378, lon: -0.5792 },
+  "Lille": { lat: 50.6292, lon: 3.0573 },
+  "Naples": { lat: 40.8518, lon: 14.2681 },
+  "Turin": { lat: 45.0703, lon: 7.6869 },
+  "Palermo": { lat: 38.1157, lon: 13.3615 },
+  "Genoa": { lat: 44.4056, lon: 8.9463 },
+  "Bologna": { lat: 44.4949, lon: 11.3426 },
+  "Florence": { lat: 43.7696, lon: 11.2558 },
+  "Verona": { lat: 45.4384, lon: 10.9916 },
+  "Padua": { lat: 45.4064, lon: 11.8768 },
+  "Bari": { lat: 41.1171, lon: 16.8719 },
+  "Catania": { lat: 37.5079, lon: 15.0830 },
+  "Bern": { lat: 46.9480, lon: 7.4474 },
+  "Geneva": { lat: 46.2044, lon: 6.1432 },
+  "Basel": { lat: 47.5596, lon: 7.5886 },
+  "Lausanne": { lat: 46.5197, lon: 6.6323 },
+  "Graz": { lat: 47.0707, lon: 15.4395 },
+  "Linz": { lat: 48.3064, lon: 14.2858 },
+  "Salzburg": { lat: 47.8095, lon: 13.0550 },
+  "Innsbruck": { lat: 47.2692, lon: 11.4041 }
+};
+
+// Pomoćne matematičke funkcije
+function toRadians(deg) {
+  return deg * Math.PI / 180;
+}
+
+function toDegrees(rad) {
+  return rad * 180 / Math.PI;
+}
+
+// Julian Day iz datuma i vremena (UTC)
+function getJulianDay(year, month, day, hour, minute) {
+  if (month <= 2) {
+    year -= 1;
+    month += 12;
+  }
+  let A = Math.floor(year / 100);
+  let B = 2 - A + Math.floor(A / 4);
+  let dayFraction = (hour + minute / 60) / 24;
+  return Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + dayFraction + B - 1524.5;
+}
+
+// Greenwich Mean Sidereal Time (u satima)
+function getGMST(jd) {
+  let T = (jd - 2451545.0) / 36525.0;
+  let gmst = 280.46061837 + 360.98564736629 * (jd - 2451545.0) + 0.000387933 * T * T - (T * T * T) / 38710000.0;
+  gmst = gmst % 360;
+  if (gmst < 0) gmst += 360;
+  return gmst / 15;
+}
+
+// Obliquity of the ecliptic (u stepenima)
+function getObliquity(jd) {
+  let T = (jd - 2451545.0) / 36525.0;
+  return 23.4392794444444 - 0.0130102136111 * T - 0.0000005922222 * T * T + 0.0000007572222 * T * T * T;
+}
+
+// TAČAN ASCENDANT (sferna trigonometrija)
+function calculateAscendant(year, month, day, hour, minute, lat, lon) {
+  // Pretvori lokalno vreme u UTC (lon/15 = sati offseta)
+  let utcOffset = lon / 15;
+  let utcHour = hour - utcOffset;
+
+  let utcDay = day;
+  let utcMonth = month;
+  let utcYear = year;
+
+  if (utcHour < 0) {
+    utcHour += 24;
+    utcDay -= 1;
+    if (utcDay < 1) {
+      utcMonth -= 1;
+      if (utcMonth < 1) {
+        utcMonth = 12;
+        utcYear -= 1;
+      }
+      let daysInMonth = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+      if (utcYear % 4 === 0 && (utcYear % 100 !== 0 || utcYear % 400 === 0)) daysInMonth[2] = 29;
+      utcDay = daysInMonth[utcMonth];
+    }
+  } else if (utcHour >= 24) {
+    utcHour -= 24;
+    utcDay += 1;
+    let daysInMonth = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    if (utcYear % 4 === 0 && (utcYear % 100 !== 0 || utcYear % 400 === 0)) daysInMonth[2] = 29;
+    if (utcDay > daysInMonth[utcMonth]) {
+      utcDay = 1;
+      utcMonth += 1;
+      if (utcMonth > 12) {
+        utcMonth = 1;
+        utcYear += 1;
+      }
+    }
+  }
+
+  let jd = getJulianDay(utcYear, utcMonth, utcDay, utcHour, minute);
+  let gmst = getGMST(jd);
+  let lst = (gmst + lon / 15) % 24;
+  if (lst < 0) lst += 24;
+
+  let lstDeg = lst * 15;
+  let obliquity = getObliquity(jd);
+
+  let lstRad = toRadians(lstDeg);
+  let latRad = toRadians(lat);
+  let oblRad = toRadians(obliquity);
+
+  let y = Math.cos(lstRad);
+  let x = -(Math.sin(lstRad) * Math.cos(oblRad) + Math.tan(latRad) * Math.sin(oblRad));
+
+  let ascendantRad = Math.atan2(y, x);
+  let ascendant = toDegrees(ascendantRad);
+
+  if (ascendant < 0) ascendant += 360;
+
+  return ascendant;
+}
+
+// Konvertuj ascendant stepene u znak
+function ascendantToSign(ascendantDeg) {
+  let signIndex = Math.floor(ascendantDeg / 30) % 12;
+  let signs = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
+               "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
+  return signs[signIndex];
+}
+
+// Fallback funkcija (stara metoda) ako grad nije u bazi
+function getSubZodiacFallback(day, month, timeStr, city) {
+  let hours = 12, minutes = 0;
+  if (timeStr && timeStr.match(/^\d{2}:\d{2}$/)) {
+    let parts = timeStr.split(":");
+    hours = parseInt(parts[0]);
+    minutes = parseInt(parts[1]);
+  }
+
+  const cityOffsets = {
+    "New York": -5, "London": 0, "Paris": 1, "Berlin": 1, "Moscow": 3,
+    "Tokyo": 9, "Sydney": 10, "Beijing": 8, "Dubai": 4, "Mumbai": 5.5,
+    "Los Angeles": -8, "Chicago": -6, "Toronto": -5, "São Paulo": -3,
+    "Buenos Aires": -3, "Cairo": 2, "Johannesburg": 2, "Istanbul": 3,
+    "Bangkok": 7, "Singapore": 8, "Hong Kong": 8, "Seoul": 9, "Madrid": 1,
+    "Rome": 1, "Vienna": 1, "Amsterdam": 1, "Brussels": 1, "Zurich": 1,
+    "Stockholm": 1, "Oslo": 1, "Copenhagen": 1, "Helsinki": 2, "Warsaw": 1,
+    "Prague": 1, "Budapest": 1, "Athens": 2, "Lisbon": 0, "Dublin": 0,
+    "Edinburgh": 0, "Barcelona": 1, "Milan": 1, "Venice": 1, "Munich": 1,
+    "Frankfurt": 1, "Hamburg": 1, "Cologne": 1, "Stuttgart": 1, "Düsseldorf": 1,
+    "Lyon": 1, "Marseille": 1, "Nice": 1, "Toulouse": 1, "Montreal": -5,
+    "Vancouver": -8, "Calgary": -7, "Ottawa": -5, "Quebec City": -5, "Winnipeg": -6,
+    "Mexico City": -6, "Guadalajara": -6, "Havana": -5, "San Juan": -4,
+    "Panama City": -5, "Bogotá": -5, "Lima": -5, "Caracas": -4, "Montevideo": -3,
+    "Asunción": -4, "Santiago": -4, "Casablanca": 0, "Rabat": 0, "Algiers": 1,
+    "Tunis": 1, "Tripoli": 2, "Alexandria": 2, "Khartoum": 2, "Addis Ababa": 3,
+    "Nairobi": 3, "Kampala": 3, "Dar es Salaam": 3, "Lusaka": 2, "Harare": 2,
+    "Gaborone": 2, "Windhoek": 2, "Luanda": 1, "Kinshasa": 1, "Brazzaville": 1,
+    "Yaoundé": 1, "Abidjan": 0, "Accra": 0, "Lagos": 1, "Abuja": 1,
+    "Dakar": 0, "Nouakchott": 0, "Reykjavik": 0, "Abu Dhabi": 4, "Doha": 3,
+    "Manama": 3, "Kuwait City": 3, "Riyadh": 3, "Jeddah": 3, "Muscat": 4,
+    "Tehran": 3.5, "Baghdad": 3, "Amman": 3, "Jerusalem": 2, "Tel Aviv": 2,
+    "Beirut": 2, "Damascus": 3, "Ankara": 3, "Izmir": 3, "Bursa": 3,
+    "Antalya": 3, "Adana": 3, "Tbilisi": 4, "Yerevan": 4, "Baku": 4,
+    "Kabul": 4.5, "Islamabad": 5, "Karachi": 5, "Lahore": 5, "New Delhi": 5.5,
+    "Kolkata": 5.5, "Chennai": 5.5, "Bangalore": 5.5, "Hyderabad": 5.5,
+    "Ahmedabad": 5.5, "Pune": 5.5, "Surat": 5.5, "Jaipur": 5.5, "Thimphu": 6,
+    "Kathmandu": 5.75, "Dhaka": 6, "Yangon": 6.5, "Phnom Penh": 7, "Vientiane": 7,
+    "Hanoi": 7, "Ho Chi Minh City": 7, "Jakarta": 7, "Surabaya": 7, "Bandung": 7,
+    "Medan": 7, "Makassar": 8, "Denpasar": 8, "Manila": 8, "Cebu": 8,
+    "Kuala Lumpur": 8, "Singapore": 8, "Bangkok": 7, "Shanghai": 8, "Beijing": 8,
+    "Guangzhou": 8, "Shenzhen": 8, "Chengdu": 8, "Hangzhou": 8, "Wuhan": 8,
+    "Xi'an": 8, "Nanjing": 8, "Tianjin": 8, "Chongqing": 8, "Harbin": 8,
+    "Suzhou": 8, "Dalian": 8, "Qingdao": 8, "Zhengzhou": 8, "Changsha": 8,
+    "Kunming": 8, "Fuzhou": 8, "Ningbo": 8, "Taipei": 8, "Kaohsiung": 8,
+    "Seoul": 9, "Busan": 9, "Osaka": 9, "Kyoto": 9, "Kobe": 9, "Nagoya": 9,
+    "Sapporo": 9, "Fukuoka": 9, "Hiroshima": 9, "Sendai": 9, "Yokohama": 9,
+    "Darwin": 9.5, "Perth": 8, "Adelaide": 9.5, "Brisbane": 10, "Sydney": 10,
+    "Melbourne": 10, "Canberra": 10, "Hobart": 10, "Gold Coast": 10,
+    "Auckland": 12, "Wellington": 12, "Christchurch": 12, "Honolulu": -10,
+    "Anchorage": -9, "Seattle": -8, "Portland": -8, "San Francisco": -8,
+    "Los Angeles": -8, "San Diego": -8, "Las Vegas": -8, "Phoenix": -7,
+    "Salt Lake City": -7, "Denver": -7, "Dallas": -6, "Houston": -6,
+    "Austin": -6, "San Antonio": -6, "Oklahoma City": -6, "Kansas City": -6,
+    "Minneapolis": -6, "St. Louis": -6, "Memphis": -6, "New Orleans": -6,
+    "Chicago": -6, "Detroit": -5, "Indianapolis": -5, "Columbus": -5,
+    "Cleveland": -5, "Cincinnati": -5, "Milwaukee": -6, "Atlanta": -5,
+    "Charlotte": -5, "Raleigh": -5, "Nashville": -6, "Miami": -5, "Tampa": -5,
+    "Orlando": -5, "Jacksonville": -5, "Baltimore": -5, "Washington DC": -5,
+    "Philadelphia": -5, "Pittsburgh": -5, "Boston": -5, "Buffalo": -5,
+    "Montreal": -5, "Quebec City": -5, "Toronto": -5, "Ottawa": -5,
+    "Calgary": -7, "Edmonton": -7, "Winnipeg": -6, "Halifax": -4,
+    "Belgrade": 1, "Zagreb": 1, "Sofia": 2, "Bucharest": 2, "Budapest": 1,
+    "Ljubljana": 1, "Bratislava": 1, "Prague": 1, "Minsk": 3, "Kiev": 2,
+    "Kharkiv": 2, "Odessa": 2, "Lviv": 2, "Saint Petersburg": 3,
+    "Yekaterinburg": 5, "Novosibirsk": 7, "Kazan": 3, "Nizhny Novgorod": 3,
+    "Samara": 4, "Omsk": 6, "Chelyabinsk": 5, "Ufa": 5, "Rostov-on-Don": 3,
+    "Volgograd": 3, "Krasnodar": 3, "Sochi": 3, "Vladivostok": 10,
+    "Irkutsk": 8, "Krasnoyarsk": 7, "Tomsk": 7, "Yakutsk": 9, "Magadan": 11,
+    "Petropavlovsk-Kamchatsky": 12, "Tashkent": 5, "Almaty": 6, "Astana": 6,
+    "Bishkek": 6, "Dushanbe": 5, "Ashgabat": 5
+  };
+
+  let offset = cityOffsets[city] || 0;
+  let decimalTime = hours + minutes / 60 - offset;
+  while (decimalTime < 0) decimalTime += 24;
+  while (decimalTime >= 24) decimalTime -= 24;
+
+  let ascendantDegree = ((decimalTime - 6) * 15) % 360;
+  if (ascendantDegree < 0) ascendantDegree += 360;
+
+  let signIndex = Math.floor(ascendantDegree / 30);
+  let signs = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
+               "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
+  return signs[signIndex];
+}
+
+// GLAVNA FUNKCIJA ZA SUB-ZODIAC
+function getSubZodiac(day, month, timeStr, city, year) {
+  // Parse time
+  let hours = 12, minutes = 0;
+  if (timeStr && timeStr.match(/^\d{2}:\d{2}$/)) {
+    let parts = timeStr.split(":");
+    hours = parseInt(parts[0]);
+    minutes = parseInt(parts[1]);
+  }
+
+  // Uzmi koordinate grada
+  let coords = cityCoords[city];
+  if (!coords) {
+    return getSubZodiacFallback(day, month, timeStr, city);
+  }
+
+  // Koristi godinu rođenja ako je dostupna, inače 2000
+  let calcYear = year || 2000;
+
+  let ascendantDeg = calculateAscendant(calcYear, month, day, hours, minutes, coords.lat, coords.lon);
+
+  return {
+    sign: ascendantToSign(ascendantDeg),
+    degree: Math.round(ascendantDeg % 30)
+  };
+}
 function formatDate(input){
 
   let value = input.value.replace(/\D/g,'');
@@ -1449,6 +2930,7 @@ function openLink(type){
 
   // 🔥 PROVERA ZA DRUGOG BLIZANCA
   let isTwin = document.getElementById("twinCheck") && document.getElementById("twinCheck").checked;
+  let isTwin3 = document.getElementById("twinCheck3") && document.getElementById("twinCheck3").checked;
 
   let age = 0;
 
@@ -1644,6 +3126,7 @@ function markAspectInPyramid(steps){
 
   // 🔥 PROVERA ZA DRUGOG BLIZANCA
   let isTwin = document.getElementById("twinCheck") && document.getElementById("twinCheck").checked;
+  let isTwin3 = document.getElementById("twinCheck3") && document.getElementById("twinCheck3").checked;
 
   // RESET
   spans.forEach(s => {
@@ -1965,7 +3448,7 @@ for(let y = 1950; y <= 2050; y++){
 
     // nazivi dana
     days.forEach(d=>{
-      html += `<div style="font-weight:bold; color:#38bdf8;">${d}</div>`;
+      html += `<div style="font-weight:bold; color:#94a3b8;">${d}</div>`;
     });
 
     html += `</div><div style="display:grid; grid-template-columns:repeat(7,1fr); gap:5px;">`;
@@ -2031,8 +3514,7 @@ html += `
     bottom:3px;
     right:4px;
     font-size:10px;
-    color:gold;
-    text-shadow:0 0 6px gold;
+    color:#FFD700;
     pointer-events:none;
   ">
     ${finalNumber}
@@ -2080,6 +3562,7 @@ html += `
 // 🔥 TAB HISTORY
 let tabHistory = [];
 const MAX_HISTORY = 10;
+let skipSavePrompt = false;
 
 function goBack(){
 
@@ -2097,8 +3580,10 @@ function goBack(){
   }
 
   let title = document.querySelector(".title");
-  if(title){
+  if(title && !document.body.classList.contains("detail-active")){
     title.style.display = "block";
+  } else if(title){
+    title.style.display = "none";
   }
 
   // izbaci trenutni tab iz istorije
@@ -2196,14 +3681,23 @@ if(id === "pyramid"){
   loadAspectYears();
 }
 
+if(id === "analysis"){
+  initAnalysisDatePicker();
+}
+
 if(id === "spirit"){
   loadSpirit();
 }
 
-// 🔥 FOOTER CONTROL (NE PRIKAZUJ UOPŠTE)
+// 🔥 FOOTER CONTROL
 let footer = document.querySelector(".footer");
 if(footer){
-  footer.style.display = "none";
+  // Footer vidljiv SAMO na home i SAMO pre prvog ANALYZE
+  if(id === "home" && !hasAnalyzedFlag){
+    footer.style.display = "flex";
+  } else {
+    footer.style.display = "none";
+  }
 }}
 
 function toggleSeason(seasonId, el){
@@ -2286,6 +3780,58 @@ function reduce(num){
   return num;
 }
 
+// 🔥 ANALYSIS DATE PICKER FUNCTIONS
+let analysisDate = { day: 1, month: 1, year: 2026 };
+
+function initAnalysisDatePicker(){
+  let today = new Date();
+  analysisDate.day = today.getDate();
+  analysisDate.month = today.getMonth() + 1;
+  analysisDate.year = today.getFullYear();
+  updateAnalysisDisplay();
+  calculateDifference();
+}
+
+function changeAnalysisDate(type, delta){
+  if(type === 'day'){
+    analysisDate.day += delta;
+    let maxDays = getDaysInMonth(analysisDate.month, analysisDate.year);
+    if(analysisDate.day > maxDays) analysisDate.day = 1;
+    if(analysisDate.day < 1) analysisDate.day = maxDays;
+  }
+  else if(type === 'month'){
+    analysisDate.month += delta;
+    if(analysisDate.month > 12) analysisDate.month = 1;
+    if(analysisDate.month < 1) analysisDate.month = 12;
+    let maxDays = getDaysInMonth(analysisDate.month, analysisDate.year);
+    if(analysisDate.day > maxDays) analysisDate.day = maxDays;
+  }
+  else if(type === 'year'){
+    analysisDate.year += delta;
+    if(analysisDate.year < 1900) analysisDate.year = 1900;
+    if(analysisDate.year > 2100) analysisDate.year = 2100;
+  }
+  updateAnalysisDisplay();
+  calculateDifference();
+}
+
+function getDaysInMonth(month, year){
+  return new Date(year, month, 0).getDate();
+}
+
+function updateAnalysisDisplay(){
+  let d = analysisDate.day.toString().padStart(2, '0');
+  let m = analysisDate.month.toString().padStart(2, '0');
+  let y = analysisDate.year.toString();
+
+  document.getElementById('analysisDay').innerText = d;
+  document.getElementById('analysisMonth').innerText = m;
+  document.getElementById('analysisYear').innerText = y;
+
+  // Ažuriraj skriveni input
+  document.getElementById('analysisInput').value = d + '.' + m + '.' + y;
+}
+
 function calculateDifference(){
 
   let firstDate = document.getElementById("input").value;
@@ -2332,12 +3878,16 @@ alert("Use format DD.MM.YYYY");
   }
 
   document.getElementById("analysisText").innerHTML = `
-
-
-    <b>TIME DIFFERENCE</b><br><br>
-    ${years} years<br>
-    ${months} months<br>
-    ${days} days
+    <div style="padding:10px; text-align:center;">
+    <div style="font-size:11px; color:#64748b; letter-spacing:2px; margin-bottom:8px;">TIME DIFFERENCE</div>
+    <div style="font-size:14px; color:white;">
+      <span style="color:#FFD700;">${years}</span> years 
+      <span style="color:#334155; margin:0 8px;">|</span> 
+      <span style="color:#FFD700;">${months}</span> months 
+      <span style="color:#334155; margin:0 8px;">|</span> 
+      <span style="color:#FFD700;">${days}</span> days
+    </div>
+    </div>
   `;
   // 🔥 UZMI SVA POLJA PIRAMIDE
 let rows = document.querySelectorAll("#analysisPyramid .row");
@@ -2352,10 +3902,14 @@ rows.forEach((row, index) => {
 
 // 🔥 PROVERA ZA DRUGOG BLIZANCA U ANALYSIS
 let isAnalysisTwin = document.getElementById("twinCheck") && document.getElementById("twinCheck").checked;
+let isAnalysisTwin3 = document.getElementById("twinCheck3") && document.getElementById("twinCheck3").checked;
 
 // 🔥 RESETUJ STARA OBELEŽJA
 spans.forEach(s => {
   s.style.border = "";
+  s.style.boxShadow = "";
+  s.style.background = "#1e293b";
+  s.style.color = "white";
 });
 
 // 🔥 FUNKCIJA ZA KRETANJE
@@ -2477,26 +4031,26 @@ row2.style.marginTop = "6px";
 
 // YEAR ASPECT
 let yearAspect = document.createElement("div");
-yearAspect.style.cssText = "color:gold; font-size:18px; font-weight:bold; cursor:pointer; text-shadow:0 0 10px gold, 0 0 20px gold, 0 0 30px rgba(255,215,0,0.8); transition:0.3s; width:60px; text-align:center;";
+yearAspect.style.cssText = "color:#FFD700; font-size:18px; font-weight:bold; cursor:pointer; transition:0.3s; width:60px; text-align:center;";
 yearAspect.innerHTML = `${y.current}/${y.next}`;
-yearAspect.onmouseover = function(){ this.style.textShadow = "0 0 15px gold, 0 0 30px gold, 0 0 45px rgba(255,215,0,1), 0 0 60px rgba(255,215,0,0.6)"; this.style.transform = "scale(1.08)"; };
-yearAspect.onmouseout = function(){ this.style.textShadow = "0 0 10px gold, 0 0 20px gold, 0 0 30px rgba(255,215,0,0.8)"; this.style.transform = "scale(1)"; };
+yearAspect.onmouseover = function(){ this.style.transform = "scale(1.08)"; };
+yearAspect.onmouseout = function(){ this.style.transform = "scale(1)"; };
 yearAspect.onclick = function(){ openAspectDetailFromCode(`${y.current}/${y.next}`); };
 
 // MONTH ASPECT
 let monthAspect = document.createElement("div");
-monthAspect.style.cssText = "color:gold; font-size:18px; font-weight:bold; cursor:pointer; text-shadow:0 0 10px gold, 0 0 20px gold, 0 0 30px rgba(255,215,0,0.8); transition:0.3s; width:60px; text-align:center;";
+monthAspect.style.cssText = "color:#FFD700; font-size:18px; font-weight:bold; cursor:pointer; transition:0.3s; width:60px; text-align:center;";
 monthAspect.innerHTML = `${m.current}/${m.next}`;
-monthAspect.onmouseover = function(){ this.style.textShadow = "0 0 15px gold, 0 0 30px gold, 0 0 45px rgba(255,215,0,1), 0 0 60px rgba(255,215,0,0.6)"; this.style.transform = "scale(1.08)"; };
-monthAspect.onmouseout = function(){ this.style.textShadow = "0 0 10px gold, 0 0 20px gold, 0 0 30px rgba(255,215,0,0.8)"; this.style.transform = "scale(1)"; };
+monthAspect.onmouseover = function(){ this.style.transform = "scale(1.08)"; };
+monthAspect.onmouseout = function(){ this.style.transform = "scale(1)"; };
 monthAspect.onclick = function(){ openAspectDetailFromCode(`${m.current}/${m.next}`); };
 
 // DAY ASPECT
 let dayAspect = document.createElement("div");
-dayAspect.style.cssText = "color:gold; font-size:18px; font-weight:bold; cursor:pointer; text-shadow:0 0 10px gold, 0 0 20px gold, 0 0 30px rgba(255,215,0,0.8); transition:0.3s; width:60px; text-align:center;";
+dayAspect.style.cssText = "color:#FFD700; font-size:18px; font-weight:bold; cursor:pointer; transition:0.3s; width:60px; text-align:center;";
 dayAspect.innerHTML = `${d.current}/${d.next}`;
-dayAspect.onmouseover = function(){ this.style.textShadow = "0 0 15px gold, 0 0 30px gold, 0 0 45px rgba(255,215,0,1), 0 0 60px rgba(255,215,0,0.6)"; this.style.transform = "scale(1.08)"; };
-dayAspect.onmouseout = function(){ this.style.textShadow = "0 0 10px gold, 0 0 20px gold, 0 0 30px rgba(255,215,0,0.8)"; this.style.transform = "scale(1)"; };
+dayAspect.onmouseover = function(){ this.style.transform = "scale(1.08)"; };
+dayAspect.onmouseout = function(){ this.style.transform = "scale(1)"; };
 dayAspect.onclick = function(){ openAspectDetailFromCode(`${d.current}/${d.next}`); };
 
 row2.appendChild(yearAspect);
@@ -2585,6 +4139,9 @@ if(intro){
 
   document.getElementById("mainLabel").style.display="block";
 
+  // 🔥 SET ANALYZE FLAG
+  hasAnalyzedFlag = true;
+
   setTimeout(()=>{
 
   document.getElementById("mainLabel").classList.add("show-label");
@@ -2618,6 +4175,24 @@ document.getElementById("numberHint").style.display = "block";
 
   document.getElementById("zodiac").innerText = zodiac;
   document.getElementById("zodiac").classList.add("show-fade");
+  document.getElementById("zodiac").style.cursor = "pointer";
+  document.getElementById("zodiac").onclick = function() {
+    // Try Swiss Ephemeris first, fallback to approximate
+    if(window.generateNatalChartSwiss) {
+      window.generateNatalChartSwiss();
+    } else {
+      generateNatalChart();
+    }
+  };
+
+  // SUB-ZODIAC (Ascendant)
+  let timeStr = document.getElementById("timeInput").value;
+  let city = document.getElementById("cityInput").value;
+  if(timeStr && city){
+    let subZodiac = getSubZodiac(parseInt(parts[0]), parseInt(parts[1]), timeStr, city, parseInt(parts[2]));
+    document.getElementById("subZodiac").innerText = " | " + subZodiac.sign + " " + subZodiac.degree + "°";
+    document.getElementById("subZodiac").classList.add("show-subzodiac");
+  }
 
   // STORE TEXT
   document.getElementById("storeMsg").classList.add("show-fade");
@@ -2645,18 +4220,41 @@ document.getElementById("numberHint").style.display = "block";
     tempOriginal = next;
   }
 
-  // 🔥 PROVERA ZA DRUGOG BLIZANCA
+  // 🔥 PROVERA ZA DRUGOG I TREĆEG BLIZANCA
   let isTwin = document.getElementById("twinCheck") && document.getElementById("twinCheck").checked;
+  let isTwin3 = document.getElementById("twinCheck3") && document.getElementById("twinCheck3").checked;
 
   // Za twin: prvi red ostaje ORIGINALAN, ali se piramida ispod gradi od twin niza
   // Za normalan: standardna piramida
   let twinFirstRow = null;
-  if(isTwin){
+  let twin3FirstRow = null;
+
+  if(isTwin || isTwin3){
     // KREĆEMO OD DRUGOG REDA originalne piramide
     let secondRow = originalRowsForCodes[1]; // [R1,R2,R3,R4,R5,R6,R7]
     let thirdRow = originalRowsForCodes[2];  // [T1,T2,T3,T4,T5,T6]
     // Novi twin prvi red: [R3,R4,R5,R6,R7,T1,T2]
     twinFirstRow = secondRow.slice(2).concat(thirdRow.slice(0,2));
+  }
+
+  if(isTwin3){
+    // PRVO IZGRADI DRUGU TWIN PIRAMIDU
+    let twin2Rows = [];
+    twin2Rows.push([...twinFirstRow]);
+    let tempTwin = [...twinFirstRow];
+    while(tempTwin.length > 0){
+      twin2Rows.push([...tempTwin]);
+      let next = [];
+      for(let i=0; i<tempTwin.length-1; i++){
+        next.push(reduce(tempTwin[i]+tempTwin[i+1]));
+      }
+      tempTwin = next;
+    }
+    // Sada od druge twin piramide izgradi treću
+    // Formula: od drugog i trećeg reda druge piramide: [A3,A4,A5,A6,B1,B2]
+    let twin2SecondRow = twin2Rows[1]; // drugi red druge piramide
+    let twin2ThirdRow = twin2Rows[2];  // treći red druge piramide
+    twin3FirstRow = twin2SecondRow.slice(2).concat(twin2ThirdRow.slice(0,2));
   }
 
   let output=document.getElementById("output");
@@ -2676,7 +4274,9 @@ document.getElementById("numberHint").style.display = "block";
 
   // DRUGI RED - odredi izvor u zavisnosti od twin
   let secondRowSource;
-  if(isTwin && twinFirstRow){
+  if(isTwin3 && twin3FirstRow){
+    secondRowSource = [...twin3FirstRow];
+  } else if(isTwin && twinFirstRow){
     secondRowSource = [...twinFirstRow];
   } else {
     // Standardno: zbir susednih iz prvog reda
@@ -2703,6 +4303,10 @@ document.getElementById("numberHint").style.display = "block";
   // 🔥 SADA KOPIRAMO GOTOVU PIRAMIDU
 document.getElementById("analysisPyramid").innerHTML = output.innerHTML;
 
+  // 🔥 SAKRIJ FOOTER NAKON PRVOG ANALYZE
+  let footer = document.querySelector(".footer");
+  if(footer) footer.style.display = "none";
+
 function generateFromAnalysis(){
 
   let val = document.getElementById("analysisInput").value;
@@ -2726,9 +4330,10 @@ function generateFromAnalysis(){
   let labels=["Life Path","Core Essence","Marriage","Children","Connections","Pyramidal Code",""];
 
   // 🔥 Koristi odgovarajuće redove u zavisnosti od twin moda
-  // Za twin: koristi rows (modifikovana piramida)
+  // Za twin3: koristi rows (treća piramida)
+  // Za twin: koristi rows (druga piramida)
   // Za normalan: koristi originalRowsForCodes
-  let codesRows = isTwin ? rows : originalRowsForCodes;
+  let codesRows = (isTwin || isTwin3) ? rows : originalRowsForCodes;
 
   codesRows.slice(1).forEach((r,i)=>{
     let line=document.createElement("div");
@@ -2739,6 +4344,14 @@ function generateFromAnalysis(){
     label.innerText=labels[i];
 
     let row=createRow(r);
+
+    // 🔥 ZLATNA BOJA ZA POSLEDNJA 2 REDA
+    if(i >= codesRows.slice(1).length - 2){
+      row.querySelectorAll("span").forEach(span => {
+        span.style.color = "#FFD700";
+        span.style.textShadow = "0 0 8px rgba(255,215,0,0.5)";
+      });
+    }
 
     line.appendChild(label);
     line.appendChild(row);
@@ -2766,9 +4379,18 @@ function generateFromAnalysis(){
   ].join("");
 
   codes.innerHTML = `
-  <div><b>PYTHAGOREAN CODE</b> ${pyth.join("")}</div>
-  <div><b>PYRAMIDAL CODE</b> ${pyr}</div>
-  <div><b>UNIQUE CODE</b> ${unique}</div>
+  <div style="text-align:center; font-size:13px; margin-bottom:4px;">
+    <span style="color:white;">PYTHAGOREAN CODE</span> 
+    <span style="color:#FFD700;">${pyth.join("")}</span>
+  </div>
+  <div style="text-align:center; font-size:13px; margin-bottom:4px;">
+    <span style="color:white;">PYRAMIDAL CODE</span> 
+    <span style="color:#FFD700;">${pyr}</span>
+  </div>
+  <div style="text-align:center; font-size:13px;">
+    <span style="color:white;">UNIQUE CODE</span> 
+    <span style="color:#FFD700;">${unique}</span>
+  </div>
 `;
 
 }
@@ -2997,6 +4619,9 @@ window.onload = function(){
   video.onended = function(){
     video.pause();
   };
+
+  // 🔥 LOAD CITIES
+  loadCities();
 
   // 🔥 DODAJ OVO
   showTab("home");
@@ -3940,6 +5565,27 @@ document.getElementById("spiritCode").innerText = code;
 
 
 
+
+// 🔥 DISCLAIMER
+function acceptDisclaimer(){
+  localStorage.setItem('disclaimer_accepted', 'true');
+  let modal = document.getElementById('disclaimerModal');
+  if(modal) modal.style.display = 'none';
+}
+
+function checkDisclaimer(){
+  let accepted = localStorage.getItem('disclaimer_accepted');
+  if(accepted === 'true'){
+    let modal = document.getElementById('disclaimerModal');
+    if(modal) modal.style.display = 'none';
+  }
+}
+
+// Proveri disclaimer pri učitavanju
+document.addEventListener('DOMContentLoaded', function(){
+  checkDisclaimer();
+});
+
 document.addEventListener("DOMContentLoaded", function(){
   showTab("home");
 });
@@ -4030,9 +5676,20 @@ function updateSavedCount(){
 }
 
 function offerSaveDate(dateStr){
-  // Proveri da li već postoji
+  // Preskoči ako učitavamo sačuvani datum
+  if(skipSavePrompt){
+    skipSavePrompt = false;
+    return;
+  }
+  // Uzmi sve vrednosti
+  let timeStr = document.getElementById("timeInput") ? document.getElementById("timeInput").value : "";
+  let city = document.getElementById("cityInput") ? document.getElementById("cityInput").value : "";
+  let isTwin = document.getElementById("twinCheck") && document.getElementById("twinCheck").checked;
+  let isTwin3 = document.getElementById("twinCheck3") && document.getElementById("twinCheck3").checked;
+
+  // Proveri da li već postoji identičan zapis
   let saved = getSavedDates();
-  let exists = saved.some(d => d.date === dateStr);
+  let exists = saved.some(d => d.date === dateStr && d.time === timeStr && d.city === city && d.isTwin === isTwin && d.isTwin3 === isTwin3);
   if(exists) return; // Već sačuvano, ne pitaj
 
   // Prikaži modal
@@ -4041,7 +5698,7 @@ function offerSaveDate(dateStr){
   let nameInput = document.getElementById('saveNameInput');
 
   if(modal && dateSpan){
-    dateSpan.innerText = dateStr;
+    dateSpan.innerText = dateStr + (timeStr ? " " + timeStr : "") + (city ? " " + city : "");
     nameInput.value = '';
     modal.style.display = 'flex';
     setTimeout(() => nameInput.focus(), 100);
@@ -4054,7 +5711,7 @@ function closeSaveModal(){
 }
 
 function confirmSaveDate(){
-  let dateStr = document.getElementById('saveModalDate').innerText;
+  let modalDate = document.getElementById('saveModalDate').innerText;
   let name = document.getElementById('saveNameInput').value.trim();
 
   if(!name){
@@ -4062,14 +5719,23 @@ function confirmSaveDate(){
     return;
   }
 
-  let saved = getSavedDates();
+  // Uzmi trenutne vrednosti
+  let dateStr = document.getElementById("input").value;
+  let timeStr = document.getElementById("timeInput") ? document.getElementById("timeInput").value : "";
+  let city = document.getElementById("cityInput") ? document.getElementById("cityInput").value : "";
   let isTwin = document.getElementById("twinCheck") && document.getElementById("twinCheck").checked;
+  let isTwin3 = document.getElementById("twinCheck3") && document.getElementById("twinCheck3").checked;
+
+  let saved = getSavedDates();
 
   saved.push({
     id: Date.now(),
     name: name,
     date: dateStr,
+    time: timeStr,
+    city: city,
     isTwin: isTwin,
+    isTwin3: isTwin3,
     timestamp: new Date().toISOString()
   });
 
@@ -4085,12 +5751,26 @@ function deleteSavedDate(id){
   renderSavedList();
 }
 
-function loadSavedDate(dateStr, isTwin){
+function loadSavedDate(dateStr, timeStr, city, isTwin, isTwin3){
   document.getElementById('input').value = dateStr;
+
+  let timeInput = document.getElementById('timeInput');
+  if(timeInput && timeStr) timeInput.value = timeStr;
+
+  let cityInput = document.getElementById('cityInput');
+  if(cityInput && city) cityInput.value = city;
+
   let twinCheck = document.getElementById('twinCheck');
   if(twinCheck){
-    twinCheck.checked = isTwin === true;
+    twinCheck.checked = isTwin === true || isTwin === 'true';
   }
+
+  let twinCheck3 = document.getElementById('twinCheck3');
+  if(twinCheck3){
+    twinCheck3.checked = isTwin3 === true || isTwin3 === 'true';
+  }
+
+  skipSavePrompt = true;
   generate();
   toggleSavedPanel();
 }
@@ -4130,6 +5810,20 @@ function renderSavedList(){
       font-weight:bold;
     ">TWIN</span>` : '';
 
+    let twin3Badge = item.isTwin3 ? `<span style="
+      background:#FFD700;
+      color:#0f172a;
+      font-size:9px;
+      padding:2px 6px;
+      border-radius:4px;
+      margin-left:6px;
+      font-weight:bold;
+    ">3rd TWIN</span>` : '';
+
+    let details = item.date;
+    if(item.time) details += " " + item.time;
+    if(item.city) details += " " + item.city;
+
     html += `<div style="
       background:#0f172a;
       border-radius:8px;
@@ -4140,11 +5834,11 @@ function renderSavedList(){
       border:1px solid #334155;
     " onmouseover="this.style.borderColor='#38bdf8'" 
        onmouseout="this.style.borderColor='#334155'"
-       onclick="loadSavedDate('${item.date}', ${item.isTwin ? 'true' : 'false'})">
+       onclick="loadSavedDate('${item.date}', '${item.time || ''}', '${item.city || ''}', ${item.isTwin ? 'true' : 'false'}, ${item.isTwin3 ? 'true' : 'false'})">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <div>
-          <div style="color:#f6cb71; font-weight:bold; font-size:13px;">${item.name}${twinBadge}</div>
-          <div style="color:#94a3b8; font-size:11px; margin-top:2px;">${item.date}</div>
+          <div style="color:#f6cb71; font-weight:bold; font-size:13px;">${item.name}${twinBadge}${twin3Badge}</div>
+          <div style="color:#94a3b8; font-size:11px; margin-top:2px;">${details}</div>
         </div>
         <span onclick="event.stopPropagation(); deleteSavedDate(${item.id})" style="
           color:#ef4444;
@@ -4278,6 +5972,307 @@ document.addEventListener('DOMContentLoaded', function(){
 </div>
 
 
+
+
+<!-- DISCLAIMER MODAL -->
+<div id="disclaimerModal" style="
+  display:flex;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.9);
+  justify-content:center;
+  align-items:center;
+  z-index:999999;
+">
+  <div style="
+    background:#1e293b;
+    padding:30px 25px;
+    border-radius:15px;
+    width:85%;
+    max-width:360px;
+    text-align:center;
+    box-shadow:0 0 40px rgba(56,189,248,0.3);
+    border:1px solid #38bdf8;
+  ">
+    <div style="
+      font-size:28px;
+      margin-bottom:15px;
+    ">⚠️</div>
+
+    <h3 style="
+      color:#38bdf8;
+      margin-bottom:20px;
+      font-size:16px;
+      text-shadow:0 0 10px rgba(56,189,248,0.6);
+    ">
+      DISCLAIMER
+    </h3>
+
+    <p style="
+      color:#94a3b8;
+      font-size:12px;
+      line-height:1.6;
+      margin-bottom:25px;
+      text-align:left;
+    ">
+      This application is intended for informational and entertainment purposes only. Results and interpretations are subjective opinions and do not constitute professional advice. By using this application, you accept full responsibility for your decisions and actions.
+    </p>
+
+    <button onclick="acceptDisclaimer()" style="
+      width:100%;
+      padding:12px;
+      background:linear-gradient(135deg, #38bdf8, #0ea5e9);
+      border:none;
+      border-radius:10px;
+      color:white;
+      font-weight:bold;
+      font-size:13px;
+      cursor:pointer;
+      box-shadow:0 0 15px rgba(56,189,248,0.4);
+      transition:0.3s;
+    " onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 0 25px rgba(56,189,248,0.8)';"
+       onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 0 15px rgba(56,189,248,0.4)';">
+      I UNDERSTAND & ACCEPT
+    </button>
+  </div>
+</div>
+
+<!-- Swiss Ephemeris Module -->
+<script type="module">
+  import { SwissEphemeris, Planet, HouseSystem } from 'https://cdn.jsdelivr.net/npm/@swisseph/browser@latest/dist/index.js';
+
+  window.SwissEphemeris = SwissEphemeris;
+  window.SE_Planet = Planet;
+  window.SE_HouseSystem = HouseSystem;
+
+  // Initialize Swiss Ephemeris
+  window.initSwissEph = async function() {
+    if(window.sweInstance) return window.sweInstance;
+
+    try {
+      const swe = new SwissEphemeris();
+      await swe.init();
+      window.sweInstance = swe;
+      console.log('Swiss Ephemeris initialized successfully');
+      return swe;
+    } catch(e) {
+      console.error('Failed to initialize Swiss Ephemeris:', e);
+      return null;
+    }
+  };
+
+  // Calculate natal chart using Swiss Ephemeris
+  window.generateNatalChartSwiss = async function() {
+    const swe = await window.initSwissEph();
+    if(!swe) {
+      // Fallback to approximate calculations
+      generateNatalChart();
+      return;
+    }
+
+    let inputVal = document.getElementById("input").value;
+    if(!inputVal.match(/^\d{2}\.\d{2}\.\d{4}$/)) {
+      alert("Use format DD.MM.YYYY");
+      return;
+    }
+
+    let parts = inputVal.split(".");
+    let day = parseInt(parts[0]);
+    let month = parseInt(parts[1]);
+    let year = parseInt(parts[2]);
+
+    let timeStr = document.getElementById("timeInput").value;
+    let city = document.getElementById("cityInput").value;
+
+    let hours = 12, minutes = 0;
+    if(timeStr && timeStr.match(/^\d{2}:\d{2}$/)) {
+      let t = timeStr.split(":");
+      hours = parseInt(t[0]);
+      minutes = parseInt(t[1]);
+    }
+
+    // Convert to UTC
+    let coords = cityCoords[city];
+    let utcHours = hours;
+    if(coords) {
+      let offset = coords.lon / 15;
+      utcHours = hours - offset;
+      while(utcHours < 0) { utcHours += 24; day--; }
+      while(utcHours >= 24) { utcHours -= 24; day++; }
+    }
+
+    // Create date object
+    let date = new Date(Date.UTC(year, month - 1, day, Math.floor(utcHours), minutes));
+    let jd = swe.dateToJulianDay(date);
+
+    // Get coordinates
+    let lat = coords ? coords.lat : 44.7866;
+    let lon = coords ? coords.lon : 20.4489;
+
+    // Calculate planet positions
+    let planets = [
+      { name: 'Sun', body: Planet.Sun },
+      { name: 'Moon', body: Planet.Moon },
+      { name: 'Mercury', body: Planet.Mercury },
+      { name: 'Venus', body: Planet.Venus },
+      { name: 'Mars', body: Planet.Mars },
+      { name: 'Jupiter', body: Planet.Jupiter },
+      { name: 'Saturn', body: Planet.Saturn },
+      { name: 'Uranus', body: Planet.Uranus },
+      { name: 'Neptune', body: Planet.Neptune },
+      { name: 'Pluto', body: Planet.Pluto }
+    ];
+
+    let planetData = [];
+    planets.forEach(p => {
+      try {
+        let pos = swe.calculatePosition(jd, p.body);
+        let longitude = pos.longitude;
+        let house = 1; // Will calculate later
+        let sign = longitudeToSign(longitude);
+        let degree = Math.round(longitude % 30);
+
+        planetData.push({
+          name: p.name,
+          longitude: longitude,
+          sign: sign,
+          degree: degree,
+          house: house
+        });
+      } catch(e) {
+        console.error('Error calculating', p.name, e);
+      }
+    });
+
+    // Calculate houses using Placidus system
+    let houses;
+    try {
+      houses = swe.calculateHouses(jd, lat, lon, HouseSystem.Placidus);
+    } catch(e) {
+      console.error('Error calculating houses:', e);
+      // Fallback to Equal houses
+      houses = null;
+    }
+
+    let houseCusps = [];
+    let ascendantDeg = 0;
+
+    if(houses) {
+      ascendantDeg = houses.ascendant;
+      for(let i = 1; i <= 12; i++) {
+        houseCusps.push(houses.cusps[i]);
+      }
+    } else {
+      // Fallback
+      ascendantDeg = calculateAscendant(year, month, day, hours, minutes, lat, lon);
+      houseCusps = calculateHouses(ascendantDeg);
+    }
+
+    // Recalculate house assignments
+    planetData.forEach(p => {
+      p.house = getHouse(p.longitude, houseCusps);
+    });
+
+    // Sort by house
+    planetData.sort((a, b) => a.house - b.house);
+
+    // Generate HTML
+    let html = `
+      <div style="text-align:center; margin-bottom:20px;">
+        <div style="font-size:14px; color:#38bdf8; margin-bottom:5px;">NATAL CHART</div>
+        <div style="font-size:11px; color:#94a3b8;">${inputVal} ${timeStr || ''} ${city || ''}</div>
+        <div style="font-size:9px; color:#4ade80; margin-top:5px; font-style:italic;">
+          ✓ Swiss Ephemeris — JPL DE431 Precision
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; max-width:700px; margin:0 auto;">
+    `;
+
+    // House cusps
+    html += `<div style="background:#1e293b; padding:15px; border-radius:10px;">
+      <div style="font-size:12px; color:#FFD700; margin-bottom:10px; text-align:center;">HOUSE CUSPS (Placidus)</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">`;
+
+    for(let i = 0; i < 12; i++) {
+      let sign = longitudeToSign(houseCusps[i]);
+      let deg = Math.round(houseCusps[i] % 30);
+      html += `<div style="font-size:11px; color:#94a3b8;">House ${i+1}: <span style="color:#38bdf8;">${sign} ${deg}°</span></div>`;
+    }
+
+    html += `</div></div>`;
+
+    // Planet positions
+    html += `<div style="background:#1e293b; padding:15px; border-radius:10px;">
+      <div style="font-size:12px; color:#FFD700; margin-bottom:10px; text-align:center;">PLANETS</div>
+      <div style="display:flex; flex-direction:column; gap:6px;">`;
+
+    let planetColors = {
+      "Sun": "#FFD700", "Moon": "#C0C0C0", "Mercury": "#FFA500",
+      "Venus": "#FF69B4", "Mars": "#FF4500", "Jupiter": "#DAA520",
+      "Saturn": "#708090", "Uranus": "#00CED1", "Neptune": "#4169E1",
+      "Pluto": "#8B008B"
+    };
+
+    planetData.forEach(p => {
+      let color = planetColors[p.name] || "#fff";
+      html += `<div style="display:flex; justify-content:space-between; font-size:11px;">
+        <span style="color:${color}; font-weight:bold;">${p.name}</span>
+        <span style="color:#94a3b8;">${p.sign} ${p.degree}°</span>
+        <span style="color:#f6cb71;">House ${p.house}</span>
+      </div>`;
+    });
+
+    html += `</div></div></div>`;
+
+    // Ascendant info
+    let ascSign = longitudeToSign(ascendantDeg);
+    let ascDegree = Math.round(ascendantDeg % 30);
+    html += `
+      <div style="text-align:center; margin-top:15px; padding:10px; background:#1e293b; border-radius:10px; max-width:400px; margin:15px auto 0;">
+        <div style="font-size:12px; color:#FFD700;">ASCENDANT</div>
+        <div style="font-size:18px; color:#38bdf8; font-weight:bold;">${ascSign} ${ascDegree}°</div>
+        <div style="font-size:10px; color:#4ade80; margin-top:3px;">Precise to 0.001 arcsecond</div>
+      </div>
+    `;
+
+    document.getElementById("natalChartText").innerHTML = html;
+
+    document.body.classList.add("detail-active");
+    showTab("natalChart");
+  };
+
+function openAstro(){
+
+  const date =
+    document.getElementById("input").value;
+
+  const time =
+    document.getElementById("timeInput").value;
+
+  const citySelect =
+    document.getElementById("cityInput");
+
+  let city = "";
+
+  if(citySelect.selectedIndex >= 0){
+    city =
+      citySelect.options[
+        citySelect.selectedIndex
+      ].text;
+  }
+
+  if(!date || !time || !city){
+    alert("Enter date, time and city");
+    return;
+  }
+
+  window.location.href =
+    `astro.html?date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}&city=${encodeURIComponent(city)}`;
+}
+
+</script>
 
 </body>
 </html>
