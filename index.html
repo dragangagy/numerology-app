@@ -235,7 +235,9 @@
 
 #introVideo {
   display: block;
-  width: 70%;
+  width: 100%;
+  max-width: 350px;
+  height: auto;
   margin: 0 auto;
   border-radius: 10px;
 }
@@ -853,16 +855,46 @@ body {
     <div class="input-wrap">
       <input type="text" id="input" placeholder="DD.MM.YYYY"
   oninput="formatDate(this)"
-  onkeypress="if(event.key === 'Enter'){ generate(); }">
+  onblur="validateDateInput(this)"
+  onkeypress="if(event.key === 'Enter'){ generate(); }"
+  maxlength="10"
+  autocomplete="off">
     </div>
 
     <input type="text" id="timeInput" placeholder="HH:MM"
       oninput="formatTime(this)"
-      onkeypress="if(event.key === 'Enter'){ generate(); }">
+      onblur="validateTimeInput(this)"
+      onkeypress="if(event.key === 'Enter'){ generate(); }"
+      maxlength="5"
+      autocomplete="off">
 
-    <select id="cityInput" required>
-      <option value="" disabled selected>City...</option>
-    </select>
+    <div style="position: relative; flex-shrink: 0;">
+      <input type="text" id="cityInput" placeholder="City..." autocomplete="off" style="
+        background: #1e293b;
+        border: 1px solid #38bdf8;
+        color: white;
+        border-radius: 8px;
+        padding: 8px 6px;
+        font-size: 12px;
+        outline: none;
+        box-shadow: 0 0 10px rgba(56,189,248,0.4);
+        width: 120px;
+      ">
+      <div id="cityDropdown" style="
+        display: none;
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        width: 220px;
+        max-height: 250px;
+        overflow-y: auto;
+        background: #1e293b;
+        border: 1px solid #38bdf8;
+        border-radius: 8px;
+        z-index: 1000;
+        box-shadow: 0 0 15px rgba(56,189,248,0.4);
+      "></div>
+    </div>
 
     <div id="savedIcon" onclick="toggleSavedPanel()" style="
       width:34px; height:34px;
@@ -1374,26 +1406,44 @@ onclick="window.location.href='free.pdf'">
 </div>
 
 <div id="calendar"></div>
-<div id="todayPythagorean" style="
+<div id="todayPythagorean" style=""
   margin-top:20px;
-  text-align:center;
-">
+  text-align:center;">
 
-  <div style="
+  <!-- LABEL -->
+  <div id="pythLabel" style=""
     font-size:14px;
     color:white;
     opacity:0.8;
-    margin-bottom:8px;
-  ">
+    margin-bottom:4px;">
     Your Pythagorean code for today is:
   </div>
 
+  <!-- BIG GOLD NUMBER -->
   <div id="todayPythCode" style="
-    font-size:20px;
+    font-size:32px;
     font-weight:bold;
     color:#FFD700;
-  ">
+    margin-bottom:15px;">
     0
+  </div>
+
+  <!-- CODE FOR YEAR -->
+  <div style=""
+    text-align:center;
+    font-size:13px;
+    margin-bottom:4px;">
+    <span style="color:white;">CODE FOR YEAR</span>
+    <span id="yearPythCode" style="color:#FFD700; font-weight:bold; margin-left:8px; font-size:16px;">0</span>
+  </div>
+
+  <!-- CODE FOR MONTH -->
+  <div style=""
+    text-align:center;
+    font-size:13px;
+    margin-bottom:4px;">
+    <span style="color:white;">CODE FOR MONTH</span>
+    <span id="monthPythCode" style="color:#FFD700; font-weight:bold; margin-left:8px; font-size:16px;">0</span>
   </div>
 
 </div>
@@ -2001,9 +2051,25 @@ function formatTime(input){
   let mm = parseInt(val.slice(2,4));
 
   if(hh > 23) hh = 23;
+  if(hh < 0) hh = 0;
   if(mm > 59) mm = 59;
+  if(mm < 0) mm = 0;
 
   input.value = hh.toString().padStart(2,'0') + ':' + mm.toString().padStart(2,'0');
+}
+
+function validateTime(timeStr){
+  if(!timeStr) return true; // optional
+  if(!timeStr.match(/^\d{2}:\d{2}$/)) return false;
+
+  let parts = timeStr.split(':');
+  let hh = parseInt(parts[0]);
+  let mm = parseInt(parts[1]);
+
+  if(hh < 0 || hh > 23) return false;
+  if(mm < 0 || mm > 59) return false;
+
+  return true;
 }
 
 // 🔥 CITY DROPDOWN
@@ -2319,17 +2385,66 @@ const worldCities = [
 ];
 
 function loadCities(){
-  let select = document.getElementById("cityInput");
-  if(!select) return;
+  // City input is now text with autocomplete, no need to populate select
+  setupCityAutocomplete();
+}
 
-  select.innerHTML = '<option value="" disabled selected>City...</option>';
+function setupCityAutocomplete(){
+  let cityInput = document.getElementById("cityInput");
+  let dropdown = document.getElementById("cityDropdown");
+  if(!cityInput) return;
 
-  worldCities.forEach(city => {
-    let opt = document.createElement("option");
-    opt.value = city;
-    opt.text = city;
-    select.appendChild(opt);
+  cityInput.addEventListener("input", function(){
+    let val = this.value.toLowerCase();
+    if(!val){
+      if(dropdown) dropdown.style.display = "none";
+      return;
+    }
+
+    let matches = worldCities.filter(city => 
+      city.toLowerCase().includes(val)
+    ).slice(0, 10); // max 10 results
+
+    if(dropdown){
+      if(matches.length > 0){
+        dropdown.innerHTML = matches.map(city => 
+          `<div onclick="selectCity('${city.replace(/'/g, "\'")}')" style="
+            padding: 8px 12px;
+            cursor: pointer;
+            color: white;
+            font-size: 12px;
+            border-bottom: 1px solid #334155;
+            transition: 0.2s;
+          " onmouseover="this.style.background='#0f172a'" 
+             onmouseout="this.style.background='transparent'">${city}</div>`
+        ).join('');
+        dropdown.style.display = "block";
+      } else {
+        dropdown.style.display = "none";
+      }
+    }
   });
+
+  // Hide dropdown when clicking outside
+  document.addEventListener("click", function(e){
+    if(dropdown && !cityInput.contains(e.target) && !dropdown.contains(e.target)){
+      dropdown.style.display = "none";
+    }
+  });
+
+  // Handle Enter key
+  cityInput.addEventListener("keypress", function(e){
+    if(e.key === "Enter"){
+      if(dropdown) dropdown.style.display = "none";
+    }
+  });
+}
+
+function selectCity(city){
+  let cityInput = document.getElementById("cityInput");
+  let dropdown = document.getElementById("cityDropdown");
+  if(cityInput) cityInput.value = city;
+  if(dropdown) dropdown.style.display = "none";
 }
 
 // 🔥 SUB-ZODIAC CALCULATION (Ascendant/Rising Sign) - TAČNA ASTRONOMSKA VERZIJA
@@ -2882,21 +2997,90 @@ function formatDate(input){
 
   let formatted = '';
 
+  // Just add dots at positions 2 and 4, don't validate while typing
   if(value.length >= 2){
-    formatted += value.slice(0,2);
+    formatted += value.slice(0,2) + '.';
   } else {
     formatted += value;
   }
 
-  if(value.length >= 3){
-    formatted += '.' + value.slice(2,4);
+  if(value.length >= 4){
+    formatted += value.slice(2,4) + '.';
+  } else if(value.length > 2){
+    formatted += value.slice(2);
   }
 
   if(value.length >= 5){
-    formatted += '.' + value.slice(4,8);
+    formatted += value.slice(4,8);
   }
 
   input.value = formatted;
+}
+
+function validateDateInput(input){
+  let val = input.value;
+  if(!val) return;
+
+  // Auto-correct format if needed
+  let clean = val.replace(/\D/g,'');
+  if(clean.length === 8){
+    let day = clean.slice(0,2);
+    let month = clean.slice(2,4);
+    let year = clean.slice(4,8);
+    input.value = day + '.' + month + '.' + year;
+  }
+
+  // Validate
+  if(!validateDate(input.value)){
+    input.style.borderColor = '#ef4444';
+    input.style.boxShadow = '0 0 10px rgba(239,68,68,0.4)';
+  } else {
+    input.style.borderColor = '#38bdf8';
+    input.style.boxShadow = '0 0 10px rgba(56,189,248,0.4)';
+  }
+}
+
+function validateTimeInput(input){
+  let val = input.value;
+  if(!val) return;
+
+  // Auto-correct format if needed
+  let clean = val.replace(/\D/g,'');
+  if(clean.length === 4){
+    let hh = clean.slice(0,2);
+    let mm = clean.slice(2,4);
+    input.value = hh + ':' + mm;
+  }
+
+  // Validate
+  if(!validateTime(input.value)){
+    input.style.borderColor = '#ef4444';
+    input.style.boxShadow = '0 0 10px rgba(239,68,68,0.4)';
+  } else {
+    input.style.borderColor = '#38bdf8';
+    input.style.boxShadow = '0 0 10px rgba(56,189,248,0.4)';
+  }
+}
+
+function validateDate(dateStr){
+  if(!dateStr.match(/^\d{2}\.\d{2}\.\d{4}$/)) return false;
+
+  let parts = dateStr.split('.');
+  let day = parseInt(parts[0]);
+  let month = parseInt(parts[1]);
+  let year = parseInt(parts[2]);
+
+  if(month < 1 || month > 12) return false;
+  if(day < 1 || day > 31) return false;
+
+  // Check days in month
+  let daysInMonth = [0,31,28,31,30,31,30,31,31,30,31,30,31];
+  if(year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) daysInMonth[2] = 29;
+
+  if(day > daysInMonth[month]) return false;
+  if(year < 1 || year > 9999) return false;
+
+  return true;
 }
 
 //book shop//
@@ -3182,15 +3366,26 @@ function markAspectInPyramid(steps){
 
 function calculateTodayPythagorean(){
 
-  let today = new Date();
+  // Use selected month/year from dropdowns if available, otherwise use today
+  let monthSelect = document.getElementById("monthSelect");
+  let yearSelect = document.getElementById("yearSelect");
 
+  let today = new Date();
   let d = today.getDate();
   let m = today.getMonth() + 1;
   let y = today.getFullYear();
 
+  // Override with dropdown values if they exist
+  if(monthSelect && yearSelect){
+    m = parseInt(monthSelect.value) + 1; // monthSelect is 0-based
+    y = parseInt(yearSelect.value);
+  }
+
   let base = getPythagoreanBase();
   if(base[0] === 0 && base[1] === 0 && base[2] === 0){
     document.getElementById("todayPythCode").innerText = "0";
+    document.getElementById("yearPythCode").innerText = "0";
+    document.getElementById("monthPythCode").innerText = "0";
     return;
   }
 
@@ -3198,13 +3393,34 @@ function calculateTodayPythagorean(){
   let mn = reduce(m);
   let dy = reduce(d);
 
+  // KOD ZA GODINU (base + godina)
+  let yearC1 = reduce(base[0] + yr);
+  let yearC2 = reduce(base[1] + yr);
+  let yearC3 = reduce(base[2] + yr);
+  let yearCode = `${yearC1}${yearC2}${yearC3}`;
+
+  // KOD ZA MESEC (base + godina + mesec)
+  let monthC1 = reduce(base[0] + yr + m);
+  let monthC2 = reduce(base[1] + yr + m);
+  let monthC3 = reduce(base[2] + yr + m);
+  let monthCode = `${monthC1}${monthC2}${monthC3}`;
+
+  // KOD ZA DAN (base + dan)
+  let dayC1 = reduce(base[0] + dy);
+  let dayC2 = reduce(base[1] + dy);
+  let dayC3 = reduce(base[2] + dy);
+  let dayCode = `${dayC1}${dayC2}${dayC3}`;
+
+  // GLAVNI KOD (base + godina + mesec + dan)
   let c1 = reduce(base[0] + yr + mn + dy);
   let c2 = reduce(base[1] + yr + mn + dy);
   let c3 = reduce(base[2] + yr + mn + dy);
+  let fullCode = `${c1}${c2}${c3}`;
 
-  let code = `${c1}${c2}${c3}`;
-
-  document.getElementById("todayPythCode").innerText = code;
+  // PRIKAŽI SVE
+  document.getElementById("todayPythCode").innerText = fullCode;
+  document.getElementById("yearPythCode").innerText = yearCode;
+  document.getElementById("monthPythCode").innerText = monthCode;
 }
 
 
@@ -3359,26 +3575,60 @@ function selectPythDay(year, month, day, code){
     selected.classList.add("selected");
   }
 
-  // prikaži kod
-  let display = document.getElementById("todayPythCode");
-  if(display){
-    display.innerText = code;
+  let base = getPythagoreanBase();
+  if(base[0] === 0 && base[1] === 0 && base[2] === 0){
+    document.getElementById("todayPythCode").innerText = "0";
+    document.getElementById("yearPythCode").innerText = "0";
+    document.getElementById("monthPythCode").innerText = "0";
+
+    let label = document.querySelector("#todayPythagorean div:first-child");
+    if(label){
+      label.innerHTML = `Your Pythagorean code for <span style="color:gold;">${day}.${parseInt(month)+1}.${year}</span> is:`;
+    }
+    return;
   }
 
+  let yr = reduce(year);
+  let mn = reduce(parseInt(month) + 1);
+  let dy = reduce(day);
+
+  // KOD ZA GODINU
+  let yearC1 = reduce(base[0] + yr);
+  let yearC2 = reduce(base[1] + yr);
+  let yearC3 = reduce(base[2] + yr);
+  let yearCode = `${yearC1}${yearC2}${yearC3}`;
+
+  // KOD ZA MESEC
+  let monthC1 = reduce(base[0] + yr + mn);
+  let monthC2 = reduce(base[1] + yr + mn);
+  let monthC3 = reduce(base[2] + yr + mn);
+  let monthCode = `${monthC1}${monthC2}${monthC3}`;
+
+  // KOD ZA DAN
+  let dayC1 = reduce(base[0] + dy);
+  let dayC2 = reduce(base[1] + dy);
+  let dayC3 = reduce(base[2] + dy);
+  let dayCode = `${dayC1}${dayC2}${dayC3}`;
+
+  // GLAVNI KOD
+  let c1 = reduce(base[0] + yr + mn + dy);
+  let c2 = reduce(base[1] + yr + mn + dy);
+  let c3 = reduce(base[2] + yr + mn + dy);
+  let fullCode = `${c1}${c2}${c3}`;
+
+  // PRIKAŽI SVE
+  document.getElementById("todayPythCode").innerText = fullCode;
+  document.getElementById("yearPythCode").innerText = yearCode;
+  document.getElementById("monthPythCode").innerText = monthCode;
+
   // ažuriraj label
-  let label = document.querySelector("#todayPythagorean div:first-child");
+  let label = document.getElementById("pythLabel");
   if(label){
-    label.innerHTML = `Your Pythagorean code for <span style="color:gold;">${day}.${parseInt(month)+1}.${year}</span> is:`;
+    label.innerText = `Your Pythagorean code for ${day}.${parseInt(month)+1}.${year} is:`;
   }
 }
 
-function generateCalendar(){
-
-  let cal = document.getElementById("calendar");
-  let monthSelect = document.getElementById("monthSelect");
-  let yearSelect = document.getElementById("yearSelect");
-
-  // 🔥 POMOCNE FUNKCIJE
+// 🔥 GLOBALNA FUNKCIJA - Pythagorean Base
 function getPythagoreanBase(){
   let input = document.getElementById("input").value;
   if(!input || !input.match(/^\d{2}\.\d{2}\.\d{4}$/)) return [0,0,0];
@@ -3394,6 +3644,12 @@ function getPythagoreanBase(){
 
   return [p1, p2, p3];
 }
+
+function generateCalendar(){
+
+  let cal = document.getElementById("calendar");
+  let monthSelect = document.getElementById("monthSelect");
+  let yearSelect = document.getElementById("yearSelect");
 
   if(!cal || !monthSelect || !yearSelect) return;
 
@@ -3533,29 +3789,25 @@ html += `
 
   // auto-select today after render completes
   setTimeout(() => {
-    let todayCode = document.getElementById("todayPythCode");
-    if(todayCode){
-      let todayY = reduce(currentYear);
-      let todayM = reduce(currentMonth + 1);
-      let todayD = reduce(todayDay);
-      let base = getPythagoreanBase();
-      if(base[0] !== 0 || base[1] !== 0 || base[2] !== 0){
-        let tc1 = reduce(base[0] + todayY + todayM + todayD);
-        let tc2 = reduce(base[1] + todayY + todayM + todayD);
-        let tc3 = reduce(base[2] + todayY + todayM + todayD);
-        let todayFullCode = `${tc1}${tc2}${tc3}`;
-        selectPythDay(currentYear, currentMonth, todayDay, todayFullCode);
-      }
+    let base = getPythagoreanBase();
+    if(base[0] !== 0 || base[1] !== 0 || base[2] !== 0){
+      selectPythDay(currentYear, currentMonth, todayDay, "");
     }
   }, 200);
 
   // promene
   monthSelect.onchange = ()=>{
     renderCalendar(parseInt(monthSelect.value), parseInt(yearSelect.value));
+    setTimeout(() => {
+      calculateTodayPythagorean();
+    }, 100);
   };
 
   yearSelect.onchange = ()=>{
     renderCalendar(parseInt(monthSelect.value), parseInt(yearSelect.value));
+    setTimeout(() => {
+      calculateTodayPythagorean();
+    }, 100);
   };
 }
 
@@ -3667,10 +3919,10 @@ function showTab(id){
 
   // 🔥 OVDE IDE TVOJ KOD (NA SAMOM KRAJU)
   if(id === "pitagora"){
-    generateCalendar();
     setTimeout(() => {
+      generateCalendar();
       calculateTodayPythagorean();
-    }, 300);
+    }, 100);
   }
 
   if(id === "store"){
@@ -3777,6 +4029,9 @@ function reduce(num){
   while(num>9){
     num=num.toString().split('').reduce((a,b)=>a+ +b,0);
   }
+
+
+
   return num;
 }
 
@@ -4125,9 +4380,17 @@ if(intro){
 
 
   let inputVal=document.getElementById("input").value;
-  // 🔥 UBACI OVDE
-  if(!inputVal.match(/^\d{2}\.\d{2}\.\d{4}$/)){
-    alert("Use format DD.MM.YYYY");
+  let timeVal=document.getElementById("timeInput").value;
+
+  // Validate date
+  if(!validateDate(inputVal)){
+    alert("Please enter a valid date (DD.MM.YYYY)\nYear: 0001-9999\nExample: 15.05.1990");
+    return;
+  }
+
+  // Validate time if entered
+  if(timeVal && !validateTime(timeVal)){
+    alert("Please enter a valid time (HH:MM)\nExample: 14:30");
     return;
   }
   let raw=inputVal.replace(/\D/g,'');
@@ -4177,12 +4440,7 @@ document.getElementById("numberHint").style.display = "block";
   document.getElementById("zodiac").classList.add("show-fade");
   document.getElementById("zodiac").style.cursor = "pointer";
   document.getElementById("zodiac").onclick = function() {
-    // Try Swiss Ephemeris first, fallback to approximate
-    if(window.generateNatalChartSwiss) {
-      window.generateNatalChartSwiss();
-    } else {
-      generateNatalChart();
-    }
+    openAstro();
   };
 
   // SUB-ZODIAC (Ascendant)
@@ -4625,6 +4883,7 @@ window.onload = function(){
 
   // 🔥 DODAJ OVO
   showTab("home");
+  restoreAstroReturnState();
 };
   
 
@@ -5858,6 +6117,87 @@ document.addEventListener('DOMContentLoaded', function(){
   updateSavedCount();
 });
 
+function saveAstroReturnState(date, time, city){
+  const baseUrl = window.location.href.split("#")[0].split("?")[0];
+  const returnUrl =
+    `${baseUrl}?astroReturn=1&date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}&city=${encodeURIComponent(city)}#zodiac`;
+  sessionStorage.setItem("astroReturnUrl", returnUrl);
+  sessionStorage.setItem("astroReturnState", JSON.stringify({
+    date,
+    time,
+    city,
+    isTwin: document.getElementById("twinCheck") ? document.getElementById("twinCheck").checked : false,
+    isTwin3: document.getElementById("twinCheck3") ? document.getElementById("twinCheck3").checked : false
+  }));
+  return returnUrl;
+}
+
+function restoreAstroReturnState(){
+  const params = new URLSearchParams(window.location.search);
+  const raw = sessionStorage.getItem("astroReturnState");
+  if(!raw && params.get("astroReturn") !== "1") return;
+
+  sessionStorage.removeItem("astroReturnState");
+
+  let state = {
+    date: params.get("date") || "",
+    time: params.get("time") || "",
+    city: params.get("city") || "",
+    isTwin: false,
+    isTwin3: false
+  };
+  try{
+    if(raw) state = JSON.parse(raw);
+  }catch(e){
+    state = {
+      date: params.get("date") || "",
+      time: params.get("time") || "",
+      city: params.get("city") || "",
+      isTwin: false,
+      isTwin3: false
+    };
+  }
+
+  if(!state || !state.date) return;
+
+  document.getElementById("input").value = state.date || "";
+  document.getElementById("timeInput").value = state.time || "";
+  document.getElementById("cityInput").value = state.city || "";
+
+  if(document.getElementById("twinCheck")) document.getElementById("twinCheck").checked = !!state.isTwin;
+  if(document.getElementById("twinCheck3")) document.getElementById("twinCheck3").checked = !!state.isTwin3;
+
+  skipSavePrompt = true;
+  generate();
+
+  setTimeout(() => {
+    const target = document.getElementById("zodiac") || document.getElementById("mainNumber");
+    if(target) target.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, 350);
+}
+
+function openAstro(){
+
+  const date = document.getElementById("input").value;
+  const time = document.getElementById("timeInput").value;
+  const city = document.getElementById("cityInput").value;
+  const coords = cityCoords && cityCoords[city] ? cityCoords[city] : null;
+  const extraParams = coords
+    ? `&lat=${encodeURIComponent(coords.lat)}&lon=${encodeURIComponent(coords.lon)}`
+    : "";
+  let returnTarget = window.location.href;
+  try{
+    returnTarget = saveAstroReturnState(date, time, city);
+  }catch(e){
+    console.warn("Could not save astro return state", e);
+  }
+  const returnUrl = encodeURIComponent(returnTarget);
+  const fromPage = encodeURIComponent(window.location.pathname.split("/").pop() || "index.html");
+
+  window.location.href =
+    `astro.html?date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}&city=${encodeURIComponent(city)}${extraParams}&from=${fromPage}&returnUrl=${returnUrl}`;
+}
+
 </script>
 
 
@@ -6038,241 +6378,14 @@ document.addEventListener('DOMContentLoaded', function(){
   </div>
 </div>
 
-<!-- Swiss Ephemeris Module -->
-<script type="module">
-  import { SwissEphemeris, Planet, HouseSystem } from 'https://cdn.jsdelivr.net/npm/@swisseph/browser@latest/dist/index.js';
 
-  window.SwissEphemeris = SwissEphemeris;
-  window.SE_Planet = Planet;
-  window.SE_HouseSystem = HouseSystem;
 
-  // Initialize Swiss Ephemeris
-  window.initSwissEph = async function() {
-    if(window.sweInstance) return window.sweInstance;
 
-    try {
-      const swe = new SwissEphemeris();
-      await swe.init();
-      window.sweInstance = swe;
-      console.log('Swiss Ephemeris initialized successfully');
-      return swe;
-    } catch(e) {
-      console.error('Failed to initialize Swiss Ephemeris:', e);
-      return null;
-    }
-  };
 
-  // Calculate natal chart using Swiss Ephemeris
-  window.generateNatalChartSwiss = async function() {
-    const swe = await window.initSwissEph();
-    if(!swe) {
-      // Fallback to approximate calculations
-      generateNatalChart();
-      return;
-    }
 
-    let inputVal = document.getElementById("input").value;
-    if(!inputVal.match(/^\d{2}\.\d{2}\.\d{4}$/)) {
-      alert("Use format DD.MM.YYYY");
-      return;
-    }
 
-    let parts = inputVal.split(".");
-    let day = parseInt(parts[0]);
-    let month = parseInt(parts[1]);
-    let year = parseInt(parts[2]);
 
-    let timeStr = document.getElementById("timeInput").value;
-    let city = document.getElementById("cityInput").value;
 
-    let hours = 12, minutes = 0;
-    if(timeStr && timeStr.match(/^\d{2}:\d{2}$/)) {
-      let t = timeStr.split(":");
-      hours = parseInt(t[0]);
-      minutes = parseInt(t[1]);
-    }
-
-    // Convert to UTC
-    let coords = cityCoords[city];
-    let utcHours = hours;
-    if(coords) {
-      let offset = coords.lon / 15;
-      utcHours = hours - offset;
-      while(utcHours < 0) { utcHours += 24; day--; }
-      while(utcHours >= 24) { utcHours -= 24; day++; }
-    }
-
-    // Create date object
-    let date = new Date(Date.UTC(year, month - 1, day, Math.floor(utcHours), minutes));
-    let jd = swe.dateToJulianDay(date);
-
-    // Get coordinates
-    let lat = coords ? coords.lat : 44.7866;
-    let lon = coords ? coords.lon : 20.4489;
-
-    // Calculate planet positions
-    let planets = [
-      { name: 'Sun', body: Planet.Sun },
-      { name: 'Moon', body: Planet.Moon },
-      { name: 'Mercury', body: Planet.Mercury },
-      { name: 'Venus', body: Planet.Venus },
-      { name: 'Mars', body: Planet.Mars },
-      { name: 'Jupiter', body: Planet.Jupiter },
-      { name: 'Saturn', body: Planet.Saturn },
-      { name: 'Uranus', body: Planet.Uranus },
-      { name: 'Neptune', body: Planet.Neptune },
-      { name: 'Pluto', body: Planet.Pluto }
-    ];
-
-    let planetData = [];
-    planets.forEach(p => {
-      try {
-        let pos = swe.calculatePosition(jd, p.body);
-        let longitude = pos.longitude;
-        let house = 1; // Will calculate later
-        let sign = longitudeToSign(longitude);
-        let degree = Math.round(longitude % 30);
-
-        planetData.push({
-          name: p.name,
-          longitude: longitude,
-          sign: sign,
-          degree: degree,
-          house: house
-        });
-      } catch(e) {
-        console.error('Error calculating', p.name, e);
-      }
-    });
-
-    // Calculate houses using Placidus system
-    let houses;
-    try {
-      houses = swe.calculateHouses(jd, lat, lon, HouseSystem.Placidus);
-    } catch(e) {
-      console.error('Error calculating houses:', e);
-      // Fallback to Equal houses
-      houses = null;
-    }
-
-    let houseCusps = [];
-    let ascendantDeg = 0;
-
-    if(houses) {
-      ascendantDeg = houses.ascendant;
-      for(let i = 1; i <= 12; i++) {
-        houseCusps.push(houses.cusps[i]);
-      }
-    } else {
-      // Fallback
-      ascendantDeg = calculateAscendant(year, month, day, hours, minutes, lat, lon);
-      houseCusps = calculateHouses(ascendantDeg);
-    }
-
-    // Recalculate house assignments
-    planetData.forEach(p => {
-      p.house = getHouse(p.longitude, houseCusps);
-    });
-
-    // Sort by house
-    planetData.sort((a, b) => a.house - b.house);
-
-    // Generate HTML
-    let html = `
-      <div style="text-align:center; margin-bottom:20px;">
-        <div style="font-size:14px; color:#38bdf8; margin-bottom:5px;">NATAL CHART</div>
-        <div style="font-size:11px; color:#94a3b8;">${inputVal} ${timeStr || ''} ${city || ''}</div>
-        <div style="font-size:9px; color:#4ade80; margin-top:5px; font-style:italic;">
-          ✓ Swiss Ephemeris — JPL DE431 Precision
-        </div>
-      </div>
-
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; max-width:700px; margin:0 auto;">
-    `;
-
-    // House cusps
-    html += `<div style="background:#1e293b; padding:15px; border-radius:10px;">
-      <div style="font-size:12px; color:#FFD700; margin-bottom:10px; text-align:center;">HOUSE CUSPS (Placidus)</div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">`;
-
-    for(let i = 0; i < 12; i++) {
-      let sign = longitudeToSign(houseCusps[i]);
-      let deg = Math.round(houseCusps[i] % 30);
-      html += `<div style="font-size:11px; color:#94a3b8;">House ${i+1}: <span style="color:#38bdf8;">${sign} ${deg}°</span></div>`;
-    }
-
-    html += `</div></div>`;
-
-    // Planet positions
-    html += `<div style="background:#1e293b; padding:15px; border-radius:10px;">
-      <div style="font-size:12px; color:#FFD700; margin-bottom:10px; text-align:center;">PLANETS</div>
-      <div style="display:flex; flex-direction:column; gap:6px;">`;
-
-    let planetColors = {
-      "Sun": "#FFD700", "Moon": "#C0C0C0", "Mercury": "#FFA500",
-      "Venus": "#FF69B4", "Mars": "#FF4500", "Jupiter": "#DAA520",
-      "Saturn": "#708090", "Uranus": "#00CED1", "Neptune": "#4169E1",
-      "Pluto": "#8B008B"
-    };
-
-    planetData.forEach(p => {
-      let color = planetColors[p.name] || "#fff";
-      html += `<div style="display:flex; justify-content:space-between; font-size:11px;">
-        <span style="color:${color}; font-weight:bold;">${p.name}</span>
-        <span style="color:#94a3b8;">${p.sign} ${p.degree}°</span>
-        <span style="color:#f6cb71;">House ${p.house}</span>
-      </div>`;
-    });
-
-    html += `</div></div></div>`;
-
-    // Ascendant info
-    let ascSign = longitudeToSign(ascendantDeg);
-    let ascDegree = Math.round(ascendantDeg % 30);
-    html += `
-      <div style="text-align:center; margin-top:15px; padding:10px; background:#1e293b; border-radius:10px; max-width:400px; margin:15px auto 0;">
-        <div style="font-size:12px; color:#FFD700;">ASCENDANT</div>
-        <div style="font-size:18px; color:#38bdf8; font-weight:bold;">${ascSign} ${ascDegree}°</div>
-        <div style="font-size:10px; color:#4ade80; margin-top:3px;">Precise to 0.001 arcsecond</div>
-      </div>
-    `;
-
-    document.getElementById("natalChartText").innerHTML = html;
-
-    document.body.classList.add("detail-active");
-    showTab("natalChart");
-  };
-
-function openAstro(){
-
-  const date =
-    document.getElementById("input").value;
-
-  const time =
-    document.getElementById("timeInput").value;
-
-  const citySelect =
-    document.getElementById("cityInput");
-
-  let city = "";
-
-  if(citySelect.selectedIndex >= 0){
-    city =
-      citySelect.options[
-        citySelect.selectedIndex
-      ].text;
-  }
-
-  if(!date || !time || !city){
-    alert("Enter date, time and city");
-    return;
-  }
-
-  window.location.href =
-    `astro.html?date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}&city=${encodeURIComponent(city)}`;
-}
-
-</script>
 
 </body>
 </html>
