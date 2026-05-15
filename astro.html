@@ -406,14 +406,199 @@ document.getElementById("backButton").addEventListener("click", () => {
 
 // Helper: wait for fonts and images to load
 function waitForReady() {
+
   return new Promise(resolve => {
-    if (document.readyState === 'complete') {
+
+    if(document.readyState === 'complete'){
+
       resolve();
-    } else {
+
+    }else{
+
       window.addEventListener('load', resolve);
+
     }
+
   });
+
 }
+
+// Clone for export
+async function cloneForCapture() {
+
+  const container = document.querySelector('.section.active') || document.body;
+
+  const clone = container.cloneNode(true);
+
+  const wrapper = document.createElement('div');
+
+  wrapper.style.cssText = `
+    position:fixed;
+    top:-99999px;
+    left:-99999px;
+    width:1120px;
+    background:#ffffff;
+    padding:30px;
+    color:#111;
+    z-index:-1;
+  `;
+
+  wrapper.appendChild(clone);
+
+  document.body.appendChild(wrapper);
+
+  // cleanup dark backgrounds
+  clone.querySelectorAll('*').forEach(el=>{
+
+    const style = getComputedStyle(el);
+
+    if(
+      style.backgroundColor === 'rgb(15, 23, 42)' ||
+      style.backgroundColor === 'rgb(30, 41, 59)'
+    ){
+
+      el.style.background = 'white';
+
+    }
+
+    if(
+      style.color === 'rgb(255, 255, 255)' ||
+      style.color === 'rgb(148, 163, 184)'
+    ){
+
+      el.style.color = '#111';
+
+    }
+
+  });
+
+  return wrapper;
+
+}
+
+/* ===== PRINT ===== */
+
+document.getElementById('printBtn').addEventListener('click', ()=>{
+
+  window.print();
+
+});
+
+/* ===== DOWNLOAD PNG ===== */
+
+document.getElementById('downloadBtn').addEventListener('click', async ()=>{
+
+  const btn = document.getElementById('downloadBtn');
+
+  btn.style.opacity = '0.5';
+
+  try{
+
+    await waitForReady();
+
+    const wrapper = await cloneForCapture();
+
+    await document.fonts.ready;
+
+    await new Promise(r=>setTimeout(r,500));
+
+    const canvas = await html2canvas(wrapper,{
+
+      backgroundColor:'#ffffff',
+
+      scale:2,
+
+      useCORS:true
+
+    });
+
+    wrapper.remove();
+
+    const image = canvas.toDataURL('image/png');
+
+    // OPEN IMAGE
+    const win = window.open();
+
+    win.document.write(`
+      <title>Natal Chart</title>
+
+      <style>
+        body{
+          margin:0;
+          background:#111;
+          display:flex;
+          justify-content:center;
+          align-items:center;
+          min-height:100vh;
+        }
+
+        img{
+          max-width:100%;
+          height:auto;
+        }
+      </style>
+
+      <img src="${image}">
+    `);
+
+  }catch(e){
+
+    console.error(e);
+
+    alert('Download failed');
+
+  }finally{
+
+    btn.style.opacity = '1';
+
+  }
+
+});
+
+/* ===== SHARE ===== */
+
+document.getElementById('shareBtn').addEventListener('click', async ()=>{
+
+  const btn = document.getElementById('shareBtn');
+
+  btn.style.opacity = '0.5';
+
+  try{
+
+    // SHARE LINK
+    if(navigator.share){
+
+      await navigator.share({
+
+        title:'Natal Chart',
+
+        text:'Check my natal chart',
+
+        url:window.location.href
+
+      });
+
+    }else{
+
+      // fallback copy
+      await navigator.clipboard.writeText(window.location.href);
+
+      alert('Link copied.');
+
+    }
+
+  }catch(e){
+
+    console.log(e);
+
+  }finally{
+
+    btn.style.opacity = '1';
+
+  }
+
+});
+
 
 // Helper: create a clean clone of the page for capture
 async function cloneForCapture() {
