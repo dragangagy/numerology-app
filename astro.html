@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Premium Natal Chart</title>
@@ -404,34 +405,55 @@ document.getElementById("backButton").addEventListener("click", () => {
 
 /* ===== SHARE / PRINT / DOWNLOAD BUTTONS ===== */
 
+
 // Helper: wait for fonts and images to load
 function waitForReady() {
+
   return new Promise(resolve => {
+
     if (document.readyState === 'complete') {
+
       resolve();
+
     } else {
+
       window.addEventListener('load', resolve);
+
     }
+
   });
+
 }
 
 // Helper: create a clean clone of the page for capture
 async function cloneForCapture() {
+
   const container = document.querySelector('.container');
+
   const clone = container.cloneNode(true);
 
   // Create wrapper with white background
   const wrapper = document.createElement('div');
+
   wrapper.style.cssText = `
-    position:fixed; top:-9999px; left:-9999px;
-    width:1120px; background:#ffffff; padding:30px;
-    font-family:Arial,sans-serif; color:#1a1a1a;
+    position:fixed;
+    top:-9999px;
+    left:-9999px;
+    width:1120px;
+    background:#ffffff;
+    padding:30px;
+    font-family:Arial,sans-serif;
+    color:#1a1a1a;
+    z-index:-1;
   `;
+
   wrapper.appendChild(clone);
+
   document.body.appendChild(wrapper);
 
-  // Clean up clone styles for white background
+  // Clean cards
   clone.querySelectorAll('.card').forEach(card => {
+
     card.style.cssText = `
       background:transparent !important;
       border:1px solid #ccc !important;
@@ -442,219 +464,398 @@ async function cloneForCapture() {
       padding:22px;
       margin-top:22px;
     `;
+
   });
 
-  clone.querySelector('.header').style.paddingTop = '20px';
-  clone.querySelector('.title').style.cssText = 'font-size:56px;font-weight:700;color:#1a1a1a;letter-spacing:4px;';
-  clone.querySelector('.birth').style.cssText = 'margin-top:14px;color:#333;font-size:28px;';
-  clone.querySelector('.sub').style.cssText = 'margin-top:10px;color:#666;font-size:15px;';
-  clone.querySelector('.status').style.cssText = 'margin-top:10px;font-size:13px;color:#4ade80;';
+  // Header
+  const header = clone.querySelector('.header');
 
-  clone.querySelectorAll('.section-title').forEach(el => {
-    el.style.cssText = 'color:#333;font-size:25px;margin-bottom:15px;';
-  });
+  if(header){
 
-  // Fix chart SVG colors for white background
-  const svg = clone.querySelector('#chartSvg');
-  if (svg) {
-    svg.querySelectorAll('circle').forEach(c => {
-      const fill = c.getAttribute('fill');
-      const stroke = c.getAttribute('stroke');
-      if (fill === '#020817') c.setAttribute('fill', '#ffffff');
-      if (stroke === '#FFD700') c.setAttribute('stroke', '#333');
-      if (stroke === '#38bdf8') c.setAttribute('stroke', '#666');
-    });
-    svg.querySelectorAll('text').forEach(t => {
-      const fill = t.getAttribute('fill');
-      if (fill === '#FFD700') t.setAttribute('fill', '#333');
-      if (fill === '#94a3b8') t.setAttribute('fill', '#666');
-      t.removeAttribute('filter');
-    });
-    svg.querySelectorAll('line').forEach(l => {
-      const stroke = l.getAttribute('stroke');
-      if (stroke === '#FFD700') l.setAttribute('stroke', '#333');
-      if (stroke === '#38bdf8') l.setAttribute('stroke', '#999');
-      if (stroke === '#334155') l.setAttribute('stroke', '#ddd');
-    });
-    // Fix planet layer
-    svg.querySelectorAll('#planetLayer circle').forEach(c => {
-      c.setAttribute('fill', '#ffffff');
-      c.setAttribute('stroke', '#333');
-    });
-    svg.querySelectorAll('#planetLayer text').forEach(t => {
-      t.setAttribute('fill', '#333');
-      t.removeAttribute('filter');
-    });
-    svg.querySelectorAll('#angleLayer text').forEach(t => {
-      t.setAttribute('fill', '#333');
-      t.removeAttribute('filter');
-    });
+    header.style.paddingTop = '20px';
+
   }
 
-  // Fix table text colors
-  clone.querySelectorAll('.name').forEach(el => el.style.color = '#1a1a1a');
-  clone.querySelectorAll('.pos').forEach(el => el.style.color = '#333');
-  clone.querySelectorAll('.house').forEach(el => el.style.color = '#555');
-  clone.querySelectorAll('.angle-label').forEach(el => el.style.color = '#333');
-  clone.querySelectorAll('.angle-value').forEach(el => el.style.color = '#1a1a1a');
-  clone.querySelectorAll('.muted').forEach(el => el.style.color = '#666');
+  // Title
+  const title = clone.querySelector('.title');
 
-  // Force layout
+  if(title){
+
+    title.style.cssText = `
+      font-size:56px;
+      font-weight:700;
+      color:#1a1a1a;
+      letter-spacing:4px;
+    `;
+
+  }
+
+  // Birth
+  const birth = clone.querySelector('.birth');
+
+  if(birth){
+
+    birth.style.cssText = `
+      margin-top:14px;
+      color:#333;
+      font-size:28px;
+    `;
+
+  }
+
+  // Sub
+  const sub = clone.querySelector('.sub');
+
+  if(sub){
+
+    sub.style.cssText = `
+      margin-top:10px;
+      color:#666;
+      font-size:15px;
+    `;
+
+  }
+
+  // Status
+  const status = clone.querySelector('.status');
+
+  if(status){
+
+    status.style.cssText = `
+      margin-top:10px;
+      font-size:13px;
+      color:#4ade80;
+    `;
+
+  }
+
+  // Section titles
+  clone.querySelectorAll('.section-title').forEach(el => {
+
+    el.style.cssText = `
+      color:#333;
+      font-size:25px;
+      margin-bottom:15px;
+    `;
+
+  });
+
+  // SVG fix
+  const svg = clone.querySelector('#chartSvg');
+
+  if (svg) {
+
+    svg.querySelectorAll('circle').forEach(c => {
+
+      const fill = c.getAttribute('fill');
+      const stroke = c.getAttribute('stroke');
+
+      if (fill === '#020817') {
+
+        c.setAttribute('fill', '#ffffff');
+
+      }
+
+      if (stroke === '#FFD700') {
+
+        c.setAttribute('stroke', '#333');
+
+      }
+
+      if (stroke === '#38bdf8') {
+
+        c.setAttribute('stroke', '#666');
+
+      }
+
+    });
+
+    svg.querySelectorAll('text').forEach(t => {
+
+      const fill = t.getAttribute('fill');
+
+      if (fill === '#FFD700') {
+
+        t.setAttribute('fill', '#333');
+
+      }
+
+      if (fill === '#94a3b8') {
+
+        t.setAttribute('fill', '#666');
+
+      }
+
+      t.removeAttribute('filter');
+
+    });
+
+    svg.querySelectorAll('line').forEach(l => {
+
+      const stroke = l.getAttribute('stroke');
+
+      if (stroke === '#FFD700') {
+
+        l.setAttribute('stroke', '#333');
+
+      }
+
+      if (stroke === '#38bdf8') {
+
+        l.setAttribute('stroke', '#999');
+
+      }
+
+      if (stroke === '#334155') {
+
+        l.setAttribute('stroke', '#ddd');
+
+      }
+
+    });
+
+    // Planet layer
+    svg.querySelectorAll('#planetLayer circle').forEach(c => {
+
+      c.setAttribute('fill', '#ffffff');
+
+      c.setAttribute('stroke', '#333');
+
+    });
+
+    svg.querySelectorAll('#planetLayer text').forEach(t => {
+
+      t.setAttribute('fill', '#333');
+
+      t.removeAttribute('filter');
+
+    });
+
+    svg.querySelectorAll('#angleLayer text').forEach(t => {
+
+      t.setAttribute('fill', '#333');
+
+      t.removeAttribute('filter');
+
+    });
+
+  }
+
+  // Text colors
+  clone.querySelectorAll('.name').forEach(el => {
+
+    el.style.color = '#1a1a1a';
+
+  });
+
+  clone.querySelectorAll('.pos').forEach(el => {
+
+    el.style.color = '#333';
+
+  });
+
+  clone.querySelectorAll('.house').forEach(el => {
+
+    el.style.color = '#555';
+
+  });
+
+  clone.querySelectorAll('.angle-label').forEach(el => {
+
+    el.style.color = '#333';
+
+  });
+
+  clone.querySelectorAll('.angle-value').forEach(el => {
+
+    el.style.color = '#1a1a1a';
+
+  });
+
+  clone.querySelectorAll('.muted').forEach(el => {
+
+    el.style.color = '#666';
+
+  });
+
   wrapper.offsetHeight;
 
   return wrapper;
+
 }
 
-// Helper: convert element to canvas using html2canvas approach with dom-to-image
-async function elementToCanvas(element) {
-  const rect = element.getBoundingClientRect();
-  const width = Math.ceil(rect.width);
-  const height = Math.ceil(rect.height);
-
-  // Use SVG foreignObject approach
-  const svgNS = 'http://www.w3.org/2000/svg';
-  const svg = document.createElementNS(svgNS, 'svg');
-  svg.setAttribute('xmlns', svgNS);
-  svg.setAttribute('width', width);
-  svg.setAttribute('height', height);
-
-  const foreignObject = document.createElementNS(svgNS, 'foreignObject');
-  foreignObject.setAttribute('width', '100%');
-  foreignObject.setAttribute('height', '100%');
-
-  // Clone the element into the foreignObject
-  const clone = element.cloneNode(true);
-  foreignObject.appendChild(clone);
-  svg.appendChild(foreignObject);
-
-  const svgData = new XMLSerializer().serializeToString(svg);
-  const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
-  const url = URL.createObjectURL(svgBlob);
-
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = width * 2;
-      canvas.height = height * 2;
-      const ctx = canvas.getContext('2d');
-      ctx.scale(2, 2);
-      ctx.drawImage(img, 0, 0, width, height);
-      URL.revokeObjectURL(url);
-      resolve(canvas);
-    };
-    img.onerror = (e) => {
-      URL.revokeObjectURL(url);
-      reject(e);
-    };
-    img.src = url;
-  });
-}
-
-// PRINT button
+// PRINT
 document.getElementById('printBtn').addEventListener('click', () => {
+
   window.print();
+
 });
 
-// DOWNLOAD button - captures page as PNG
+// DOWNLOAD
 document.getElementById('downloadBtn').addEventListener('click', async () => {
+
   const btn = document.getElementById('downloadBtn');
+
   btn.style.opacity = '0.5';
+
   btn.style.pointerEvents = 'none';
 
   try {
+
     await waitForReady();
+
     const wrapper = await cloneForCapture();
 
-    // Wait for fonts
     await document.fonts.ready;
+
     await new Promise(r => setTimeout(r, 500));
 
-    const canvas = await elementToCanvas(wrapper);
+    const canvas = await html2canvas(wrapper, {
 
-    // Clean up
-    document.body.removeChild(wrapper);
+      backgroundColor:'#ffffff',
 
-    // Download
+      scale:2,
+
+      useCORS:true
+
+    });
+
+    wrapper.remove();
+
     const link = document.createElement('a');
-    const filename = birthDate ? `natal-chart-${birthDate.replace(/\./g, '-')}.png` : 'natal-chart.png';
+
+    const filename =
+      birthDate
+      ? `natal-chart-${birthDate.replace(/\./g, '-')}.png`
+      : 'natal-chart.png';
+
     link.download = filename;
+
     link.href = canvas.toDataURL('image/png');
+
     document.body.appendChild(link);
+
     link.click();
+
     document.body.removeChild(link);
 
   } catch (e) {
-    console.error('Download failed:', e);
-    alert('Download failed. Please try Print instead.');
+
+    console.error(e);
+
+    alert('Download failed.');
+
   } finally {
+
     btn.style.opacity = '1';
+
     btn.style.pointerEvents = 'auto';
+
   }
+
 });
 
-// SHARE button - shares as image or copies to clipboard
+// SHARE
 document.getElementById('shareBtn').addEventListener('click', async () => {
+
   const btn = document.getElementById('shareBtn');
+
   btn.style.opacity = '0.5';
+
   btn.style.pointerEvents = 'none';
 
   try {
+
     await waitForReady();
+
     const wrapper = await cloneForCapture();
 
     await document.fonts.ready;
+
     await new Promise(r => setTimeout(r, 500));
 
-    const canvas = await elementToCanvas(wrapper);
-    document.body.removeChild(wrapper);
+    const canvas = await html2canvas(wrapper, {
 
-    canvas.toBlob(async (blob) => {
-      if (!blob) {
-        alert('Could not create image.');
+      backgroundColor:'#ffffff',
+
+      scale:2,
+
+      useCORS:true
+
+    });
+
+    wrapper.remove();
+
+    canvas.toBlob(async(blob)=>{
+
+      if(!blob){
+
+        alert('Image error');
+
         return;
+
       }
 
-      const file = new File([blob], `natal-chart-${birthDate || 'chart'}.png`, {type: 'image/png'});
+      const file = new File(
+        [blob],
+        'astro-chart.png',
+        {type:'image/png'}
+      );
 
-      // Try Web Share API with files
-      if (navigator.canShare && navigator.canShare({files: [file]})) {
-        try {
+      // MOBILE SHARE
+      if(
+        navigator.canShare &&
+        navigator.canShare({files:[file]})
+      ){
+
+        try{
+
           await navigator.share({
-            title: 'Natal Chart',
-            text: `Natal chart for ${[birthDate, birthTime, birthCity].filter(Boolean).join(' ')}`,
-            files: [file]
+            title:'Natal Chart',
+            files:[file]
           });
-          return;
-        } catch (shareErr) {
-          // User cancelled or share failed, try clipboard
-          console.log('Share cancelled, trying clipboard...');
+
+        }catch(err){
+
+          console.log(err);
+
         }
+
+      }else{
+
+        // FALLBACK DOWNLOAD
+        const link = document.createElement('a');
+
+        link.download = 'astro-chart.png';
+
+        link.href = URL.createObjectURL(blob);
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        document.body.removeChild(link);
+
+        alert('Share nije podržan. Slika je sačuvana.');
+
       }
 
-      // Fallback: copy to clipboard
-      try {
-        const item = new ClipboardItem({'image/png': blob});
-        await navigator.clipboard.write([item]);
-        alert('Chart image copied to clipboard!');
-      } catch (clipErr) {
-        // Final fallback: download
-        const link = document.createElement('a');
-        link.download = `natal-chart-${birthDate || 'chart'}.png`;
-        link.href = canvas.toDataURL('image/png');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
     }, 'image/png');
 
   } catch (e) {
-    console.error('Share failed:', e);
-    alert('Share not available. Please try Download or Print.');
+
+    console.error(e);
+
+    alert('Share failed.');
+
   } finally {
+
     btn.style.opacity = '1';
+
     btn.style.pointerEvents = 'auto';
+
   }
+
 });
 
 /* ===== END SHARE / PRINT / DOWNLOAD ===== */
@@ -978,6 +1179,8 @@ async function calculate(){
 }
 
 calculate();
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </script>
 </body>
 </html>
