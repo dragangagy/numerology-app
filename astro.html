@@ -24,13 +24,73 @@ body::before{
   pointer-events:none;
 }
 .container{width:100%;max-width:1120px;margin:auto;padding:22px;position:relative;z-index:2}
+
+/* ===== TOP BAR WITH BACK + ACTION BUTTONS ===== */
+.top-bar{
+  position:fixed;
+  top:18px;
+  left:18px;
+  right:18px;
+  z-index:5;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  pointer-events:none;
+}
+.top-bar > *{pointer-events:auto;}
+
 .back-btn{
-  position:fixed;top:18px;left:18px;z-index:5;
   background:rgba(16,27,45,.9);color:#38bdf8;border:1px solid rgba(56,189,248,.3);
   border-radius:18px;padding:12px 18px;font-size:18px;cursor:pointer;backdrop-filter:blur(12px);
   box-shadow:0 0 20px rgba(56,189,248,.2),inset 0 0 10px rgba(255,215,0,.04);
+  transition:all .25s ease;
 }
-.header{text-align:center;padding-top:38px;margin-bottom:18px}
+.back-btn:hover{
+  background:rgba(16,27,45,1);
+  border-color:rgba(56,189,248,.6);
+  box-shadow:0 0 30px rgba(56,189,248,.35),inset 0 0 15px rgba(255,215,0,.08);
+  transform:translateY(-1px);
+}
+
+.action-group{
+  display:flex;
+  gap:8px;
+  margin-left:auto;
+}
+
+.action-btn{
+  width:44px;
+  height:44px;
+  border-radius:14px;
+  background:rgba(16,27,45,.9);
+  border:1px solid rgba(148,163,184,.25);
+  color:#94a3b8;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  backdrop-filter:blur(12px);
+  box-shadow:0 0 15px rgba(0,0,0,.2);
+  transition:all .25s ease;
+}
+.action-btn:hover{
+  color:#38bdf8;
+  border-color:rgba(56,189,248,.5);
+  box-shadow:0 0 20px rgba(56,189,248,.25);
+  transform:translateY(-2px);
+}
+.action-btn svg{
+  width:22px;
+  height:22px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+/* ===== END TOP BAR ===== */
+
+.header{text-align:center;padding-top:78px;margin-bottom:18px}
 .title{
   font-size:56px;font-weight:700;color:#38bdf8;letter-spacing:4px;
   text-shadow:0 0 15px rgba(56,189,248,.7),0 0 35px rgba(56,189,248,.3);
@@ -58,6 +118,55 @@ svg{width:100%;max-width:820px;height:auto}
 .aspect-row:last-child{border-bottom:0}
 .muted{color:#64748b;font-size:12px;line-height:1.45}
 .error{color:#fb7185}
+
+/* ===== PRINT STYLES - CLEAN WHITE, NO BACKGROUND ===== */
+@media print{
+  body::before,.top-bar,.loading-panel{display:none !important}
+  body{
+    background:#ffffff !important;
+    color:#1a1a1a !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .container{padding:0}
+  .header{padding-top:20px}
+  .title{color:#1a1a1a !important;text-shadow:none !important}
+  .birth{color:#333 !important;text-shadow:none !important}
+  .sub{color:#666 !important}
+  .status{color:#4ade80 !important}
+  .card{
+    background:transparent !important;
+    border:1px solid #ccc !important;
+    box-shadow:none !important;
+    backdrop-filter:none !important;
+    break-inside:avoid;
+    page-break-inside:avoid;
+    color:#1a1a1a !important;
+  }
+  .section-title{color:#333 !important;text-shadow:none !important}
+  .name{color:#1a1a1a !important}
+  .pos{color:#333 !important}
+  .house{color:#555 !important}
+  .angle-label{color:#333 !important}
+  .angle-value{color:#1a1a1a !important}
+  .muted{color:#666 !important}
+  /* Chart wheel - white bg, black lines */
+  #chartSvg circle[fill="#020817"]{fill:#ffffff !important;stroke:#333 !important}
+  #chartSvg circle[stroke="#FFD700"]{stroke:#333 !important}
+  #chartSvg circle[stroke="#38bdf8"]{stroke:#666 !important}
+  #chartSvg text[fill="#FFD700"]{fill:#333 !important;filter:none !important}
+  #chartSvg line[stroke="#FFD700"]{stroke:#333 !important}
+  #chartSvg line[stroke="#38bdf8"]{stroke:#999 !important}
+  #chartSvg line[stroke="#334155"]{stroke:#ddd !important}
+  #chartSvg text[fill="#94a3b8"]{fill:#666 !important}
+  #planetLayer circle{fill:#ffffff !important;stroke:#333 !important}
+  #planetLayer text{fill:#333 !important;filter:none !important}
+  #planetLayer line{stroke:#999 !important}
+  #angleLayer text{fill:#333 !important;filter:none !important}
+  #aspectLayer line{opacity:0.3 !important}
+}
+/* ===== END PRINT STYLES ===== */
+
 .loading-panel{
   position:fixed;
   inset:0;
@@ -114,11 +223,16 @@ svg{width:100%;max-width:820px;height:auto}
   from{transform:rotate(0deg) translateX(-50%)}
   to{transform:rotate(360deg) translateX(-50%)}
 }
+
 @media(max-width:900px){
   .layout{grid-template-columns:1fr}
   .title{font-size:38px}
   .birth{font-size:20px}
-  .back-btn{position:static;margin:14px 0 0 14px}
+  .top-bar{left:10px;right:10px;top:10px}
+  .back-btn{padding:10px 14px;font-size:16px}
+  .action-btn{width:40px;height:40px}
+  .action-btn svg{width:20px;height:20px}
+  .header{padding-top:70px}
   .container{padding:14px}
 }
 </style>
@@ -131,7 +245,24 @@ svg{width:100%;max-width:820px;height:auto}
     <div class="loading-text">Preparing planets, houses and aspects from your birth data.</div>
   </div>
 </div>
-<button class="back-btn" id="backButton" type="button">&#8592; BACK</button>
+
+<!-- ===== TOP BAR: BACK + SHARE/PRINT/DOWNLOAD ===== -->
+<div class="top-bar">
+  <button class="back-btn" id="backButton" type="button">&#8592; BACK</button>
+  <div class="action-group">
+    <button class="action-btn" id="shareBtn" title="Share as image">
+      <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+    </button>
+    <button class="action-btn" id="printBtn" title="Print A4">
+      <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    </button>
+    <button class="action-btn" id="downloadBtn" title="Download as image">
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    </button>
+  </div>
+</div>
+<!-- ===== END TOP BAR ===== -->
+
 <div class="container">
   <div class="header">
     <div class="title">NATAL CHART</div>
@@ -192,19 +323,19 @@ const returnPage = params.get("from") || "index.html";
 const NS = "http://www.w3.org/2000/svg";
 const centerX = 450;
 const centerY = 450;
-const signSymbols = ["\u2648","\u2649","\u264A","\u264B","\u264C","\u264D","\u264E","\u264F","\u2650","\u2651","\u2652","\u2653"];
+const signSymbols = ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"];
 const signNames = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
 const planets = [
-  {name:"Sun", symbol:"\u2609", color:"#FFD700"},
-  {name:"Moon", symbol:"\u263D", color:"#C0C0C0"},
-  {name:"Mercury", symbol:"\u263F", color:"#FFA500"},
-  {name:"Venus", symbol:"\u2640", color:"#FF69B4"},
-  {name:"Mars", symbol:"\u2642", color:"#FF4500"},
-  {name:"Jupiter", symbol:"\u2643", color:"#DAA520"},
-  {name:"Saturn", symbol:"\u2644", color:"#708090"},
-  {name:"Uranus", symbol:"\u2645", color:"#00CED1"},
-  {name:"Neptune", symbol:"\u2646", color:"#4169E1"},
-  {name:"Pluto", symbol:"\u2647", color:"#B569FF"}
+  {name:"Sun", symbol:"☉", color:"#FFD700"},
+  {name:"Moon", symbol:"☽", color:"#C0C0C0"},
+  {name:"Mercury", symbol:"☿", color:"#FFA500"},
+  {name:"Venus", symbol:"♀", color:"#FF69B4"},
+  {name:"Mars", symbol:"♂", color:"#FF4500"},
+  {name:"Jupiter", symbol:"♃", color:"#DAA520"},
+  {name:"Saturn", symbol:"♄", color:"#708090"},
+  {name:"Uranus", symbol:"♅", color:"#00CED1"},
+  {name:"Neptune", symbol:"♆", color:"#4169E1"},
+  {name:"Pluto", symbol:"♇", color:"#B569FF"}
 ];
 
 const cityCoords = {
@@ -249,7 +380,7 @@ const cityCoords = {
   "Mexico City": {lat:19.4326, lon:-99.1332, tz:"America/Mexico_City"},
   "Buenos Aires": {lat:-34.6037, lon:-58.3816, tz:"America/Argentina/Buenos_Aires"},
   "Sao Paulo": {lat:-23.5505, lon:-46.6333, tz:"America/Sao_Paulo"},
-  "S\u00e3o Paulo": {lat:-23.5505, lon:-46.6333, tz:"America/Sao_Paulo"}
+  "São Paulo": {lat:-23.5505, lon:-46.6333, tz:"America/Sao_Paulo"}
 };
 
 document.getElementById("birthLine").textContent = [birthDate,birthTime,birthCity].filter(Boolean).join(" ");
@@ -271,6 +402,447 @@ document.getElementById("backButton").addEventListener("click", () => {
   window.location.href = target || new URL("index.html", window.location.href).href;
 });
 
+/* ===== SHARE / PRINT / DOWNLOAD BUTTONS ===== */
+
+// Helper: wait for fonts and images to load
+function waitForReady() {
+
+  return new Promise(resolve => {
+
+    if(document.readyState === 'complete'){
+
+      resolve();
+
+    }else{
+
+      window.addEventListener('load', resolve);
+
+    }
+
+  });
+
+}
+
+// Clone for export
+async function cloneForCapture() {
+
+  const container = document.querySelector('.section.active') || document.body;
+
+  const clone = container.cloneNode(true);
+
+  const wrapper = document.createElement('div');
+
+  wrapper.style.cssText = `
+    position:fixed;
+    top:-99999px;
+    left:-99999px;
+    width:1120px;
+    background:#ffffff;
+    padding:30px;
+    color:#111;
+    z-index:-1;
+  `;
+
+  wrapper.appendChild(clone);
+
+  document.body.appendChild(wrapper);
+
+  // cleanup dark backgrounds
+  clone.querySelectorAll('*').forEach(el=>{
+
+    const style = getComputedStyle(el);
+
+    if(
+      style.backgroundColor === 'rgb(15, 23, 42)' ||
+      style.backgroundColor === 'rgb(30, 41, 59)'
+    ){
+
+      el.style.background = 'white';
+
+    }
+
+    if(
+      style.color === 'rgb(255, 255, 255)' ||
+      style.color === 'rgb(148, 163, 184)'
+    ){
+
+      el.style.color = '#111';
+
+    }
+
+  });
+
+  return wrapper;
+
+}
+
+/* ===== PRINT ===== */
+
+document.getElementById('printBtn').addEventListener('click', ()=>{
+
+  window.print();
+
+});
+
+/* ===== DOWNLOAD PNG ===== */
+
+document.getElementById('downloadBtn').addEventListener('click', async ()=>{
+
+  const btn = document.getElementById('downloadBtn');
+
+  btn.style.opacity = '0.5';
+
+  try{
+
+    await waitForReady();
+
+    const wrapper = await cloneForCapture();
+
+    await document.fonts.ready;
+
+    await new Promise(r=>setTimeout(r,500));
+
+    const canvas = await html2canvas(wrapper,{
+
+      backgroundColor:'#ffffff',
+
+      scale:2,
+
+      useCORS:true
+
+    });
+
+    wrapper.remove();
+
+    const image = canvas.toDataURL('image/png');
+
+    // OPEN IMAGE
+    const win = window.open();
+
+    win.document.write(`
+      <title>Natal Chart</title>
+
+      <style>
+        body{
+          margin:0;
+          background:#111;
+          display:flex;
+          justify-content:center;
+          align-items:center;
+          min-height:100vh;
+        }
+
+        img{
+          max-width:100%;
+          height:auto;
+        }
+      </style>
+
+      <img src="${image}">
+    `);
+
+  }catch(e){
+
+    console.error(e);
+
+    alert('Download failed');
+
+  }finally{
+
+    btn.style.opacity = '1';
+
+  }
+
+});
+
+/* ===== SHARE ===== */
+
+document.getElementById('shareBtn').addEventListener('click', async ()=>{
+
+  const btn = document.getElementById('shareBtn');
+
+  btn.style.opacity = '0.5';
+
+  try{
+
+    // SHARE LINK
+    if(navigator.share){
+
+      await navigator.share({
+
+        title:'Natal Chart',
+
+        text:'Check my natal chart',
+
+        url:window.location.href
+
+      });
+
+    }else{
+
+      // fallback copy
+      await navigator.clipboard.writeText(window.location.href);
+
+      alert('Link copied.');
+
+    }
+
+  }catch(e){
+
+    console.log(e);
+
+  }finally{
+
+    btn.style.opacity = '1';
+
+  }
+
+});
+
+
+// Helper: create a clean clone of the page for capture
+async function cloneForCapture() {
+  const container = document.querySelector('.container');
+  const clone = container.cloneNode(true);
+
+  // Create wrapper with white background
+  const wrapper = document.createElement('div');
+  wrapper.style.cssText = `
+    position:fixed; top:-9999px; left:-9999px;
+    width:1120px; background:#ffffff; padding:30px;
+    font-family:Arial,sans-serif; color:#1a1a1a;
+  `;
+  wrapper.appendChild(clone);
+  document.body.appendChild(wrapper);
+
+  // Clean up clone styles for white background
+  clone.querySelectorAll('.card').forEach(card => {
+    card.style.cssText = `
+      background:transparent !important;
+      border:1px solid #ccc !important;
+      box-shadow:none !important;
+      backdrop-filter:none !important;
+      color:#1a1a1a !important;
+      border-radius:16px;
+      padding:22px;
+      margin-top:22px;
+    `;
+  });
+
+  clone.querySelector('.header').style.paddingTop = '20px';
+  clone.querySelector('.title').style.cssText = 'font-size:56px;font-weight:700;color:#1a1a1a;letter-spacing:4px;';
+  clone.querySelector('.birth').style.cssText = 'margin-top:14px;color:#333;font-size:28px;';
+  clone.querySelector('.sub').style.cssText = 'margin-top:10px;color:#666;font-size:15px;';
+  clone.querySelector('.status').style.cssText = 'margin-top:10px;font-size:13px;color:#4ade80;';
+
+  clone.querySelectorAll('.section-title').forEach(el => {
+    el.style.cssText = 'color:#333;font-size:25px;margin-bottom:15px;';
+  });
+
+  // Fix chart SVG colors for white background
+  const svg = clone.querySelector('#chartSvg');
+  if (svg) {
+    svg.querySelectorAll('circle').forEach(c => {
+      const fill = c.getAttribute('fill');
+      const stroke = c.getAttribute('stroke');
+      if (fill === '#020817') c.setAttribute('fill', '#ffffff');
+      if (stroke === '#FFD700') c.setAttribute('stroke', '#333');
+      if (stroke === '#38bdf8') c.setAttribute('stroke', '#666');
+    });
+    svg.querySelectorAll('text').forEach(t => {
+      const fill = t.getAttribute('fill');
+      if (fill === '#FFD700') t.setAttribute('fill', '#333');
+      if (fill === '#94a3b8') t.setAttribute('fill', '#666');
+      t.removeAttribute('filter');
+    });
+    svg.querySelectorAll('line').forEach(l => {
+      const stroke = l.getAttribute('stroke');
+      if (stroke === '#FFD700') l.setAttribute('stroke', '#333');
+      if (stroke === '#38bdf8') l.setAttribute('stroke', '#999');
+      if (stroke === '#334155') l.setAttribute('stroke', '#ddd');
+    });
+    // Fix planet layer
+    svg.querySelectorAll('#planetLayer circle').forEach(c => {
+      c.setAttribute('fill', '#ffffff');
+      c.setAttribute('stroke', '#333');
+    });
+    svg.querySelectorAll('#planetLayer text').forEach(t => {
+      t.setAttribute('fill', '#333');
+      t.removeAttribute('filter');
+    });
+    svg.querySelectorAll('#angleLayer text').forEach(t => {
+      t.setAttribute('fill', '#333');
+      t.removeAttribute('filter');
+    });
+  }
+
+  // Fix table text colors
+  clone.querySelectorAll('.name').forEach(el => el.style.color = '#1a1a1a');
+  clone.querySelectorAll('.pos').forEach(el => el.style.color = '#333');
+  clone.querySelectorAll('.house').forEach(el => el.style.color = '#555');
+  clone.querySelectorAll('.angle-label').forEach(el => el.style.color = '#333');
+  clone.querySelectorAll('.angle-value').forEach(el => el.style.color = '#1a1a1a');
+  clone.querySelectorAll('.muted').forEach(el => el.style.color = '#666');
+
+  // Force layout
+  wrapper.offsetHeight;
+
+  return wrapper;
+}
+
+// Helper: convert element to canvas using html2canvas approach with dom-to-image
+async function elementToCanvas(element) {
+  const rect = element.getBoundingClientRect();
+  const width = Math.ceil(rect.width);
+  const height = Math.ceil(rect.height);
+
+  // Use SVG foreignObject approach
+  const svgNS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(svgNS, 'svg');
+  svg.setAttribute('xmlns', svgNS);
+  svg.setAttribute('width', width);
+  svg.setAttribute('height', height);
+
+  const foreignObject = document.createElementNS(svgNS, 'foreignObject');
+  foreignObject.setAttribute('width', '100%');
+  foreignObject.setAttribute('height', '100%');
+
+  // Clone the element into the foreignObject
+  const clone = element.cloneNode(true);
+  foreignObject.appendChild(clone);
+  svg.appendChild(foreignObject);
+
+  const svgData = new XMLSerializer().serializeToString(svg);
+  const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+  const url = URL.createObjectURL(svgBlob);
+
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = width * 2;
+      canvas.height = height * 2;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(2, 2);
+      ctx.drawImage(img, 0, 0, width, height);
+      URL.revokeObjectURL(url);
+      resolve(canvas);
+    };
+    img.onerror = (e) => {
+      URL.revokeObjectURL(url);
+      reject(e);
+    };
+    img.src = url;
+  });
+}
+
+// PRINT button
+document.getElementById('printBtn').addEventListener('click', () => {
+  window.print();
+});
+
+// DOWNLOAD button - captures page as PNG
+document.getElementById('downloadBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('downloadBtn');
+  btn.style.opacity = '0.5';
+  btn.style.pointerEvents = 'none';
+
+  try {
+    await waitForReady();
+    const wrapper = await cloneForCapture();
+
+    // Wait for fonts
+    await document.fonts.ready;
+    await new Promise(r => setTimeout(r, 500));
+
+    const canvas = await elementToCanvas(wrapper);
+
+    // Clean up
+    document.body.removeChild(wrapper);
+
+    // Download
+    const link = document.createElement('a');
+    const filename = birthDate ? `natal-chart-${birthDate.replace(/\./g, '-')}.png` : 'natal-chart.png';
+    link.download = filename;
+    link.href = canvas.toDataURL('image/png');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+  } catch (e) {
+    console.error('Download failed:', e);
+    alert('Download failed. Please try Print instead.');
+  } finally {
+    btn.style.opacity = '1';
+    btn.style.pointerEvents = 'auto';
+  }
+});
+
+// SHARE button - shares as image or copies to clipboard
+document.getElementById('shareBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('shareBtn');
+  btn.style.opacity = '0.5';
+  btn.style.pointerEvents = 'none';
+
+  try {
+    await waitForReady();
+    const wrapper = await cloneForCapture();
+
+    await document.fonts.ready;
+    await new Promise(r => setTimeout(r, 500));
+
+    const canvas = await elementToCanvas(wrapper);
+    document.body.removeChild(wrapper);
+
+    canvas.toBlob(async (blob) => {
+      if (!blob) {
+        alert('Could not create image.');
+        return;
+      }
+
+      const file = new File([blob], `natal-chart-${birthDate || 'chart'}.png`, {type: 'image/png'});
+
+      // Try Web Share API with files
+      if (navigator.canShare && navigator.canShare({files: [file]})) {
+        try {
+          await navigator.share({
+            title: 'Natal Chart',
+            text: `Natal chart for ${[birthDate, birthTime, birthCity].filter(Boolean).join(' ')}`,
+            files: [file]
+          });
+          return;
+        } catch (shareErr) {
+          // User cancelled or share failed, try clipboard
+          console.log('Share cancelled, trying clipboard...');
+        }
+      }
+
+      // Fallback: copy to clipboard
+      try {
+        const item = new ClipboardItem({'image/png': blob});
+        await navigator.clipboard.write([item]);
+        alert('Chart image copied to clipboard!');
+      } catch (clipErr) {
+        // Final fallback: download
+        const link = document.createElement('a');
+        link.download = `natal-chart-${birthDate || 'chart'}.png`;
+        link.href = canvas.toDataURL('image/png');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }, 'image/png');
+
+  } catch (e) {
+    console.error('Share failed:', e);
+    alert('Share not available. Please try Download or Print.');
+  } finally {
+    btn.style.opacity = '1';
+    btn.style.pointerEvents = 'auto';
+  }
+});
+
+/* ===== END SHARE / PRINT / DOWNLOAD ===== */
 
 function parseDate(value){
   const match = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(value);

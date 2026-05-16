@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astrology App</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family: Arial;
+  background: #0f172a;
+  color: white;
+  text-align: center;
+  margin: 0;
+  padding: 5px;
+}
+
+/* ===== TITLE ===== */
+.title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #FFD700;
+  display: block;
+}
+
+/* ===== TABS - 2 REDA PO 3 ===== */
+.tabs {
+  display: none;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin: 15px auto;
+  max-width: 420px;
+}
+
+.tab {
+  padding: 6px 10px;
+  background: #1e293b;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  opacity: 0.6;
+  flex: 0 0 calc(33.333% - 4px);
+  text-align: center;
+  white-space: nowrap;
+  transition: 0.3s;
+}
+
+.tab.active {
+  opacity: 1;
+  box-shadow: 0 0 6px rgba(56,189,248,0.6);
+}
+
+/* ===== SECTIONS ===== */
+.section { display:none; }
+.section.active { display:block; }
+
+/* ===== INPUT LINE ===== */
+.input-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 auto;
+  max-width: 340px;
+  padding: 0 10px;
+}
+
+.input-wrap {
+  flex: 1;
+  margin: 0 !important;
+  min-width: 0;
+  background: #1e293b;
+  border-radius: 14px;
+  padding: 2px;
+}
+
+.input-wrap input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 20px;
+  height: 30px;
+  line-height: 30px;
+  color: white;
+  text-align: center;
+  padding: 0;
+  border-radius: 8px !important;
+}
+
+.input-line input[type="text"] {
+  background: #1e293b;
+  border: 1px solid #38bdf8;
+  color: white;
+  border-radius: 8px;
+  padding: 8px 6px;
+  font-size: 12px;
+  outline: none;
+  box-shadow: 0 0 10px rgba(56,189,248,0.4);
+  transition: 0.3s;
+  height: 34px;
+  box-sizing: border-box;
+}
+
+.input-line input[type="text"]:hover {
+  box-shadow: 0 0 15px rgba(56,189,248,0.8);
+}
+
+#timeInput {
+  width: 60px;
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+#cityInput {
+  width: 120px;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+/* ===== CITY DROPDOWN ===== */
+#cityDropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 220px;
+  max-height: 250px;
+  overflow-y: auto;
+  background: #1e293b;
+  border: 1px solid #38bdf8;
+  border-radius: 8px;
+  z-index: 1000;
+  box-shadow: 0 0 15px rgba(56,189,248,0.4);
+}
+
+/* ===== SAVED ICON ===== */
+#savedIcon {
+  width:34px; height:34px;
+  background:#1e293b;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  box-shadow:0 0 10px rgba(56,189,248,0.4);
+  border:1px solid #38bdf8;
+  transition:0.3s;
+  flex-shrink:0;
+  position: relative;
+}
+
+#savedCount {
+  position:absolute;
+  top:-8px; right:-8px;
+  background:#ef4444;
+  color:white;
+  font-size:9px;
+  width:16px; height:16px;
+  border-radius:50%;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+}
+
+/* ===== TWIN CHECKBOXES ===== */
+.twin-row {
+  margin-top:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:20px;
+}
+
+.twin-row label {
+  font-size:12px;
+  cursor: pointer;
+}
+
+/* ===== ANALYZE BUTTON ===== */
+.analyze-btn {
+  width: 90%;
+  max-width: 340px;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.analyze-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(56,189,248,0.6);
+}
+
+/* ===== GLOW RING ===== */
+.glow-ring-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.glow-ring {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 3px solid rgba(56,189,248,0.6);
+  box-shadow: 
+    0 0 20px rgba(56,189,248,0.4),
+    0 0 40px rgba(56,189,248,0.3),
+    0 0 60px rgba(56,189,248,0.2),
+    inset 0 0 20px rgba(56,189,248,0.1);
+  animation: ringPulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes ringPulse {
+  from {
+    box-shadow: 
+      0 0 20px rgba(56,189,248,0.4),
+      0 0 40px rgba(56,189,248,0.3),
+      0 0 60px rgba(56,189,248,0.2),
+      inset 0 0 20px rgba(56,189,248,0.1);
+    border-color: rgba(56,189,248,0.6);
+  }
+  to {
+    box-shadow: 
+      0 0 30px rgba(56,189,248,0.6),
+      0 0 60px rgba(56,189,248,0.4),
+      0 0 90px rgba(56,189,248,0.3),
+      inset 0 0 30px rgba(56,189,248,0.2);
+    border-color: rgba(56,189,248,0.9);
+  }
+}
+
+/* ===== BACK BUTTON ===== */
+.back-arrow {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  font-size: 22px;
+  color: #38bdf8;
+  cursor: pointer;
+  z-index: 99999;
+  text-shadow: 0 0 6px #38bdf8, 0 0 12px rgba(56,189,248,0.7);
+  background: rgba(15,23,42,0.8);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(56,189,248,0.3);
+}
+
+.back-arrow:hover {
+  color: #60a5fa;
+  text-shadow: 0 0 10px #60a5fa, 0 0 20px #60a5fa, 0 0 30px #93c5fd;
+}
+
+/* ===== SAVED PANEL ===== */
+#savedPanel {
+  display:none;
+  position:fixed;
+  top:0; right:0;
+  width:280px;
+  height:100%;
+  background:#1e293b;
+  z-index:99998;
+  padding:60px 15px 20px 15px;
+  overflow-y:auto;
+  box-shadow:-5px 0 20px rgba(0,0,0,0.5);
+}
+
+/* ===== SAVE MODAL ===== */
+#saveModal {
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.85);
+  justify-content:center;
+  align-items:center;
+  z-index:99999;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #0f172a;
+  border-top: 1px solid #334155;
+  padding: 10px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  font-size: 11px;
+  z-index: 999;
+}
+
+.footer-logo {
+  width: 40px;
+  height: auto;
+}
+
+.footer-text {
+  text-align: left;
+  line-height: 1.3;
+  color: #94a3b8;
+}
+
+body {
+  padding-bottom: 80px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+  .tab {
+    font-size: 10px;
+    padding: 5px 6px;
+  }
+  .title {
+    font-size: 18px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- BACK BUTTON -->
+<div class="back-arrow" onclick="goBack()">❮</div>
+
+<!-- TITLE -->
+<div class="title">Astrology App</div>
+
+<!-- TABS - 2 REDA PO 3 -->
+<div class="tabs" id="tabs" style="display:flex;">
+  <div class="tab active" data-tab="astroChart" onclick="openAstroFromTab()">ASTRO CHART</div>
+  <div class="tab" data-tab="transit" onclick="showTab('transit')">TRANSIT</div>
+  <div class="tab" data-tab="retrogradnost" onclick="showTab('retrogradnost')">RETROGRADNOST</div>
+  <div class="tab" data-tab="astrocartography" onclick="showTab('astrocartography')">ASTROCARTOGRAPHY</div>
+  <div class="tab" data-tab="sinastrija" onclick="showTab('sinastrija')">SINASTRIJA</div>
+  <div class="tab" data-tab="lunarPhases" onclick="showTab('lunarPhases')">LUNAR PHASES</div>
+</div>
+
+<!-- ===== ASTRO CHART TAB ===== -->
+<div id="astroChart" class="section active">
+
+  <!-- INPUT LINE -->
+  <div class="input-line">
+    <div class="input-wrap">
+      <input type="text" id="input" placeholder="DD.MM.YYYY"
+        oninput="formatDate(this)"
+        onblur="validateDateInput(this)"
+        onkeypress="if(event.key === 'Enter'){ openAstro(); }"
+        maxlength="10"
+        autocomplete="off">
+    </div>
+
+    <input type="text" id="timeInput" placeholder="HH:MM"
+      oninput="formatTime(this)"
+      onblur="validateTimeInput(this)"
+      onkeypress="if(event.key === 'Enter'){ openAstro(); }"
+      maxlength="5"
+      autocomplete="off">
+
+    <div style="position: relative; flex-shrink: 0;">
+      <input type="text" id="cityInput" placeholder="City..." autocomplete="off" style="
+        background: #1e293b;
+        border: 1px solid #38bdf8;
+        color: white;
+        border-radius: 8px;
+        padding: 8px 6px;
+        font-size: 12px;
+        outline: none;
+        box-shadow: 0 0 10px rgba(56,189,248,0.4);
+        width: 120px;
+      ">
+      <div id="cityDropdown"></div>
+    </div>
+
+    <div id="savedIcon" onclick="toggleSavedPanel()">
+      <span style="font-size:16px;">📋</span>
+      <span id="savedCount">0</span>
+    </div>
+  </div>
+
+  <div style="margin-top:10px; font-size:11px; color:white; opacity:0.8;">
+    (enter your date of birth, time, and place)
+  </div>
+
+  <!-- ANALYZE button removed - astro.html opens directly via tab click -->
+
+  <!-- GLOW RING - removed along with ANALYZE button -->
+
+</div>
+
+<!-- ===== TRANSIT TAB ===== -->
+<div id="transit" class="section">
+  <div style="padding:40px 20px; color:#64748b; font-size:14px;">
+    Transit analysis coming soon...
+  </div>
+</div>
+
+<!-- ===== RETROGRADNOST TAB ===== -->
+<div id="retrogradnost" class="section">
+  <div style="padding:40px 20px; color:#64748b; font-size:14px;">
+    Retrogradnost analysis coming soon...
+  </div>
+</div>
+
+<!-- ===== ASTROCARTOGRAPHY TAB ===== -->
+<div id="astrocartography" class="section">
+  <div style="padding:40px 20px; color:#64748b; font-size:14px;">
+    Astrocartography coming soon...
+  </div>
+</div>
+
+<!-- ===== SINASTRIJA TAB ===== -->
+<div id="sinastrija" class="section">
+  <div style="padding:40px 20px; color:#64748b; font-size:14px;">
+    Sinastrija analysis coming soon...
+  </div>
+</div>
+
+<!-- ===== LUNAR PHASES TAB ===== -->
+<div id="lunarPhases" class="section">
+  <div style="padding:40px 20px; color:#64748b; font-size:14px;">
+    Lunar phases coming soon...
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <img src="images/logo.png" class="footer-logo" alt="logo">
+  <div class="footer-text">
+    <div>G-Lab Team</div>
+    <div>IT Research & Development</div>
+    <div>© 2025 G-Lab – Dragan Milošević</div>
+    <div><b>All rights reserved.</b></div>
+  </div>
+</div>
+
+<!-- SAVE MODAL -->
+<div id="saveModal" style="
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.85);
+  justify-content:center;
+  align-items:center;
+  z-index:99999;">
+  <div style="
+    background:#1e293b;
+    padding:25px;
+    border-radius:15px;
+    width:85%;
+    max-width:320px;
+    text-align:center;
+    box-shadow:0 0 30px rgba(56,189,248,0.4);
+  ">
+    <h3 style="color:#38bdf8; margin-bottom:15px; text-shadow:0 0 10px rgba(56,189,248,0.6);">
+      Save Date
+    </h3>
+    <div style="margin-bottom:15px; color:#94a3b8; font-size:12px;">
+      Date: <span id="saveModalDate" style="color:#f6cb71; font-weight:bold;"></span>
+    </div>
+    <input type="text" id="saveNameInput" placeholder="Enter name..." style="
+      width:100%;
+      padding:10px;
+      background:#0f172a;
+      border:1px solid #38bdf8;
+      border-radius:8px;
+      color:white;
+      font-size:14px;
+      text-align:center;
+      margin-bottom:15px;
+      outline:none;
+    " onkeypress="if(event.key==='Enter'){ confirmSaveDate(); }">
+    <div style="display:flex; gap:10px; justify-content:center;">
+      <button onclick="confirmSaveDate()" style="
+        padding:8px 20px;
+        background:linear-gradient(135deg, #38bdf8, #0ea5e9);
+        border:none;
+        border-radius:8px;
+        color:white;
+        font-weight:bold;
+        cursor:pointer;
+        font-size:12px;
+      ">SAVE</button>
+      <button onclick="closeSaveModal()" style="
+        padding:8px 20px;
+        background:#334155;
+        border:none;
+        border-radius:8px;
+        color:white;
+        cursor:pointer;
+        font-size:12px;
+      ">CANCEL</button>
+    </div>
+  </div>
+</div>
+
+<!-- SAVED PANEL -->
+<div id="savedPanel" style="
+  display:none;
+  position:fixed;
+  top:0; right:0;
+  width:280px;
+  height:100%;
+  background:#1e293b;
+  z-index:99998;
+  padding:60px 15px 20px 15px;
+  overflow-y:auto;
+  box-shadow:-5px 0 20px rgba(0,0,0,0.5);
+">
+  <div onclick="toggleSavedPanel()" style="
+    position:absolute;
+    top:15px; right:15px;
+    font-size:20px;
+    color:#38bdf8;
+    cursor:pointer;
+  ">✕</div>
+  <h3 style="color:#38bdf8; margin-bottom:15px; font-size:14px; text-align:center;">
+    SAVED DATES
+  </h3>
+  <div id="savedList"></div>
+</div>
+
+<script>
+// ===== GLOBALNE PROMENLJIVE =====
+let skipSavePrompt = false;
+
+// ===== OPEN ASTRO FROM TAB CLICK =====
+function openAstroFromTab(){
+  openAstro();
+}
+
+// ===== TAB NAVIGATION =====
+let tabHistory = [];
+const MAX_HISTORY = 10;
+
+function showTab(id) {
+  if(tabHistory.length === 0 || tabHistory[tabHistory.length - 1] !== id){
+    tabHistory.push(id);
+    if(tabHistory.length > MAX_HISTORY) tabHistory.shift();
+  }
+
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+
+  let current = document.getElementById(id);
+  if(current) current.classList.add("active");
+
+  let tab = document.querySelector('[data-tab="' + id + '"');
+  if(tab) tab.classList.add("active");
+}
+
+// ===== GO BACK - vraća na index.html sa parametrima =====
+function goBack() {
+  const date = document.getElementById("input").value;
+  const time = document.getElementById("timeInput").value;
+  const city = document.getElementById("cityInput").value;
+
+  let backUrl = "index.html";
+  if(date) {
+    backUrl += "?date=" + encodeURIComponent(date);
+    if(time) backUrl += "&time=" + encodeURIComponent(time);
+    if(city) backUrl += "&city=" + encodeURIComponent(city);
+  }
+  window.location.href = backUrl;
+}
+
+// ===== DATE FORMATTING =====
+function formatDate(input){
+  let value = input.value.replace(/[^0-9]/g,'');
+  if(value.length > 8) value = value.slice(0,8);
+  let formatted = '';
+  if(value.length >= 2){
+    formatted += value.slice(0,2) + '.';
+  } else {
+    formatted += value;
+  }
+  if(value.length >= 4){
+    formatted += value.slice(2,4) + '.';
+  } else if(value.length > 2){
+    formatted += value.slice(2);
+  }
+  if(value.length >= 5){
+    formatted += value.slice(4,8);
+  }
+  input.value = formatted;
+}
+
+function validateDateInput(input){
+  let val = input.value;
+  if(!val) return;
+  let clean = val.replace(/[^0-9]/g,'');
+  if(clean.length === 8){
+    let day = clean.slice(0,2);
+    let month = clean.slice(2,4);
+    let year = clean.slice(4,8);
+    input.value = day + '.' + month + '.' + year;
+  }
+  if(!validateDate(input.value)){
+    input.style.borderColor = '#ef4444';
+    input.style.boxShadow = '0 0 10px rgba(239,68,68,0.4)';
+  } else {
+    input.style.borderColor = '#38bdf8';
+    input.style.boxShadow = '0 0 10px rgba(56,189,248,0.4)';
+  }
+}
+
+function validateDate(dateStr){
+  if(!dateStr.match(/^\d{2}\.\d{2}\.\d{4}$/)) return false;
+  let parts = dateStr.split('.');
+  let day = parseInt(parts[0]);
+  let month = parseInt(parts[1]);
+  let year = parseInt(parts[2]);
+  if(month < 1 || month > 12) return false;
+  if(day < 1 || day > 31) return false;
+  let daysInMonth = [0,31,28,31,30,31,30,31,31,30,31,30,31];
+  if(year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) daysInMonth[2] = 29;
+  if(day > daysInMonth[month]) return false;
+  return true;
+}
+
+// ===== TIME FORMATTING =====
+function formatTime(input){
+  let val = input.value.replace(/[^0-9]/g,'');
+  if(val.length > 4) val = val.slice(0,4);
+  if(val.length < 4){
+    input.value = val;
+    return;
+  }
+  let hh = parseInt(val.slice(0,2));
+  let mm = parseInt(val.slice(2,4));
+  if(hh > 23) hh = 23;
+  if(mm > 59) mm = 59;
+  input.value = hh.toString().padStart(2,'0') + ':' + mm.toString().padStart(2,'0');
+}
+
+function validateTimeInput(input){
+  let val = input.value;
+  if(!val) return;
+  let clean = val.replace(/[^0-9]/g,'');
+  if(clean.length === 4){
+    let hh = clean.slice(0,2);
+    let mm = clean.slice(2,4);
+    input.value = hh + ':' + mm;
+  }
+  if(!validateTime(input.value)){
+    input.style.borderColor = '#ef4444';
+    input.style.boxShadow = '0 0 10px rgba(239,68,68,0.4)';
+  } else {
+    input.style.borderColor = '#38bdf8';
+    input.style.boxShadow = '0 0 10px rgba(56,189,248,0.4)';
+  }
+}
+
+function validateTime(timeStr){
+  if(!timeStr) return true;
+  if(!timeStr.match(/^\d{2}:\d{2}$/)) return false;
+  let parts = timeStr.split(':');
+  let hh = parseInt(parts[0]);
+  let mm = parseInt(parts[1]);
+  if(hh < 0 || hh > 23) return false;
+  if(mm < 0 || mm > 59) return false;
+  return true;
+}
+
+// ===== CITY AUTOCOMPLETE =====
+const worldCities = [
+  "Belgrade","Zagreb","London","Paris","Berlin","Moscow","New York","Los Angeles",
+  "Chicago","Toronto","Sydney","Tokyo","Dubai","Istanbul","Rome","Madrid",
+  "Vienna","Budapest","Athens","Bucharest","Sofia","Ljubljana","Prague","Warsaw",
+  "Amsterdam","Zurich","Stockholm","Oslo","Dublin","Lisbon","Cairo","Johannesburg",
+  "Singapore","Hong Kong","Seoul","Beijing","Mumbai","New Delhi","Mexico City",
+  "Buenos Aires","Sao Paulo","São Paulo"
+];
+
+function setupCityAutocomplete(){
+  let cityInput = document.getElementById("cityInput");
+  let dropdown = document.getElementById("cityDropdown");
+  if(!cityInput) return;
+
+  cityInput.addEventListener("input", function(){
+    let val = this.value.toLowerCase();
+    if(!val){
+      if(dropdown) dropdown.style.display = "none";
+      return;
+    }
+    let matches = worldCities.filter(function(city){
+      return city.toLowerCase().includes(val);
+    }).slice(0, 10);
+
+    if(dropdown){
+      if(matches.length > 0){
+        dropdown.innerHTML = matches.map(function(city){
+          return '<div onclick="selectCity(' + "'" + city.replace(/'/g, "\'") + "'" + ')" style="padding: 8px 12px; cursor: pointer; color: white; font-size: 12px; border-bottom: 1px solid #334155; transition: 0.2s;" onmouseover="this.style.background=\'#0f172a\'" onmouseout="this.style.background=\'transparent\'">' + city + '</div>';
+        }).join('');
+        dropdown.style.display = "block";
+      } else {
+        dropdown.style.display = "none";
+      }
+    }
+  });
+
+  document.addEventListener("click", function(e){
+    if(dropdown && !cityInput.contains(e.target) && !dropdown.contains(e.target)){
+      dropdown.style.display = "none";
+    }
+  });
+}
+
+function selectCity(city){
+  let cityInput = document.getElementById("cityInput");
+  let dropdown = document.getElementById("cityDropdown");
+  if(cityInput) cityInput.value = city;
+  if(dropdown) dropdown.style.display = "none";
+}
+
+// ===== CITY COORDS =====
+const cityCoords = {
+  "Belgrade": { lat: 44.7866, lon: 20.4489 },
+  "Zagreb": { lat: 45.8150, lon: 15.9819 },
+  "London": { lat: 51.5074, lon: -0.1278 },
+  "Paris": { lat: 48.8566, lon: 2.3522 },
+  "Berlin": { lat: 52.5200, lon: 13.4050 },
+  "Moscow": { lat: 55.7558, lon: 37.6173 },
+  "New York": { lat: 40.7128, lon: -74.0060 },
+  "Los Angeles": { lat: 34.0522, lon: -118.2437 },
+  "Chicago": { lat: 41.8781, lon: -87.6298 },
+  "Toronto": { lat: 43.6532, lon: -79.3832 },
+  "Sydney": { lat: -33.8688, lon: 151.2093 },
+  "Tokyo": { lat: 35.6762, lon: 139.6503 },
+  "Dubai": { lat: 25.2048, lon: 55.2708 },
+  "Istanbul": { lat: 41.0082, lon: 28.9784 },
+  "Rome": { lat: 41.9028, lon: 12.4964 },
+  "Madrid": { lat: 40.4168, lon: -3.7038 },
+  "Vienna": { lat: 48.2082, lon: 16.3738 },
+  "Budapest": { lat: 47.4979, lon: 19.0402 },
+  "Athens": { lat: 37.9838, lon: 23.7275 },
+  "Bucharest": { lat: 44.4268, lon: 26.1025 },
+  "Sofia": { lat: 42.6977, lon: 23.3219 },
+  "Ljubljana": { lat: 46.0569, lon: 14.5058 },
+  "Prague": { lat: 50.0755, lon: 14.4378 },
+  "Warsaw": { lat: 52.2297, lon: 21.0122 },
+  "Amsterdam": { lat: 52.3676, lon: 4.9041 },
+  "Zurich": { lat: 47.3769, lon: 8.5417 },
+  "Stockholm": { lat: 59.3293, lon: 18.0686 },
+  "Oslo": { lat: 59.9139, lon: 10.7522 },
+  "Dublin": { lat: 53.3498, lon: -6.2603 },
+  "Lisbon": { lat: 38.7223, lon: -9.1393 },
+  "Cairo": { lat: 30.0444, lon: 31.2357 },
+  "Johannesburg": { lat: -26.2041, lon: 28.0473 },
+  "Singapore": { lat: 1.3521, lon: 103.8198 },
+  "Hong Kong": { lat: 22.3193, lon: 114.1694 },
+  "Seoul": { lat: 37.5665, lon: 126.9780 },
+  "Beijing": { lat: 39.9042, lon: 116.4074 },
+  "Mumbai": { lat: 19.0760, lon: 72.8777 },
+  "New Delhi": { lat: 28.6139, lon: 77.2090 },
+  "Mexico City": { lat: 19.4326, lon: -99.1332 },
+  "Buenos Aires": { lat: -34.6037, lon: -58.3816 },
+  "Sao Paulo": { lat: -23.5505, lon: -46.6333 },
+  "São Paulo": { lat: -23.5505, lon: -46.6333 }
+};
+
+// ===== OPEN ASTRO - prenosi sve podatke u astro.html =====
+function openAstro(){
+  const date = document.getElementById("input").value;
+  const time = document.getElementById("timeInput").value;
+  const city = document.getElementById("cityInput").value;
+
+  if(!validateDate(date)){
+    alert("Please enter a valid date (DD.MM.YYYY)");
+    return;
+  }
+
+  const coords = cityCoords[city] || null;
+  const extraParams = coords
+    ? '&lat=' + encodeURIComponent(coords.lat) + '&lon=' + encodeURIComponent(coords.lon)
+    : "";
+
+  // Sačuvaj stanje za povratak
+  saveAstroReturnState(date, time, city);
+
+  const returnUrl = encodeURIComponent(window.location.href);
+  const fromPage = encodeURIComponent("chart.html");
+
+  window.location.href =
+    'astro.html?date=' + encodeURIComponent(date) +
+    '&time=' + encodeURIComponent(time) +
+    '&city=' + encodeURIComponent(city) +
+    extraParams +
+    '&from=' + fromPage +
+    '&returnUrl=' + returnUrl;
+}
+
+// ===== SAVE ASTRO RETURN STATE =====
+function saveAstroReturnState(date, time, city){
+  sessionStorage.setItem("astroReturnState", JSON.stringify({
+    date: date,
+    time: time,
+    city: city
+  }));
+}
+
+// ===== SAVED DATES FUNCTIONS =====
+function getSavedDates(){
+  let saved = localStorage.getItem('numerology_dates');
+  return saved ? JSON.parse(saved) : [];
+}
+
+function saveDatesList(dates){
+  localStorage.setItem('numerology_dates', JSON.stringify(dates));
+  updateSavedCount();
+}
+
+function updateSavedCount(){
+  let count = getSavedDates().length;
+  let badge = document.getElementById('savedCount');
+  if(badge){
+    badge.innerText = count;
+    badge.style.display = count > 0 ? 'flex' : 'none';
+  }
+}
+
+function offerSaveDate(dateStr){
+  if(skipSavePrompt){
+    skipSavePrompt = false;
+    return;
+  }
+  let timeStr = document.getElementById("timeInput") ? document.getElementById("timeInput").value : "";
+  let city = document.getElementById("cityInput") ? document.getElementById("cityInput").value : "";
+
+  let saved = getSavedDates();
+  let exists = saved.some(function(d) {
+    return d.date === dateStr && d.time === timeStr && d.city === city;
+  });
+  if(exists) return;
+
+  let modal = document.getElementById('saveModal');
+  let dateSpan = document.getElementById('saveModalDate');
+  let nameInput = document.getElementById('saveNameInput');
+
+  if(modal && dateSpan){
+    dateSpan.innerText = dateStr + (timeStr ? " " + timeStr : "") + (city ? " " + city : "");
+    nameInput.value = '';
+    modal.style.display = 'flex';
+    setTimeout(function() { nameInput.focus(); }, 100);
+  }
+}
+
+function closeSaveModal(){
+  let modal = document.getElementById('saveModal');
+  if(modal) modal.style.display = 'none';
+}
+
+function confirmSaveDate(){
+  let name = document.getElementById('saveNameInput').value.trim();
+  if(!name){
+    alert('Please enter a name');
+    return;
+  }
+
+  let dateStr = document.getElementById("input").value;
+  let timeStr = document.getElementById("timeInput") ? document.getElementById("timeInput").value : "";
+  let city = document.getElementById("cityInput") ? document.getElementById("cityInput").value : "";
+
+  let saved = getSavedDates();
+  saved.push({
+    id: Date.now(),
+    name: name,
+    date: dateStr,
+    time: timeStr,
+    city: city,
+    timestamp: new Date().toISOString()
+  });
+
+  saveDatesList(saved);
+  closeSaveModal();
+  renderSavedList();
+}
+
+function deleteSavedDate(id){
+  if(!confirm('Delete this saved date?')) return;
+  let saved = getSavedDates().filter(function(d) { return d.id !== id; });
+  saveDatesList(saved);
+  renderSavedList();
+}
+
+function loadSavedDate(dateStr, timeStr, city){
+  document.getElementById('input').value = dateStr;
+
+  let timeInput = document.getElementById('timeInput');
+  if(timeInput && timeStr) timeInput.value = timeStr;
+
+  let cityInput = document.getElementById('cityInput');
+  if(cityInput && city) cityInput.value = city;
+
+  skipSavePrompt = true;
+  toggleSavedPanel();
+}
+
+function toggleSavedPanel(){
+  let panel = document.getElementById('savedPanel');
+  if(!panel) return;
+
+  if(panel.style.display === 'block'){
+    panel.style.display = 'none';
+  } else {
+    panel.style.display = 'block';
+    renderSavedList();
+  }
+}
+
+function renderSavedList(){
+  let container = document.getElementById('savedList');
+  if(!container) return;
+
+  let saved = getSavedDates();
+
+  if(saved.length === 0){
+    container.innerHTML = '<div style="color:#64748b; text-align:center; padding:20px; font-size:12px;">No saved dates</div>';
+    return;
+  }
+
+  let html = '';
+  saved.forEach(function(item) {
+    let twinBadge = item.isTwin ? '<span style="background:#38bdf8;color:#0f172a;font-size:9px;padding:2px 6px;border-radius:4px;margin-left:6px;font-weight:bold;">TWIN</span>' : '';
+    let twin3Badge = item.isTwin3 ? '<span style="background:#FFD700;color:#0f172a;font-size:9px;padding:2px 6px;border-radius:4px;margin-left:6px;font-weight:bold;">3rd TWIN</span>' : '';
+    let details = item.date;
+    if(item.time) details += " " + item.time;
+    if(item.city) details += " " + item.city;
+
+    html += '<div style="background:#0f172a;border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:0.3s;border:1px solid #334155;" onmouseover="this.style.borderColor=\'#38bdf8\'" onmouseout="this.style.borderColor=\'#334155\'" onclick="loadSavedDate(\'' + item.date + '\',\'' + (item.time || '') + '\',\'' + (item.city || '') + '\',' + (item.isTwin ? 'true' : 'false') + ',' + (item.isTwin3 ? 'true' : 'false') + ')">' +
+      '<div style="display:flex; justify-content:space-between; align-items:center;">' +
+        '<div>' +
+          '<div style="color:#f6cb71; font-weight:bold; font-size:13px;">' + item.name + twinBadge + twin3Badge + '</div>' +
+          '<div style="color:#94a3b8; font-size:11px; margin-top:2px;">' + details + '</div>' +
+        '</div>' +
+        '<span onclick="event.stopPropagation(); deleteSavedDate(' + item.id + ')" style="color:#ef4444;font-size:16px;cursor:pointer;padding:5px;">🗑️</span>' +
+      '</div>' +
+    '</div>';
+  });
+
+  container.innerHTML = html;
+}
+
+// ===== INIT =====
+window.onload = function(){
+  setupCityAutocomplete();
+  showTab("astroChart");
+  updateSavedCount();
+
+  // Preuzmi parametre iz URL ako postoje (iz index.html)
+  const params = new URLSearchParams(window.location.search);
+  const date = params.get("date");
+  const time = params.get("time");
+  const city = params.get("city");
+
+  if(date) document.getElementById("input").value = date;
+  if(time) document.getElementById("timeInput").value = time;
+  if(city) document.getElementById("cityInput").value = city;
+  // Twin checkboxes removed - no longer needed
+};
+</script>
+
+</body>
+</html>

@@ -6135,6 +6135,33 @@ function saveAstroReturnState(date, time, city){
 function restoreAstroReturnState(){
   const params = new URLSearchParams(window.location.search);
   const raw = sessionStorage.getItem("astroReturnState");
+
+  // Proveri i URL parametre (iz chart.html povratka)
+  const urlDate = params.get("date");
+  const urlTime = params.get("time");
+  const urlCity = params.get("city");
+  const urlTwin = params.get("isTwin");
+  const urlTwin3 = params.get("isTwin3");
+
+  // Ako ima URL parametara iz chart.html, koristi ih
+  if(urlDate){
+    document.getElementById("input").value = urlDate;
+    if(urlTime) document.getElementById("timeInput").value = urlTime;
+    if(urlCity) document.getElementById("cityInput").value = urlCity;
+    if(document.getElementById("twinCheck")) document.getElementById("twinCheck").checked = urlTwin === "true";
+    if(document.getElementById("twinCheck3")) document.getElementById("twinCheck3").checked = urlTwin3 === "true";
+
+    skipSavePrompt = true;
+    generate();
+
+    // Očisti URL parametre
+    if(history.replaceState){
+      history.replaceState({}, document.title, window.location.pathname);
+    }
+    return;
+  }
+
+  // Inače koristi sessionStorage (stari astro.html povratak)
   if(!raw && params.get("astroReturn") !== "1") return;
 
   sessionStorage.removeItem("astroReturnState");
@@ -6181,21 +6208,29 @@ function openAstro(){
   const date = document.getElementById("input").value;
   const time = document.getElementById("timeInput").value;
   const city = document.getElementById("cityInput").value;
-  const coords = cityCoords && cityCoords[city] ? cityCoords[city] : null;
-  const extraParams = coords
-    ? `&lat=${encodeURIComponent(coords.lat)}&lon=${encodeURIComponent(coords.lon)}`
-    : "";
-  let returnTarget = window.location.href;
+  const isTwin = document.getElementById("twinCheck") && document.getElementById("twinCheck").checked;
+  const isTwin3 = document.getElementById("twinCheck3") && document.getElementById("twinCheck3").checked;
+
+  // Validacija datuma
+  if(!validateDate(date)){
+    alert("Please enter a valid date (DD.MM.YYYY)");
+    return;
+  }
+
+  // Sačuvaj stanje za povratak
   try{
-    returnTarget = saveAstroReturnState(date, time, city);
+    saveAstroReturnState(date, time, city);
   }catch(e){
     console.warn("Could not save astro return state", e);
   }
-  const returnUrl = encodeURIComponent(returnTarget);
-  const fromPage = encodeURIComponent(window.location.pathname.split("/").pop() || "index.html");
 
-  window.location.href =
-    `astro.html?date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}&city=${encodeURIComponent(city)}${extraParams}&from=${fromPage}&returnUrl=${returnUrl}`;
+  // Prenesi sve podatke u chart.html
+  let chartUrl = `chart.html?date=${encodeURIComponent(date)}`;
+  if(time) chartUrl += `&time=${encodeURIComponent(time)}`;
+  if(city) chartUrl += `&city=${encodeURIComponent(city)}`;
+  chartUrl += `&isTwin=${isTwin}&isTwin3=${isTwin3}`;
+
+  window.location.href = chartUrl;
 }
 
 </script>
