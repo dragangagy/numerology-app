@@ -22,6 +22,8 @@ body{
   margin-bottom: 10px;
   color: #FFD700;
   display: block;
+  position: relative;
+  padding-right: 80px;
 }
 
 /* ===== TABS - 2 REDA PO 3 ===== */
@@ -350,78 +352,90 @@ body{
 
 .error { color: #fb7185; }
 
-/* ===== BACK BUTTON ===== */
-.back-arrow {
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  font-size: 22px;
-  color: #38bdf8;
-  cursor: pointer;
-  z-index: 99999;
-  text-shadow: 0 0 6px #38bdf8, 0 0 12px rgba(56,189,248,0.7);
-  background: rgba(15,23,42,0.8);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(56,189,248,0.3);
+/* ===== LEFT ACTION BUTTONS ===== */
+.left-bar{
+  position:absolute;
+  top:10px;
+  left:12px;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  gap:6px;
 }
-.back-arrow:hover {
-  color: #60a5fa;
-  text-shadow: 0 0 10px #60a5fa, 0 0 20px #60a5fa, 0 0 30px #93c5fd;
-}
-/* ===== TOP BAR ACTION BUTTONS ===== */
-.top-bar {
-  position: fixed;
-  top: 15px;
-  left: auto;
-  right: 15px;
-  z-index: 99999;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  pointer-events: none;
-}
-.top-bar > * { pointer-events: auto; }
 
+.left-btn{
+  width:30px;
+  height:30px;
+  border-radius:8px;
+  background:#1e293b;
+  border:1px solid rgba(56,189,248,0.25);
+  color:#94a3b8;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:0.2s;
+  padding:0;
+}
 
-.action-group {
-  display: flex;
-  gap: 8px;
-  margin-left: auto;
+.left-btn:hover{
+  color:#38bdf8;
+  border-color:#38bdf8;
+  box-shadow:0 0 10px rgba(56,189,248,0.35);
 }
-.action-btn {
-  width: 42px;
-  height: 42px;
-  border-radius: 14px;
-  background: rgba(16,27,45,0.9);
-  border: 1px solid rgba(148,163,184,0.25);
-  color: #94a3b8;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
-  transition: all 0.25s ease;
+
+.left-btn svg{
+  width:18px;
+  height:18px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
 }
-.action-btn:hover {
-  color: #38bdf8;
-  border-color: rgba(56,189,248,0.5);
-  box-shadow: 0 0 20px rgba(56,189,248,0.25);
-  transform: translateY(-2px);
+/* ===== TOP RIGHT BUTTONS ===== */
+.top-bar{
+  position:absolute;
+  top:10px;
+  right:12px;
+  z-index:9999;
 }
-.action-btn svg {
-  width: 21px;
-  height: 21px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+
+.action-group{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.action-btn{
+  width:30px;
+  height:30px;
+  border-radius:8px;
+  background:#1e293b;
+  border:1px solid rgba(56,189,248,0.25);
+  color:#94a3b8;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:0.2s;
+  padding:0;
+}
+
+.action-btn:hover{
+  color:#38bdf8;
+  border-color:#38bdf8;
+  box-shadow:0 0 10px rgba(56,189,248,0.35);
+}
+
+.action-btn svg{
+  width:21px;
+  height:21px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
 }
 
 /* ===== LOADING PANEL ===== */
@@ -617,8 +631,22 @@ body {
   </div>
 </div>
 
-<!-- BACK BUTTON -->
-<div class="back-arrow" onclick="goBack()">&#10094;</div>
+<!-- LEFT BUTTONS -->
+<div class="left-bar">
+  <button class="left-btn" onclick="goBack()" title="Back">
+    <svg viewBox="0 0 24 24">
+      <path d="M15 18l-6-6 6-6"/>
+    </svg>
+  </button>
+
+  <button class="left-btn" onclick="exitApp()" title="Exit">
+    <svg viewBox="0 0 24 24">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+      <path d="M16 17l5-5-5-5"/>
+      <path d="M21 12H9"/>
+    </svg>
+  </button>
+</div>
 
 <!-- TOP BAR: SHARE/PRINT -->
 <div class="top-bar">
@@ -699,7 +727,7 @@ body {
     <div class="astro-header">
       <div class="astro-title">ASTRO CHART</div>
       <div class="astro-birth" id="birthLine"></div>
-      <div class="astro-sub">Approximate positions â€” for precise calculations use professional ephemeris software</div>
+    
       <div class="astro-status" id="statusLine">Calculating...</div>
     </div>
 
@@ -973,6 +1001,16 @@ async function analyze() {
 }
 
 // ===== GO BACK =====
+
+function exitApp(){
+  if(window.history.length > 1){
+    window.close();
+    history.back();
+  }else{
+    window.location.href = "index.html";
+  }
+}
+
 function goBack() {
   const date = document.getElementById("input").value;
   const time = document.getElementById("timeInput").value;
