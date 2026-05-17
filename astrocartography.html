@@ -1,0 +1,2249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astrocartography</title>
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 5px;
+}
+
+.header{
+    width:100%;
+    padding:18px;
+    background:#0f172a;
+}
+
+
+
+.subtitle{
+    margin-top:6px;
+    color:#94a3b8;
+    font-size:12px;
+}
+
+.container{
+    width:100%;
+    max-width:1000px;
+    margin:auto;
+    padding:12px;
+}
+
+.card{
+    background:rgba(10,20,35,0.78);
+    border-radius:20px;
+    border:1px solid rgba(56,189,248,0.12);
+    padding:16px;
+    margin-top:16px;
+}
+
+.section-title{
+    color:#FFD700;
+    font-size:18px;
+    margin-bottom:14px;
+    text-shadow: 0 0 8px rgba(255,215,0,0.2);
+}
+
+/* === BIRTH DATA INPUT === */
+.birth-input-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap:10px;
+    margin-bottom:14px;
+}
+
+.birth-input-grid input{
+    background:#1e293b;
+    border:1px solid rgba(56,189,248,0.2);
+    border-radius:10px;
+    padding:10px 12px;
+    color:#e2e8f0;
+    font-size:13px;
+    outline:none;
+    transition:0.3s;
+}
+
+.birth-input-grid input:focus{
+    border-color:#38bdf8;
+    box-shadow:0 0 10px rgba(56,189,248,0.3);
+}
+
+.birth-input-grid input::placeholder{
+    color:#64748b;
+}
+
+.calc-btn{
+    background:linear-gradient(135deg,#FFD700,#f59e0b);
+    color:#0f172a;
+    font-weight:bold;
+    border:none;
+    border-radius:10px;
+    padding:10px 20px;
+    cursor:pointer;
+    transition:0.3s;
+    font-size:13px;
+}
+
+.calc-btn:hover{
+    transform:scale(1.02);
+    box-shadow:0 0 20px rgba(255,215,0,0.4);
+}
+
+/* === MAP === */
+.map-wrapper{
+    position:relative;
+    width:100%;
+    overflow:hidden;
+    border-radius:18px;
+    background:#1e293b;
+    border:1px solid rgba(56,189,248,0.12);
+    box-shadow:0 0 16px rgba(56,189,248,0.12);
+}
+
+.map-wrapper img{
+    width:100%;
+    display:block;
+    opacity:0.82;
+    filter: brightness(0.9) contrast(1.05);
+}
+
+/* Planet lines with glow */
+.planet-line{
+    position:absolute;
+    top:0;
+    bottom:0;
+    width:2px;
+    opacity:0.85;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.planet-line:hover{
+    width:4px;
+    opacity:1;
+    z-index:10;
+}
+
+/* Sun */
+.sun-mc{ left:22%; background:#FFD700; box-shadow:0 0 14px #FFD700, 0 0 30px rgba(255,215,0,0.3); }
+.sun-ac{ left:28%; background:#FFD700; box-shadow:0 0 10px #FFD700; opacity:0.6; }
+.sun-ic{ left:72%; background:#FFD700; box-shadow:0 0 10px #FFD700; opacity:0.6; }
+.sun-dc{ left:78%; background:#FFD700; box-shadow:0 0 10px #FFD700; opacity:0.6; }
+
+/* Moon */
+.moon-mc{ left:35%; background:#e2e8f0; box-shadow:0 0 14px #e2e8f0, 0 0 30px rgba(226,232,240,0.3); }
+.moon-ac{ left:41%; background:#e2e8f0; box-shadow:0 0 10px #e2e8f0; opacity:0.6; }
+.moon-ic{ left:59%; background:#e2e8f0; box-shadow:0 0 10px #e2e8f0; opacity:0.6; }
+.moon-dc{ left:65%; background:#e2e8f0; box-shadow:0 0 10px #e2e8f0; opacity:0.6; }
+
+/* Mercury */
+.mercury-mc{ left:18%; background:#a78bfa; box-shadow:0 0 14px #a78bfa, 0 0 30px rgba(167,139,250,0.3); }
+.mercury-ac{ left:24%; background:#a78bfa; box-shadow:0 0 10px #a78bfa; opacity:0.6; }
+.mercury-ic{ left:76%; background:#a78bfa; box-shadow:0 0 10px #a78bfa; opacity:0.6; }
+.mercury-dc{ left:82%; background:#a78bfa; box-shadow:0 0 10px #a78bfa; opacity:0.6; }
+
+/* Venus */
+.venus-mc{ left:48%; background:#fb7185; box-shadow:0 0 14px #fb7185, 0 0 30px rgba(251,113,133,0.3); }
+.venus-ac{ left:54%; background:#fb7185; box-shadow:0 0 10px #fb7185; opacity:0.6; }
+.venus-ic{ left:46%; background:#fb7185; box-shadow:0 0 10px #fb7185; opacity:0.6; }
+.venus-dc{ left:52%; background:#fb7185; box-shadow:0 0 10px #fb7185; opacity:0.6; }
+
+/* Mars */
+.mars-mc{ left:15%; background:#ef4444; box-shadow:0 0 14px #ef4444, 0 0 30px rgba(239,68,68,0.3); }
+.mars-ac{ left:21%; background:#ef4444; box-shadow:0 0 10px #ef4444; opacity:0.6; }
+.mars-ic{ left:79%; background:#ef4444; box-shadow:0 0 10px #ef4444; opacity:0.6; }
+.mars-dc{ left:85%; background:#ef4444; box-shadow:0 0 10px #ef4444; opacity:0.6; }
+
+/* Jupiter */
+.jupiter-mc{ left:62%; background:#38bdf8; box-shadow:0 0 14px #38bdf8, 0 0 30px rgba(56,189,248,0.3); }
+.jupiter-ac{ left:68%; background:#38bdf8; box-shadow:0 0 10px #38bdf8; opacity:0.6; }
+.jupiter-ic{ left:32%; background:#38bdf8; box-shadow:0 0 10px #38bdf8; opacity:0.6; }
+.jupiter-dc{ left:38%; background:#38bdf8; box-shadow:0 0 10px #38bdf8; opacity:0.6; }
+
+/* Saturn */
+.saturn-mc{ left:8%; background:#475569; box-shadow:0 0 14px #475569, 0 0 30px rgba(71,85,105,0.3); }
+.saturn-ac{ left:14%; background:#475569; box-shadow:0 0 10px #475569; opacity:0.6; }
+.saturn-ic{ left:86%; background:#475569; box-shadow:0 0 10px #475569; opacity:0.6; }
+.saturn-dc{ left:92%; background:#475569; box-shadow:0 0 10px #475569; opacity:0.6; }
+
+/* Uranus */
+.uranus-mc{ left:55%; background:#22d3ee; box-shadow:0 0 14px #22d3ee, 0 0 30px rgba(34,211,238,0.3); }
+.uranus-ac{ left:61%; background:#22d3ee; box-shadow:0 0 10px #22d3ee; opacity:0.6; }
+.uranus-ic{ left:39%; background:#22d3ee; box-shadow:0 0 10px #22d3ee; opacity:0.6; }
+.uranus-dc{ left:45%; background:#22d3ee; box-shadow:0 0 10px #22d3ee; opacity:0.6; }
+
+/* Neptune */
+.neptune-mc{ left:30%; background:#818cf8; box-shadow:0 0 14px #818cf8, 0 0 30px rgba(129,140,248,0.3); }
+.neptune-ac{ left:36%; background:#818cf8; box-shadow:0 0 10px #818cf8; opacity:0.6; }
+.neptune-ic{ left:64%; background:#818cf8; box-shadow:0 0 10px #818cf8; opacity:0.6; }
+.neptune-dc{ left:70%; background:#818cf8; box-shadow:0 0 10px #818cf8; opacity:0.6; }
+
+/* Pluto */
+.pluto-mc{ left:40%; background:#a855f7; box-shadow:0 0 14px #a855f7, 0 0 30px rgba(168,85,247,0.3); }
+.pluto-ac{ left:46%; background:#a855f7; box-shadow:0 0 10px #a855f7; opacity:0.6; }
+.pluto-ic{ left:54%; background:#a855f7; box-shadow:0 0 10px #a855f7; opacity:0.6; }
+.pluto-dc{ left:60%; background:#a855f7; box-shadow:0 0 10px #a855f7; opacity:0.6; }
+
+/* Chiron */
+.chiron-mc{ left:12%; background:#f472b6; box-shadow:0 0 14px #f472b6, 0 0 30px rgba(244,114,182,0.3); }
+.chiron-ac{ left:18%; background:#f472b6; box-shadow:0 0 10px #f472b6; opacity:0.6; }
+.chiron-ic{ left:82%; background:#f472b6; box-shadow:0 0 10px #f472b6; opacity:0.6; }
+.chiron-dc{ left:88%; background:#f472b6; box-shadow:0 0 10px #f472b6; opacity:0.6; }
+
+/* North Node */
+.nnode-mc{ left:25%; background:#fbbf24; box-shadow:0 0 14px #fbbf24, 0 0 30px rgba(251,191,36,0.3); }
+.nnode-ac{ left:31%; background:#fbbf24; box-shadow:0 0 10px #fbbf24; opacity:0.6; }
+.nnode-ic{ left:69%; background:#fbbf24; box-shadow:0 0 10px #fbbf24; opacity:0.6; }
+.nnode-dc{ left:75%; background:#fbbf24; box-shadow:0 0 10px #fbbf24; opacity:0.6; }
+
+/* Line labels */
+.line-label{
+    position:absolute;
+    top:12px;
+    font-size:10px;
+    font-weight:bold;
+    padding:4px 8px;
+    border-radius:999px;
+    background:rgba(15,23,42,0.9);
+    border:1px solid rgba(56,189,248,0.15);
+    white-space:nowrap;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.line-label:hover{
+    transform:scale(1.1);
+    z-index:20;
+}
+
+.sun-label{ left:20%; color:#FFD700; }
+.moon-label{ left:33%; color:#e2e8f0; }
+.mercury-label{ left:16%; color:#a78bfa; }
+.venus-label{ left:46%; color:#fb7185; }
+.mars-label{ left:13%; color:#ef4444; }
+.jupiter-label{ left:60%; color:#38bdf8; }
+.saturn-label{ left:6%; color:#94a3b8; }
+.uranus-label{ left:53%; color:#22d3ee; }
+.neptune-label{ left:28%; color:#818cf8; }
+.pluto-label{ left:38%; color:#a855f7; }
+.chiron-label{ left:10%; color:#f472b6; }
+.nnode-label{ left:23%; color:#fbbf24; }
+
+/* Orb zones */
+.orb-zone{
+    position:absolute;
+    top:0;
+    bottom:0;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+    pointer-events:none;
+}
+
+/* === CROSSINGS INDICATOR === */
+.crossing-marker{
+    position:absolute;
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    background:#FFD700;
+    box-shadow:0 0 15px #FFD700, 0 0 30px rgba(255,215,0,0.5);
+    animation:pulse 2s infinite;
+    cursor:pointer;
+    z-index:15;
+}
+
+@keyframes pulse{
+    0%,100%{ transform:scale(1); opacity:1; }
+    50%{ transform:scale(1.3); opacity:0.7; }
+}
+
+/* === TOOLTIP === */
+.tooltip{
+    position:absolute;
+    background:rgba(15,23,42,0.95);
+    border:1px solid rgba(56,189,248,0.3);
+    border-radius:12px;
+    padding:12px 16px;
+    font-size:12px;
+    color:#e2e8f0;
+    max-width:220px;
+    pointer-events:none;
+    opacity:0;
+    transition:0.3s;
+    z-index:100;
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
+
+.tooltip.show{ opacity:1; }
+
+.tooltip .tt-title{
+    color:#FFD700;
+    font-weight:bold;
+    margin-bottom:6px;
+    font-size:13px;
+}
+
+.tooltip .tt-desc{
+    color:#94a3b8;
+    line-height:1.5;
+}
+
+/* === LEGEND === */
+.legend-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap:8px;
+    margin-top:12px;
+}
+
+.legend-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:6px 10px;
+    background:rgba(30,41,59,0.5);
+    border-radius:8px;
+    font-size:11px;
+    cursor:pointer;
+    transition:0.3s;
+    border:1px solid transparent;
+}
+
+.legend-item:hover{
+    background:rgba(30,41,59,0.8);
+    border-color:rgba(56,189,248,0.2);
+}
+
+.planet-check{
+    width:14px;
+    height:14px;
+    cursor:pointer;
+    accent-color:#38bdf8;
+    flex-shrink:0;
+}
+
+.legend-item:hover{
+    background:rgba(30,41,59,0.8);
+    border-color:rgba(56,189,248,0.2);
+}
+
+.legend-color{
+    width:12px;
+    height:12px;
+    border-radius:3px;
+    flex-shrink:0;
+}
+
+.legend-text{
+    color:#cbd5e1;
+}
+
+/* === INFO GRID === */
+.info-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.info-card{
+    background:#1e293b;
+    border-radius:14px;
+    padding:14px;
+    border:1px solid rgba(56,189,248,0.08);
+    transition:0.25s;
+    cursor:pointer;
+}
+
+.info-card:hover{
+    transform:scale(1.01);
+    box-shadow:0 0 14px rgba(56,189,248,0.2);
+}
+
+.info-card.active{
+    border-color:rgba(255,215,0,0.4);
+    box-shadow:0 0 20px rgba(255,215,0,0.15);
+}
+
+.planet{
+    font-size:17px;
+    font-weight:bold;
+    margin-bottom:8px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.planet-icon{
+    font-size:20px;
+}
+
+.text{
+    color:#94a3b8;
+    font-size:12px;
+    line-height:1.6;
+}
+
+/* === CROSSINGS SECTION === */
+.crossings-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap:10px;
+    margin-top:10px;
+}
+
+.crossing-card{
+    background:linear-gradient(135deg, rgba(255,215,0,0.1), rgba(56,189,248,0.1));
+    border:1px solid rgba(255,215,0,0.2);
+    border-radius:12px;
+    padding:12px;
+    text-align:left;
+}
+
+.crossing-card .cross-title{
+    color:#FFD700;
+    font-size:13px;
+    font-weight:bold;
+    margin-bottom:6px;
+}
+
+.crossing-card .cross-desc{
+    color:#94a3b8;
+    font-size:11px;
+    line-height:1.5;
+}
+
+/* === PARANS SECTION === */
+.parans-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+    font-size:12px;
+}
+
+.parans-table th{
+    background:rgba(56,189,248,0.15);
+    color:#38bdf8;
+    padding:8px;
+    text-align:left;
+    font-weight:600;
+}
+
+.parans-table td{
+    padding:8px;
+    border-bottom:1px solid rgba(56,189,248,0.08);
+    color:#cbd5e1;
+}
+
+.parans-table tr:hover td{
+    background:rgba(56,189,248,0.05);
+}
+
+/* === MY PLACES === */
+.places-list{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:10px;
+}
+
+.place-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:#1e293b;
+    border-radius:10px;
+    padding:10px 14px;
+    border:1px solid rgba(56,189,248,0.08);
+    transition:0.3s;
+}
+
+.place-item:hover{
+    border-color:rgba(56,189,248,0.2);
+}
+
+.place-name{
+    font-weight:600;
+    color:#e2e8f0;
+    font-size:13px;
+}
+
+.place-lines{
+    font-size:11px;
+    color:#64748b;
+}
+
+.place-rating{
+    display:flex;
+    gap:2px;
+}
+
+.star{
+    color:#FFD700;
+    font-size:14px;
+}
+
+.star.empty{
+    color:#334155;
+}
+
+/* === SEARCH === */
+.search-box{
+    display:flex;
+    gap:8px;
+    margin-bottom:14px;
+}
+
+.search-box input{
+    flex:1;
+    background:#1e293b;
+    border:1px solid rgba(56,189,248,0.2);
+    border-radius:10px;
+    padding:10px 14px;
+    color:#e2e8f0;
+    font-size:13px;
+    outline:none;
+}
+
+.search-box input:focus{
+    border-color:#38bdf8;
+}
+
+.search-btn{
+    background:linear-gradient(135deg,#38bdf8,#0ea5e9);
+    color:white;
+    border:none;
+    border-radius:10px;
+    padding:10px 18px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+/* === ORB SLIDER === */
+.orb-control{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin:14px 0;
+    padding:10px 14px;
+    background:rgba(30,41,59,0.5);
+    border-radius:10px;
+}
+
+.orb-control label{
+    font-size:12px;
+    color:#94a3b8;
+    white-space:nowrap;
+}
+
+.orb-control input[type="range"]{
+    flex:1;
+    accent-color:#38bdf8;
+}
+
+.orb-value{
+    font-size:12px;
+    color:#38bdf8;
+    font-weight:bold;
+    min-width:50px;
+}
+
+/* === BUTTONS === */
+
+
+button{
+    flex:1;
+    padding:10px;
+    border-radius:14px;
+    border:none;
+    background:linear-gradient(135deg,#38bdf8,#0ea5e9);
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.02);
+    box-shadow:0 0 20px rgba(56,189,248,0.6);
+}
+
+/* === FOOTER === */
+.footer{
+    text-align:center;
+    padding:25px;
+    color:#64748b;
+    font-size:11px;
+}
+
+/* === FILTERS === */
+.filter-tabs{
+    display:flex;
+    gap:6px;
+    margin-bottom:14px;
+    flex-wrap:wrap;
+}
+
+.filter-tab{
+    padding:6px 14px;
+    border-radius:999px;
+    border:1px solid rgba(56,189,248,0.2);
+    background:transparent;
+    color:#94a3b8;
+    font-size:12px;
+    cursor:pointer;
+    transition:0.3s;
+    flex:none;
+}
+
+.filter-tab:hover, .filter-tab.active{
+    background:rgba(56,189,248,0.15);
+    color:#38bdf8;
+    border-color:rgba(56,189,248,0.4);
+}
+
+/* === RESPONSIVE === */
+@media(max-width:700px){
+    .info-grid{ grid-template-columns:1fr; }
+
+    .legend-grid{ grid-template-columns:1fr 1fr; }
+    .birth-input-grid{ grid-template-columns:1fr; }
+    .crossings-grid{ grid-template-columns:1fr; }
+    .line-label{ font-size:9px; padding:3px 6px; }
+}
+
+/* === HIDDEN STATE === */
+.hidden{ display:none !important; }
+
+/* === GLOW EFFECTS FOR ACTIVE CARDS === */
+.glow-sun{ box-shadow:0 0 20px rgba(255,215,0,0.2) !important; border-color:rgba(255,215,0,0.3) !important; }
+.glow-moon{ box-shadow:0 0 20px rgba(226,232,240,0.2) !important; border-color:rgba(226,232,240,0.3) !important; }
+.glow-mercury{ box-shadow:0 0 20px rgba(167,139,250,0.2) !important; border-color:rgba(167,139,250,0.3) !important; }
+.glow-venus{ box-shadow:0 0 20px rgba(251,113,133,0.2) !important; border-color:rgba(251,113,133,0.3) !important; }
+.glow-mars{ box-shadow:0 0 20px rgba(239,68,68,0.2) !important; border-color:rgba(239,68,68,0.3) !important; }
+.glow-jupiter{ box-shadow:0 0 20px rgba(56,189,248,0.2) !important; border-color:rgba(56,189,248,0.3) !important; }
+.glow-saturn{ box-shadow:0 0 20px rgba(71,85,105,0.2) !important; border-color:rgba(71,85,105,0.3) !important; }
+.glow-uranus{ box-shadow:0 0 20px rgba(34,211,238,0.2) !important; border-color:rgba(34,211,238,0.3) !important; }
+.glow-neptune{ box-shadow:0 0 20px rgba(129,140,248,0.2) !important; border-color:rgba(129,140,248,0.3) !important; }
+.glow-pluto{ box-shadow:0 0 20px rgba(168,85,247,0.2) !important; border-color:rgba(168,85,247,0.3) !important; }
+.glow-chiron{ box-shadow:0 0 20px rgba(244,114,182,0.2) !important; border-color:rgba(244,114,182,0.3) !important; }
+.glow-nnode{ box-shadow:0 0 20px rgba(251,191,36,0.2) !important; border-color:rgba(251,191,36,0.3) !important; }
+/* ===== INPUT LINE ===== */
+.input-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 auto;
+  max-width: 340px;
+  padding: 0 10px;
+}
+
+.input-wrap {
+  flex: 1;
+  margin: 0 !important;
+  min-width: 0;
+  background: #1e293b;
+  border-radius: 14px;
+  padding: 2px;
+}
+
+.input-wrap input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 20px;
+  height: 30px;
+  line-height: 30px;
+  color: white;
+  text-align: center;
+  padding: 0;
+  border-radius: 8px !important;
+}
+
+.input-line input[type="text"] {
+  background: #1e293b;
+  border: 1px solid #38bdf8;
+  color: white;
+  border-radius: 8px;
+  padding: 8px 6px;
+  font-size: 12px;
+  outline: none;
+  box-shadow: 0 0 10px rgba(56,189,248,0.4);
+  transition: 0.3s;
+  height: 34px;
+  box-sizing: border-box;
+}
+
+.input-line input[type="text"]:hover {
+  box-shadow: 0 0 15px rgba(56,189,248,0.8);
+}
+
+#timeInput {
+  width: 60px;
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+#cityInput {
+  width: 120px;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+/* ===== CITY DROPDOWN ===== */
+/* ===== SAVED ICON ===== */
+#savedIcon {
+  width:34px; height:34px;
+  background:#1e293b;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  box-shadow:0 0 10px rgba(56,189,248,0.4);
+  border:1px solid #38bdf8;
+  transition:0.3s;
+  flex-shrink:0;
+  position: relative;
+}
+
+#savedCount {
+  position:absolute;
+  top:-8px; right:-8px;
+  background:#ef4444;
+  color:white;
+  font-size:9px;
+  width:16px; height:16px;
+  border-radius:50%;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+}
+
+/* ===== ANALYZE BUTTON ===== */
+/* ===== LEFT ACTION BUTTONS ===== */
+/* ===== HEADER BAR ===== */
+.header-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 12px;
+  position:relative;
+  z-index:9999;
+}
+
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex:0 0 auto;
+}
+
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex:0 0 auto;
+}
+
+.header-title{
+  font-size:22px;
+  font-weight:700;
+  color:#FFD700;
+  letter-spacing:3px;
+  text-shadow: 0 0 12px rgba(255,215,0,0.35);
+  text-align:center;
+  flex:1 1 auto;
+  padding:0 10px;
+  white-space:nowrap;
+}
+
+.left-btn{
+  width:30px;
+  height:30px;
+  border-radius:8px;
+  background:#1e293b;
+  border:1px solid rgba(56,189,248,0.25);
+  color:#94a3b8;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:0.2s;
+  padding:0;
+  flex-shrink:0;
+}
+
+.left-btn:hover{
+  color:#38bdf8;
+  border-color:#38bdf8;
+  box-shadow:0 0 10px rgba(56,189,248,0.35);
+}
+
+.left-btn svg{
+  width:18px;
+  height:18px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.action-btn{
+  width:30px;
+  height:30px;
+  border-radius:8px;
+  background:#1e293b;
+  border:1px solid rgba(56,189,248,0.25);
+  color:#94a3b8;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:0.2s;
+  padding:0;
+  flex-shrink:0;
+}
+
+.action-btn:hover{
+  color:#38bdf8;
+  border-color:#38bdf8;
+  box-shadow:0 0 10px rgba(56,189,248,0.35);
+}
+
+.action-btn svg{
+  width:18px;
+  height:18px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+
+@media print {
+
+  .header-bar,
+  .footer{
+    display:none !important;
+  }
+
+  body{
+    background:#fff !important;
+    color:#111 !important;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+
+  .card{
+    background:#fff !important;
+    border:1px solid #ccc !important;
+    box-shadow:none !important;
+    break-inside:avoid;
+    page-break-inside:avoid;
+  }
+
+  .section-title,
+  .planet,
+  .place-name{
+    color:#111 !important;
+    text-shadow:none !important;
+  }
+
+  .text,
+  .place-lines{
+    color:#444 !important;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<!-- HEADER BAR -->
+<div class="header-bar">
+  <div class="header-left">
+    <button class="left-btn" onclick="goBack()" title="Back">
+      <svg viewBox="0 0 24 24">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </button>
+    <button class="left-btn" onclick="exitApp()" title="Exit">
+      <svg viewBox="0 0 24 24">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+        <path d="M16 17l5-5-5-5"/>
+        <path d="M21 12H9"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="header-title">ASTROCARTOGRAPHY</div>
+
+  <div class="header-right">
+    <button class="action-btn" id="shareBtn" type="button" title="Share">
+      <svg viewBox="0 0 24 24">
+        <circle cx="18" cy="5" r="3"/>
+        <circle cx="6" cy="12" r="3"/>
+        <circle cx="18" cy="19" r="3"/>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+      </svg>
+    </button>
+    <button class="action-btn" id="printBtn" type="button" title="Print">
+      <svg viewBox="0 0 24 24">
+        <path d="M6 9V2h12v7"/>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+        <path d="M6 14h12v8H6z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<div class="container">
+
+    <!-- BIRTH DATA INPUT -->
+    <div class="card">
+        <div class="section-title">BIRTH DATA</div>
+<!-- INPUT LINE -->
+  <div class="input-line">
+    <div class="input-wrap">
+      <input type="text" id="input" placeholder="DD.MM.YYYY"
+        oninput="formatDate(this)"
+        onblur="validateDateInput(this)"
+        onkeypress="if(event.key === 'Enter'){ autoAnalyzeAstrocartography(); }"
+        maxlength="10"
+        autocomplete="off">
+    </div>
+
+    <input type="text" id="timeInput" placeholder="HH:MM"
+      oninput="formatTime(this)"
+      onblur="validateTimeInput(this)"
+      onkeypress="if(event.key === 'Enter'){ autoAnalyzeAstrocartography(); }"
+      maxlength="5"
+      autocomplete="off">
+
+    <div style="position: relative; flex-shrink: 0;">
+      <input type="text" id="cityInput" placeholder="City..." autocomplete="off" style="
+        background: #1e293b;
+        border: 1px solid #38bdf8;
+        color: white;
+        border-radius: 8px;
+        padding: 8px 6px;
+        font-size: 12px;
+        outline: none;
+        box-shadow: 0 0 10px rgba(56,189,248,0.4);
+        width: 120px;
+      ">
+      <div id="cityDropdown"></div>
+    </div>
+
+    <div id="savedIcon" onclick="toggleSavedPanel()">
+      <svg viewBox="0 0 24 24" aria-hidden="true" style="width:19px;height:19px;fill:none;stroke:#38bdf8;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px rgba(56,189,248,0.75));"><path d="M8 4h8"/><path d="M9 2h6a1 1 0 0 1 1 1v2H8V3a1 1 0 0 1 1-1z"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M8 11h8"/><path d="M8 16h5"/></svg>
+      <span id="savedCount">0</span>
+    </div>
+  </div>
+
+  <div style="margin-top:10px; font-size:11px; color:white; opacity:0.8;">
+    (enter your date of birth, time, and place)
+  </div>
+
+  <!-- ANALYZE BUTTON -->
+  <button class="analyze-btn" id="analyzeBtn" onclick="autoAnalyzeAstrocartography()">ANALYZE</button>
+    </div>
+
+    <!-- PLANETARY MAP -->
+    <div class="card">
+        <div class="section-title">PLANETARY MAP</div>
+
+        <div class="filter-tabs">
+            <div class="filter-tab active" onclick="filterLines('all')">All Lines</div>
+            <div class="filter-tab" onclick="filterLines('angular')">Angular Only</div>
+            <div class="filter-tab" onclick="filterLines('personal')">Personal Planets</div>
+            <div class="filter-tab" onclick="filterLines('transpersonal')">Transpersonal</div>
+            <div class="filter-tab" onclick="filterLines('mc')">MC Lines</div>
+            <div class="filter-tab" onclick="filterLines('ac')">AC Lines</div>
+        </div>
+
+        <div class="search-box" style="position:relative;">
+            <input type="text" id="citySearch" placeholder="Search city to check lines..." autocomplete="off" style="
+                flex:1;
+                background:#1e293b;
+                border:1px solid rgba(56,189,248,0.2);
+                border-radius:10px;
+                padding:10px 14px;
+                color:#e2e8f0;
+                font-size:13px;
+                outline:none;
+            ">
+            <div id="citySearchDropdown" style="
+                display:none;
+                position:absolute;
+                top:calc(100% + 4px);
+                left:0;
+                width:100%;
+                max-height:250px;
+                overflow-y:auto;
+                background:#1e293b;
+                border:1px solid #38bdf8;
+                border-radius:8px;
+                z-index:1000;
+                box-shadow:0 0 15px rgba(56,189,248,0.4);
+            "></div>
+            <button class="search-btn" onclick="searchCity()">Search</button>
+        </div>
+
+        <div class="map-wrapper" id="mapWrapper">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg" alt="World Map">
+
+            <!-- SUN lines -->
+            <div class="planet-line sun-mc" data-planet="sun" data-angle="mc" onclick="highlightPlanet('sun')"></div>
+            <div class="planet-line sun-ac" data-planet="sun" data-angle="ac" onclick="highlightPlanet('sun')"></div>
+            <div class="planet-line sun-ic" data-planet="sun" data-angle="ic" onclick="highlightPlanet('sun')"></div>
+            <div class="planet-line sun-dc" data-planet="sun" data-angle="dc" onclick="highlightPlanet('sun')"></div>
+
+            <!-- MOON lines -->
+            <div class="planet-line moon-mc" data-planet="moon" data-angle="mc" onclick="highlightPlanet('moon')"></div>
+            <div class="planet-line moon-ac" data-planet="moon" data-angle="ac" onclick="highlightPlanet('moon')"></div>
+            <div class="planet-line moon-ic" data-planet="moon" data-angle="ic" onclick="highlightPlanet('moon')"></div>
+            <div class="planet-line moon-dc" data-planet="moon" data-angle="dc" onclick="highlightPlanet('moon')"></div>
+
+            <!-- MERCURY lines -->
+            <div class="planet-line mercury-mc" data-planet="mercury" data-angle="mc" onclick="highlightPlanet('mercury')"></div>
+            <div class="planet-line mercury-ac" data-planet="mercury" data-angle="ac" onclick="highlightPlanet('mercury')"></div>
+            <div class="planet-line mercury-ic" data-planet="mercury" data-angle="ic" onclick="highlightPlanet('mercury')"></div>
+            <div class="planet-line mercury-dc" data-planet="mercury" data-angle="dc" onclick="highlightPlanet('mercury')"></div>
+
+            <!-- VENUS lines -->
+            <div class="planet-line venus-mc" data-planet="venus" data-angle="mc" onclick="highlightPlanet('venus')"></div>
+            <div class="planet-line venus-ac" data-planet="venus" data-angle="ac" onclick="highlightPlanet('venus')"></div>
+            <div class="planet-line venus-ic" data-planet="venus" data-angle="ic" onclick="highlightPlanet('venus')"></div>
+            <div class="planet-line venus-dc" data-planet="venus" data-angle="dc" onclick="highlightPlanet('venus')"></div>
+
+            <!-- MARS lines -->
+            <div class="planet-line mars-mc" data-planet="mars" data-angle="mc" onclick="highlightPlanet('mars')"></div>
+            <div class="planet-line mars-ac" data-planet="mars" data-angle="ac" onclick="highlightPlanet('mars')"></div>
+            <div class="planet-line mars-ic" data-planet="mars" data-angle="ic" onclick="highlightPlanet('mars')"></div>
+            <div class="planet-line mars-dc" data-planet="mars" data-angle="dc" onclick="highlightPlanet('mars')"></div>
+
+            <!-- JUPITER lines -->
+            <div class="planet-line jupiter-mc" data-planet="jupiter" data-angle="mc" onclick="highlightPlanet('jupiter')"></div>
+            <div class="planet-line jupiter-ac" data-planet="jupiter" data-angle="ac" onclick="highlightPlanet('jupiter')"></div>
+            <div class="planet-line jupiter-ic" data-planet="jupiter" data-angle="ic" onclick="highlightPlanet('jupiter')"></div>
+            <div class="planet-line jupiter-dc" data-planet="jupiter" data-angle="dc" onclick="highlightPlanet('jupiter')"></div>
+
+            <!-- SATURN lines -->
+            <div class="planet-line saturn-mc" data-planet="saturn" data-angle="mc" onclick="highlightPlanet('saturn')"></div>
+            <div class="planet-line saturn-ac" data-planet="saturn" data-angle="ac" onclick="highlightPlanet('saturn')"></div>
+            <div class="planet-line saturn-ic" data-planet="saturn" data-angle="ic" onclick="highlightPlanet('saturn')"></div>
+            <div class="planet-line saturn-dc" data-planet="saturn" data-angle="dc" onclick="highlightPlanet('saturn')"></div>
+
+            <!-- URANUS lines -->
+            <div class="planet-line uranus-mc" data-planet="uranus" data-angle="mc" onclick="highlightPlanet('uranus')"></div>
+            <div class="planet-line uranus-ac" data-planet="uranus" data-angle="ac" onclick="highlightPlanet('uranus')"></div>
+            <div class="planet-line uranus-ic" data-planet="uranus" data-angle="ic" onclick="highlightPlanet('uranus')"></div>
+            <div class="planet-line uranus-dc" data-planet="uranus" data-angle="dc" onclick="highlightPlanet('uranus')"></div>
+
+            <!-- NEPTUNE lines -->
+            <div class="planet-line neptune-mc" data-planet="neptune" data-angle="mc" onclick="highlightPlanet('neptune')"></div>
+            <div class="planet-line neptune-ac" data-planet="neptune" data-angle="ac" onclick="highlightPlanet('neptune')"></div>
+            <div class="planet-line neptune-ic" data-planet="neptune" data-angle="ic" onclick="highlightPlanet('neptune')"></div>
+            <div class="planet-line neptune-dc" data-planet="neptune" data-angle="dc" onclick="highlightPlanet('neptune')"></div>
+
+            <!-- PLUTO lines -->
+            <div class="planet-line pluto-mc" data-planet="pluto" data-angle="mc" onclick="highlightPlanet('pluto')"></div>
+            <div class="planet-line pluto-ac" data-planet="pluto" data-angle="ac" onclick="highlightPlanet('pluto')"></div>
+            <div class="planet-line pluto-ic" data-planet="pluto" data-angle="ic" onclick="highlightPlanet('pluto')"></div>
+            <div class="planet-line pluto-dc" data-planet="pluto" data-angle="dc" onclick="highlightPlanet('pluto')"></div>
+
+            <!-- CHIRON lines -->
+            <div class="planet-line chiron-mc" data-planet="chiron" data-angle="mc" onclick="highlightPlanet('chiron')"></div>
+            <div class="planet-line chiron-ac" data-planet="chiron" data-angle="ac" onclick="highlightPlanet('chiron')"></div>
+            <div class="planet-line chiron-ic" data-planet="chiron" data-angle="ic" onclick="highlightPlanet('chiron')"></div>
+            <div class="planet-line chiron-dc" data-planet="chiron" data-angle="dc" onclick="highlightPlanet('chiron')"></div>
+
+            <!-- NORTH NODE lines -->
+            <div class="planet-line nnode-mc" data-planet="nnode" data-angle="mc" onclick="highlightPlanet('nnode')"></div>
+            <div class="planet-line nnode-ac" data-planet="nnode" data-angle="ac" onclick="highlightPlanet('nnode')"></div>
+            <div class="planet-line nnode-ic" data-planet="nnode" data-angle="ic" onclick="highlightPlanet('nnode')"></div>
+            <div class="planet-line nnode-dc" data-planet="nnode" data-angle="dc" onclick="highlightPlanet('nnode')"></div>
+
+            <!-- Labels -->
+            <div class="line-label sun-label" onclick="highlightPlanet('sun')">☉ SUN MC</div>
+            <div class="line-label moon-label" onclick="highlightPlanet('moon')">☾ MOON MC</div>
+            <div class="line-label mercury-label" onclick="highlightPlanet('mercury')">☿ MERCURY MC</div>
+            <div class="line-label venus-label" onclick="highlightPlanet('venus')">♀ VENUS AC</div>
+            <div class="line-label mars-label" onclick="highlightPlanet('mars')">♂ MARS MC</div>
+            <div class="line-label jupiter-label" onclick="highlightPlanet('jupiter')">♃ JUPITER MC</div>
+            <div class="line-label saturn-label" onclick="highlightPlanet('saturn')">♄ SATURN MC</div>
+            <div class="line-label uranus-label" onclick="highlightPlanet('uranus')">♅ URANUS MC</div>
+            <div class="line-label neptune-label" onclick="highlightPlanet('neptune')">♆ NEPTUNE MC</div>
+            <div class="line-label pluto-label" onclick="highlightPlanet('pluto')">♇ PLUTO MC</div>
+            <div class="line-label chiron-label" onclick="highlightPlanet('chiron')">⚷ CHIRON MC</div>
+            <div class="line-label nnode-label" onclick="highlightPlanet('nnode')">☊ N.NODE MC</div>
+
+            <!-- Crossing markers -->
+            <div class="crossing-marker" style="left:22%; top:35%;" title="Sun-Jupiter crossing"></div>
+            <div class="crossing-marker" style="left:48%; top:60%;" title="Venus-Saturn crossing"></div>
+            <div class="crossing-marker" style="left:35%; top:25%;" title="Moon-Neptune crossing"></div>
+
+            <!-- Tooltip -->
+            <div class="tooltip" id="mapTooltip">
+                <div class="tt-title" id="ttTitle"></div>
+                <div class="tt-desc" id="ttDesc"></div>
+            </div>
+        </div>
+
+        <!-- LEGEND -->
+        <div class="legend-grid">
+            <div class="legend-item" onclick="highlightPlanet('sun')">
+                <input type="checkbox" class="planet-check" data-planet="sun" checked onchange="togglePlanetLine('sun')" onclick="event.stopPropagation()">
+                <div class="legend-color" style="background:#FFD700;"></div>
+                <span class="legend-text">☉ Sun</span>
+            </div>
+            <div class="legend-item" onclick="highlightPlanet('moon')">
+                <input type="checkbox" class="planet-check" data-planet="moon" checked onchange="togglePlanetLine('moon')" onclick="event.stopPropagation()">
+                <div class="legend-color" style="background:#e2e8f0;"></div>
+                <span class="legend-text">☾ Moon</span>
+            </div>
+            <div class="legend-item" onclick="highlightPlanet('mercury')">
+                <input type="checkbox" class="planet-check" data-planet="mercury" checked onchange="togglePlanetLine('mercury')" onclick="event.stopPropagation()">
+                <div class="legend-color" style="background:#a78bfa;"></div>
+                <span class="legend-text">☿ Mercury</span>
+            </div>
+            <div class="legend-item" onclick="highlightPlanet('venus')">
+                <input type="checkbox" class="planet-check" data-planet="venus" checked onchange="togglePlanetLine('venus')" onclick="event.stopPropagation()">
+                <div class="legend-color" style="background:#fb7185;"></div>
+                <span class="legend-text">♀ Venus</span>
+            </div>
+            <div class="legend-item" onclick="highlightPlanet('mars')">
+                <input type="checkbox" class="planet-check" data-planet="mars" checked onchange="togglePlanetLine('mars')" onclick="event.stopPropagation()">
+                <div class="legend-color" style="background:#ef4444;"></div>
+                <span class="legend-text">♂ Mars</span>
+            </div>
+            <div class="legend-item" onclick="highlightPlanet('jupiter')">
+                <input type="checkbox" class="planet-check" data-planet="jupiter" checked onchange="togglePlanetLine('jupiter')" onclick="event.stopPropagation()">
+                <div class="legend-color" style="background:#38bdf8;"></div>
+                <span class="legend-text">♃ Jupiter</span>
+            </div>
+            <div class="legend-item" onclick="highlightPlanet('saturn')">
+                <input type="checkbox" class="planet-check" data-planet="saturn" checked onchange="togglePlanetLine('saturn')" onclick="event.stopPropagation()">
+                <div class="legend-color" style="background:#475569;"></div>
+                <span class="legend-text">♄ Saturn</span>
+            </div>
+            <div class="legend-item" onclick="highlightPlanet('uranus')">
+                <input type="checkbox" class="planet-check" data-planet="uranus" onchange="togglePlanetLine('uranus')" onclick="event.stopPropagation()">
+                <div class="legend-color" style="background:#22d3ee;"></div>
+                <span class="legend-text">♅ Uranus</span>
+            </div>
+            <div class="legend-item" onclick="highlightPlanet('neptune')">
+                <input type="checkbox" class="planet-check" data-planet="neptune" onchange="togglePlanetLine('neptune')" onclick="event.stopPropagation()">
+                <div class="legend-color" style="background:#818cf8;"></div>
+                <span class="legend-text">♆ Neptune</span>
+            </div>
+            <div class="legend-item" onclick="highlightPlanet('pluto')">
+                <input type="checkbox" class="planet-check" data-planet="pluto" onchange="togglePlanetLine('pluto')" onclick="event.stopPropagation()">
+                <div class="legend-color" style="background:#a855f7;"></div>
+                <span class="legend-text">♇ Pluto</span>
+            </div>
+            <div class="legend-item" onclick="highlightPlanet('chiron')">
+                <input type="checkbox" class="planet-check" data-planet="chiron" onchange="togglePlanetLine('chiron')" onclick="event.stopPropagation()">
+                <div class="legend-color" style="background:#f472b6;"></div>
+                <span class="legend-text">⚷ Chiron</span>
+            </div>
+            <div class="legend-item" onclick="highlightPlanet('nnode')">
+                <input type="checkbox" class="planet-check" data-planet="nnode" onchange="togglePlanetLine('nnode')" onclick="event.stopPropagation()">
+                <div class="legend-color" style="background:#fbbf24;"></div>
+                <span class="legend-text">☊ N.Node</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACTIVE LINES -->
+    <div class="card">
+        <div class="section-title">ACTIVE LINES</div>
+        <div class="info-grid">
+            <div class="info-card" id="card-sun" onclick="highlightPlanet('sun')">
+                <div class="planet"><span class="planet-icon">☉</span> Sun MC</div>
+                <div class="text">Career visibility, confidence, success and leadership energy. Best for professional recognition.</div>
+            </div>
+            <div class="info-card" id="card-moon" onclick="highlightPlanet('moon')">
+                <div class="planet"><span class="planet-icon">☾</span> Moon MC</div>
+                <div class="text">Emotional fulfillment, public popularity, nurturing career. Strong connection with the public.</div>
+            </div>
+            <div class="info-card" id="card-mercury" onclick="highlightPlanet('mercury')">
+                <div class="planet"><span class="planet-icon">☿</span> Mercury MC</div>
+                <div class="text">Communication, writing, teaching, media. Excellent for intellectual work and networking.</div>
+            </div>
+            <div class="info-card" id="card-venus" onclick="highlightPlanet('venus')">
+                <div class="planet"><span class="planet-icon">♀</span> Venus AC</div>
+                <div class="text">Love, attraction, beauty, harmony and relationships. Social grace and artistic expression.</div>
+            </div>
+            <div class="info-card" id="card-mars" onclick="highlightPlanet('mars')">
+                <div class="planet"><span class="planet-icon">♂</span> Mars MC</div>
+                <div class="text">Drive, ambition, competitive energy. Good for athletics, military, or entrepreneurial ventures.</div>
+            </div>
+            <div class="info-card" id="card-jupiter" onclick="highlightPlanet('jupiter')">
+                <div class="planet"><span class="planet-icon">♃</span> Jupiter DC</div>
+                <div class="text">Growth, luck, expansion and beneficial partnerships. Fortune through others and travel.</div>
+            </div>
+            <div class="info-card" id="card-saturn" onclick="highlightPlanet('saturn')">
+                <div class="planet"><span class="planet-icon">♄</span> Saturn IC</div>
+                <div class="text">Discipline, karmic lessons, responsibility and structure. Hard work brings lasting results.</div>
+            </div>
+            <div class="info-card" id="card-uranus" onclick="highlightPlanet('uranus')">
+                <div class="planet"><span class="planet-icon">♅</span> Uranus AC</div>
+                <div class="text">Sudden changes, innovation, freedom, uniqueness. Breakthroughs and unexpected opportunities.</div>
+            </div>
+            <div class="info-card" id="card-neptune" onclick="highlightPlanet('neptune')">
+                <div class="planet"><span class="planet-icon">♆</span> Neptune MC</div>
+                <div class="text">Spirituality, creativity, inspiration, idealism. Great for arts, healing, and compassion work.</div>
+            </div>
+            <div class="info-card" id="card-pluto" onclick="highlightPlanet('pluto')">
+                <div class="planet"><span class="planet-icon">♇</span> Pluto MC</div>
+                <div class="text">Transformation, power, deep change, regeneration. Intense career and public influence.</div>
+            </div>
+            <div class="info-card" id="card-chiron" onclick="highlightPlanet('chiron')">
+                <div class="planet"><span class="planet-icon">⚷</span> Chiron AC</div>
+                <div class="text">Healing, the wounded healer, turning pain into wisdom. Teaching through personal experience.</div>
+            </div>
+            <div class="info-card" id="card-nnode" onclick="highlightPlanet('nnode')">
+                <div class="planet"><span class="planet-icon">☊</span> North Node MC</div>
+                <div class="text">Karmic destiny, soul growth, life purpose. Moving toward your highest potential.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LINE CROSSINGS -->
+    <div class="card">
+        <div class="section-title">LINE CROSSINGS (Power Zones)</div>
+        <div class="crossings-grid">
+            <div class="crossing-card">
+                <div class="cross-title">☉ Sun + ♃ Jupiter</div>
+                <div class="cross-desc">Mega success zone. Career expansion, public recognition, and abundant opportunities. Ideal for launching major projects.</div>
+            </div>
+            <div class="crossing-card">
+                <div class="cross-title">☾ Moon + ♀ Venus</div>
+                <div class="cross-desc">Emotional harmony and love. Perfect for relationships, family life, and creative emotional expression.</div>
+            </div>
+            <div class="crossing-card">
+                <div class="cross-title">♂ Mars + ♅ Uranus</div>
+                <div class="cross-desc">High energy breakthrough zone. Innovation, courage, and sudden action. Watch for impulsiveness.</div>
+            </div>
+            <div class="crossing-card">
+                <div class="cross-title">♄ Saturn + ⚷ Chiron</div>
+                <div class="cross-desc">Deep healing through discipline. Karmic lessons become wisdom. Mastery through overcoming limitations.</div>
+            </div>
+            <div class="crossing-card">
+                <div class="cross-title">☿ Mercury + ☊ N.Node</div>
+                <div class="cross-desc">Destined communication. Writing, teaching, or speaking becomes your soul path. Important messages flow.</div>
+            </div>
+            <div class="crossing-card">
+                <div class="cross-title">♆ Neptune + ♇ Pluto</div>
+                <div class="cross-desc">Spiritual transformation. Deep psychic and creative power. Massive spiritual awakening potential.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PARANS (HORIZONTAL LINES) -->
+    <div class="card">
+        <div class="section-title">PARANS (Horizontal Rising/Culminating Lines)</div>
+        <table class="parans-table">
+            <thead>
+                <tr><th>Planet</th><th>Rising Longitude</th><th>Culminating Latitude</th><th>Effect</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>☉ Sun</td><td>15° E - 45° E</td><td>30° N - 60° N</td><td>Leadership rising</td></tr>
+                <tr><td>☾ Moon</td><td>60° W - 30° W</td><td>20° S - 20° N</td><td>Emotional tides</td></tr>
+                <tr><td>☿ Mercury</td><td>0° - 30° E</td><td>40° N - 70° N</td><td>Communication hubs</td></tr>
+                <tr><td>♀ Venus</td><td>90° W - 60° W</td><td>10° N - 40° N</td><td>Love & beauty zones</td></tr>
+                <tr><td>♂ Mars</td><td>120° E - 150° E</td><td>35° N - 55° N</td><td>Action & drive</td></tr>
+                <tr><td>♃ Jupiter</td><td>30° W - 0°</td><td>20° S - 40° N</td><td>Expansion & luck</td></tr>
+                <tr><td>♄ Saturn</td><td>150° E - 180°</td><td>50° N - 70° N</td><td>Discipline & karma</td></tr>
+                <tr><td>♅ Uranus</td><td>45° E - 75° E</td><td>25° N - 55° N</td><td>Innovation bursts</td></tr>
+                <tr><td>♆ Neptune</td><td>75° W - 45° W</td><td>15° S - 35° N</td><td>Dream & illusion</td></tr>
+                <tr><td>♇ Pluto</td><td>135° E - 165° E</td><td>30° S - 30° N</td><td>Deep transformation</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- MY PLACES -->
+    <div class="card">
+        <div class="section-title">MY PLACES</div>
+        <div class="places-list">
+            <div class="place-item">
+                <div>
+                    <div class="place-name">📍 New York, USA</div>
+                    <div class="place-lines">☉ Sun MC • ♃ Jupiter AC • ♄ Saturn DC</div>
+                </div>
+                <div class="place-rating">
+                    <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span>
+                </div>
+            </div>
+            <div class="place-item">
+                <div>
+                    <div class="place-name">📍 Paris, France</div>
+                    <div class="place-lines">♀ Venus MC • ☾ Moon AC • ☿ Mercury DC</div>
+                </div>
+                <div class="place-rating">
+                    <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                </div>
+            </div>
+            <div class="place-item">
+                <div>
+                    <div class="place-name">📍 Tokyo, Japan</div>
+                    <div class="place-lines">♂ Mars MC • ♅ Uranus AC • ♇ Pluto DC</div>
+                </div>
+                <div class="place-rating">
+                    <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span><span class="star empty">★</span>
+                </div>
+            </div>
+            <div class="place-item">
+                <div>
+                    <div class="place-name">📍 Bali, Indonesia</div>
+                    <div class="place-lines">♆ Neptune MC • ⚷ Chiron AC • ☊ N.Node DC</div>
+                </div>
+                <div class="place-rating">
+                    <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+</div>
+
+<div class="footer">
+    Local Swiss Ephemeris • Astrocartography Projection • All 10 Planets + Chiron + Nodes
+</div>
+
+<!-- SAVE MODAL -->
+<div id="saveModal" style="
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.85);
+  justify-content:center;
+  align-items:center;
+  z-index:99999;">
+  <div style="
+    background:#1e293b;
+    padding:25px;
+    border-radius:15px;
+    width:85%;
+    max-width:320px;
+    text-align:center;
+    box-shadow:0 0 30px rgba(56,189,248,0.4);
+  ">
+    <h3 style="color:#38bdf8; margin-bottom:15px; text-shadow:0 0 10px rgba(56,189,248,0.6);">
+      Save Date
+    </h3>
+    <div style="margin-bottom:15px; color:#94a3b8; font-size:12px;">
+      Date: <span id="saveModalDate" style="color:#f6cb71; font-weight:bold;"></span>
+    </div>
+    <input type="text" id="saveNameInput" placeholder="Enter name..." style="
+      width:100%;
+      padding:10px;
+      background:#0f172a;
+      border:1px solid #38bdf8;
+      border-radius:8px;
+      color:white;
+      font-size:14px;
+      text-align:center;
+      margin-bottom:15px;
+      outline:none;
+    " onkeypress="if(event.key==='Enter'){ confirmSaveDate(); }">
+    <div style="display:flex; gap:10px; justify-content:center;">
+      <button onclick="confirmSaveDate()" style="
+        padding:8px 20px;
+        background:linear-gradient(135deg, #38bdf8, #0ea5e9);
+        border:none;
+        border-radius:8px;
+        color:white;
+        font-weight:bold;
+        cursor:pointer;
+        font-size:12px;
+      ">SAVE</button>
+      <button onclick="closeSaveModal()" style="
+        padding:8px 20px;
+        background:#334155;
+        border:none;
+        border-radius:8px;
+        color:white;
+        cursor:pointer;
+        font-size:12px;
+      ">CANCEL</button>
+    </div>
+  </div>
+</div>
+
+<!-- SAVED PANEL -->
+<div id="savedPanel" style="
+  display:none;
+  position:fixed;
+  top:0; right:0;
+  width:280px;
+  height:100%;
+  background:#1e293b;
+  z-index:99998;
+  padding:60px 15px 20px 15px;
+  overflow-y:auto;
+  box-shadow:-5px 0 20px rgba(0,0,0,0.5);
+">
+  <div onclick="toggleSavedPanel()" style="
+    position:absolute;
+    top:15px; left:15px;
+    font-size:20px;
+    color:#38bdf8;
+    cursor:pointer;
+  ">&times;</div>
+  <h3 style="color:#38bdf8; margin-bottom:15px; font-size:14px; text-align:center;">
+    SAVED DATES
+  </h3>
+  <div id="savedList"></div>
+</div>
+
+
+<script>
+// ===== SHARED FUNCTIONS FROM CHART.HTML =====
+// ===== GLOBALNE PROMENLJIVE =====
+let skipSavePrompt = false;
+
+// ===== DATE FORMATTING =====
+function formatDate(input){
+  let value = input.value.replace(/[^0-9]/g,'');
+  if(value.length > 8) value = value.slice(0,8);
+  let formatted = '';
+  if(value.length >= 2){
+    formatted += value.slice(0,2) + '.';
+  } else {
+    formatted += value;
+  }
+  if(value.length >= 4){
+    formatted += value.slice(2,4) + '.';
+  } else if(value.length > 2){
+    formatted += value.slice(2);
+  }
+  if(value.length >= 5){
+    formatted += value.slice(4,8);
+  }
+  input.value = formatted;
+}
+
+function validateDateInput(input){
+  let val = input.value;
+  if(!val) return;
+  let clean = val.replace(/[^0-9]/g,'');
+  if(clean.length === 8){
+    let day = clean.slice(0,2);
+    let month = clean.slice(2,4);
+    let year = clean.slice(4,8);
+    input.value = day + '.' + month + '.' + year;
+  }
+  if(!validateDate(input.value)){
+    input.style.borderColor = '#ef4444';
+    input.style.boxShadow = '0 0 10px rgba(239,68,68,0.4)';
+  } else {
+    input.style.borderColor = '#38bdf8';
+    input.style.boxShadow = '0 0 10px rgba(56,189,248,0.4)';
+  }
+}
+
+function validateDate(dateStr){
+  if(!dateStr.match(/^\d{2}\.\d{2}\.\d{4}$/)) return false;
+  let parts = dateStr.split('.');
+  let day = parseInt(parts[0]);
+  let month = parseInt(parts[1]);
+  let year = parseInt(parts[2]);
+  if(month < 1 || month > 12) return false;
+  if(day < 1 || day > 31) return false;
+  let daysInMonth = [0,31,28,31,30,31,30,31,31,30,31,30,31];
+  if(year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) daysInMonth[2] = 29;
+  if(day > daysInMonth[month]) return false;
+  return true;
+}
+
+
+// ===== TIME FORMATTING =====
+function formatTime(input){
+  let val = input.value.replace(/[^0-9]/g,'');
+  if(val.length > 4) val = val.slice(0,4);
+  if(val.length < 4){
+    input.value = val;
+    return;
+  }
+  let hh = parseInt(val.slice(0,2));
+  let mm = parseInt(val.slice(2,4));
+  if(hh > 23) hh = 23;
+  if(mm > 59) mm = 59;
+  input.value = hh.toString().padStart(2,'0') + ':' + mm.toString().padStart(2,'0');
+}
+
+function validateTimeInput(input){
+  let val = input.value;
+  if(!val) return;
+  let clean = val.replace(/[^0-9]/g,'');
+  if(clean.length === 4){
+    let hh = clean.slice(0,2);
+    let mm = clean.slice(2,4);
+    input.value = hh + ':' + mm;
+  }
+  if(!validateTime(input.value)){
+    input.style.borderColor = '#ef4444';
+    input.style.boxShadow = '0 0 10px rgba(239,68,68,0.4)';
+  } else {
+    input.style.borderColor = '#38bdf8';
+    input.style.boxShadow = '0 0 10px rgba(56,189,248,0.4)';
+  }
+}
+
+function validateTime(timeStr){
+  if(!timeStr) return true;
+  if(!timeStr.match(/^\d{2}:\d{2}$/)) return false;
+  let parts = timeStr.split(':');
+  let hh = parseInt(parts[0]);
+  let mm = parseInt(parts[1]);
+  if(hh < 0 || hh > 23) return false;
+  if(mm < 0 || mm > 59) return false;
+  return true;
+}
+
+
+// ===== CITY AUTOCOMPLETE =====
+const worldCities = [
+  "Belgrade","Zagreb","London","Paris","Berlin","Moscow","New York","Los Angeles",
+  "Chicago","Toronto","Sydney","Tokyo","Dubai","Istanbul","Rome","Madrid",
+  "Vienna","Budapest","Athens","Bucharest","Sofia","Ljubljana","Prague","Warsaw",
+  "Amsterdam","Zurich","Stockholm","Oslo","Dublin","Lisbon","Cairo","Johannesburg",
+  "Singapore","Hong Kong","Seoul","Beijing","Mumbai","New Delhi","Mexico City",
+  "Buenos Aires","Sao Paulo","SÃ£o Paulo"
+];
+
+function setupCityAutocomplete(){
+  // Setup for birth city input
+  let cityInput = document.getElementById("cityInput");
+  let dropdown = document.getElementById("cityDropdown");
+  if(cityInput && dropdown){
+    cityInput.addEventListener("input", function(){
+      let val = this.value.toLowerCase();
+      if(!val){
+        dropdown.style.display = "none";
+        return;
+      }
+      let matches = worldCities.filter(function(city){
+        return city.toLowerCase().includes(val);
+      }).slice(0, 10);
+
+      if(matches.length > 0){
+        dropdown.innerHTML = matches.map(function(city){
+          return '<div onclick="selectCity(\'' + city.replace(/'/g, "\\'") + '\')" style="padding: 8px 12px; cursor: pointer; color: white; font-size: 12px; border-bottom: 1px solid #334155; transition: 0.2s;" onmouseover="this.style.background=\'#0f172a\'" onmouseout="this.style.background=\'transparent\'">' + city + '</div>';
+        }).join('');
+        dropdown.style.display = "block";
+      } else {
+        dropdown.style.display = "none";
+      }
+    });
+
+    document.addEventListener("click", function(e){
+      if(!cityInput.contains(e.target) && !dropdown.contains(e.target)){
+        dropdown.style.display = "none";
+      }
+    });
+  }
+
+  // Setup for search city input (same dropdown behavior)
+  let citySearch = document.getElementById("citySearch");
+  let searchDropdown = document.getElementById("citySearchDropdown");
+  if(citySearch && searchDropdown){
+    citySearch.addEventListener("input", function(){
+      let val = this.value.toLowerCase();
+      if(!val){
+        searchDropdown.style.display = "none";
+        return;
+      }
+      let matches = worldCities.filter(function(city){
+        return city.toLowerCase().includes(val);
+      }).slice(0, 10);
+
+      if(matches.length > 0){
+        searchDropdown.innerHTML = matches.map(function(city){
+          return '<div onclick="selectCitySearch(\'' + city.replace(/'/g, "\\'") + '\')" style="padding: 8px 12px; cursor: pointer; color: white; font-size: 12px; border-bottom: 1px solid #334155; transition: 0.2s;" onmouseover="this.style.background=\'#0f172a\'" onmouseout="this.style.background=\'transparent\'">' + city + '</div>';
+        }).join('');
+        searchDropdown.style.display = "block";
+      } else {
+        searchDropdown.style.display = "none";
+      }
+    });
+
+    document.addEventListener("click", function(e){
+      if(!citySearch.contains(e.target) && !searchDropdown.contains(e.target)){
+        searchDropdown.style.display = "none";
+      }
+    });
+  }
+}
+
+function selectCity(city){
+  let cityInput = document.getElementById("cityInput");
+  let dropdown = document.getElementById("cityDropdown");
+  if(cityInput) cityInput.value = city;
+  if(dropdown) dropdown.style.display = "none";
+}
+
+function selectCitySearch(city){
+  let citySearch = document.getElementById("citySearch");
+  let searchDropdown = document.getElementById("citySearchDropdown");
+  if(citySearch) citySearch.value = city;
+  if(searchDropdown) searchDropdown.style.display = "none";
+  // Auto-trigger search when city is selected
+  searchCity();
+}
+
+
+// ===== CITY COORDS =====
+const cityCoords = {
+  "Belgrade": { lat: 44.7866, lon: 20.4489, tz: "Europe/Belgrade" },
+  "Zagreb": { lat: 45.8150, lon: 15.9819, tz: "Europe/Zagreb" },
+  "London": { lat: 51.5074, lon: -0.1278, tz: "Europe/London" },
+  "Paris": { lat: 48.8566, lon: 2.3522, tz: "Europe/Paris" },
+  "Berlin": { lat: 52.5200, lon: 13.4050, tz: "Europe/Berlin" },
+  "Moscow": { lat: 55.7558, lon: 37.6173, tz: "Europe/Moscow" },
+  "New York": { lat: 40.7128, lon: -74.0060, tz: "America/New_York" },
+  "Los Angeles": { lat: 34.0522, lon: -118.2437, tz: "America/Los_Angeles" },
+  "Chicago": { lat: 41.8781, lon: -87.6298, tz: "America/Chicago" },
+  "Toronto": { lat: 43.6532, lon: -79.3832, tz: "America/Toronto" },
+  "Sydney": { lat: -33.8688, lon: 151.2093, tz: "Australia/Sydney" },
+  "Tokyo": { lat: 35.6762, lon: 139.6503, tz: "Asia/Tokyo" },
+  "Dubai": { lat: 25.2048, lon: 55.2708, tz: "Asia/Dubai" },
+  "Istanbul": { lat: 41.0082, lon: 28.9784, tz: "Europe/Istanbul" },
+  "Rome": { lat: 41.9028, lon: 12.4964, tz: "Europe/Rome" },
+  "Madrid": { lat: 40.4168, lon: -3.7038, tz: "Europe/Madrid" },
+  "Vienna": { lat: 48.2082, lon: 16.3738, tz: "Europe/Vienna" },
+  "Budapest": { lat: 47.4979, lon: 19.0402, tz: "Europe/Budapest" },
+  "Athens": { lat: 37.9838, lon: 23.7275, tz: "Europe/Athens" },
+  "Bucharest": { lat: 44.4268, lon: 26.1025, tz: "Europe/Bucharest" },
+  "Sofia": { lat: 42.6977, lon: 23.3219, tz: "Europe/Sofia" },
+  "Ljubljana": { lat: 46.0569, lon: 14.5058, tz: "Europe/Ljubljana" },
+  "Prague": { lat: 50.0755, lon: 14.4378, tz: "Europe/Prague" },
+  "Warsaw": { lat: 52.2297, lon: 21.0122, tz: "Europe/Warsaw" },
+  "Amsterdam": { lat: 52.3676, lon: 4.9041, tz: "Europe/Amsterdam" },
+  "Zurich": { lat: 47.3769, lon: 8.5417, tz: "Europe/Zurich" },
+  "Stockholm": { lat: 59.3293, lon: 18.0686, tz: "Europe/Stockholm" },
+  "Oslo": { lat: 59.9139, lon: 10.7522, tz: "Europe/Oslo" },
+  "Dublin": { lat: 53.3498, lon: -6.2603, tz: "Europe/Dublin" },
+  "Lisbon": { lat: 38.7223, lon: -9.1393, tz: "Europe/Lisbon" },
+  "Cairo": { lat: 30.0444, lon: 31.2357, tz: "Africa/Cairo" },
+  "Johannesburg": { lat: -26.2041, lon: 28.0473, tz: "Africa/Johannesburg" },
+  "Singapore": { lat: 1.3521, lon: 103.8198, tz: "Asia/Singapore" },
+  "Hong Kong": { lat: 22.3193, lon: 114.1694, tz: "Asia/Hong_Kong" },
+  "Seoul": { lat: 37.5665, lon: 126.9780, tz: "Asia/Seoul" },
+  "Beijing": { lat: 39.9042, lon: 116.4074, tz: "Asia/Shanghai" },
+  "Mumbai": { lat: 19.0760, lon: 72.8777, tz: "Asia/Kolkata" },
+  "New Delhi": { lat: 28.6139, lon: 77.2090, tz: "Asia/Kolkata" },
+  "Mexico City": { lat: 19.4326, lon: -99.1332, tz: "America/Mexico_City" },
+  "Buenos Aires": { lat: -34.6037, lon: -58.3816, tz: "America/Argentina/Buenos_Aires" },
+  "Sao Paulo": { lat: -23.5505, lon: -46.6333, tz: "America/Sao_Paulo" },
+  "SÃ£o Paulo": { lat: -23.5505, lon: -46.6333, tz: "America/Sao_Paulo" }
+};
+
+
+// ===== SAVE ASTRO RETURN STATE =====
+function saveAstroReturnState(date, time, city){
+  const params = new URLSearchParams(window.location.search);
+  const isTwin = params.get("isTwin") || "false";
+  const isTwin3 = params.get("isTwin3") || "false";
+  sessionStorage.setItem("returningFromChart", "true");
+  sessionStorage.setItem("astroReturnState", JSON.stringify({
+    date: date,
+    time: time,
+    city: city,
+    isTwin: isTwin === "true",
+    isTwin3: isTwin3 === "true"
+  }));
+}
+
+
+// ===== SAVED DATES FUNCTIONS =====
+function getSavedDates(){
+  let saved = localStorage.getItem('numerology_dates');
+  return saved ? JSON.parse(saved) : [];
+}
+
+function saveDatesList(dates){
+  localStorage.setItem('numerology_dates', JSON.stringify(dates));
+  updateSavedCount();
+}
+
+function updateSavedCount(){
+  let count = getSavedDates().length;
+  let badge = document.getElementById('savedCount');
+  if(badge){
+    badge.innerText = count;
+    badge.style.display = count > 0 ? 'flex' : 'none';
+  }
+}
+
+function offerSaveDate(dateStr){
+  if(skipSavePrompt){
+    skipSavePrompt = false;
+    return;
+  }
+  let timeStr = document.getElementById("timeInput") ? document.getElementById("timeInput").value : "";
+  let city = document.getElementById("cityInput") ? document.getElementById("cityInput").value : "";
+
+  let saved = getSavedDates();
+  let exists = saved.some(function(d) {
+    return d.date === dateStr && d.time === timeStr && d.city === city;
+  });
+  if(exists) return;
+
+  let modal = document.getElementById('saveModal');
+  let dateSpan = document.getElementById('saveModalDate');
+  let nameInput = document.getElementById('saveNameInput');
+
+  if(modal && dateSpan){
+    dateSpan.innerText = dateStr + (timeStr ? " " + timeStr : "") + (city ? " " + city : "");
+    nameInput.value = '';
+    modal.style.display = 'flex';
+    setTimeout(function() { nameInput.focus(); }, 100);
+  }
+}
+
+function closeSaveModal(){
+  let modal = document.getElementById('saveModal');
+  if(modal) modal.style.display = 'none';
+}
+
+function confirmSaveDate(){
+  let name = document.getElementById('saveNameInput').value.trim();
+  if(!name){
+    alert('Please enter a name');
+    return;
+  }
+
+  let dateStr = document.getElementById("input").value;
+  let timeStr = document.getElementById("timeInput") ? document.getElementById("timeInput").value : "";
+  let city = document.getElementById("cityInput") ? document.getElementById("cityInput").value : "";
+
+  let saved = getSavedDates();
+  saved.push({
+    id: Date.now(),
+    name: name,
+    date: dateStr,
+    time: timeStr,
+    city: city,
+    timestamp: new Date().toISOString()
+  });
+
+  saveDatesList(saved);
+  closeSaveModal();
+  renderSavedList();
+}
+
+function deleteSavedDate(id){
+  if(!confirm('Delete this saved date?')) return;
+  let saved = getSavedDates().filter(function(d) { return d.id !== id; });
+  saveDatesList(saved);
+  renderSavedList();
+}
+
+function loadSavedDate(dateStr, timeStr, city){
+  document.getElementById('input').value = dateStr;
+
+  let timeInput = document.getElementById('timeInput');
+  if(timeInput && timeStr) timeInput.value = timeStr;
+
+  let cityInput = document.getElementById('cityInput');
+  if(cityInput && city) cityInput.value = city;
+
+  skipSavePrompt = true;
+  toggleSavedPanel();
+}
+
+function toggleSavedPanel(){
+  let panel = document.getElementById('savedPanel');
+  if(!panel) return;
+
+  if(panel.style.display === 'block'){
+    panel.style.display = 'none';
+  } else {
+    panel.style.display = 'block';
+    renderSavedList();
+  }
+}
+
+function renderSavedList(){
+  let container = document.getElementById('savedList');
+  if(!container) return;
+
+  let saved = getSavedDates();
+
+  if(saved.length === 0){
+    container.innerHTML = '<div style="color:#64748b; text-align:center; padding:20px; font-size:12px;">No saved dates</div>';
+    return;
+  }
+
+  let html = '';
+  saved.forEach(function(item) {
+    let twinBadge = item.isTwin ? '<span style="background:#38bdf8;color:#0f172a;font-size:9px;padding:2px 6px;border-radius:4px;margin-left:6px;font-weight:bold;">TWIN</span>' : '';
+    let twin3Badge = item.isTwin3 ? '<span style="background:#FFD700;color:#0f172a;font-size:9px;padding:2px 6px;border-radius:4px;margin-left:6px;font-weight:bold;">3rd TWIN</span>' : '';
+    let details = item.date;
+    if(item.time) details += " " + item.time;
+    if(item.city) details += " " + item.city;
+
+    html += '<div style="background:#0f172a;border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:0.3s;border:1px solid #334155;" onmouseover="this.style.borderColor=\'#38bdf8\'" onmouseout="this.style.borderColor=\'#334155\'" onclick="loadSavedDate(\'' + item.date + '\',\'' + (item.time || '') + '\',\'' + (item.city || '') + '\',' + (item.isTwin ? 'true' : 'false') + ',' + (item.isTwin3 ? 'true' : 'false') + ')">' +
+      '<div style="display:flex; justify-content:space-between; align-items:center;">' +
+        '<div>' +
+          '<div style="color:#f6cb71; font-weight:bold; font-size:13px;">' + item.name + twinBadge + twin3Badge + '</div>' +
+          '<div style="color:#94a3b8; font-size:11px; margin-top:2px;">' + details + '</div>' +
+        '</div>' +
+        '<span onclick="event.stopPropagation(); deleteSavedDate(' + item.id + ')" style="color:#ef4444;font-size:16px;cursor:pointer;padding:5px;" title="Delete saved contact">&#128465;&#65039;</span>' +
+      '</div>' +
+    '</div>';
+  });
+
+  container.innerHTML = html;
+}
+
+
+
+
+// ===== ASTROCARTOGRAPHY SPECIFIC FUNCTIONS =====
+
+// === ORB SLIDER ===
+const orbSlider = document.getElementById('orbSlider');
+if(orbSlider){
+    orbSlider.addEventListener('input', function(){
+        const orbValue = document.getElementById('orbValue');
+        if(orbValue) orbValue.textContent = this.value + ' km';
+    });
+}
+
+// === HIGHLIGHT PLANET ===
+let activePlanet = null;
+
+function highlightPlanet(planet){
+    document.querySelectorAll('.planet-line').forEach(l => {
+        l.style.opacity = '0.85';
+        l.style.width = '2px';
+    });
+    document.querySelectorAll('.info-card').forEach(c => c.classList.remove('active', 'glow-sun','glow-moon','glow-mercury','glow-venus','glow-mars','glow-jupiter','glow-saturn','glow-uranus','glow-neptune','glow-pluto','glow-chiron','glow-nnode'));
+
+    if(activePlanet === planet){
+        activePlanet = null;
+        return;
+    }
+
+    activePlanet = planet;
+
+    document.querySelectorAll('.planet-line').forEach(l => {
+        if(l.dataset.planet === planet){
+            l.style.opacity = '1';
+            l.style.width = '4px';
+            l.style.zIndex = '10';
+        } else {
+            l.style.opacity = '0.25';
+            l.style.width = '1px';
+            l.style.zIndex = '1';
+        }
+    });
+
+    const card = document.getElementById('card-' + planet);
+    if(card){
+        card.classList.add('active', 'glow-' + planet);
+        card.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+}
+
+// === FILTER LINES ===
+// === TOGGLE PLANET LINE VISIBILITY ===
+function togglePlanetLine(planet){
+    const checkbox = document.querySelector('.planet-check[data-planet="' + planet + '"]');
+    const isChecked = checkbox ? checkbox.checked : true;
+
+    // Toggle all lines for this planet
+    document.querySelectorAll('.planet-line[data-planet="' + planet + '"]').forEach(line => {
+        line.style.display = isChecked ? 'block' : 'none';
+    });
+
+    // Toggle label
+    document.querySelectorAll('.line-label.' + planet + '-label').forEach(label => {
+        label.style.display = isChecked ? 'block' : 'none';
+    });
+}
+
+// === INITIALIZE PLANET VISIBILITY ===
+function initPlanetVisibility(){
+    document.querySelectorAll('.planet-check').forEach(checkbox => {
+        const planet = checkbox.dataset.planet;
+        const isChecked = checkbox.checked;
+
+        document.querySelectorAll('.planet-line[data-planet="' + planet + '"]').forEach(line => {
+            line.style.display = isChecked ? 'block' : 'none';
+        });
+
+        document.querySelectorAll('.line-label.' + planet + '-label').forEach(label => {
+            label.style.display = isChecked ? 'block' : 'none';
+        });
+    });
+}
+
+function filterLines(type){
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+
+    const lines = document.querySelectorAll('.planet-line');
+    const labels = document.querySelectorAll('.line-label');
+
+    lines.forEach(l => {
+        let show = true;
+        if(type === 'angular') show = ['mc','ac'].includes(l.dataset.angle);
+        else if(type === 'personal') show = ['sun','moon','mercury','venus','mars'].includes(l.dataset.planet);
+        else if(type === 'transpersonal') show = ['jupiter','saturn','uranus','neptune','pluto'].includes(l.dataset.planet);
+        else if(type === 'mc') show = l.dataset.angle === 'mc';
+        else if(type === 'ac') show = l.dataset.angle === 'ac';
+
+        l.style.display = show ? 'block' : 'none';
+        l.style.opacity = show ? '0.85' : '0';
+    });
+
+    labels.forEach(lbl => {
+        lbl.style.display = (type === 'all' || type === 'mc') ? 'block' : 'none';
+    });
+}
+
+// === SEARCH CITY ===
+function searchCity(){
+    const city = document.getElementById('citySearch');
+    if(!city || !city.value) return;
+    alert('Searching for: ' + city.value + '\n\nIn a full implementation, this would query a geocoding API and calculate which planetary lines pass near this location based on the birth data.');
+}
+
+// === CALCULATE LINES ===
+function calculateLines(){
+    const date = document.getElementById("input").value;
+    const time = document.getElementById("timeInput").value;
+    const place = document.getElementById("cityInput").value;
+
+    if(!date || !place){
+        alert('Please fill in date and place fields.');
+        return;
+    }
+
+    const btn = document.getElementById("analyzeBtn");
+    if(btn){
+        btn.textContent = '✦ Calculating...';
+        setTimeout(() => {
+            btn.textContent = '✓ Lines Calculated!';
+            btn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
+
+            setTimeout(() => {
+                btn.textContent = 'ANALYZE';
+                btn.style.background = 'linear-gradient(135deg, #38bdf8, #0ea5e9)';
+            }, 2000);
+        }, 1500);
+    }
+}
+
+// === TOOLTIP ===
+const tooltip = document.getElementById('mapTooltip');
+const ttTitle = document.getElementById('ttTitle');
+const ttDesc = document.getElementById('ttDesc');
+
+const planetData = {
+    sun: { title: '☉ Sun Line', desc: 'Vitality, ego, leadership. Best for career and public recognition.' },
+    moon: { title: '☾ Moon Line', desc: 'Emotions, home, nurturing. Strong family and public connection.' },
+    mercury: { title: '☿ Mercury Line', desc: 'Communication, intellect, travel. Great for learning and business.' },
+    venus: { title: '♀ Venus Line', desc: 'Love, beauty, art, harmony. Relationships flourish here.' },
+    mars: { title: '♂ Mars Line', desc: 'Energy, drive, conflict, passion. Action-oriented zone.' },
+    jupiter: { title: '♃ Jupiter Line', desc: 'Expansion, luck, wisdom, growth. Fortune and abundance.' },
+    saturn: { title: '♄ Saturn Line', desc: 'Discipline, restriction, karma, structure. Hard lessons but mastery.' },
+    uranus: { title: '♅ Uranus Line', desc: 'Innovation, freedom, shock, change. Breakthroughs happen.' },
+    neptune: { title: '♆ Neptune Line', desc: 'Spirituality, dreams, illusion, creativity. Mystical experiences.' },
+    pluto: { title: '♇ Pluto Line', desc: 'Transformation, power, death/rebirth. Intense deep change.' },
+    chiron: { title: '⚷ Chiron Line', desc: 'Healing, the wound, wisdom through pain. Teacher/healer energy.' },
+    nnode: { title: '☊ North Node Line', desc: 'Destiny, soul growth, karmic path. Move toward your purpose.' }
+};
+
+document.querySelectorAll('.planet-line').forEach(line => {
+    line.addEventListener('mouseenter', function(e){
+        const planet = this.dataset.planet;
+        const angle = this.dataset.angle.toUpperCase();
+        const data = planetData[planet];
+        if(data && ttTitle && ttDesc){
+            ttTitle.textContent = data.title + ' ' + angle;
+            ttDesc.textContent = data.desc;
+            tooltip.classList.add('show');
+        }
+    });
+
+    line.addEventListener('mousemove', function(e){
+        const mapWrapper = document.getElementById('mapWrapper');
+        if(mapWrapper && tooltip){
+            const rect = mapWrapper.getBoundingClientRect();
+            tooltip.style.left = (e.clientX - rect.left + 15) + 'px';
+            tooltip.style.top = (e.clientY - rect.top + 15) + 'px';
+        }
+    });
+
+    line.addEventListener('mouseleave', function(){
+        if(tooltip) tooltip.classList.remove('show');
+    });
+});
+
+// === EXPORT ===
+function exportMap(){
+    alert('Export feature would generate a high-resolution PNG or PDF of your astrocartography map with all active lines and crossings marked.');
+}
+
+// === RESPONSIVE LABELS ===
+function adjustLabels(){
+    const w = window.innerWidth;
+    const labels = document.querySelectorAll('.line-label');
+    labels.forEach(l => {
+        l.style.fontSize = w < 700 ? '9px' : '10px';
+    });
+}
+
+window.addEventListener('resize', adjustLabels);
+adjustLabels();
+
+// === UPDATED autoAnalyzeAstrocartography - handles manual input ===
+function autoAnalyzeAstrocartography(){
+    const date = document.getElementById("input").value;
+    const time = document.getElementById("timeInput").value;
+    const city = document.getElementById("cityInput").value;
+
+    if(!validateDate(date)){
+        alert("Please enter a valid date (DD.MM.YYYY)");
+        return;
+    }
+
+    // Save to astroReturnState (for back navigation to chart.html)
+    saveAstroReturnState(date, time, city);
+
+    // Save to local/session for compatibility
+    sessionStorage.setItem("astro_date", date);
+    sessionStorage.setItem("astro_time", time);
+    sessionStorage.setItem("astro_city", city);
+    localStorage.setItem("astro_date", date);
+    localStorage.setItem("astro_time", time);
+    localStorage.setItem("astro_city", city);
+
+    // Run calculation
+    if(typeof calculateLines === "function"){
+        calculateLines();
+    }
+
+    // Offer to save date (same as chart.html)
+    offerSaveDate(date);
+}
+
+// === GO BACK & EXIT ===
+function goBack(){
+    const date = document.getElementById("input").value;
+    const time = document.getElementById("timeInput").value;
+    const city = document.getElementById("cityInput").value;
+    saveAstroReturnState(date, time, city);
+    history.back();
+}
+
+function exitApp(){
+    window.close();
+}
+
+// === PRINT & SHARE (astrocartography-specific) ===
+const printBtn = document.getElementById("printBtn");
+if(printBtn){
+    printBtn.addEventListener("click", () => {
+        window.print();
+    });
+}
+
+const shareBtn = document.getElementById("shareBtn");
+if(shareBtn){
+    shareBtn.addEventListener("click", async () => {
+        const date = document.getElementById("input")?.value || "";
+        const time = document.getElementById("timeInput")?.value || "";
+        const city = document.getElementById("cityInput")?.value || "";
+        const birthText = [date, time, city].filter(Boolean).join(" ") || "My Astrocartography";
+        const shareData = {
+            title: "Astrocartography",
+            text: birthText,
+            url: window.location.href
+        };
+        try{
+            if(navigator.share){
+                await navigator.share(shareData);
+            }else if(navigator.clipboard){
+                await navigator.clipboard.writeText(window.location.href);
+                alert("Link copied to clipboard.");
+            }
+        }catch(error){
+            console.warn("Share failed", error);
+        }
+    });
+}
+
+// ===== INIT =====
+window.onload = function(){
+    setupCityAutocomplete();
+    updateSavedCount();
+
+    // Preuzmi parametre iz URL ako postoje
+    const params = new URLSearchParams(window.location.search);
+    const date = params.get("date");
+    const time = params.get("time");
+    const city = params.get("city");
+
+    if(date) document.getElementById("input").value = date;
+    if(time) document.getElementById("timeInput").value = time;
+    if(city) document.getElementById("cityInput").value = city;
+
+    // Ako nema URL params, probaj sessionStorage iz chart.html (astroReturnState)
+    if(!date && !time && !city){
+        const savedState = sessionStorage.getItem("astroReturnState");
+        if(savedState){
+            try{
+                const data = JSON.parse(savedState);
+                if(data.date) document.getElementById("input").value = data.date;
+                if(data.time) document.getElementById("timeInput").value = data.time;
+                if(data.city) document.getElementById("cityInput").value = data.city;
+            }catch(e){ console.log(e); }
+        }
+    }
+
+    // Fallback na individual local/session storage
+    if(!document.getElementById("input").value){
+        const savedDate = sessionStorage.getItem("astro_date") || localStorage.getItem("astro_date");
+        if(savedDate) document.getElementById("input").value = savedDate;
+    }
+    if(!document.getElementById("timeInput").value){
+        const savedTime = sessionStorage.getItem("astro_time") || localStorage.getItem("astro_time");
+        if(savedTime) document.getElementById("timeInput").value = savedTime;
+    }
+    if(!document.getElementById("cityInput").value){
+        const savedCity = sessionStorage.getItem("astro_city") || localStorage.getItem("astro_city");
+        if(savedCity) document.getElementById("cityInput").value = savedCity;
+    }
+
+    // Initialize planet visibility based on checkboxes
+    initPlanetVisibility();
+
+    // Auto-run analyze after short delay (only if we have data)
+    const hasData = document.getElementById("input").value;
+    if(hasData){
+        setTimeout(() => {
+            autoAnalyzeAstrocartography();
+        }, 300);
+    }
+};
+</script>
+
+<!-- SAVE MODAL -->
+<div id="saveModal" style="
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.85);
+  justify-content:center;
+  align-items:center;
+  z-index:99999;">
+  <div style="
+    background:#1e293b;
+    padding:25px;
+    border-radius:15px;
+    width:85%;
+    max-width:320px;
+    text-align:center;
+    box-shadow:0 0 30px rgba(56,189,248,0.4);
+  ">
+    <h3 style="color:#38bdf8; margin-bottom:15px; text-shadow:0 0 10px rgba(56,189,248,0.6);">
+      Save Date
+    </h3>
+    <div style="margin-bottom:15px; color:#94a3b8; font-size:12px;">
+      Date: <span id="saveModalDate" style="color:#f6cb71; font-weight:bold;"></span>
+    </div>
+    <input type="text" id="saveNameInput" placeholder="Enter name..." style="
+      width:100%;
+      padding:10px;
+      background:#0f172a;
+      border:1px solid #38bdf8;
+      border-radius:8px;
+      color:white;
+      font-size:14px;
+      text-align:center;
+      margin-bottom:15px;
+      outline:none;
+    " onkeypress="if(event.key==='Enter'){ confirmSaveDate(); }">
+    <div style="display:flex; gap:10px; justify-content:center;">
+      <button onclick="confirmSaveDate()" style="
+        padding:8px 20px;
+        background:linear-gradient(135deg, #38bdf8, #0ea5e9);
+        border:none;
+        border-radius:8px;
+        color:white;
+        font-weight:bold;
+        cursor:pointer;
+        font-size:12px;
+      ">SAVE</button>
+      <button onclick="closeSaveModal()" style="
+        padding:8px 20px;
+        background:#334155;
+        border:none;
+        border-radius:8px;
+        color:white;
+        cursor:pointer;
+        font-size:12px;
+      ">CANCEL</button>
+    </div>
+  </div>
+</div>
+
+<!-- SAVED PANEL -->
+<div id="savedPanel" style="
+  display:none;
+  position:fixed;
+  top:0; right:0;
+  width:280px;
+  height:100%;
+  background:#1e293b;
+  z-index:99998;
+  padding:60px 15px 20px 15px;
+  overflow-y:auto;
+  box-shadow:-5px 0 20px rgba(0,0,0,0.5);">
+  <div onclick="toggleSavedPanel()" style="
+    position:absolute;
+    top:15px; left:15px;
+    font-size:20px;
+    color:#38bdf8;
+    cursor:pointer;
+  ">&times;</div>
+  <h3 style="color:#38bdf8; margin-bottom:15px; font-size:14px; text-align:center;">
+    SAVED DATES
+  </h3>
+  <div id="savedList"></div>
+</div>
+
+</body>
+</html>
