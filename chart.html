@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -369,10 +369,162 @@ body{
   justify-content: center;
   border: 1px solid rgba(56,189,248,0.3);
 }
-
 .back-arrow:hover {
   color: #60a5fa;
   text-shadow: 0 0 10px #60a5fa, 0 0 20px #60a5fa, 0 0 30px #93c5fd;
+}
+/* ===== TOP BAR ACTION BUTTONS ===== */
+.top-bar {
+  position: fixed;
+  top: 15px;
+  left: auto;
+  right: 15px;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;
+}
+.top-bar > * { pointer-events: auto; }
+
+
+.action-group {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+.action-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: rgba(16,27,45,0.9);
+  border: 1px solid rgba(148,163,184,0.25);
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  transition: all 0.25s ease;
+}
+.action-btn:hover {
+  color: #38bdf8;
+  border-color: rgba(56,189,248,0.5);
+  box-shadow: 0 0 20px rgba(56,189,248,0.25);
+  transform: translateY(-2px);
+}
+.action-btn svg {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ===== LOADING PANEL ===== */
+.loading-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2,6,13,0.86);
+  backdrop-filter: blur(10px);
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+.loading-panel.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.loading-box {
+  width: min(430px, calc(100% - 36px));
+  border: 1px solid rgba(56,189,248,0.24);
+  border-radius: 22px;
+  background: rgba(10,20,35,0.92);
+  box-shadow: 0 0 45px rgba(56,189,248,0.16), inset 0 0 18px rgba(255,215,0,0.04);
+  padding: 28px;
+  text-align: center;
+}
+.loading-orbit {
+  width: 84px;
+  height: 84px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,215,0,0.38);
+  position: relative;
+}
+.loading-orbit::before {
+  content: "";
+  position: absolute;
+  inset: 9px;
+  border-radius: 50%;
+  border: 1px solid rgba(56,189,248,0.32);
+}
+.loading-orbit::after {
+  content: "";
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #38bdf8;
+  box-shadow: 0 0 16px rgba(56,189,248,0.9);
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+  transform-origin: 0 35px;
+  animation: orbitSpin 1.15s linear infinite;
+}
+.loading-title { font-size: 22px; color: #FFD700; margin-bottom: 8px; }
+.loading-text { font-size: 14px; color: #94a3b8; line-height: 1.45; }
+@keyframes orbitSpin {
+  from { transform: rotate(0deg) translateX(-50%); }
+  to { transform: rotate(360deg) translateX(-50%); }
+}
+
+/* ===== PRINT STYLES - CLEAN WHITE, NO BACKGROUND ===== */
+@media print {
+  body::before, .top-bar, .back-arrow, .loading-panel, .tabs, .input-line, .analyze-btn, .footer, #savedPanel, #saveModal { display: none !important; }
+  body {
+    background: #ffffff !important;
+    color: #1a1a1a !important;
+    padding-bottom: 0 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .title { display: none !important; }
+  .section { display: block !important; }
+  #astroChart { display: block !important; }
+  .astro-content { display: block !important; }
+  .astro-header { padding-top: 20px; }
+  .astro-title { color: #1a1a1a !important; text-shadow: none !important; }
+  .astro-birth { color: #333 !important; text-shadow: none !important; }
+  .astro-sub, .muted { color: #666 !important; }
+  .astro-status { color: #4ade80 !important; }
+  .astro-card {
+    background: transparent !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    color: #1a1a1a !important;
+  }
+  .section-title, .name, .angle-label, .angle-value { color: #1a1a1a !important; text-shadow: none !important; }
+  .pos { color: #333 !important; }
+  .house { color: #555 !important; }
+  #chartSvg circle[fill="#020817"] { fill: #ffffff !important; stroke: #333 !important; }
+  #chartSvg circle[stroke="#FFD700"] { stroke: #333 !important; }
+  #chartSvg circle[stroke="#38bdf8"] { stroke: #666 !important; }
+  #chartSvg text[fill="#FFD700"] { fill: #333 !important; filter: none !important; }
+  #chartSvg line[stroke="#FFD700"] { stroke: #333 !important; }
+  #chartSvg line[stroke="#38bdf8"] { stroke: #999 !important; }
+  #chartSvg line[stroke="#334155"] { stroke: #ddd !important; }
+  #chartSvg text[fill="#94a3b8"] { fill: #666 !important; }
+  #planetLayer circle { fill: #ffffff !important; stroke: #333 !important; }
+  #planetLayer text, #angleLayer text { fill: #333 !important; filter: none !important; }
+  #planetLayer line { stroke: #999 !important; }
+  #aspectLayer line { opacity: 0.3 !important; }
 }
 
 /* ===== SAVED PANEL ===== */
@@ -457,8 +609,28 @@ body {
 </head>
 <body>
 
+<div class="loading-panel hidden" id="loadingPanel">
+  <div class="loading-box">
+    <div class="loading-orbit"></div>
+    <div class="loading-title">Calculating natal chart</div>
+    <div class="loading-text">Preparing planets, houses and aspects from your birth data.</div>
+  </div>
+</div>
+
 <!-- BACK BUTTON -->
-<div class="back-arrow" onclick="goBack()">❮</div>
+<div class="back-arrow" onclick="goBack()">&#10094;</div>
+
+<!-- TOP BAR: SHARE/PRINT -->
+<div class="top-bar">
+  <div class="action-group">
+    <button class="action-btn" id="shareBtn" type="button" title="Share chart">
+      <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+    </button>
+    <button class="action-btn" id="printBtn" type="button" title="Print A4">
+      <svg viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+    </button>
+  </div>
+</div>
 
 <!-- TITLE -->
 <div class="title">Astrology App</div>
@@ -510,7 +682,7 @@ body {
     </div>
 
     <div id="savedIcon" onclick="toggleSavedPanel()">
-      <span style="font-size:16px;">📋</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true" style="width:19px;height:19px;fill:none;stroke:#38bdf8;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px rgba(56,189,248,0.75));"><path d="M8 4h8"/><path d="M9 2h6a1 1 0 0 1 1 1v2H8V3a1 1 0 0 1 1-1z"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M8 11h8"/><path d="M8 16h5"/></svg>
       <span id="savedCount">0</span>
     </div>
   </div>
@@ -527,7 +699,7 @@ body {
     <div class="astro-header">
       <div class="astro-title">ASTRO CHART</div>
       <div class="astro-birth" id="birthLine"></div>
-      <div class="astro-sub">Approximate positions — for precise calculations use professional ephemeris software</div>
+      <div class="astro-sub">Approximate positions â€” for precise calculations use professional ephemeris software</div>
       <div class="astro-status" id="statusLine">Calculating...</div>
     </div>
 
@@ -613,7 +785,7 @@ body {
   <div class="footer-text">
     <div>G-Lab Team</div>
     <div>IT Research & Development</div>
-    <div>© 2025 G-Lab – Dragan Milošević</div>
+    <div>Â© 2025 G-Lab â€“ Dragan MiloÅ¡eviÄ‡</div>
     <div><b>All rights reserved.</b></div>
   </div>
 </div>
@@ -694,11 +866,11 @@ body {
 ">
   <div onclick="toggleSavedPanel()" style="
     position:absolute;
-    top:15px; right:15px;
+    top:15px; left:15px;
     font-size:20px;
     color:#38bdf8;
     cursor:pointer;
-  ">✕</div>
+  ">&times;</div>
   <h3 style="color:#38bdf8; margin-bottom:15px; font-size:14px; text-align:center;">
     SAVED DATES
   </h3>
@@ -710,6 +882,35 @@ body {
 let skipSavePrompt = false;
 let tabsUnlocked = false;
 
+function showLoadingPanel(){
+  const loader = document.getElementById("loadingPanel");
+  if(loader) loader.classList.remove("hidden");
+}
+
+function hideLoadingPanel(){
+  const loader = document.getElementById("loadingPanel");
+  if(loader) loader.classList.add("hidden");
+}
+
+document.getElementById("printBtn").addEventListener("click", async () => {
+  if(document.getElementById("astroContent").style.display === "none") await analyze();
+  window.print();
+});
+
+document.getElementById("shareBtn").addEventListener("click", async () => {
+  const birth = document.getElementById("birthLine")?.textContent || "Astro chart";
+  const shareData = { title: "Astro chart", text: birth, url: window.location.href };
+  try{
+    if(navigator.share){
+      await navigator.share(shareData);
+    }else if(navigator.clipboard){
+      await navigator.clipboard.writeText(window.location.href);
+      alert("Chart link copied to clipboard.");
+    }
+  }catch(error){
+    console.warn("Share failed", error);
+  }
+});
 // ===== TAB NAVIGATION =====
 let tabHistory = [];
 const MAX_HISTORY = 10;
@@ -742,30 +943,32 @@ document.querySelectorAll('.tab').forEach(tab => {
   });
 });
 
-// ===== ANALYZE - otključava tabove i pokreće chart =====
-function analyze() {
+// ===== ANALYZE - otkljuÄava tabove i pokreÄ‡e chart =====
+async function analyze() {
   const date = document.getElementById("input").value;
   const time = document.getElementById("timeInput").value;
   const city = document.getElementById("cityInput").value;
+  saveAstroReturnState(date, time, city);
 
   if(!validateDate(date)){
     alert("Please enter a valid date (DD.MM.YYYY)");
     return;
   }
 
-  // Otključaj tabove
+  // OtkljuÄaj tabove
   tabsUnlocked = true;
   document.querySelectorAll('.tab').forEach(tab => {
     tab.classList.add('unlocked');
   });
 
-  // Prikaži astro chart
+  // PrikaÅ¾i astro chart
   document.getElementById("astroContent").style.display = "block";
   
   // Pokreni kalkulaciju
-  calculateChart();
+  showLoadingPanel();
+  await calculateChart();
   
-  // Sačuvaj stanje
+  // SaÄuvaj stanje
   saveAstroReturnState(date, time, city);
 }
 
@@ -774,13 +977,24 @@ function goBack() {
   const date = document.getElementById("input").value;
   const time = document.getElementById("timeInput").value;
   const city = document.getElementById("cityInput").value;
+  saveAstroReturnState(date, time, city);
 
-  let backUrl = "index.html";
+  const params = new URLSearchParams(window.location.search);
+  const returnUrl = params.get("returnUrl") || sessionStorage.getItem("astroReturnUrl");
+  if(returnUrl){
+    sessionStorage.setItem("returningFromChart", "true");
+    window.location.href = returnUrl;
+    return;
+  }
+
+  let backUrl = "index.html?astroReturn=1";
   if(date) {
-    backUrl += "?date=" + encodeURIComponent(date);
+    backUrl += "&date=" + encodeURIComponent(date);
     if(time) backUrl += "&time=" + encodeURIComponent(time);
     if(city) backUrl += "&city=" + encodeURIComponent(city);
   }
+  backUrl += "#zodiac";
+  sessionStorage.setItem("returningFromChart", "true");
   window.location.href = backUrl;
 }
 
@@ -889,7 +1103,7 @@ const worldCities = [
   "Vienna","Budapest","Athens","Bucharest","Sofia","Ljubljana","Prague","Warsaw",
   "Amsterdam","Zurich","Stockholm","Oslo","Dublin","Lisbon","Cairo","Johannesburg",
   "Singapore","Hong Kong","Seoul","Beijing","Mumbai","New Delhi","Mexico City",
-  "Buenos Aires","Sao Paulo","São Paulo"
+  "Buenos Aires","Sao Paulo","SÃ£o Paulo"
 ];
 
 function setupCityAutocomplete(){
@@ -976,15 +1190,21 @@ const cityCoords = {
   "Mexico City": { lat: 19.4326, lon: -99.1332, tz: "America/Mexico_City" },
   "Buenos Aires": { lat: -34.6037, lon: -58.3816, tz: "America/Argentina/Buenos_Aires" },
   "Sao Paulo": { lat: -23.5505, lon: -46.6333, tz: "America/Sao_Paulo" },
-  "São Paulo": { lat: -23.5505, lon: -46.6333, tz: "America/Sao_Paulo" }
+  "SÃ£o Paulo": { lat: -23.5505, lon: -46.6333, tz: "America/Sao_Paulo" }
 };
 
 // ===== SAVE ASTRO RETURN STATE =====
 function saveAstroReturnState(date, time, city){
+  const params = new URLSearchParams(window.location.search);
+  const isTwin = params.get("isTwin") || "false";
+  const isTwin3 = params.get("isTwin3") || "false";
+  sessionStorage.setItem("returningFromChart", "true");
   sessionStorage.setItem("astroReturnState", JSON.stringify({
     date: date,
     time: time,
-    city: city
+    city: city,
+    isTwin: isTwin === "true",
+    isTwin3: isTwin3 === "true"
   }));
 }
 
@@ -1122,7 +1342,7 @@ function renderSavedList(){
           '<div style="color:#f6cb71; font-weight:bold; font-size:13px;">' + item.name + twinBadge + twin3Badge + '</div>' +
           '<div style="color:#94a3b8; font-size:11px; margin-top:2px;">' + details + '</div>' +
         '</div>' +
-        '<span onclick="event.stopPropagation(); deleteSavedDate(' + item.id + ')" style="color:#ef4444;font-size:16px;cursor:pointer;padding:5px;">🗑️</span>' +
+        '<span onclick="event.stopPropagation(); deleteSavedDate(' + item.id + ')" style="color:#ef4444;font-size:16px;cursor:pointer;padding:5px;" title="Delete saved contact">&#128465;&#65039;</span>' +
       '</div>' +
     '</div>';
   });
@@ -1134,19 +1354,19 @@ function renderSavedList(){
 const NS = "http://www.w3.org/2000/svg";
 const centerX = 450;
 const centerY = 450;
-const signSymbols = ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"];
+const signSymbols = ["\u2648","\u2649","\u264A","\u264B","\u264C","\u264D","\u264E","\u264F","\u2650","\u2651","\u2652","\u2653"];
 const signNames = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
 const planets = [
-  {name:"Sun", symbol:"☉", color:"#FFD700"},
-  {name:"Moon", symbol:"☽", color:"#C0C0C0"},
-  {name:"Mercury", symbol:"☿", color:"#FFA500"},
-  {name:"Venus", symbol:"♀", color:"#FF69B4"},
-  {name:"Mars", symbol:"♂", color:"#FF4500"},
-  {name:"Jupiter", symbol:"♃", color:"#DAA520"},
-  {name:"Saturn", symbol:"♄", color:"#708090"},
-  {name:"Uranus", symbol:"♅", color:"#00CED1"},
-  {name:"Neptune", symbol:"♆", color:"#4169E1"},
-  {name:"Pluto", symbol:"♇", color:"#B569FF"}
+  {name:"Sun", symbol:"\u2609", color:"#FFD700"},
+  {name:"Moon", symbol:"\u263D", color:"#C0C0C0"},
+  {name:"Mercury", symbol:"\u263F", color:"#FFA500"},
+  {name:"Venus", symbol:"\u2640", color:"#FF69B4"},
+  {name:"Mars", symbol:"\u2642", color:"#FF4500"},
+  {name:"Jupiter", symbol:"\u2643", color:"#DAA520"},
+  {name:"Saturn", symbol:"\u2644", color:"#708090"},
+  {name:"Uranus", symbol:"\u2645", color:"#00CED1"},
+  {name:"Neptune", symbol:"\u2646", color:"#4169E1"},
+  {name:"Pluto", symbol:"\u2647", color:"#B569FF"}
 ];
 
 function parseDate(value){
@@ -1410,7 +1630,7 @@ function renderTables(data, cusps, asc, mc, aspects, details){
   `;
 }
 
-function calculateChart(){
+async function calculateChart(){
   try{
     const birthDate = document.getElementById("input").value;
     const birthTime = document.getElementById("timeInput").value;
@@ -1440,21 +1660,52 @@ function calculateChart(){
     let cusps;
     let ascMc;
 
-    data = planets.map(p => ({...p, longitude:fallbackPlanetLongitude(jd, p.name)}));
-    ascMc = calculateAscMc(jd, coords.lat, coords.lon);
-    cusps = equalHouses(ascMc.asc);
+    try{
+      const mod = await import("./vendor/swisseph/swisseph-local.js");
+      const swe = new mod.SwissEphemeris();
+      await swe.init();
+      source = "Local Swiss Ephemeris";
+      const bodyByName = {
+        Sun: mod.Planet.Sun,
+        Moon: mod.Planet.Moon,
+        Mercury: mod.Planet.Mercury,
+        Venus: mod.Planet.Venus,
+        Mars: mod.Planet.Mars,
+        Jupiter: mod.Planet.Jupiter,
+        Saturn: mod.Planet.Saturn,
+        Uranus: mod.Planet.Uranus,
+        Neptune: mod.Planet.Neptune,
+        Pluto: mod.Planet.Pluto
+      };
+      const swissFlags = mod.CalculationFlag.SwissEphemeris | mod.CalculationFlag.Speed;
+      data = planets.map(p => ({...p, longitude: normalize(swe.calculatePosition(jd, bodyByName[p.name], swissFlags).longitude)}));
+      const houses = swe.calculateHouses(jd, coords.lat, coords.lon, mod.HouseSystem.Placidus);
+      ascMc = { asc: normalize(houses.ascendant), mc: normalize(houses.mc || houses.mediumCoeli || houses.cusps[10]) };
+      cusps = Array.from({length: 12}, (_, i) => normalize(houses.cusps[i + 1]));
+      houseSystem = "Placidus";
+    }catch(error){
+      console.warn("Swiss Ephemeris unavailable, using fallback", error);
+      data = planets.map(p => ({...p, longitude: fallbackPlanetLongitude(jd, p.name)}));
+      ascMc = calculateAscMc(jd, coords.lat, coords.lon);
+      cusps = equalHouses(ascMc.asc);
+    }
 
     data.forEach(p => p.house = getHouse(p.longitude, cusps));
     const aspects = findAspects(data);
     renderWheel(data, cusps, ascMc.asc, ascMc.mc, aspects);
     renderTables(data, cusps, ascMc.asc, ascMc.mc, aspects, {
-      source, houseSystem, utc:converted.utc, timeMethod:converted.method, lat:coords.lat, lon:coords.lon
+      source, houseSystem, utc: converted.utc, timeMethod: converted.method, lat: coords.lat, lon: coords.lon
     });
-    
+
     const statusLine = document.getElementById("statusLine");
-    if(statusLine) statusLine.textContent = "Calculated with built-in fallback formulas.";
-    if(converted.method.startsWith("estimated")){
-      if(statusLine) statusLine.textContent += " Timezone is estimated for this city.";
+    if(statusLine){
+      statusLine.classList.remove("error");
+      statusLine.textContent = source === "Local Swiss Ephemeris"
+        ? "Precise chart calculated."
+        : "Calculated with built-in fallback because Swiss Ephemeris could not load.";
+      if(converted.method.startsWith("estimated")){
+        statusLine.textContent += " Timezone is estimated for this city.";
+      }
     }
   }catch(error){
     const statusLine = document.getElementById("statusLine");
@@ -1462,6 +1713,8 @@ function calculateChart(){
       statusLine.textContent = error.message;
       statusLine.classList.add("error");
     }
+  }finally{
+    hideLoadingPanel();
   }
 }
 
@@ -1485,3 +1738,12 @@ window.onload = function(){
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
