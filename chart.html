@@ -26,7 +26,7 @@ body{
 
 /* ===== TABS - 2 REDA PO 3 ===== */
 .tabs {
-  display: none;
+  display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 6px;
@@ -40,16 +40,28 @@ body{
   border-radius: 6px;
   font-size: 11px;
   cursor: pointer;
-  opacity: 0.6;
+  opacity: 0.3;
   flex: 0 0 calc(33.333% - 4px);
   text-align: center;
   white-space: nowrap;
   transition: 0.3s;
+  pointer-events: none;
+  user-select: none;
 }
 
 .tab.active {
   opacity: 1;
   box-shadow: 0 0 6px rgba(56,189,248,0.6);
+  pointer-events: auto;
+}
+
+.tab.unlocked {
+  opacity: 0.6;
+  pointer-events: auto;
+}
+
+.tab.unlocked:hover {
+  opacity: 1;
 }
 
 /* ===== SECTIONS ===== */
@@ -168,20 +180,6 @@ body{
   font-weight:bold;
 }
 
-/* ===== TWIN CHECKBOXES ===== */
-.twin-row {
-  margin-top:10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:20px;
-}
-
-.twin-row label {
-  font-size:12px;
-  cursor: pointer;
-}
-
 /* ===== ANALYZE BUTTON ===== */
 .analyze-btn {
   width: 90%;
@@ -202,46 +200,155 @@ body{
   box-shadow: 0 0 20px rgba(56,189,248,0.6);
 }
 
-/* ===== GLOW RING ===== */
-.glow-ring-container {
+.analyze-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ===== ASTRO CHART CONTENT (from astro.html) ===== */
+.astro-content {
+  margin-top: 20px;
+  padding: 0 10px;
+}
+
+.astro-header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+
+.astro-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #38bdf8;
+  letter-spacing: 3px;
+  text-shadow: 0 0 10px rgba(56,189,248,0.5);
+}
+
+.astro-birth {
+  margin-top: 10px;
+  color: #FFD700;
+  font-size: 18px;
+}
+
+.astro-sub {
+  margin-top: 6px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.astro-status {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #4ade80;
+}
+
+.astro-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+  gap: 16px;
+  align-items: start;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.astro-card {
+  background: rgba(10,20,35,0.78);
+  border-radius: 20px;
+  border: 1px solid rgba(56,189,248,0.12);
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.chart-card {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 30px;
-  margin-bottom: 30px;
 }
 
-.glow-ring {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  border: 3px solid rgba(56,189,248,0.6);
-  box-shadow: 
-    0 0 20px rgba(56,189,248,0.4),
-    0 0 40px rgba(56,189,248,0.3),
-    0 0 60px rgba(56,189,248,0.2),
-    inset 0 0 20px rgba(56,189,248,0.1);
-  animation: ringPulse 2s ease-in-out infinite alternate;
+#chartSvg {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
 }
 
-@keyframes ringPulse {
-  from {
-    box-shadow: 
-      0 0 20px rgba(56,189,248,0.4),
-      0 0 40px rgba(56,189,248,0.3),
-      0 0 60px rgba(56,189,248,0.2),
-      inset 0 0 20px rgba(56,189,248,0.1);
-    border-color: rgba(56,189,248,0.6);
-  }
-  to {
-    box-shadow: 
-      0 0 30px rgba(56,189,248,0.6),
-      0 0 60px rgba(56,189,248,0.4),
-      0 0 90px rgba(56,189,248,0.3),
-      inset 0 0 30px rgba(56,189,248,0.2);
-    border-color: rgba(56,189,248,0.9);
-  }
+.section-title {
+  color: #FFD700;
+  font-size: 18px;
+  margin-bottom: 10px;
+  text-shadow: 0 0 8px rgba(255,215,0,0.2);
 }
+
+.data-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 80px 1fr 60px;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(148,163,184,0.12);
+  font-size: 12px;
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.name { font-weight: 700; }
+.pos { color: #dbeafe; }
+.house { color: #f6cb71; text-align: right; }
+
+.angles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.angle-box {
+  background: rgba(15,23,42,0.65);
+  border: 1px solid rgba(56,189,248,0.12);
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+}
+
+.angle-label {
+  color: #FFD700;
+  font-size: 10px;
+  margin-bottom: 3px;
+}
+
+.angle-value {
+  color: #dbeafe;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.aspect-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(148,163,184,0.1);
+  font-size: 11px;
+}
+
+.aspect-row:last-child {
+  border-bottom: 0;
+}
+
+.muted {
+  color: #64748b;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.error { color: #fb7185; }
 
 /* ===== BACK BUTTON ===== */
 .back-arrow {
@@ -327,6 +434,15 @@ body {
 }
 
 /* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .astro-layout {
+    grid-template-columns: 1fr;
+  }
+  .astro-title {
+    font-size: 24px;
+  }
+}
+
 @media (max-width: 480px) {
   .tab {
     font-size: 10px;
@@ -337,6 +453,7 @@ body {
   }
 }
 </style>
+<base target="_blank">
 </head>
 <body>
 
@@ -347,13 +464,13 @@ body {
 <div class="title">Astrology App</div>
 
 <!-- TABS - 2 REDA PO 3 -->
-<div class="tabs" id="tabs" style="display:flex;">
-  <div class="tab active" data-tab="astroChart" onclick="openAstroFromTab()">ASTRO CHART</div>
-  <div class="tab" data-tab="transit" onclick="showTab('transit')">TRANSIT</div>
-  <div class="tab" data-tab="retrogradnost" onclick="showTab('retrogradnost')">RETROGRADNOST</div>
-  <div class="tab" data-tab="astrocartography" onclick="showTab('astrocartography')">ASTROCARTOGRAPHY</div>
-  <div class="tab" data-tab="sinastrija" onclick="showTab('sinastrija')">SINASTRIJA</div>
-  <div class="tab" data-tab="lunarPhases" onclick="showTab('lunarPhases')">LUNAR PHASES</div>
+<div class="tabs" id="tabs">
+  <div class="tab active" data-tab="astroChart">ASTRO CHART</div>
+  <div class="tab" data-tab="transit">TRANSIT</div>
+  <div class="tab" data-tab="retrogradnost">RETROGRADNOST</div>
+  <div class="tab" data-tab="astrocartography">ASTROCARTOGRAPHY</div>
+  <div class="tab" data-tab="sinastrija">SINASTRIJA</div>
+  <div class="tab" data-tab="lunarPhases">LUNAR PHASES</div>
 </div>
 
 <!-- ===== ASTRO CHART TAB ===== -->
@@ -365,7 +482,7 @@ body {
       <input type="text" id="input" placeholder="DD.MM.YYYY"
         oninput="formatDate(this)"
         onblur="validateDateInput(this)"
-        onkeypress="if(event.key === 'Enter'){ openAstro(); }"
+        onkeypress="if(event.key === 'Enter'){ analyze(); }"
         maxlength="10"
         autocomplete="off">
     </div>
@@ -373,7 +490,7 @@ body {
     <input type="text" id="timeInput" placeholder="HH:MM"
       oninput="formatTime(this)"
       onblur="validateTimeInput(this)"
-      onkeypress="if(event.key === 'Enter'){ openAstro(); }"
+      onkeypress="if(event.key === 'Enter'){ analyze(); }"
       maxlength="5"
       autocomplete="off">
 
@@ -402,9 +519,56 @@ body {
     (enter your date of birth, time, and place)
   </div>
 
-  <!-- ANALYZE button removed - astro.html opens directly via tab click -->
+  <!-- ANALYZE BUTTON -->
+  <button class="analyze-btn" id="analyzeBtn" onclick="analyze()">ANALYZE</button>
 
-  <!-- GLOW RING - removed along with ANALYZE button -->
+  <!-- ASTRO CHART CONTENT (hidden until analyze) -->
+  <div class="astro-content" id="astroContent" style="display:none;">
+    <div class="astro-header">
+      <div class="astro-title">ASTRO CHART</div>
+      <div class="astro-birth" id="birthLine"></div>
+      <div class="astro-sub">Approximate positions — for precise calculations use professional ephemeris software</div>
+      <div class="astro-status" id="statusLine">Calculating...</div>
+    </div>
+
+    <div class="astro-layout">
+      <div class="astro-card chart-card">
+        <svg id="chartSvg" viewBox="0 0 900 900" role="img" aria-label="Natal chart wheel">
+          <defs>
+            <filter id="glowBlue"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <filter id="glowGold"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <circle cx="450" cy="450" r="370" fill="#020817" stroke="#FFD700" stroke-width="2"/>
+          <circle cx="450" cy="450" r="315" fill="transparent" stroke="#38bdf8" stroke-width="2" opacity=".8"/>
+          <circle cx="450" cy="450" r="185" fill="transparent" stroke="#38bdf8" stroke-width="1" opacity=".5"/>
+          <g id="zodiacLayer"></g>
+          <g id="houseLayer"></g>
+          <g id="aspectLayer"></g>
+          <g id="planetLayer" filter="url(#glowBlue)"></g>
+          <g id="angleLayer"></g>
+        </svg>
+      </div>
+
+      <div>
+        <div class="astro-card">
+          <div class="section-title">Positions</div>
+          <div class="data-grid" id="planetTable"></div>
+        </div>
+        <div class="astro-card">
+          <div class="section-title">Angles</div>
+          <div class="angles" id="angleTable"></div>
+        </div>
+        <div class="astro-card">
+          <div class="section-title">Aspects</div>
+          <div id="aspectTable"></div>
+        </div>
+        <div class="astro-card">
+          <div class="section-title">Calculation</div>
+          <div class="muted" id="calcDetails"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
 
@@ -544,17 +708,15 @@ body {
 <script>
 // ===== GLOBALNE PROMENLJIVE =====
 let skipSavePrompt = false;
-
-// ===== OPEN ASTRO FROM TAB CLICK =====
-function openAstroFromTab(){
-  openAstro();
-}
+let tabsUnlocked = false;
 
 // ===== TAB NAVIGATION =====
 let tabHistory = [];
 const MAX_HISTORY = 10;
 
 function showTab(id) {
+  if (!tabsUnlocked && id !== 'astroChart') return;
+  
   if(tabHistory.length === 0 || tabHistory[tabHistory.length - 1] !== id){
     tabHistory.push(id);
     if(tabHistory.length > MAX_HISTORY) tabHistory.shift();
@@ -566,11 +728,48 @@ function showTab(id) {
   let current = document.getElementById(id);
   if(current) current.classList.add("active");
 
-  let tab = document.querySelector('[data-tab="' + id + '"');
+  let tab = document.querySelector('[data-tab="' + id + '"]');
   if(tab) tab.classList.add("active");
 }
 
-// ===== GO BACK - vraća na index.html sa parametrima =====
+// Tab click handlers
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    const tabId = this.getAttribute('data-tab');
+    if (tabsUnlocked || tabId === 'astroChart') {
+      showTab(tabId);
+    }
+  });
+});
+
+// ===== ANALYZE - otključava tabove i pokreće chart =====
+function analyze() {
+  const date = document.getElementById("input").value;
+  const time = document.getElementById("timeInput").value;
+  const city = document.getElementById("cityInput").value;
+
+  if(!validateDate(date)){
+    alert("Please enter a valid date (DD.MM.YYYY)");
+    return;
+  }
+
+  // Otključaj tabove
+  tabsUnlocked = true;
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.classList.add('unlocked');
+  });
+
+  // Prikaži astro chart
+  document.getElementById("astroContent").style.display = "block";
+  
+  // Pokreni kalkulaciju
+  calculateChart();
+  
+  // Sačuvaj stanje
+  saveAstroReturnState(date, time, city);
+}
+
+// ===== GO BACK =====
 function goBack() {
   const date = document.getElementById("input").value;
   const time = document.getElementById("timeInput").value;
@@ -711,7 +910,7 @@ function setupCityAutocomplete(){
     if(dropdown){
       if(matches.length > 0){
         dropdown.innerHTML = matches.map(function(city){
-          return '<div onclick="selectCity(' + "'" + city.replace(/'/g, "\'") + "'" + ')" style="padding: 8px 12px; cursor: pointer; color: white; font-size: 12px; border-bottom: 1px solid #334155; transition: 0.2s;" onmouseover="this.style.background=\'#0f172a\'" onmouseout="this.style.background=\'transparent\'">' + city + '</div>';
+          return '<div onclick="selectCity(\'' + city.replace(/'/g, "\\'") + '\')" style="padding: 8px 12px; cursor: pointer; color: white; font-size: 12px; border-bottom: 1px solid #334155; transition: 0.2s;" onmouseover="this.style.background=\'#0f172a\'" onmouseout="this.style.background=\'transparent\'">' + city + '</div>';
         }).join('');
         dropdown.style.display = "block";
       } else {
@@ -736,80 +935,49 @@ function selectCity(city){
 
 // ===== CITY COORDS =====
 const cityCoords = {
-  "Belgrade": { lat: 44.7866, lon: 20.4489 },
-  "Zagreb": { lat: 45.8150, lon: 15.9819 },
-  "London": { lat: 51.5074, lon: -0.1278 },
-  "Paris": { lat: 48.8566, lon: 2.3522 },
-  "Berlin": { lat: 52.5200, lon: 13.4050 },
-  "Moscow": { lat: 55.7558, lon: 37.6173 },
-  "New York": { lat: 40.7128, lon: -74.0060 },
-  "Los Angeles": { lat: 34.0522, lon: -118.2437 },
-  "Chicago": { lat: 41.8781, lon: -87.6298 },
-  "Toronto": { lat: 43.6532, lon: -79.3832 },
-  "Sydney": { lat: -33.8688, lon: 151.2093 },
-  "Tokyo": { lat: 35.6762, lon: 139.6503 },
-  "Dubai": { lat: 25.2048, lon: 55.2708 },
-  "Istanbul": { lat: 41.0082, lon: 28.9784 },
-  "Rome": { lat: 41.9028, lon: 12.4964 },
-  "Madrid": { lat: 40.4168, lon: -3.7038 },
-  "Vienna": { lat: 48.2082, lon: 16.3738 },
-  "Budapest": { lat: 47.4979, lon: 19.0402 },
-  "Athens": { lat: 37.9838, lon: 23.7275 },
-  "Bucharest": { lat: 44.4268, lon: 26.1025 },
-  "Sofia": { lat: 42.6977, lon: 23.3219 },
-  "Ljubljana": { lat: 46.0569, lon: 14.5058 },
-  "Prague": { lat: 50.0755, lon: 14.4378 },
-  "Warsaw": { lat: 52.2297, lon: 21.0122 },
-  "Amsterdam": { lat: 52.3676, lon: 4.9041 },
-  "Zurich": { lat: 47.3769, lon: 8.5417 },
-  "Stockholm": { lat: 59.3293, lon: 18.0686 },
-  "Oslo": { lat: 59.9139, lon: 10.7522 },
-  "Dublin": { lat: 53.3498, lon: -6.2603 },
-  "Lisbon": { lat: 38.7223, lon: -9.1393 },
-  "Cairo": { lat: 30.0444, lon: 31.2357 },
-  "Johannesburg": { lat: -26.2041, lon: 28.0473 },
-  "Singapore": { lat: 1.3521, lon: 103.8198 },
-  "Hong Kong": { lat: 22.3193, lon: 114.1694 },
-  "Seoul": { lat: 37.5665, lon: 126.9780 },
-  "Beijing": { lat: 39.9042, lon: 116.4074 },
-  "Mumbai": { lat: 19.0760, lon: 72.8777 },
-  "New Delhi": { lat: 28.6139, lon: 77.2090 },
-  "Mexico City": { lat: 19.4326, lon: -99.1332 },
-  "Buenos Aires": { lat: -34.6037, lon: -58.3816 },
-  "Sao Paulo": { lat: -23.5505, lon: -46.6333 },
-  "São Paulo": { lat: -23.5505, lon: -46.6333 }
+  "Belgrade": { lat: 44.7866, lon: 20.4489, tz: "Europe/Belgrade" },
+  "Zagreb": { lat: 45.8150, lon: 15.9819, tz: "Europe/Zagreb" },
+  "London": { lat: 51.5074, lon: -0.1278, tz: "Europe/London" },
+  "Paris": { lat: 48.8566, lon: 2.3522, tz: "Europe/Paris" },
+  "Berlin": { lat: 52.5200, lon: 13.4050, tz: "Europe/Berlin" },
+  "Moscow": { lat: 55.7558, lon: 37.6173, tz: "Europe/Moscow" },
+  "New York": { lat: 40.7128, lon: -74.0060, tz: "America/New_York" },
+  "Los Angeles": { lat: 34.0522, lon: -118.2437, tz: "America/Los_Angeles" },
+  "Chicago": { lat: 41.8781, lon: -87.6298, tz: "America/Chicago" },
+  "Toronto": { lat: 43.6532, lon: -79.3832, tz: "America/Toronto" },
+  "Sydney": { lat: -33.8688, lon: 151.2093, tz: "Australia/Sydney" },
+  "Tokyo": { lat: 35.6762, lon: 139.6503, tz: "Asia/Tokyo" },
+  "Dubai": { lat: 25.2048, lon: 55.2708, tz: "Asia/Dubai" },
+  "Istanbul": { lat: 41.0082, lon: 28.9784, tz: "Europe/Istanbul" },
+  "Rome": { lat: 41.9028, lon: 12.4964, tz: "Europe/Rome" },
+  "Madrid": { lat: 40.4168, lon: -3.7038, tz: "Europe/Madrid" },
+  "Vienna": { lat: 48.2082, lon: 16.3738, tz: "Europe/Vienna" },
+  "Budapest": { lat: 47.4979, lon: 19.0402, tz: "Europe/Budapest" },
+  "Athens": { lat: 37.9838, lon: 23.7275, tz: "Europe/Athens" },
+  "Bucharest": { lat: 44.4268, lon: 26.1025, tz: "Europe/Bucharest" },
+  "Sofia": { lat: 42.6977, lon: 23.3219, tz: "Europe/Sofia" },
+  "Ljubljana": { lat: 46.0569, lon: 14.5058, tz: "Europe/Ljubljana" },
+  "Prague": { lat: 50.0755, lon: 14.4378, tz: "Europe/Prague" },
+  "Warsaw": { lat: 52.2297, lon: 21.0122, tz: "Europe/Warsaw" },
+  "Amsterdam": { lat: 52.3676, lon: 4.9041, tz: "Europe/Amsterdam" },
+  "Zurich": { lat: 47.3769, lon: 8.5417, tz: "Europe/Zurich" },
+  "Stockholm": { lat: 59.3293, lon: 18.0686, tz: "Europe/Stockholm" },
+  "Oslo": { lat: 59.9139, lon: 10.7522, tz: "Europe/Oslo" },
+  "Dublin": { lat: 53.3498, lon: -6.2603, tz: "Europe/Dublin" },
+  "Lisbon": { lat: 38.7223, lon: -9.1393, tz: "Europe/Lisbon" },
+  "Cairo": { lat: 30.0444, lon: 31.2357, tz: "Africa/Cairo" },
+  "Johannesburg": { lat: -26.2041, lon: 28.0473, tz: "Africa/Johannesburg" },
+  "Singapore": { lat: 1.3521, lon: 103.8198, tz: "Asia/Singapore" },
+  "Hong Kong": { lat: 22.3193, lon: 114.1694, tz: "Asia/Hong_Kong" },
+  "Seoul": { lat: 37.5665, lon: 126.9780, tz: "Asia/Seoul" },
+  "Beijing": { lat: 39.9042, lon: 116.4074, tz: "Asia/Shanghai" },
+  "Mumbai": { lat: 19.0760, lon: 72.8777, tz: "Asia/Kolkata" },
+  "New Delhi": { lat: 28.6139, lon: 77.2090, tz: "Asia/Kolkata" },
+  "Mexico City": { lat: 19.4326, lon: -99.1332, tz: "America/Mexico_City" },
+  "Buenos Aires": { lat: -34.6037, lon: -58.3816, tz: "America/Argentina/Buenos_Aires" },
+  "Sao Paulo": { lat: -23.5505, lon: -46.6333, tz: "America/Sao_Paulo" },
+  "São Paulo": { lat: -23.5505, lon: -46.6333, tz: "America/Sao_Paulo" }
 };
-
-// ===== OPEN ASTRO - prenosi sve podatke u astro.html =====
-function openAstro(){
-  const date = document.getElementById("input").value;
-  const time = document.getElementById("timeInput").value;
-  const city = document.getElementById("cityInput").value;
-
-  if(!validateDate(date)){
-    alert("Please enter a valid date (DD.MM.YYYY)");
-    return;
-  }
-
-  const coords = cityCoords[city] || null;
-  const extraParams = coords
-    ? '&lat=' + encodeURIComponent(coords.lat) + '&lon=' + encodeURIComponent(coords.lon)
-    : "";
-
-  // Sačuvaj stanje za povratak
-  saveAstroReturnState(date, time, city);
-
-  const returnUrl = encodeURIComponent(window.location.href);
-  const fromPage = encodeURIComponent("chart.html");
-
-  window.location.href =
-    'astro.html?date=' + encodeURIComponent(date) +
-    '&time=' + encodeURIComponent(time) +
-    '&city=' + encodeURIComponent(city) +
-    extraParams +
-    '&from=' + fromPage +
-    '&returnUrl=' + returnUrl;
-}
 
 // ===== SAVE ASTRO RETURN STATE =====
 function saveAstroReturnState(date, time, city){
@@ -962,6 +1130,341 @@ function renderSavedList(){
   container.innerHTML = html;
 }
 
+// ===== ASTRO CHART CALCULATION (from astro.html) =====
+const NS = "http://www.w3.org/2000/svg";
+const centerX = 450;
+const centerY = 450;
+const signSymbols = ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"];
+const signNames = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
+const planets = [
+  {name:"Sun", symbol:"☉", color:"#FFD700"},
+  {name:"Moon", symbol:"☽", color:"#C0C0C0"},
+  {name:"Mercury", symbol:"☿", color:"#FFA500"},
+  {name:"Venus", symbol:"♀", color:"#FF69B4"},
+  {name:"Mars", symbol:"♂", color:"#FF4500"},
+  {name:"Jupiter", symbol:"♃", color:"#DAA520"},
+  {name:"Saturn", symbol:"♄", color:"#708090"},
+  {name:"Uranus", symbol:"♅", color:"#00CED1"},
+  {name:"Neptune", symbol:"♆", color:"#4169E1"},
+  {name:"Pluto", symbol:"♇", color:"#B569FF"}
+];
+
+function parseDate(value){
+  const match = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(value);
+  if(!match) throw new Error("Use date format DD.MM.YYYY");
+  return {day:+match[1], month:+match[2], year:+match[3]};
+}
+
+function parseTime(value){
+  const match = /^(\d{2}):(\d{2})$/.exec(value || "12:00");
+  if(!match) return {hours:12, minutes:0};
+  return {hours:+match[1], minutes:+match[2]};
+}
+
+function getZonedOffsetMinutes(year, month, day, hour, minute, timeZone){
+  const utcGuess = Date.UTC(year, month - 1, day, hour, minute);
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone, hour12:false, year:"numeric", month:"2-digit", day:"2-digit",
+    hour:"2-digit", minute:"2-digit", second:"2-digit"
+  }).formatToParts(new Date(utcGuess)).reduce((acc, p) => (acc[p.type] = p.value, acc), {});
+  const asUTC = Date.UTC(+parts.year, +parts.month - 1, +parts.day, +parts.hour, +parts.minute, +parts.second);
+  return (asUTC - utcGuess) / 60000;
+}
+
+function localBirthToUtc(date, time, coords){
+  if(coords.tz){
+    const offset = getZonedOffsetMinutes(date.year, date.month, date.day, time.hours, time.minutes, coords.tz);
+    return {utc:new Date(Date.UTC(date.year, date.month - 1, date.day, time.hours, time.minutes) - offset * 60000), method:`IANA timezone ${coords.tz}`};
+  }
+  const offset = Math.round(coords.lon / 15 * 60);
+  return {utc:new Date(Date.UTC(date.year, date.month - 1, date.day, time.hours, time.minutes) - offset * 60000), method:"estimated timezone from longitude"};
+}
+
+function julianDay(date){
+  return date.getTime() / 86400000 + 2440587.5;
+}
+
+function normalize(deg){
+  deg %= 360;
+  return deg < 0 ? deg + 360 : deg;
+}
+
+function toRad(deg){ return deg * Math.PI / 180; }
+
+function fallbackPlanetLongitude(jd, name){
+  const T = (jd - 2451545.0) / 36525;
+  let M = 0, L = 0;
+  switch(name){
+    case "Sun":
+      M = 357.52911 + 35999.05029 * T;
+      L = 280.46646 + 36000.76983 * T + 1.914602 * Math.sin(toRad(M)) + .019993 * Math.sin(toRad(2*M));
+      break;
+    case "Moon":
+      M = 134.963 + 477198.867 * T;
+      L = 218.316 + 481267.881 * T + 6.289 * Math.sin(toRad(M));
+      break;
+    case "Mercury":
+      M = 174.796 + 149472.515 * T;
+      L = 252.251 + 149472.674 * T + 23.44 * Math.sin(toRad(M)) + 2.98 * Math.sin(toRad(2*M));
+      break;
+    case "Venus":
+      M = 50.416 + 58519.813 * T;
+      L = 181.980 + 58517.816 * T + .775 * Math.sin(toRad(M));
+      break;
+    case "Mars":
+      M = 19.373 + 19140.299 * T;
+      L = 355.433 + 19140.299 * T + 10.691 * Math.sin(toRad(M));
+      break;
+    case "Jupiter":
+      M = 20.020 + 3034.906 * T;
+      L = 34.351 + 3034.906 * T + 5.555 * Math.sin(toRad(M));
+      break;
+    case "Saturn":
+      M = 317.020 + 1222.114 * T;
+      L = 50.077 + 1222.114 * T + 6.406 * Math.sin(toRad(M));
+      break;
+    case "Uranus":
+      M = 141.050 + 428.467 * T;
+      L = 314.055 + 428.467 * T + 5.332 * Math.sin(toRad(M));
+      break;
+    case "Neptune":
+      M = 256.225 + 218.459 * T;
+      L = 304.348 + 218.459 * T + 2.552 * Math.sin(toRad(M));
+      break;
+    case "Pluto":
+      L = 238.929 + 145.208 * T + 17.1 * Math.sin(toRad(238.9 + 145.2 * T));
+      break;
+  }
+  return normalize(L);
+}
+
+function gmst(jd){
+  const T = (jd - 2451545.0) / 36525;
+  return normalize(280.46061837 + 360.98564736629 * (jd - 2451545) + .000387933 * T*T - T*T*T / 38710000);
+}
+
+function calculateAscMc(jd, lat, lon){
+  const eps = toRad(23.439291);
+  const theta = toRad(normalize(gmst(jd) + lon));
+  const phi = toRad(lat);
+  const mc = normalize(Math.atan2(Math.sin(theta), Math.cos(theta) * Math.cos(eps)) * 180 / Math.PI);
+  const asc = normalize(Math.atan2(-Math.cos(theta), Math.sin(theta) * Math.cos(eps) + Math.tan(phi) * Math.sin(eps)) * 180 / Math.PI);
+  return {asc, mc};
+}
+
+function equalHouses(asc){
+  return Array.from({length:12}, (_, i) => normalize(asc + i * 30));
+}
+
+function signOf(longitude){
+  const index = Math.floor(normalize(longitude) / 30) % 12;
+  return {index, name:signNames[index], symbol:signSymbols[index], degree:normalize(longitude) % 30};
+}
+
+function formatPos(longitude){
+  const s = signOf(longitude);
+  const deg = Math.floor(s.degree);
+  const min = Math.round((s.degree - deg) * 60);
+  return `${s.symbol} ${s.name} ${deg}\u00B0${String(min).padStart(2,"0")}'`;
+}
+
+function getHouse(longitude, cusps){
+  const p = normalize(longitude);
+  for(let i = 0; i < 12; i++){
+    const c1 = normalize(cusps[i]);
+    const c2 = normalize(cusps[(i + 1) % 12]);
+    if(c2 < c1){
+      if(p >= c1 || p < c2) return i + 1;
+    }else if(p >= c1 && p < c2){
+      return i + 1;
+    }
+  }
+  return 1;
+}
+
+function findAspects(data){
+  const defs = [
+    {name:"Conjunction", angle:0, orb:8, color:"#FFD700"},
+    {name:"Sextile", angle:60, orb:5, color:"#38bdf8"},
+    {name:"Square", angle:90, orb:6, color:"#fb7185"},
+    {name:"Trine", angle:120, orb:6, color:"#4ade80"},
+    {name:"Opposition", angle:180, orb:8, color:"#fb7185"}
+  ];
+  const found = [];
+  for(let i = 0; i < data.length; i++){
+    for(let j = i + 1; j < data.length; j++){
+      let diff = Math.abs(data[i].longitude - data[j].longitude);
+      if(diff > 180) diff = 360 - diff;
+      for(const a of defs){
+        const orb = Math.abs(diff - a.angle);
+        if(orb <= a.orb) found.push({...a, p1:data[i], p2:data[j], orb});
+      }
+    }
+  }
+  return found.sort((a,b) => a.orb - b.orb);
+}
+
+function svgEl(name, attrs, text){
+  const el = document.createElementNS(NS, name);
+  Object.entries(attrs || {}).forEach(([k,v]) => el.setAttribute(k, v));
+  if(text !== undefined) el.textContent = text;
+  return el;
+}
+
+function point(longitude, radius, asc){
+  const angle = toRad(longitude - asc + 180);
+  return {x:centerX + radius * Math.cos(angle), y:centerY + radius * Math.sin(angle)};
+}
+
+function renderWheel(data, cusps, asc, mc, aspects){
+  ["zodiacLayer","houseLayer","aspectLayer","planetLayer","angleLayer"].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.replaceChildren();
+  });
+  
+  const zodiacLayer = document.getElementById("zodiacLayer");
+  const houseLayer = document.getElementById("houseLayer");
+  const aspectLayer = document.getElementById("aspectLayer");
+  const planetLayer = document.getElementById("planetLayer");
+  const angleLayer = document.getElementById("angleLayer");
+
+  for(let i = 0; i < 12; i++){
+    const mid = i * 30 + 15;
+    const p = point(mid, 338, asc);
+    if(zodiacLayer) zodiacLayer.appendChild(svgEl("text", {x:p.x, y:p.y, fill:"#FFD700", "font-size":42, "text-anchor":"middle", "dominant-baseline":"middle", filter:"url(#glowGold)"}, signSymbols[i]));
+    for(let d = 0; d < 30; d += 5){
+      const a = i * 30 + d;
+      const p1 = point(a, d === 0 ? 315 : 326, asc);
+      const p2 = point(a, 370, asc);
+      if(houseLayer) houseLayer.appendChild(svgEl("line", {x1:p1.x, y1:p1.y, x2:p2.x, y2:p2.y, stroke:d === 0 ? "#FFD700" : "#334155", "stroke-width":d === 0 ? 1.6 : .8, opacity:.75}));
+    }
+  }
+
+  cusps.forEach((cusp, i) => {
+    const p1 = point(cusp, 185, asc);
+    const p2 = point(cusp, 370, asc);
+    const major = i === 0 || i === 3 || i === 6 || i === 9;
+    if(houseLayer) houseLayer.appendChild(svgEl("line", {x1:p1.x, y1:p1.y, x2:p2.x, y2:p2.y, stroke:major ? "#FFD700" : "#38bdf8", "stroke-width":major ? 2.4 : 1, opacity:major ? .95 : .5}));
+    const num = point(normalize(cusp + 15), 215, asc);
+    if(houseLayer) houseLayer.appendChild(svgEl("text", {x:num.x, y:num.y, fill:"#94a3b8", "font-size":18, "text-anchor":"middle", "dominant-baseline":"middle"}, String(i + 1)));
+  });
+
+  aspects.slice(0, 24).forEach(a => {
+    const p1 = point(a.p1.longitude, 185, asc);
+    const p2 = point(a.p2.longitude, 185, asc);
+    if(aspectLayer) aspectLayer.appendChild(svgEl("line", {x1:p1.x, y1:p1.y, x2:p2.x, y2:p2.y, stroke:a.color, "stroke-width":1.4, opacity:.42}));
+  });
+
+  const used = [];
+  data.forEach(p => {
+    const base = point(p.longitude, 260, asc);
+    let x = base.x, y = base.y;
+    used.forEach(u => {
+      if(Math.hypot(x - u.x, y - u.y) < 34){
+        x += 18;
+        y += 12;
+      }
+    });
+    used.push({x,y});
+    if(planetLayer) planetLayer.appendChild(svgEl("circle", {cx:x, cy:y, r:22, fill:"rgba(2,8,23,.92)", stroke:p.color, "stroke-width":2}));
+    if(planetLayer) planetLayer.appendChild(svgEl("text", {x, y:y + 1, fill:p.color, "font-size":32, "text-anchor":"middle", "dominant-baseline":"middle"}, p.symbol));
+    const tick = point(p.longitude, 315, asc);
+    if(planetLayer) planetLayer.appendChild(svgEl("line", {x1:base.x, y1:base.y, x2:tick.x, y2:tick.y, stroke:p.color, "stroke-width":1, opacity:.55}));
+  });
+
+  [{label:"ASC", lon:asc}, {label:"MC", lon:mc}, {label:"DSC", lon:normalize(asc + 180)}, {label:"IC", lon:normalize(mc + 180)}].forEach(a => {
+    const p = point(a.lon, 398, asc);
+    if(angleLayer) angleLayer.appendChild(svgEl("text", {x:p.x, y:p.y, fill:"#FFD700", "font-size":23, "font-weight":"700", "text-anchor":"middle", "dominant-baseline":"middle"}, a.label));
+  });
+}
+
+function renderTables(data, cusps, asc, mc, aspects, details){
+  const planetTable = document.getElementById("planetTable");
+  const angleTable = document.getElementById("angleTable");
+  const aspectTable = document.getElementById("aspectTable");
+  const calcDetails = document.getElementById("calcDetails");
+
+  if(planetTable) planetTable.innerHTML = data.map(p => `
+    <div class="row">
+      <div class="name" style="color:${p.color}">${p.symbol} ${p.name}</div>
+      <div class="pos">${formatPos(p.longitude)}</div>
+      <div class="house">House ${p.house}</div>
+    </div>`).join("");
+
+  const angleData = [
+    ["ASC", asc], ["MC", mc], ["DSC", normalize(asc + 180)], ["IC", normalize(mc + 180)]
+  ];
+  if(angleTable) angleTable.innerHTML = angleData.map(([name, lon]) => `
+    <div class="angle-box"><div class="angle-label">${name}</div><div class="angle-value">${formatPos(lon)}</div></div>`).join("");
+
+  if(aspectTable) aspectTable.innerHTML = aspects.length
+    ? aspects.slice(0, 12).map(a => `<div class="aspect-row"><span style="color:${a.color}">${a.p1.name} - ${a.p2.name}</span><span>${a.name}</span><span>${a.orb.toFixed(1)}&deg;</span></div>`).join("")
+    : `<div class="muted">No major aspects inside the selected orbs.</div>`;
+
+  if(calcDetails) calcDetails.innerHTML = `
+    Source: ${details.source}<br>
+    Time conversion: ${details.timeMethod}<br>
+    UTC used: ${details.utc.toISOString().replace("T"," ").slice(0,16)}<br>
+    Location: ${details.lat.toFixed(4)}, ${details.lon.toFixed(4)}<br>
+    Houses: ${details.houseSystem}
+  `;
+}
+
+function calculateChart(){
+  try{
+    const birthDate = document.getElementById("input").value;
+    const birthTime = document.getElementById("timeInput").value;
+    const birthCity = document.getElementById("cityInput").value;
+
+    document.getElementById("birthLine").textContent = [birthDate, birthTime, birthCity].filter(Boolean).join(" ");
+
+    const date = parseDate(birthDate);
+    const time = parseTime(birthTime);
+    const knownCity = cityCoords[birthCity] || {};
+    const coords = {
+      lat: knownCity.lat,
+      lon: knownCity.lon,
+      tz: knownCity.tz
+    };
+    if(!Number.isFinite(coords.lat) || !Number.isFinite(coords.lon)){
+      coords.lat = 44.7866;
+      coords.lon = 20.4489;
+      coords.tz = "Europe/Belgrade";
+    }
+
+    const converted = localBirthToUtc(date, time, coords);
+    const jd = julianDay(converted.utc);
+    let source = "browser formulas";
+    let houseSystem = "Equal house fallback";
+    let data;
+    let cusps;
+    let ascMc;
+
+    data = planets.map(p => ({...p, longitude:fallbackPlanetLongitude(jd, p.name)}));
+    ascMc = calculateAscMc(jd, coords.lat, coords.lon);
+    cusps = equalHouses(ascMc.asc);
+
+    data.forEach(p => p.house = getHouse(p.longitude, cusps));
+    const aspects = findAspects(data);
+    renderWheel(data, cusps, ascMc.asc, ascMc.mc, aspects);
+    renderTables(data, cusps, ascMc.asc, ascMc.mc, aspects, {
+      source, houseSystem, utc:converted.utc, timeMethod:converted.method, lat:coords.lat, lon:coords.lon
+    });
+    
+    const statusLine = document.getElementById("statusLine");
+    if(statusLine) statusLine.textContent = "Calculated with built-in fallback formulas.";
+    if(converted.method.startsWith("estimated")){
+      if(statusLine) statusLine.textContent += " Timezone is estimated for this city.";
+    }
+  }catch(error){
+    const statusLine = document.getElementById("statusLine");
+    if(statusLine){
+      statusLine.textContent = error.message;
+      statusLine.classList.add("error");
+    }
+  }
+}
+
 // ===== INIT =====
 window.onload = function(){
   setupCityAutocomplete();
@@ -977,7 +1480,6 @@ window.onload = function(){
   if(date) document.getElementById("input").value = date;
   if(time) document.getElementById("timeInput").value = time;
   if(city) document.getElementById("cityInput").value = city;
-  // Twin checkboxes removed - no longer needed
 };
 </script>
 
