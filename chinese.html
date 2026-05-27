@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chinese Zodiac</title>
+<script src="app-shared-state.js"></script>
+<script src="app-notification-open.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#0f172a;color:white;text-align:center;margin:0;padding:5px;overflow-x:hidden}
+.header-bar{position:relative;width:100%;padding:10px 12px;display:flex;align-items:center;justify-content:center;min-height:50px}
+.left-bar{position:absolute;top:10px;left:12px;z-index:20;display:flex;align-items:center;gap:6px}
+.left-btn,.action-btn{width:30px;height:30px;border-radius:8px;background:#1e293b;border:1px solid rgba(248,113,113,.32);color:#fca5a5;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;padding:0;flex:none}
+.left-btn:hover,.action-btn:hover{color:#ef4444;border-color:#ef4444;box-shadow:0 0 12px rgba(239,68,68,.38)}
+.left-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.action-btn svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.header-title{font-size:clamp(14px,5vw,23px);font-weight:bold;color:#ff3b3b;letter-spacing:1px;text-shadow:0 0 14px rgba(239,68,68,.46);padding:0 72px;white-space:nowrap;overflow:hidden;line-height:30px}
+.top-bar{position:absolute;top:10px;right:12px;z-index:20}.action-group{display:flex;align-items:center;gap:6px}
+.container{width:100%;max-width:920px;margin:auto;padding:12px}
+.subtitle{margin-top:3px;color:#fca5a5;font-size:12px;opacity:.82}
+.input-card{background:transparent;border:none;padding:8px 0 4px;margin-top:8px}
+.input-line{display:flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;flex-wrap:nowrap!important;width:100%!important;max-width:360px!important;margin:0 auto!important;padding:0 4px!important}
+.input-line input{width:var(--birth-field-width,82px)!important;flex:0 0 var(--birth-field-width,82px)!important;height:var(--birth-field-height,30px)!important;min-height:var(--birth-field-height,30px)!important;background:#1e293b;border:1px solid #ef4444;color:white;border-radius:8px!important;padding:0 6px!important;font-size:var(--birth-field-font,11px)!important;outline:none;box-shadow:0 0 10px rgba(239,68,68,.28);text-align:center;box-sizing:border-box!important}
+.primary-btn{height:34px;border:none;border-radius:8px;background:linear-gradient(135deg,#ef4444,#991b1b);color:white;font-size:12px;font-weight:800;letter-spacing:.5px;padding:0 14px;cursor:pointer;box-shadow:0 0 12px rgba(239,68,68,.35)}
+.main-action-row{display:flex;justify-content:center;margin-top:10px}
+.main-action-row .primary-btn{min-width:130px}
+.primary-btn:hover{box-shadow:0 0 18px rgba(239,68,68,.6);transform:translateY(-1px)}
+.savedIconBox{width:34px!important;height:34px!important;min-width:34px!important;flex:0 0 34px!important;background:#1e293b;border-radius:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(239,68,68,.3);border:1px solid #ef4444;position:relative;cursor:pointer;transition:.3s;color:#fecaca}
+.savedCountBox{position:absolute;top:-8px;right:-8px;background:#450a0a;color:#fecaca;font-size:9px;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;font-weight:bold;border:1px solid rgba(248,113,113,.55)}
+.savedPanel{display:none;position:fixed;top:58px;right:0;width:280px;height:calc(100% - 58px);background:#1e293b;z-index:9000;padding:46px 15px 20px;overflow-y:auto;box-shadow:-5px 0 20px rgba(239,68,68,.18);border-left:1px solid rgba(239,68,68,.45)}
+.savedPanelClose{position:absolute;top:14px;left:15px;font-size:20px;color:#ff3b3b;cursor:pointer}
+.savedPanelTitle{color:#ff3b3b;margin-bottom:15px;font-size:14px;text-shadow:0 0 10px rgba(239,68,68,.36)}
+.savedItem{background:#0f172a;border:1px solid rgba(248,113,113,.24);border-radius:8px;padding:10px;margin-bottom:8px;text-align:left;cursor:pointer}
+.savedItem:hover{border-color:#ef4444;box-shadow:0 0 10px rgba(239,68,68,.25)}
+.tabs{display:flex;justify-content:center;gap:6px;margin:12px auto 4px;max-width:650px;padding:0 8px;flex-wrap:wrap}
+.tab{min-height:34px;border-radius:8px;background:#1e293b;border:1px solid rgba(248,113,113,.22);color:#fca5a5;font-size:11px;font-weight:800;letter-spacing:.4px;cursor:pointer;transition:.25s;padding:0 12px}
+.tab:hover,.tab.active{color:white;border-color:#ef4444;box-shadow:0 0 12px rgba(239,68,68,.3);background:#334155}
+.panel{display:none}.panel.active{display:block}
+.card{background:rgba(10,20,35,.78);border-radius:12px;border:1px solid rgba(248,113,113,.18);padding:14px;margin-top:14px;box-shadow:0 0 22px rgba(0,0,0,.18)}
+.section-title{color:#ff3b3b;font-size:17px;line-height:1.25;margin-bottom:12px;text-shadow:0 0 10px rgba(239,68,68,.28)}
+.hero-animal{font-size:68px;line-height:1;margin:12px 0 8px;text-shadow:0 0 20px rgba(239,68,68,.45)}
+.big-name{font-size:30px;color:#fff;font-weight:900;letter-spacing:1px}
+.meta{color:#fca5a5;font-size:13px;margin-top:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:12px}
+.box{background:#1e293b;border:1px solid rgba(248,113,113,.15);border-radius:10px;padding:11px;text-align:left}
+.label{font-size:10px;color:#fb7185;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
+.value{font-size:13px;color:#fee2e2;line-height:1.45}
+.text-block{color:#fee2e2;font-size:13px;line-height:1.6;text-align:left}
+.compat-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:10px}
+.pill{background:#1e293b;border:1px solid rgba(248,113,113,.18);border-radius:10px;padding:9px;color:#fee2e2;font-size:12px}
+.year-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(74px,1fr));gap:7px;margin-top:10px}
+.year-cell{background:#1e293b;border:1px solid rgba(248,113,113,.14);border-radius:8px;padding:8px;font-size:11px;color:#fecaca}
+.coming-note{margin-top:10px;color:#fca5a5;font-size:11px;line-height:1.4;opacity:.8}
+@media(max-width:460px){.header-title{font-size:14px;padding:0 66px}.input-line{gap:6px}.tab{flex:1;padding:0 6px}.hero-animal{font-size:58px}}
+</style>
+</head>
+<body>
+<div class="header-bar">
+  <div class="left-bar">
+    <button class="left-btn" onclick="goBack()" title="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"></path></svg></button>
+    <button class="left-btn" onclick="exitApp()" title="Exit"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg></button>
+  </div>
+  <div>
+    <div class="header-title">CHINESE ZODIAC</div>
+    <div class="subtitle">animal, element, yin-yang, compatibility and yearly rhythm</div>
+  </div>
+  <div class="top-bar">
+    <div class="action-group">
+      <button class="action-btn" type="button" onclick="sharePage()" title="Share"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg></button>
+      <button class="action-btn" type="button" onclick="window.print()" title="Print"><svg viewBox="0 0 24 24"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><path d="M6 14h12v8H6z"></path></svg></button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="input-card">
+    <div class="input-line">
+      <input id="birthDate" type="text" placeholder="DD.MM.YYYY" maxlength="10">
+      <input id="birthTime" type="text" placeholder="HH:MM" maxlength="5">
+      <input id="birthCity" type="text" placeholder="City">
+      <div class="savedIconBox" onclick="toggleSavedPanel()" title="Saved profiles">
+        <svg viewBox="0 0 24 24" style="width:19px;height:19px;fill:none;stroke:#ef4444;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px rgba(239,68,68,0.65))"><path d="M8 4h8"></path><path d="M9 2h6a1 1 0 0 1 1 1v2H8V3a1 1 0 0 1 1-1z"></path><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="M8 11h8"></path><path d="M8 16h5"></path></svg>
+        <span id="savedCountBox" class="savedCountBox">0</span>
+      </div>
+    </div>
+    <div class="main-action-row">
+      <button class="primary-btn" onclick="calculateChinese()">GO</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="overview" onclick="showTab('overview')">Overview</button>
+    <button class="tab" data-tab="element" onclick="showTab('element')">Element</button>
+    <button class="tab" data-tab="compat" onclick="showTab('compat')">Compatibility</button>
+    <button class="tab" data-tab="today" onclick="showTab('today')">Today</button>
+    <button class="tab" data-tab="years" onclick="showTab('years')">Years</button>
+    <button class="tab" data-tab="signs" onclick="showTab('signs')">Signs</button>
+  </div>
+
+  <div id="overview" class="panel active">
+    <div class="card">
+      <div class="section-title">Your Chinese Zodiac</div>
+      <div id="animalIcon" class="hero-animal">?</div>
+      <div id="animalName" class="big-name">Enter birth data</div>
+      <div id="animalMeta" class="meta">Owner profile will be used automatically when available.</div>
+      <div class="grid" id="overviewGrid"></div>
+    </div>
+  </div>
+
+  <div id="element" class="panel">
+    <div class="card">
+      <div class="section-title">Element And Polarity</div>
+      <div id="elementText" class="text-block"></div>
+      <div class="grid" id="elementGrid"></div>
+    </div>
+  </div>
+
+  <div id="compat" class="panel">
+    <div class="card">
+      <div class="section-title">Compatibility</div>
+      <div id="compatText" class="text-block"></div>
+      <div class="compat-list" id="compatList"></div>
+    </div>
+  </div>
+
+  <div id="today" class="panel">
+    <div class="card">
+      <div class="section-title">Today's Chinese Rhythm</div>
+      <div id="todayText" class="text-block"></div>
+      <div class="grid" id="todayGrid"></div>
+    </div>
+  </div>
+
+  <div id="years" class="panel">
+    <div class="card">
+      <div class="section-title">Recent And Coming Years</div>
+      <div class="year-grid" id="yearGrid"></div>
+    </div>
+  </div>
+
+  <div id="signs" class="panel">
+    <div class="card">
+      <div class="section-title">All Chinese Signs</div>
+      <div class="grid" id="signsGrid"></div>
+    </div>
+  </div>
+</div>
+
+<div id="savedPanel" class="savedPanel">
+  <div class="savedPanelClose" onclick="toggleSavedPanel()">X</div>
+  <div class="savedPanelTitle">SAVED PROFILES</div>
+  <div id="savedList"></div>
+</div>
+
+<script>
+const animals = [
+  {key:"Rat",icon:"R",traits:"quick, observant, strategic, socially alert",best:["Dragon","Monkey","Ox"],hard:["Horse","Goat"]},
+  {key:"Ox",icon:"O",traits:"steady, loyal, patient, practical",best:["Rat","Snake","Rooster"],hard:["Goat","Horse"]},
+  {key:"Tiger",icon:"T",traits:"brave, magnetic, intense, independent",best:["Horse","Dog","Pig"],hard:["Monkey","Snake"]},
+  {key:"Rabbit",icon:"Rb",traits:"gentle, diplomatic, artistic, sensitive",best:["Goat","Pig","Dog"],hard:["Rooster","Dragon"]},
+  {key:"Dragon",icon:"D",traits:"powerful, visionary, proud, charismatic",best:["Rat","Monkey","Rooster"],hard:["Dog","Rabbit"]},
+  {key:"Snake",icon:"S",traits:"wise, private, intuitive, elegant",best:["Ox","Rooster","Monkey"],hard:["Pig","Tiger"]},
+  {key:"Horse",icon:"H",traits:"free, expressive, fast, passionate",best:["Tiger","Dog","Goat"],hard:["Rat","Ox"]},
+  {key:"Goat",icon:"G",traits:"creative, soft, empathic, refined",best:["Rabbit","Pig","Horse"],hard:["Ox","Rat"]},
+  {key:"Monkey",icon:"M",traits:"clever, playful, inventive, restless",best:["Rat","Dragon","Snake"],hard:["Tiger","Pig"]},
+  {key:"Rooster",icon:"Ro",traits:"precise, stylish, honest, disciplined",best:["Ox","Snake","Dragon"],hard:["Rabbit","Dog"]},
+  {key:"Dog",icon:"Do",traits:"loyal, protective, sincere, fair",best:["Tiger","Horse","Rabbit"],hard:["Dragon","Rooster"]},
+  {key:"Pig",icon:"P",traits:"warm, generous, sensual, sincere",best:["Rabbit","Goat","Tiger"],hard:["Snake","Monkey"]}
+];
+const elements = {
+  Wood:"growth, kindness, imagination and long-term vision",
+  Fire:"visibility, courage, passion and fast transformation",
+  Earth:"stability, care, responsibility and grounded building",
+  Metal:"clarity, discipline, standards and inner strength",
+  Water:"intuition, flexibility, emotional intelligence and timing"
+};
+const chineseNewYear = {
+  1900:"31.01",1901:"19.02",1902:"08.02",1903:"29.01",1904:"16.02",1905:"04.02",1906:"25.01",1907:"13.02",1908:"02.02",1909:"22.01",
+  1910:"10.02",1911:"30.01",1912:"18.02",1913:"06.02",1914:"26.01",1915:"14.02",1916:"03.02",1917:"23.01",1918:"11.02",1919:"01.02",
+  1920:"20.02",1921:"08.02",1922:"28.01",1923:"16.02",1924:"05.02",1925:"24.01",1926:"13.02",1927:"02.02",1928:"23.01",1929:"10.02",
+  1930:"30.01",1931:"17.02",1932:"06.02",1933:"26.01",1934:"14.02",1935:"04.02",1936:"24.01",1937:"11.02",1938:"31.01",1939:"19.02",
+  1940:"08.02",1941:"27.01",1942:"15.02",1943:"05.02",1944:"25.01",1945:"13.02",1946:"02.02",1947:"22.01",1948:"10.02",1949:"29.01",
+  1950:"17.02",1951:"06.02",1952:"27.01",1953:"14.02",1954:"03.02",1955:"24.01",1956:"12.02",1957:"31.01",1958:"18.02",1959:"08.02",
+  1960:"28.01",1961:"15.02",1962:"05.02",1963:"25.01",1964:"13.02",1965:"02.02",1966:"21.01",1967:"09.02",1968:"30.01",1969:"17.02",
+  1970:"06.02",1971:"27.01",1972:"15.02",1973:"03.02",1974:"23.01",1975:"11.02",1976:"31.01",1977:"18.02",1978:"07.02",1979:"28.01",
+  1980:"16.02",1981:"05.02",1982:"25.01",1983:"13.02",1984:"02.02",1985:"20.02",1986:"09.02",1987:"29.01",1988:"17.02",1989:"06.02",
+  1990:"27.01",1991:"15.02",1992:"04.02",1993:"23.01",1994:"10.02",1995:"31.01",1996:"19.02",1997:"07.02",1998:"28.01",1999:"16.02",
+  2000:"05.02",2001:"24.01",2002:"12.02",2003:"01.02",2004:"22.01",2005:"09.02",2006:"29.01",2007:"18.02",2008:"07.02",2009:"26.01",
+  2010:"14.02",2011:"03.02",2012:"23.01",2013:"10.02",2014:"31.01",2015:"19.02",2016:"08.02",2017:"28.01",2018:"16.02",2019:"05.02",
+  2020:"25.01",2021:"12.02",2022:"01.02",2023:"22.01",2024:"10.02",2025:"29.01",2026:"17.02",2027:"06.02",2028:"26.01",2029:"13.02",2030:"03.02"
+};
+let currentResult = null;
+function parseDate(v){const m=/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/.exec(String(v||"").trim());return m?{d:+m[1],m:+m[2],y:+m[3]}:null}
+function pad(n){return String(n).padStart(2,"0")}
+function cnyDate(year){const value=chineseNewYear[year]||"04.02";const p=value.split(".");return {d:+p[0],m:+p[1],y:year}}
+function before(a,b){return a.y<b.y || (a.y===b.y && (a.m<b.m || (a.m===b.m && a.d<b.d)))}
+function chineseYear(date){const start=cnyDate(date.y);return before(date,start)?date.y-1:date.y}
+function animalForYear(year){return animals[(year-2020)%12<0?(year-2020)%12+12:(year-2020)%12]}
+function elementForYear(year){return ["Metal","Metal","Water","Water","Wood","Wood","Fire","Fire","Earth","Earth"][(year-2020)%10<0?(year-2020)%10+10:(year-2020)%10]}
+function polarityForYear(year){return year%2===0?"Yang":"Yin"}
+function showTab(id){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));document.querySelectorAll(".panel").forEach(p=>p.classList.toggle("active",p.id===id))}
+function safe(v){return String(v||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function calculateChinese(){
+  const date=parseDate(document.getElementById("birthDate").value);
+  if(!date){alert("Please enter birth date as DD.MM.YYYY");return}
+  const year=chineseYear(date);
+  const animal=animalForYear(year);
+  const element=elementForYear(year);
+  const polarity=polarityForYear(year);
+  const stemBranch=element+" "+animal.key+" ("+polarity+")";
+  currentResult={date,year,animal,element,polarity,stemBranch};
+  if(window.AppSharedState)AppSharedState.saveLastAstroInput({date:document.getElementById("birthDate").value,time:document.getElementById("birthTime").value,city:document.getElementById("birthCity").value});
+  renderChinese();
+}
+function renderChinese(){
+  if(!currentResult)return;
+  const r=currentResult;
+  document.getElementById("animalIcon").textContent=r.animal.icon;
+  document.getElementById("animalName").textContent=r.stemBranch;
+  document.getElementById("animalMeta").textContent="Chinese year starts on "+chineseNewYear[r.date.y]+"."+r.date.y+" for this birth year.";
+  document.getElementById("overviewGrid").innerHTML=[
+    ["Animal",r.animal.key],["Element",r.element],["Polarity",r.polarity],["Core tone",r.animal.traits]
+  ].map(box).join("");
+  document.getElementById("elementText").textContent=r.element+" brings "+elements[r.element]+". In this chart it colors the way the "+r.animal.key+" expresses instinct, timing and choice.";
+  document.getElementById("elementGrid").innerHTML=[
+    ["Best use","Lead with "+r.element.toLowerCase()+" qualities before forcing action."],
+    ["Balance","When stressed, return to the opposite rhythm: slow breath, clear priorities, simpler moves."],
+    ["Polarity",r.polarity+" energy shows how this sign initiates and responds."]
+  ].map(box).join("");
+  document.getElementById("compatText").textContent="Compatibility is read through rhythm: who supports your natural timing, who challenges growth, and who asks for more patience.";
+  document.getElementById("compatList").innerHTML=[
+    ...r.animal.best.map(x=>'<div class="pill"><b>Support:</b> '+x+'</div>'),
+    ...r.animal.hard.map(x=>'<div class="pill"><b>Challenge:</b> '+x+'</div>')
+  ].join("");
+  renderToday();
+  renderYears();
+  renderSigns();
+}
+function renderToday(){
+  const today=new Date();
+  const tYear=chineseYear({d:today.getDate(),m:today.getMonth()+1,y:today.getFullYear()});
+  const tAnimal=animalForYear(tYear);
+  const tElement=elementForYear(tYear);
+  const match=tAnimal.key===currentResult.animal.key;
+  document.getElementById("todayText").textContent="Today moves through a "+tElement+" "+tAnimal.key+" yearly field. "+(match?"This echoes your own sign, so notice repeating themes and direct feedback.":"Use it as a weather layer around your own "+currentResult.animal.key+" nature.");
+  document.getElementById("todayGrid").innerHTML=[
+    ["Year energy",tElement+" "+tAnimal.key],
+    ["For you",match?"Personal mirror day":"Adjustment and timing"],
+    ["Focus","Choose one clean action and avoid scattering attention."]
+  ].map(box).join("");
+}
+function renderYears(){
+  const now=new Date().getFullYear();
+  let html="";
+  for(let y=now-6;y<=now+6;y++){
+    const a=animalForYear(y);
+    html+='<div class="year-cell"><b>'+y+'</b><br>'+elementForYear(y)+'<br>'+a.key+'</div>';
+  }
+  document.getElementById("yearGrid").innerHTML=html;
+}
+function renderSigns(){
+  document.getElementById("signsGrid").innerHTML=animals.map(a=>'<div class="box"><div class="label">'+safe(a.key)+'</div><div class="value"><b>'+safe(a.icon)+'</b><br>'+safe(a.traits)+'<br><br>Support: '+safe(a.best.join(", "))+'</div></div>').join("");
+}
+function box(item){return '<div class="box"><div class="label">'+safe(item[0])+'</div><div class="value">'+safe(item[1])+'</div></div>'}
+function loadInitial(){
+  const params=new URLSearchParams(location.search);
+  const state=window.AppSharedState?AppSharedState.preferredAstroInput(params):{date:params.get("date")||"",time:params.get("time")||"",city:params.get("city")||""};
+  document.getElementById("birthDate").value=state.date||"";
+  document.getElementById("birthTime").value=state.time||"";
+  document.getElementById("birthCity").value=state.city||"";
+  if(window.AppSharedState)AppSharedState.bindLastAstroInput({dateId:"birthDate",timeId:"birthTime",cityId:"birthCity"});
+  renderSavedList();
+  renderSigns();
+  if(state.date)calculateChinese();
+}
+function contacts(){return window.AppSharedState?AppSharedState.contactsWithOwner():JSON.parse(localStorage.getItem("numerology_dates")||"[]")}
+function renderSavedList(){
+  const list=contacts();
+  const box=document.getElementById("savedCountBox");
+  box.textContent=list.length;box.style.display=list.length?"flex":"none";
+  document.getElementById("savedList").innerHTML=list.length?list.map(item=>`<div class="savedItem" onclick="loadSaved('${safe(item.id)}')"><b>${safe(item.name)}</b><br><span style="color:#fca5a5;font-size:11px">${safe(item.date||"")} ${safe(item.time||"")} ${safe(item.city||"")}</span></div>`).join(""):'<div class="coming-note">No saved profiles yet.</div>';
+}
+function loadSaved(id){const item=contacts().find(x=>String(x.id)===String(id));if(!item)return;birthDate.value=item.date||"";birthTime.value=item.time||"";birthCity.value=item.city||"";toggleSavedPanel(false);calculateChinese()}
+function toggleSavedPanel(force){const p=document.getElementById("savedPanel");p.style.display=force===false?"none":(p.style.display==="block"?"none":"block")}
+function goBack(){if(window.AppSharedState)AppSharedState.saveLastAstroInput({date:birthDate.value,time:birthTime.value,city:birthCity.value});window.location.href="index.html?astroReturn=1&date="+encodeURIComponent(birthDate.value)+"&time="+encodeURIComponent(birthTime.value)+"&city="+encodeURIComponent(birthCity.value)+"#astroEntry"}
+function exitApp(){window.location.href="index.html"}
+async function sharePage(){const text="Chinese Zodiac: "+(currentResult?currentResult.stemBranch:"");if(navigator.share){try{await navigator.share({title:"Chinese Zodiac",text,url:location.href});return}catch(e){}}try{await navigator.clipboard.writeText(location.href);alert("Link copied.")}catch(e){alert(text || "Chinese Zodiac")}}
+window.addEventListener("DOMContentLoaded",loadInitial);
+</script>
+</body>
+</html>

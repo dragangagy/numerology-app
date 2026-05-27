@@ -57,8 +57,10 @@
     while(n>9 && n!==11 && n!==22)n=String(n).split("").reduce((sum,d)=>sum+Number(d),0);
     return n;
   }
-  function ownerBirthDigits(owner){
-    return String(owner.birthDate||"").replace(/\D/g,"");
+  function reduceDigit(value){
+    let n = Number(value) || 0;
+    while(n>9)n=String(n).split("").reduce((sum,d)=>sum+Number(d),0);
+    return n;
   }
   function parseOwnerDate(value){
     const m = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(String(value||""));
@@ -70,6 +72,132 @@
   }
   function ownerDateToUtc(date,time){
     return new Date(Date.UTC(date.year,date.month-1,date.day,time.hours,time.minutes));
+  }
+  function pythagoreanBaseFromDate(date){
+    if(!date)return [0,0,0];
+    const p1 = reduceDigit(date.day + date.month);
+    const p2 = reduceDigit(date.year);
+    const p3 = reduceDigit(p1 + p2);
+    return [p1,p2,p3];
+  }
+  function pythagoreanCodeForDate(ownerDate, targetDate){
+    const base = pythagoreanBaseFromDate(ownerDate);
+    if(base[0] === 0 && base[1] === 0 && base[2] === 0)return "0";
+    const yr = reduceDigit(targetDate.getFullYear());
+    const mn = reduceDigit(targetDate.getMonth() + 1);
+    const dy = reduceDigit(targetDate.getDate());
+    return [
+      reduceDigit(base[0] + yr + mn + dy),
+      reduceDigit(base[1] + yr + mn + dy),
+      reduceDigit(base[2] + yr + mn + dy)
+    ].join("");
+  }
+  function buildPyramidRows(ownerDate, owner){
+    if(!ownerDate)return [];
+    const raw = pad(ownerDate.day)+pad(ownerDate.month)+ownerDate.year;
+    const numbers = raw.split("").map(Number);
+    const originalRows = [];
+    let tempOriginal = [...numbers];
+    while(tempOriginal.length > 0){
+      originalRows.push([...tempOriginal]);
+      const next = [];
+      for(let i=0;i<tempOriginal.length-1;i++){
+        next.push(reduceDigit(tempOriginal[i]+tempOriginal[i+1]));
+      }
+      tempOriginal = next;
+    }
+
+    let twinFirstRow = null;
+    let twin3FirstRow = null;
+    if((owner && owner.isTwin) || (owner && owner.isTwin3)){
+      const secondRow = originalRows[1] || [];
+      const thirdRow = originalRows[2] || [];
+      twinFirstRow = secondRow.slice(2).concat(thirdRow.slice(0,2));
+    }
+    if(owner && owner.isTwin3 && twinFirstRow){
+      const twin2Rows = [];
+      twin2Rows.push([...twinFirstRow]);
+      let tempTwin = [...twinFirstRow];
+      while(tempTwin.length > 0){
+        twin2Rows.push([...tempTwin]);
+        const next = [];
+        for(let i=0;i<tempTwin.length-1;i++){
+          next.push(reduceDigit(tempTwin[i]+tempTwin[i+1]));
+        }
+        tempTwin = next;
+      }
+      const twin2SecondRow = twin2Rows[1] || [];
+      const twin2ThirdRow = twin2Rows[2] || [];
+      twin3FirstRow = twin2SecondRow.slice(2).concat(twin2ThirdRow.slice(0,2));
+    }
+
+    const rows = [[...numbers]];
+    let secondRowSource;
+    if(owner && owner.isTwin3 && twin3FirstRow){
+      secondRowSource = [...twin3FirstRow];
+    }else if(owner && owner.isTwin && twinFirstRow){
+      secondRowSource = [...twinFirstRow];
+    }else{
+      secondRowSource = [];
+      for(let i=0;i<numbers.length-1;i++){
+        secondRowSource.push(reduceDigit(numbers[i]+numbers[i+1]));
+      }
+    }
+
+    let temp = [...secondRowSource];
+    while(temp.length > 0){
+      rows.push([...temp]);
+      const next = [];
+      for(let i=0;i<temp.length-1;i++){
+        next.push(reduceDigit(temp[i]+temp[i+1]));
+      }
+      temp = next;
+    }
+    return rows;
+  }
+  function dateDifferenceParts(first, second){
+    let d1 = new Date(first.year, first.month-1, first.day);
+    let d2 = new Date(second.getFullYear(), second.getMonth(), second.getDate());
+    if(d2 < d1){
+      const temp = d1;
+      d1 = d2;
+      d2 = temp;
+    }
+    let years = d2.getFullYear() - d1.getFullYear();
+    let months = d2.getMonth() - d1.getMonth();
+    let days = d2.getDate() - d1.getDate();
+    if(days < 0){
+      months--;
+      days += new Date(d2.getFullYear(), d2.getMonth(), 0).getDate();
+    }
+    if(months < 0){
+      years--;
+      months += 12;
+    }
+    return {years,months,days};
+  }
+  function pyramidDayCodeForDate(ownerDate, owner, targetDate){
+    const rows = buildPyramidRows(ownerDate, owner);
+    const spans = rows.slice(1).flat();
+    if(spans.length < 2)return "0";
+    const diff = dateDifferenceParts(ownerDate, targetDate);
+    let currentIndex = -1;
+    function markPosition(steps, skipFirst){
+      let index = currentIndex;
+      for(let i=0;i<steps;i++){
+        index++;
+        if(skipFirst && index === 0)index++;
+        if(index >= spans.length)index = 0;
+      }
+      currentIndex = index;
+      const current = Number(spans[index]) || 0;
+      const next = Number(spans[(index + 1) % spans.length]) || 0;
+      return {current,next,sum:reduceDigit(current + next)};
+    }
+    markPosition(diff.years, true);
+    markPosition(diff.months, false);
+    const day = markPosition(diff.days, false);
+    return ""+day.current+day.next+day.sum;
   }
   function moonLongitude(date){
     return fallbackLongitude(julianDay(date),"moon");
@@ -85,6 +213,64 @@
     const raw = Math.abs(normalize(currentMoon-natalMoon));
     const diff = raw > 180 ? 360 - raw : raw;
     return aspects.map(a => ({...a,orb:Math.abs(diff-a.angle)})).sort((a,b)=>a.orb-b.orb)[0];
+  }
+
+  function notificationTabForTopic(topic){
+    if(topic==="pythagoreanDay")return "pitagora";
+    if(topic==="pyramidDay")return "analysis";
+    if(/^newBook|freePdf|bookRecommendation|seasonBook/.test(topic))return "store";
+    return "home";
+  }
+
+  function notificationPageForTopic(topic){
+    const lunar = ["newMoon","fullMoon","moonGuidance","moonAvoid","voidMoon","firstQuarterMoon","lastQuarterMoon","moonPhaseChange","natalLunarToday","moonNatalAspect","voidMoonEnd","moonSignChange","eclipseReminder","newMoonTomorrow","fullMoonTomorrow"];
+    const retro = ["retroStart","retroDirect","stationRetroToday","stationDirectToday","retroStartTomorrow","retroDirectTomorrow","activeRetroSummary","natalRetroReminder","mercuryRetroSpecial","venusRetroSpecial","marsRetroSpecial"];
+    const transit = ["importantTransit","exactTransit","challengingTransit","positiveTransit","majorTransit","moonTransitNatalMoon","saturnTransitWarning","jupiterTransitOpportunity","marsTransitEnergy","venusTransitRelationship","transitTomorrow","weeklyTransitSummary"];
+    const relation = ["synastryReminder","partnerTransit","relationshipTalkDay","relationshipChallengeDay","venusMarsRelationship","moonCompatibility"];
+    const location = ["astrocartographyCity","travelLineGood","travelLineCaution","venusLineOpportunity","jupiterLineOpportunity","saturnPlutoLineCaution","locationEnergyReminder"];
+    const chart = ["birthdayReminder","sunSeasonStart","moonSignDaily","ascendantDaily","natalChartReminder","houseActivation","planetFocus"];
+    if(lunar.includes(topic))return "lunarphases.html";
+    if(retro.includes(topic))return "retrogradnost.html";
+    if(transit.includes(topic))return "transit.html";
+    if(relation.includes(topic))return "sinastrija.html";
+    if(location.includes(topic))return "astrocartography.html";
+    if(chart.includes(topic))return "chart.html";
+    return "index.html";
+  }
+
+  function ownerQuery(owner){
+    const params = new URLSearchParams();
+    if(owner && owner.birthDate)params.set("date", owner.birthDate);
+    if(owner && owner.birthTime)params.set("time", owner.birthTime);
+    if(owner && (owner.currentCity || owner.birthCity))params.set("city", owner.currentCity || owner.birthCity);
+    if(owner && owner.isTwin)params.set("isTwin", "true");
+    if(owner && owner.isTwin3)params.set("isTwin3", "true");
+    return params;
+  }
+
+  function notificationOpenUrl(event, owner){
+    const params = ownerQuery(owner);
+    params.set("notificationTopic", event.topic || "");
+    params.set("notificationTitle", event.title || "Notification");
+    params.set("notificationBody", event.body || "");
+    params.set("notificationTab", notificationTabForTopic(event.topic || ""));
+    const page = notificationPageForTopic(event.topic || "");
+    const base = location.href.split("#")[0].split("?")[0].replace(/[^\/\\]*$/, page);
+    return base+"?"+params.toString();
+  }
+
+  function withNotificationOpenData(events, owner){
+    return events.map(event => {
+      const route = {
+        page:notificationPageForTopic(event.topic || ""),
+        tab:notificationTabForTopic(event.topic || ""),
+        topic:event.topic || "",
+        title:event.title || "",
+        body:event.body || ""
+      };
+      const openUrl = notificationOpenUrl(event, owner);
+      return {...event,route,openUrl,url:openUrl};
+    });
   }
 
   function buildLunarEvents(owner, topics, days){
@@ -128,12 +314,18 @@
   }
 
   async function getSwe(){
-    if(location.protocol === "file:"){
-      const err = new Error("swisseph-unavailable");
-      err.code = "SWISSEPH_UNAVAILABLE";
-      throw err;
+    let mod;
+    try{
+      mod = await import("./vendor/swisseph/swisseph-local.js");
+    }catch(firstError){
+      try{
+        mod = await import("vendor/swisseph/swisseph-local.js");
+      }catch(secondError){
+        const err = secondError || firstError || new Error("swisseph-unavailable");
+        err.code = "SWISSEPH_UNAVAILABLE";
+        throw err;
+      }
     }
-    const mod = await import("./vendor/swisseph/swisseph-local.js");
     const swe = new mod.SwissEphemeris();
     await swe.init();
     return {mod,swe};
@@ -198,18 +390,18 @@
   function buildDailyNumerologyEvents(owner, topics, days){
     const events = [];
     const now = new Date();
-    const birthDigits = ownerBirthDigits(owner);
+    const ownerDate = parseOwnerDate(owner && owner.birthDate);
+    if(!ownerDate)return events;
     for(let i=0;i<days;i++){
       const d = new Date(now);
       d.setDate(now.getDate()+i);
-      const dateDigits = pad(d.getDate())+pad(d.getMonth()+1)+d.getFullYear();
       if(topics.includes("pythagoreanDay")){
-        const num = reduceNumber(birthDigits + dateDigits);
-        events.push({id:"pythagoreanDay-"+isoLocal(d,8,0).slice(0,10),topic:"pythagoreanDay",title:"Pythagorean day number",body:"Your Pythagorean number for today is "+num+".",at:isoLocal(d,8,0)});
+        const code = pythagoreanCodeForDate(ownerDate, d);
+        events.push({id:"pythagoreanDay-"+isoLocal(d,8,0).slice(0,10),topic:"pythagoreanDay",title:"Pythagorean day code",body:"Your Pythagorean code for today is "+code+".",at:isoLocal(d,8,0)});
       }
       if(topics.includes("pyramidDay")){
-        const num = reduceNumber(dateDigits + birthDigits.split("").reverse().join(""));
-        events.push({id:"pyramidDay-"+isoLocal(d,8,5).slice(0,10),topic:"pyramidDay",title:"Pyramid day number",body:"Your pyramid number for today is "+num+".",at:isoLocal(d,8,5)});
+        const code = pyramidDayCodeForDate(ownerDate, owner, d);
+        events.push({id:"pyramidDay-"+isoLocal(d,8,5).slice(0,10),topic:"pyramidDay",title:"Pyramidal day code",body:"Your pyramidal day code is "+code+".",at:isoLocal(d,8,5)});
       }
     }
     return events;
@@ -224,9 +416,9 @@
       ...buildImportantTransitEvents(owner, topics, 30),
       ...(await buildRetroEvents(topics, 90))
     ];
-    return events
+    return withNotificationOpenData(events
       .filter(event => new Date(event.at).getTime() > Date.now() - 60000)
-      .sort((a,b)=>new Date(a.at)-new Date(b.at));
+      .sort((a,b)=>new Date(a.at)-new Date(b.at)), owner);
   }
 
   async function requestWebPermission(){
@@ -259,7 +451,7 @@
             title: event.title,
             body: event.body,
             schedule: {at:new Date(event.at)},
-            extra: {topic:event.topic, notificationId:event.id}
+            extra: {topic:event.topic, notificationId:event.id, route:event.route, url:event.openUrl, openUrl:event.openUrl}
           }))
         });
         return "capacitor";

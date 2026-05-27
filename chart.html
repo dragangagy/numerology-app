@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0f172a">
 <title>Astrology App</title>
+<script src="app-shared-state.js"></script>
+<script src="app-notification-open.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html{
@@ -1997,6 +1999,9 @@ function saveAstroReturnState(date, time, city){
   const params = new URLSearchParams(window.location.search);
   const isTwin = params.get("isTwin") || "false";
   const isTwin3 = params.get("isTwin3") || "false";
+  if(window.AppSharedState){
+    AppSharedState.saveLastAstroInput({date, time, city, isTwin:isTwin === "true", isTwin3:isTwin3 === "true"});
+  }
   sessionStorage.setItem("returningFromChart", "true");
   sessionStorage.setItem("astroReturnState", JSON.stringify({
     date: date,
@@ -2329,6 +2334,7 @@ function loadSavedDate(dateStr, timeStr, city){
   let cityInput = document.getElementById('cityInput');
   if(cityInput && city) cityInput.value = city;
 
+  if(window.AppSharedState) AppSharedState.saveLastAstroInput({date:dateStr, time:timeStr || "", city:city || ""});
   skipSavePrompt = true;
   toggleSavedPanel();
 }
@@ -2781,15 +2787,19 @@ window.onload = function(){
   showTab("astroChart");
   updateSavedCount();
 
-  // Preuzmi parametre iz URL ako postoje (iz index.html)
   const params = new URLSearchParams(window.location.search);
-  const date = params.get("date");
-  const time = params.get("time");
-  const city = params.get("city");
+  const state = window.AppSharedState ? AppSharedState.preferredAstroInput(params) : {date:params.get("date"), time:params.get("time"), city:params.get("city")};
+  const date = state.date;
+  const time = state.time;
+  const city = state.city;
 
   if(date) document.getElementById("input").value = date;
   if(time) document.getElementById("timeInput").value = time;
   if(city) document.getElementById("cityInput").value = city;
+  if(window.AppSharedState){
+    AppSharedState.saveLastAstroInput(state);
+    AppSharedState.bindLastAstroInput({dateId:"input",timeId:"timeInput",cityId:"cityInput"});
+  }
   applyUnitFormatToInputs();
   updateAstrologyPortal();
   try{

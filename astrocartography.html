@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Astrocartography</title>
+<script src="app-shared-state.js"></script>
+<script src="app-notification-open.js"></script>
 <style>
 *{
     margin:0;
@@ -2288,6 +2290,7 @@ function loadSavedDate(dateStr, timeStr, city){
   let cityInput = document.getElementById('cityInput');
   if(cityInput) cityInput.value = city || 'Belgrade';
 
+  if(window.AppSharedState) AppSharedState.saveLastAstroInput({date:dateStr || "", time:timeStr || "12:00", city:city || "Belgrade"});
   skipSavePrompt = true;
   toggleSavedPanel();
   autoAnalyzeAstrocartography();
@@ -3437,6 +3440,7 @@ function goBack(){
     const date = document.getElementById("input").value;
     const time = document.getElementById("timeInput").value;
     const city = document.getElementById("cityInput").value;
+    if(window.AppSharedState) AppSharedState.saveLastAstroInput({date,time,city});
     saveAstroReturnState(date, time, city);
     const params = new URLSearchParams(window.location.search);
     let backUrl = "chart.html?date=" + encodeURIComponent(date);
@@ -3496,13 +3500,18 @@ window.onload = function(){
 
     // Preuzmi parametre iz URL ako postoje
     const params = new URLSearchParams(window.location.search);
-    const date = params.get("date");
-    const time = params.get("time");
-    const city = params.get("city");
+    const preferredState = window.AppSharedState ? AppSharedState.preferredAstroInput(params) : null;
+    const date = preferredState ? preferredState.date : params.get("date");
+    const time = preferredState ? preferredState.time : params.get("time");
+    const city = preferredState ? preferredState.city : params.get("city");
 
     if(date) document.getElementById("input").value = date;
     if(time) document.getElementById("timeInput").value = time;
     if(city) document.getElementById("cityInput").value = city;
+    if(window.AppSharedState){
+        AppSharedState.saveLastAstroInput(preferredState);
+        AppSharedState.bindLastAstroInput({dateId:"input",timeId:"timeInput",cityId:"cityInput"});
+    }
 
     // Ako nema URL params, probaj sessionStorage iz chart.html (astroReturnState)
     if(!date && !time && !city){

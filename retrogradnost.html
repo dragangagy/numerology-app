@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Retrograde Planets</title>
+<script src="app-shared-state.js"></script>
+<script src="app-notification-open.js"></script>
 
 <style>
 
@@ -784,8 +786,8 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
         <div class="section-title">ACTIVE RETROGRADES</div>
 
         <div class="filter-tabs">
-            <div class="filter-tab active" onclick="filterRetro('retro')">Retrograde</div>
-            <div class="filter-tab" onclick="filterRetro('station')">Station</div>
+            <div class="filter-tab active" onclick="filterRetro('retro', this)">Retrograde</div>
+            <div class="filter-tab" onclick="filterRetro('station', this)">Station</div>
         </div>
 
         <div id="retroList"></div>
@@ -1063,15 +1065,21 @@ function filterRetro(type, sourceEl){
     else if(typeof event!=="undefined"&&event.target)event.target.classList.add('active');
 
     const isStation = type === 'station';
-    let visible=0;
     document.querySelectorAll('.retro-empty').forEach(el=>el.remove());
     const retroList = document.getElementById('retroList');
-    if(retroList)retroList.style.display = 'none';
-    document.querySelectorAll('#retroList .retro-item').forEach(item => {
-        const show = false;
-        item.style.display = 'none';
-        if(show)visible++;
-    });
+    if(retroList){
+        retroList.style.setProperty('display', isStation ? 'none' : 'block', 'important');
+        if(!isStation){
+            renderRetro('retroList', r => r.type === 'retro', 'details');
+            if(!retroList.querySelector('.retro-item')){
+                const empty = document.createElement('div');
+                empty.className = 'retro-empty';
+                empty.style.cssText = 'color:#94a3b8;font-size:12px;padding:12px;text-align:center;';
+                empty.textContent = 'No planets are retrograde right now.';
+                retroList.appendChild(empty);
+            }
+        }
+    }
     document.querySelectorAll('.retro-tab-extra').forEach(card => {
         card.style.display = isStation ? 'none' : '';
     });
@@ -1244,7 +1252,7 @@ function retroJulian(date){return date.getTime()/86400000+2440587.5}
 function retroNormalize(deg){deg%=360;return deg<0?deg+360:deg}
 function retroSign(longitude){const idx=Math.floor(retroNormalize(longitude)/30)%12;return{symbol:retroSignSymbols[idx],name:retroSignNames[idx],degree:Math.floor(retroNormalize(longitude)%30)}}
 function retroDateFromInput(date,time){return new Date(Date.UTC(date.year,date.month-1,date.day,time.hours,time.minutes))}
-async function getRetroSwe(){if(retroSweCache)return{mod:retroModCache,swe:retroSweCache};if(location.protocol==="file:"){const err=new Error("swisseph-unavailable");err.code="SWISSEPH_UNAVAILABLE";throw err}const mod=await import("./vendor/swisseph/swisseph-local.js");const swe=new mod.SwissEphemeris();await swe.init();retroModCache=mod;retroSweCache=swe;return{mod,swe}}
+async function getRetroSwe(){if(retroSweCache)return{mod:retroModCache,swe:retroSweCache};let mod;try{mod=await import("./vendor/swisseph/swisseph-local.js")}catch(e){mod=await import("vendor/swisseph/swisseph-local.js")}const swe=new mod.SwissEphemeris();await swe.init();retroModCache=mod;retroSweCache=swe;return{mod,swe}}
 function retroPlanetId(mod,key){return mod.Planet[key]}
 function setCalcSourceStatus(source){const el=document.getElementById("calcSourceStatus");if(!el)return;const precise=source==="Local Swiss Ephemeris";el.classList.toggle("fallback",!precise);el.textContent=precise?"Swiss Ephemeris loaded - precise retrograde calculation.":"Fallback calculation used - Swiss module not available."}
 async function retroSpeedAt(jd,key){const {mod,swe}=await getRetroSwe();const pos=swe.calculatePosition(jd,retroPlanetId(mod,key),mod.CalculationFlag.SwissEphemeris|mod.CalculationFlag.Speed);const speed=Number(pos.longitudeSpeed??pos.speed??0);return{longitude:retroNormalize(pos.longitude),speed:Number.isFinite(speed)?speed:0}}
@@ -1255,7 +1263,7 @@ async function renderLiveRetro(){const now=new Date();try{const data=await build
 async function calculateNatalRetro(dateValue,timeValue){const resultDiv=document.getElementById('natalResult');const listDiv=document.getElementById('natalRetroList');const meaningDiv=document.getElementById('natalMeaning');try{const date=parseRetroDate(dateValue);const time=parseRetroTime(timeValue);const jd=retroJulian(retroDateFromInput(date,time));const selected=[];for(const def of retroPlanetDefs){const data=await retroSpeedAt(jd,def.key);if(data.speed<0)selected.push(def)}if(selected.length===0){listDiv.innerHTML='<span class="natal-retro-chip" style="color:#4ade80;border-color:rgba(74,222,128,.35);background:rgba(74,222,128,.12)">No natal retrogrades</span>';meaningDiv.innerHTML='<strong style="color:#FFD700">Natal Retrograde Theme:</strong> Your chart has no major natal retrograde planets in this set. Retrograde lessons may arrive more through transits than as a constant natal signature.'}else{listDiv.innerHTML=selected.map(s=>`<span class="natal-retro-chip">${s.symbol} ${s.key}</span>`).join('');meaningDiv.innerHTML='<strong style="color:#FFD700">Natal Retrograde Theme:</strong> '+(selected.length>2?'Multiple natal retrogrades show a strongly reflective chart. Growth tends to come from inner timing, review and private integration.':'A focused natal retrograde signature shows where energy works inward first: '+selected.map(s=>s.key).join(', ')+'.')}resultDiv.classList.add('show')}catch(e){if(e&&e.code==="SWISSEPH_UNAVAILABLE"){listDiv.innerHTML='<span class="natal-retro-chip">☿ Mercury</span>';meaningDiv.innerHTML='<strong style="color:#FFD700">Natal Retrograde Theme:</strong> Detailed natal retrograde calculation is available in the app/server view. This view is using fallback retrograde guidance.';resultDiv.classList.add('show');return}alert('Natal retrograde could not be calculated.')}}
 function checkNatalRetro(){const date=document.getElementById('natalDate').value;const time=document.getElementById('natalTime').value;if(!date){alert('Please enter your birth date');return}calculateNatalRetro(date,time)}
 function refreshRetro(){renderLiveRetro()}
-function goBack(){const date=document.getElementById('natalDate').value;const time=document.getElementById('natalTime').value;let url='chart.html';if(date){url+='?date='+encodeURIComponent(date);if(time)url+='&time='+encodeURIComponent(time)}window.location.href=url}
+function goBack(){const date=document.getElementById('natalDate').value;const time=document.getElementById('natalTime').value;const last=window.AppSharedState?AppSharedState.lastAstroInput():null;const city=last&&last.city?last.city:"";if(window.AppSharedState)AppSharedState.saveLastAstroInput({date,time,city});let url='chart.html';if(date){url+='?date='+encodeURIComponent(date);if(time)url+='&time='+encodeURIComponent(time);if(city)url+='&city='+encodeURIComponent(city)}window.location.href=url}
 function exitApp(){appExit("index.html")}
 function appCopyText(text,message){if(navigator.clipboard&&window.isSecureContext){return navigator.clipboard.writeText(text).then(()=>{if(message)alert(message)}).catch(()=>appCopyTextFallback(text,message))}return appCopyTextFallback(text,message)}
 function appCopyTextFallback(text,message){const input=document.createElement("textarea");input.value=text;input.setAttribute("readonly","");input.style.position="fixed";input.style.left="-9999px";document.body.appendChild(input);input.select();try{document.execCommand("copy");if(message)alert(message)}catch(e){alert(text)}document.body.removeChild(input);return Promise.resolve()}
@@ -1267,7 +1275,7 @@ document.getElementById('printBtn').addEventListener('click',()=>appPrintPage())
 document.getElementById('shareBtn').addEventListener('click',async()=>{await appShare({title:"Retrograde",text:"Retrograde report",url:window.location.href})});
 
 /* ===== INIT ===== */
-window.addEventListener('load',()=>{const params=new URLSearchParams(window.location.search);const date=params.get('date');const time=params.get('time');if(date)document.getElementById('natalDate').value=date;if(time)document.getElementById('natalTime').value=time;renderLiveRetro();if(date)calculateNatalRetro(date,time||'12:00')});
+window.addEventListener('load',()=>{const params=new URLSearchParams(window.location.search);const state=window.AppSharedState?AppSharedState.preferredAstroInput(params):{date:params.get('date')||'',time:params.get('time')||'12:00',city:params.get('city')||''};const date=state.date;const time=state.time||'12:00';if(date)document.getElementById('natalDate').value=date;if(time)document.getElementById('natalTime').value=time;if(window.AppSharedState){AppSharedState.saveLastAstroInput(state);AppSharedState.bindLastAstroInput({dateId:"natalDate",timeId:"natalTime"})}renderLiveRetro();if(date)calculateNatalRetro(date,time)});
 
 </script>
 

@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Synastry</title>
+<script src="app-shared-state.js"></script>
+<script src="app-notification-open.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:Arial,sans-serif;background:#0f172a;color:white;text-align:center;margin:0;padding:5px}
@@ -503,11 +505,11 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 <div class="card">
 <div class="section-title">KEY ASPECTS</div>
 <div class="aspect-tabs">
-<div class="aspect-tab active" onclick="filterAspects('all')">All</div>
-<div class="aspect-tab" onclick="filterAspects('good')">Harmonious</div>
-<div class="aspect-tab" onclick="filterAspects('bad')">Challenging</div>
-<div class="aspect-tab" onclick="filterAspects('neutral')">Neutral</div>
-<div class="aspect-tab" onclick="filterAspects('major')">Major Only</div>
+<div class="aspect-tab active" onclick="filterAspects('all', this)">All</div>
+<div class="aspect-tab" onclick="filterAspects('good', this)">Harmonious</div>
+<div class="aspect-tab" onclick="filterAspects('bad', this)">Challenging</div>
+<div class="aspect-tab" onclick="filterAspects('neutral', this)">Neutral</div>
+<div class="aspect-tab" onclick="filterAspects('major', this)">Major Only</div>
 </div>
 <div id="aspectsList">
 <div class="aspect-item good" data-type="good" data-major="true"><div class="left"><div class="aspect">&#9729; Sun Trine &#9729; Sun</div><div class="description">Core identity harmony. Natural understanding of each other's essence and life purpose.</div></div><div class="score">+9</div></div>
@@ -554,14 +556,14 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 <!-- ===== SAVED PANEL A ===== -->
 <div class="savedPanel" id="savedPanel1">
 <div class="savedPanelClose" onclick="toggleSavedPanel1()">&times;</div>
-<h3 class="savedPanelTitle">SAVED CONTACTS A</h3>
+<h3 class="savedPanelTitle">SAVED PROFILES A</h3>
 <div id="savedList1"></div>
 </div>
 
 <!-- ===== SAVED PANEL B ===== -->
 <div class="savedPanel" id="savedPanel2">
 <div class="savedPanelClose" onclick="toggleSavedPanel2()">&times;</div>
-<h3 class="savedPanelTitle">SAVED CONTACTS B</h3>
+<h3 class="savedPanelTitle">SAVED PROFILES B</h3>
 <div id="savedList2"></div>
 </div>
 
@@ -631,7 +633,7 @@ function offerSaveDate1(dateStr){if(skipSavePrompt){skipSavePrompt=false;return}
 function closeSaveModal1(){let modal=document.getElementById('saveModal1');if(modal)modal.style.display='none'}
 function confirmSaveDate1(){let name=document.getElementById('saveNameInput1').value.trim();if(!name){alert('Please enter a name');return}let dateStr=document.getElementById("input1").value;let timeStr=document.getElementById("timeInput1")?document.getElementById("timeInput1").value:"";let city=document.getElementById("cityInput1")?document.getElementById("cityInput1").value:"";let saved=getSavedDates1();saved.push({id:Date.now(),name:name,date:dateStr,time:timeStr,city:city,timestamp:new Date().toISOString()});saveDatesList1(saved);closeSaveModal1();renderSavedList1()}
 function deleteSavedDate1(id){if(id==='owner-profile'){alert('Owner profile cannot be deleted from contacts.');return}if(!confirm('Delete this saved contact?'))return;let saved=getSavedDates1().filter(function(d){return String(d.id)!==String(id)});saveDatesList1(saved);renderSavedList1()}function editSavedDate1(id){if(id==="owner-profile")return;let saved=getSavedDates1().filter(x=>x.id!=="owner-profile"&&!x.ownerProfile);let item=saved.find(d=>String(d.id)===String(id));if(!item)return;const n=prompt("Edit contact name",item.name||"");if(n===null)return;const d=prompt("Edit date (DD.MM.YYYY)",item.date||"");if(d===null)return;const t=prompt("Edit time (HH:MM)",item.time||"");if(t===null)return;const c=prompt("Edit city",item.city||"");if(c===null)return;item.name=n.trim()||item.name||"Saved contact";item.date=d.trim();item.time=t.trim();item.city=c.trim();item.updatedAt=new Date().toISOString();saveDatesList1(saved);renderSavedList1()}
-function loadSavedDate1(dateStr,timeStr,city){document.getElementById('input1').value=dateStr;let timeInput=document.getElementById('timeInput1');if(timeInput&&timeStr)timeInput.value=timeStr;let cityInput=document.getElementById('cityInput1');if(cityInput&&city)cityInput.value=city;skipSavePrompt=true;toggleSavedPanel1()}
+function loadSavedDate1(dateStr,timeStr,city){document.getElementById('input1').value=dateStr;let timeInput=document.getElementById('timeInput1');if(timeInput&&timeStr)timeInput.value=timeStr;let cityInput=document.getElementById('cityInput1');if(cityInput&&city)cityInput.value=city;if(window.AppSharedState)AppSharedState.saveLastAstroInput({date:dateStr,time:timeStr||'',city:city||''});skipSavePrompt=true;toggleSavedPanel1()}
 function toggleSavedPanel1(){let panel=document.getElementById('savedPanel1');if(!panel)return;if(panel.style.display==='block'){panel.style.display='none'}else{panel.style.display='block';renderSavedList1()}}
 function renderSavedList1(){let container=document.getElementById('savedList1');if(!container)return;let saved=getSavedDates1();if(saved.length===0){container.innerHTML='<div style="color:#64748b;text-align:center;padding:20px;font-size:12px">No saved contacts</div>';return}let html='';saved.forEach(function(item){let isOwner=item.id==='owner-profile'||item.ownerProfile||item.locked;let details=formatSavedContactDetails(item);if(isOwner){html+='<div style="background:#FFD700;color:#0f172a;border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:0.3s;border:1px solid rgba(255,215,0,.75);text-align:center;" onclick="loadSavedDate1(\''+item.date+'\',\''+(item.time||'')+'\',\''+(item.city||'')+'\')"><div style="color:#0f172a;font-weight:bold;font-size:13px">'+item.name+'</div></div>';return}let edit='<span class="saved-edit-contact" onclick="event.stopPropagation();editSavedDate1('+JSON.stringify(item.id)+')" title="Edit saved contact">EDIT</span>';let lock='<span onclick="event.stopPropagation();deleteSavedDate1('+JSON.stringify(item.id)+')" style="color:#ef4444;font-size:16px;cursor:pointer;padding:5px" title="Delete saved contact">&#128465;&#65039;</span>';html+='<div style="background:#0f172a;border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:0.3s;border:1px solid #334155;" onmouseover="this.style.borderColor=\'#FFD700\'" onmouseout="this.style.borderColor=\'#334155\'" onclick="loadSavedDate1(\''+item.date+'\',\''+(item.time||'')+'\',\''+(item.city||'')+'\')">'+'<div style="display:flex;justify-content:space-between;align-items:center;">'+'<div>'+'<div style="color:#f6cb71;font-weight:bold;font-size:13px">'+item.name+'</div><div style="color:#94a3b8;font-size:11px;margin-top:2px">'+details+'</div></div>'+'<div style="display:flex;align-items:center;gap:2px">'+edit+lock+'</div>'+'</div>'+'</div>'});container.innerHTML=html}
 
@@ -648,7 +650,7 @@ function toggleSavedPanel2(){let panel=document.getElementById('savedPanel2');if
 function renderSavedList2(){let container=document.getElementById('savedList2');if(!container)return;let saved=getSavedDates2();if(saved.length===0){container.innerHTML='<div style="color:#64748b;text-align:center;padding:20px;font-size:12px">No saved contacts</div>';return}let html='';saved.forEach(function(item){let isOwner=item.id==='owner-profile'||item.ownerProfile||item.locked;let details=formatSavedContactDetails(item);if(isOwner){html+='<div style="background:#FFD700;color:#0f172a;border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:0.3s;border:1px solid rgba(255,215,0,.75);text-align:center;" onclick="loadSavedDate2(\''+item.date+'\',\''+(item.time||'')+'\',\''+(item.city||'')+'\')"><div style="color:#0f172a;font-weight:bold;font-size:13px">'+item.name+'</div></div>';return}let edit='<span class="saved-edit-contact" onclick="event.stopPropagation();editSavedDate2('+JSON.stringify(item.id)+')" title="Edit saved contact">EDIT</span>';let lock='<span onclick="event.stopPropagation();deleteSavedDate2('+JSON.stringify(item.id)+')" style="color:#ef4444;font-size:16px;cursor:pointer;padding:5px" title="Delete saved contact">&#128465;&#65039;</span>';html+='<div style="background:#0f172a;border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:0.3s;border:1px solid #334155;" onmouseover="this.style.borderColor=\'#FFD700\'" onmouseout="this.style.borderColor=\'#334155\'" onclick="loadSavedDate2(\''+item.date+'\',\''+(item.time||'')+'\',\''+(item.city||'')+'\')">'+'<div style="display:flex;justify-content:space-between;align-items:center;">'+'<div>'+'<div style="color:#f6cb71;font-weight:bold;font-size:13px">'+item.name+'</div><div style="color:#94a3b8;font-size:11px;margin-top:2px">'+details+'</div></div>'+'<div style="display:flex;align-items:center;gap:2px">'+edit+lock+'</div>'+'</div>'+'</div>'});container.innerHTML=html}
 
 // ===== NAVIGATION =====
-function goBack(){const date=document.getElementById("input1").value;const time=document.getElementById("timeInput1").value;const city=document.getElementById("cityInput1").value;let backUrl="chart.html";if(date){backUrl+="?date="+encodeURIComponent(date);if(time)backUrl+="&time="+encodeURIComponent(time);if(city)backUrl+="&city="+encodeURIComponent(city)}window.location.href=backUrl}
+function goBack(){const date=document.getElementById("input1").value;const time=document.getElementById("timeInput1").value;const city=document.getElementById("cityInput1").value;if(window.AppSharedState)AppSharedState.saveLastAstroInput({date,time,city});let backUrl="chart.html";if(date){backUrl+="?date="+encodeURIComponent(date);if(time)backUrl+="&time="+encodeURIComponent(time);if(city)backUrl+="&city="+encodeURIComponent(city)}window.location.href=backUrl}
 function exitApp(){appExit("index.html")}
 
 // ===== SHARE / PRINT =====
@@ -662,7 +664,7 @@ document.getElementById("printBtn").addEventListener("click",function(){appPrint
 document.getElementById("shareBtn").addEventListener("click",async function(){const shareData={title:"Synastry",text:"Synastry compatibility analysis",url:window.location.href};await appShare(shareData)});
 
 // ===== FILTER ASPECTS =====
-function filterAspects(type){document.querySelectorAll('.aspect-tab').forEach(t=>t.classList.remove('active'));event.target.classList.add('active');document.querySelectorAll('.aspect-item').forEach(item=>{let show=true;if(type==='good')show=item.dataset.type==='good';else if(type==='bad')show=item.dataset.type==='bad';else if(type==='neutral')show=item.dataset.type==='neutral';else if(type==='major')show=item.dataset.major==='true';item.style.display=show?'flex':'none';if(show){item.style.animation='none';item.offsetHeight;item.style.animation='fadeIn 0.3s ease'}})}
+function filterAspects(type, tab){document.querySelectorAll('.aspect-tab').forEach(t=>t.classList.remove('active'));if(tab)tab.classList.add('active');document.querySelectorAll('.aspect-item').forEach(item=>{let show=true;if(type==='good')show=item.dataset.type==='good';else if(type==='bad')show=item.dataset.type==='bad';else if(type==='neutral')show=item.dataset.type==='neutral';else if(type==='major')show=item.dataset.major==='true';item.style.display=show?'flex':'none';if(show){item.style.animation='none';item.offsetHeight;item.style.animation='fadeIn 0.3s ease'}})}
 
 // ===== ASTRO CALCULATION =====
 const signNames=["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
@@ -744,10 +746,12 @@ if(state){try{const data=JSON.parse(state);if(data.date)document.getElementById(
 
 // Also try URL params
 const params=new URLSearchParams(window.location.search);
-const date=params.get("date");const time=params.get("time");const city=params.get("city");
+const preferredState=window.AppSharedState?AppSharedState.preferredAstroInput(params):null;
+const date=preferredState?preferredState.date:params.get("date");const time=preferredState?preferredState.time:params.get("time");const city=preferredState?preferredState.city:params.get("city");
 if(date)document.getElementById('input1').value=date;
 if(time)document.getElementById('timeInput1').value=time;
 if(city)document.getElementById('cityInput1').value=city;
+if(window.AppSharedState){AppSharedState.saveLastAstroInput({date,time,city});AppSharedState.bindLastAstroInput({dateId:"input1",timeId:"timeInput1",cityId:"cityInput1"})}
 
 resetSynastryOutputs();
 });

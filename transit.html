@@ -4,6 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Astrology App - Transits</title>
+<script src="app-shared-state.js"></script>
+<script src="app-notification-open.js"></script>
 <style>
 *{
     margin:0;
@@ -949,11 +951,11 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
         <div class="section-title">ACTIVE TRANSITS</div>
 
         <div class="filter-tabs">
-            <div class="filter-tab active" onclick="filterTransits('all')">All</div>
-            <div class="filter-tab" onclick="filterTransits('positive')">Positive</div>
-            <div class="filter-tab" onclick="filterTransits('challenge')">Challenging</div>
-            <div class="filter-tab" onclick="filterTransits('neutral')">Neutral</div>
-            <div class="filter-tab" onclick="filterTransits('major')">Major Only</div>
+            <div class="filter-tab active" onclick="filterTransits('all', this)">All</div>
+            <div class="filter-tab" onclick="filterTransits('positive', this)">Positive</div>
+            <div class="filter-tab" onclick="filterTransits('challenge', this)">Challenging</div>
+            <div class="filter-tab" onclick="filterTransits('neutral', this)">Neutral</div>
+            <div class="filter-tab" onclick="filterTransits('major', this)">Major Only</div>
         </div>
 
         <div class="aspect-legend">
@@ -1035,7 +1037,7 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 
 <div class="savedPanel" id="savedPanel">
     <div class="savedPanelClose" onclick="toggleSavedPanel()">&times;</div>
-    <h3 class="savedPanelTitle">SAVED CONTACTS</h3>
+    <h3 class="savedPanelTitle">SAVED PROFILES</h3>
     <div id="savedList"></div>
 </div>
 
@@ -1328,9 +1330,9 @@ function daysUntil(dateStr){
 }
 
 /* ===== FILTER ===== */
-function filterTransits(type){
+function filterTransits(type, tab){
     document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
+    if(tab) tab.classList.add('active');
 
     document.querySelectorAll('.transit-item').forEach(item => {
         let show = true;
@@ -1339,7 +1341,7 @@ function filterTransits(type){
         else if(type === 'neutral') show = item.dataset.type === 'neutral';
         else if(type === 'major') show = item.dataset.major === 'true';
 
-        item.style.display = show ? 'flex' : 'none';
+        item.style.setProperty('display', show ? 'block' : 'none', 'important');
     });
 }
 
@@ -1372,14 +1374,30 @@ function calculateTransits(){
 }
 
 /* ===== DATE PICKER ===== */
+function formatTransitDateInput(date){
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+}
+
+function recalculateSelectedTransitDate(){
+    const btn = document.querySelector('.birth-panel > .calc-btn');
+    if(typeof calculateTransits === 'function'){
+        calculateTransits({target: btn});
+    }
+}
+
 function setToday(){
-    document.getElementById('transitDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('transitDate').value = formatTransitDateInput(new Date());
+    recalculateSelectedTransitDate();
 }
 
 function setTomorrow(){
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
-    document.getElementById('transitDate').value = tomorrow.toISOString().split('T')[0];
+    document.getElementById('transitDate').value = formatTransitDateInput(tomorrow);
+    recalculateSelectedTransitDate();
 }
 
 /* ===== EXPORT ===== */
@@ -1514,8 +1532,8 @@ const transitCityData={"Belgrade":{lat:44.7866,lon:20.4489,tz:"Europe/Belgrade"}
 async function loadSharedCityCatalog(){try{const html=await fetch("index.html").then(r=>r.text());const cityMatch=/const worldCities\s*=\s*(\[[\s\S]*?\]);/.exec(html);if(cityMatch){const sharedCities=Function("return "+cityMatch[1])();transitCities=[...new Set([...transitCities,...sharedCities])].sort((a,b)=>a.localeCompare(b))}const coordMatch=/const cityCoords\s*=\s*(\{[\s\S]*?\n\};)/.exec(html);if(coordMatch){const sharedCoords=Function("return "+coordMatch[1].replace(/;$/,""))();Object.entries(sharedCoords).forEach(([name,coords])=>{if(!transitCityData[name])transitCityData[name]={lat:coords.lat,lon:coords.lon}})}}catch(e){console.warn("Shared city catalog could not be loaded.",e)}}
 function setupTransitCityAutocomplete(){const input=document.getElementById("birthCity");const dropdown=document.getElementById("birthCityDropdown");if(!input||!dropdown)return;input.addEventListener("input",function(){const val=this.value.toLowerCase();if(!val){dropdown.style.display="none";return}const matches=transitCities.filter(city=>city.toLowerCase().includes(val)).slice(0,10);dropdown.innerHTML=matches.map(city=>'<div onclick="selectTransitCity(\''+city.replace(/'/g,"\\'")+'\')" style="padding:8px 12px;cursor:pointer;color:white;font-size:12px;border-bottom:1px solid #334155">'+city+'</div>').join("");dropdown.style.display=matches.length?"block":"none"});document.addEventListener("click",function(e){if(!input.contains(e.target)&&!dropdown.contains(e.target))dropdown.style.display="none"})}
 function selectTransitCity(city){document.getElementById("birthCity").value=city;document.getElementById("birthCityDropdown").style.display="none"}
-function initTransitFromParams(){const params=new URLSearchParams(window.location.search);let owner=null;try{owner=JSON.parse(localStorage.getItem("numerology_owner_profile")||"null")}catch(e){}document.getElementById("birthDate").value=params.get("date")||(owner&&owner.birthDate)||"";document.getElementById("birthTime").value=params.get("time")||(owner&&owner.birthTime)||"";document.getElementById("birthCity").value=params.get("city")||(owner&&owner.birthCity)||"Belgrade";document.getElementById("transitDate").value=new Date().toISOString().slice(0,10)}
-function goBack(){const date=document.getElementById("birthDate").value;const time=document.getElementById("birthTime").value;const city=document.getElementById("birthCity").value;let url="chart.html";if(date){url+="?date="+encodeURIComponent(date);if(time)url+="&time="+encodeURIComponent(time);if(city)url+="&city="+encodeURIComponent(city)}window.location.href=url}
+function initTransitFromParams(){const params=new URLSearchParams(window.location.search);const state=window.AppSharedState?AppSharedState.preferredAstroInput(params):{date:params.get("date")||"",time:params.get("time")||"",city:params.get("city")||"Belgrade"};document.getElementById("birthDate").value=state.date||"";document.getElementById("birthTime").value=state.time||"";document.getElementById("birthCity").value=state.city||"Belgrade";document.getElementById("transitDate").value=new Date().toISOString().slice(0,10);if(window.AppSharedState){AppSharedState.saveLastAstroInput(state);AppSharedState.bindLastAstroInput({dateId:"birthDate",timeId:"birthTime",cityId:"birthCity"})}}
+function goBack(){const date=document.getElementById("birthDate").value;const time=document.getElementById("birthTime").value;const city=document.getElementById("birthCity").value;if(window.AppSharedState)AppSharedState.saveLastAstroInput({date,time,city});let url="chart.html";if(date){url+="?date="+encodeURIComponent(date);if(time)url+="&time="+encodeURIComponent(time);if(city)url+="&city="+encodeURIComponent(city)}window.location.href=url}
 function exitApp(){appExit("index.html")}
 function appCopyText(text,message){if(navigator.clipboard&&window.isSecureContext){return navigator.clipboard.writeText(text).then(()=>{if(message)alert(message)}).catch(()=>appCopyTextFallback(text,message))}return appCopyTextFallback(text,message)}
 function appCopyTextFallback(text,message){const input=document.createElement("textarea");input.value=text;input.setAttribute("readonly","");input.style.position="fixed";input.style.left="-9999px";document.body.appendChild(input);input.select();try{document.execCommand("copy");if(message)alert(message)}catch(e){alert(text)}document.body.removeChild(input);return Promise.resolve()}
@@ -1533,7 +1551,7 @@ function getStoredContacts(){try{return JSON.parse(localStorage.getItem("numerol
 function getSavedDates(){let dates=getStoredContacts();try{const profile=JSON.parse(localStorage.getItem("numerology_owner_profile")||"null");const name=[profile&&profile.firstName,profile&&profile.lastName].filter(Boolean).join(" ").trim();if(name){dates=dates.filter(item=>item.id!=="owner-profile"&&!item.ownerProfile);dates.unshift({id:"owner-profile",ownerProfile:true,locked:true,name,date:profile.birthDate||"",time:profile.birthTime||"",city:profile.birthCity||"",isTwin:!!profile.isTwin,isTwin3:!!profile.isTwin3})}}catch(e){}return dates}
 function updateSavedCount(){const icon=document.getElementById("savedIcon");const badge=document.getElementById("savedCount");const count=getSavedDates().length;if(icon)icon.style.display="flex";if(!badge)return;badge.textContent=count;badge.style.display=count>0?"flex":"none"}
 function toggleSavedPanel(){const panel=document.getElementById("savedPanel");if(!panel)return;if(panel.style.display==="block"){panel.style.display="none"}else{panel.style.display="block";renderSavedList()}}
-function loadSavedDate(dateStr,timeStr,city){document.getElementById("birthDate").value=dateStr||"";document.getElementById("birthTime").value=timeStr||"12:00";document.getElementById("birthCity").value=city||"Belgrade";toggleSavedPanel();calculateTransits()}
+function loadSavedDate(dateStr,timeStr,city){document.getElementById("birthDate").value=dateStr||"";document.getElementById("birthTime").value=timeStr||"12:00";document.getElementById("birthCity").value=city||"Belgrade";if(window.AppSharedState)AppSharedState.saveLastAstroInput({date:dateStr,time:timeStr||"12:00",city:city||"Belgrade"});toggleSavedPanel();calculateTransits()}
 function deleteSavedDate(id){if(id==="owner-profile"){alert("Owner profile cannot be deleted from contacts.");return}if(!confirm("Delete this saved contact?"))return;const saved=getStoredContacts().filter(item=>String(item.id)!==String(id)&&item.id!=="owner-profile"&&!item.ownerProfile);localStorage.setItem("numerology_dates",JSON.stringify(saved));updateSavedCount();renderSavedList()}function editSavedDate(id){if(id==="owner-profile")return;let saved=[];try{saved=JSON.parse(localStorage.getItem("numerology_dates")||"[]")}catch(e){saved=[]}const item=saved.find(x=>String(x.id)===String(id));if(!item)return;const n=prompt("Edit contact name",item.name||"");if(n===null)return;const d=prompt("Edit date (DD.MM.YYYY)",item.date||"");if(d===null)return;const t=prompt("Edit time (HH:MM)",item.time||"");if(t===null)return;const c=prompt("Edit city",item.city||"");if(c===null)return;item.name=n.trim()||item.name||"Saved contact";item.date=normalizeDateForCalc(d.trim());item.time=normalizeTimeForCalc(t.trim());item.city=c.trim();item.updatedAt=new Date().toISOString();localStorage.setItem("numerology_dates",JSON.stringify(saved));updateSavedCount();renderSavedList()}
 function ownerUnits(){try{return(JSON.parse(localStorage.getItem("numerology_owner_profile")||"{}").units)||"EU"}catch(e){return"EU"}}
 function displayDateByUnits(date){const m=/^(\d{2})\.(\d{2})\.(\d{4})$/.exec(date||"");return ownerUnits()==="US"&&m?m[2]+"."+m[1]+"."+m[3]:(date||"")}

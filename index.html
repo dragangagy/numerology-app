@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0f172a">
 <title>Pyramid App</title>
+<script src="app-shared-state.js"></script>
+<script src="app-notification-open.js"></script>
 
 <style>
 
@@ -1546,6 +1548,113 @@ body {
   font-size:9px;
   font-weight:bold;
   letter-spacing:.7px;
+}
+
+.notification-group{
+  background:rgba(15,23,42,.48);
+  border:1px solid rgba(56,189,248,.14);
+  border-radius:8px;
+  margin:7px 0;
+  overflow:hidden;
+}
+
+.notification-group summary{
+  color:#e2e8f0;
+  cursor:pointer;
+  font-size:11px;
+  font-weight:bold;
+  letter-spacing:.4px;
+  list-style:none;
+  padding:9px 10px;
+  text-transform:uppercase;
+}
+
+.notification-group summary::-webkit-details-marker{
+  display:none;
+}
+
+.notification-group summary::after{
+  content:"+";
+  float:right;
+  color:#38bdf8;
+}
+
+.notification-group[open] summary::after{
+  content:"-";
+}
+
+.notification-group-body{
+  border-top:1px solid rgba(56,189,248,.12);
+  padding:4px 10px 8px;
+}
+
+.notification-option-disabled{
+  opacity:.38;
+  filter:grayscale(1);
+  cursor:not-allowed;
+}
+
+.notification-option-disabled input{
+  cursor:not-allowed;
+}
+
+.notification-coming-soon{
+  color:#94a3b8;
+  font-size:9px;
+  font-weight:bold;
+  letter-spacing:.5px;
+  margin-left:auto;
+}
+
+.notification-info-modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(2,6,23,.82);
+  align-items:center;
+  justify-content:center;
+  z-index:100001;
+  padding:18px;
+}
+
+.notification-info-panel{
+  width:min(92vw,380px);
+  background:#0f172a;
+  border:1px solid rgba(56,189,248,.45);
+  border-radius:12px;
+  box-shadow:0 0 26px rgba(56,189,248,.28);
+  color:white;
+  padding:16px;
+  position:relative;
+}
+
+.notification-info-close{
+  position:absolute;
+  top:8px;
+  right:8px;
+  width:30px;
+  height:30px;
+  border:1px solid rgba(148,163,184,.36);
+  border-radius:8px;
+  background:#1e293b;
+  color:white;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.notification-info-title{
+  color:#38bdf8;
+  font-size:15px;
+  font-weight:bold;
+  padding-right:34px;
+  margin-bottom:8px;
+}
+
+.notification-info-body{
+  color:#e2e8f0;
+  font-size:13px;
+  line-height:1.5;
+  white-space:pre-line;
 }
 
 .title{
@@ -4999,6 +5108,17 @@ function closeSpiritDetail(){
   showTab("spirit");
 }
 
+function stopStoreVideo(resetTime = false){
+  let video = document.getElementById("storeVideo");
+  if(!video) return;
+
+  video.pause();
+  video.muted = true;
+  if(resetTime){
+    video.currentTime = 0;
+  }
+}
+
 function playStoreVideo(){
 
 
@@ -5010,6 +5130,7 @@ function playStoreVideo(){
 
   video.style.display = "block";
   download.style.display = "none";
+  video.muted = false;
 
   video.currentTime = 0;
 
@@ -5043,6 +5164,10 @@ function showTab(id){
     if(tabHistory.length > MAX_HISTORY){
       tabHistory.shift();
     }
+  }
+
+  if(id !== "store"){
+    stopStoreVideo(true);
   }
 
   // sakrij sve sekcije
@@ -5102,6 +5227,12 @@ if(footer){
   }
 }}
 
+document.addEventListener("visibilitychange", function(){
+  if(document.hidden){
+    stopStoreVideo();
+  }
+});
+
 function toggleSeason(seasonId, el){
 
   let selected = document.getElementById(seasonId);
@@ -5113,6 +5244,7 @@ function toggleSeason(seasonId, el){
 
     selected.style.display = "none";
 
+    stopStoreVideo(true);
     if(video) video.style.display = "none";
     if(download) download.style.display = "block";
     if(icons) icons.style.display = "block"; // ðŸ”¥ DODATO
@@ -5132,6 +5264,7 @@ function toggleSeason(seasonId, el){
     el.classList.add("active");
   }
 
+  stopStoreVideo(true);
   if(video) video.style.display = "none";
   if(download) download.style.display = "none";
   if(icons) icons.style.display = "none"; // ðŸ”¥ DODATO
@@ -7272,8 +7405,8 @@ const APP_TRANSLATIONS = {
     "Retrograde starts": "Početak retrogradnosti",
     "Planet goes direct": "Planeta kreće direktno",
     "Important transit": "Važan tranzit",
-    "Pythagorean day number": "Pitagorin broj dana",
-    "Pyramid day number": "Broj dana piramide",
+    "Pythagorean day code": "Pitagorin kod dana",
+    "Pyramidal day code": "Piramidalni kod dana",
     "Notifications use the owner birth data. Moon alerts and local sky timing use the city of residence, so keep it updated.": "Notifikacije koriste podatke rođenja vlasnika. Mesečeva upozorenja i lokalna astro vremena koriste grad prebivališta, zato ga održavaj ažurnim.",
     "Date format": "Format datuma",
     "EU metric": "EU format",
@@ -7491,7 +7624,7 @@ function openOwnerProfile(){
   document.getElementById('ownerNotifications').checked = !!profile.notificationsEnabled;
   document.querySelectorAll('#ownerNotificationList input[type="checkbox"]').forEach(input => {
     const topics = profile.notificationTopics || [];
-    input.checked = topics.includes(input.value) || (input.value === 'moonGuidance' && topics.includes('moonAvoid'));
+    input.checked = !input.disabled && (topics.includes(input.value) || (input.value === 'moonGuidance' && topics.includes('moonAvoid')));
   });
   loadAppSettings();
   showOwnerProfileTab('ownerData');
@@ -7508,6 +7641,63 @@ function toggleOwnerNotificationList(){
   const list = document.getElementById('ownerNotificationList');
   const enabled = document.getElementById('ownerNotifications')?.checked;
   if(list)list.style.display = enabled ? 'block' : 'none';
+}
+
+function notificationTabForTopic(topic){
+  const lunar = ['newMoon','fullMoon','moonGuidance','moonAvoid','voidMoon','firstQuarterMoon','lastQuarterMoon','moonPhaseChange','natalLunarToday','moonNatalAspect','voidMoonEnd','moonSignChange','eclipseReminder','newMoonTomorrow','fullMoonTomorrow'];
+  const retro = ['retroStart','retroDirect','stationRetroToday','stationDirectToday','retroStartTomorrow','retroDirectTomorrow','activeRetroSummary','natalRetroReminder','mercuryRetroSpecial','venusRetroSpecial','marsRetroSpecial'];
+  const transit = ['importantTransit','exactTransit','challengingTransit','positiveTransit','majorTransit','moonTransitNatalMoon','saturnTransitWarning','jupiterTransitOpportunity','marsTransitEnergy','venusTransitRelationship','transitTomorrow','weeklyTransitSummary'];
+  const numerology = ['pythagoreanDay','pyramidDay','personalDay','personalMonth','personalYear','dailyNumerologyAdvice','challengingNumerologyDay','favorableNumerologyDay','master11Day','master22Day','repeatingCodeDay'];
+  const chart = ['birthdayReminder','sunSeasonStart','moonSignDaily','ascendantDaily','natalChartReminder','houseActivation','planetFocus'];
+  const relation = ['synastryReminder','partnerTransit','relationshipTalkDay','relationshipChallengeDay','venusMarsRelationship','moonCompatibility'];
+  const location = ['astrocartographyCity','travelLineGood','travelLineCaution','venusLineOpportunity','jupiterLineOpportunity','saturnPlutoLineCaution','locationEnergyReminder'];
+  const books = ['newBook','freePdfReminder','bookRecommendation','seasonBookRelease'];
+  const settings = ['ownerProfileReminder','saveProfileReminder'];
+  if(numerology.includes(topic)) return topic === 'pythagoreanDay' ? 'pitagora' : 'analysis';
+  if(books.includes(topic)) return 'store';
+  if(settings.includes(topic)) return 'home';
+  if(lunar.includes(topic) || retro.includes(topic) || transit.includes(topic) || chart.includes(topic) || relation.includes(topic) || location.includes(topic)) return 'home';
+  return 'home';
+}
+
+function openNotificationInfoFromParams(){
+  const params = new URLSearchParams(window.location.search);
+  const topic = params.get('notificationTopic');
+  if(topic){
+    window.__pendingNotificationInfo = {
+      topic,
+      title: params.get('notificationTitle') || 'Notification',
+      body: params.get('notificationBody') || 'Open the related section for more details.',
+      tab: params.get('notificationTab') || notificationTabForTopic(topic)
+    };
+  }
+  const pending = window.__pendingNotificationInfo;
+  if(!pending || !pending.topic) return;
+  const title = pending.title;
+  const body = pending.body;
+  const tab = pending.tab || notificationTabForTopic(pending.topic);
+  document.body.classList.remove('detail-active');
+  if(tab) showTab(tab);
+  setTimeout(() => showNotificationInfo(title, body), 120);
+  if(topic && history.replaceState){
+    const clean = window.location.pathname + (window.location.hash || '');
+    history.replaceState({}, document.title, clean);
+  }
+}
+
+function showNotificationInfo(title, body){
+  const modal = document.getElementById('notificationInfoModal');
+  if(!modal) return;
+  const titleEl = document.getElementById('notificationInfoTitle');
+  const bodyEl = document.getElementById('notificationInfoBody');
+  if(titleEl) titleEl.textContent = title || 'Notification';
+  if(bodyEl) bodyEl.textContent = body || '';
+  modal.style.display = 'flex';
+}
+
+function closeNotificationInfo(){
+  const modal = document.getElementById('notificationInfoModal');
+  if(modal) modal.style.display = 'none';
 }
 
 function applyOwnerUnitFormat(units){
@@ -7619,7 +7809,7 @@ function saveOwnerProfile(){
     }
     const notificationsEnabled = document.getElementById('ownerNotifications').checked;
     const notificationTopics = notificationsEnabled
-      ? [...document.querySelectorAll('#ownerNotificationList input[type="checkbox"]:checked')].map(input => input.value)
+      ? [...document.querySelectorAll('#ownerNotificationList input[type="checkbox"]:checked:not(:disabled)')].map(input => input.value)
       : [];
     const profile = {
       firstName,
@@ -7660,6 +7850,8 @@ window.saveOwnerProfile = saveOwnerProfile;
 window.toggleOwnerNotificationList = toggleOwnerNotificationList;
 window.applyOwnerUnitFormat = applyOwnerUnitFormat;
 window.showOwnerProfileTab = showOwnerProfileTab;
+window.showNotificationInfo = showNotificationInfo;
+window.closeNotificationInfo = closeNotificationInfo;
 window.applyLanguage = applyLanguage;
 
 function getSavedDates(){
@@ -7831,6 +8023,9 @@ function loadSavedDate(dateStr, timeStr, city, isTwin, isTwin3){
     twinCheck3.checked = isTwin3 === true || isTwin3 === 'true';
   }
 
+  if(window.AppSharedState){
+    AppSharedState.saveLastAstroInput({date:dateStr, time:timeStr || "", city:city || "", isTwin:isTwin === true || isTwin === "true", isTwin3:isTwin3 === true || isTwin3 === "true"});
+  }
   skipSavePrompt = true;
   generate();
   toggleSavedPanel();
@@ -7961,6 +8156,8 @@ document.addEventListener('DOMContentLoaded', function(){
   loadAppSettings();
   syncAmbientAudio();
   initAmbientAudioUnlock();
+  setTimeout(openNotificationInfoFromParams, 120);
+  setTimeout(openNotificationInfoFromParams, 900);
 });
 
 function saveAstroReturnState(date, time, city){
@@ -8105,6 +8302,9 @@ function buildAstroPageUrl(page){
   const city = document.getElementById("cityInput").value;
   const isTwin = document.getElementById("twinCheck") && document.getElementById("twinCheck").checked;
   const isTwin3 = document.getElementById("twinCheck3") && document.getElementById("twinCheck3").checked;
+  if(window.AppSharedState){
+    AppSharedState.saveLastAstroInput({date, time, city, isTwin, isTwin3});
+  }
 
   // Validacija datuma
   if(!validateDate(rawDate)){
@@ -8228,15 +8428,120 @@ function openAstro(){
     <div id="ownerNotificationsTab" class="profile-tab-panel">
       <label class="profile-check-row"><input type="checkbox" id="ownerNotifications" onchange="toggleOwnerNotificationList()"> Receive notifications</label>
       <div id="ownerNotificationList" style="display:none; margin-left:22px; padding-top:2px;">
-        <label class="profile-check-row"><input type="checkbox" value="newMoon"> New Moon</label>
-        <label class="profile-check-row"><input type="checkbox" value="fullMoon"> Full Moon</label>
-        <label class="profile-check-row"><input type="checkbox" value="moonGuidance"> Moon guidance</label>
-        <label class="profile-check-row"><input type="checkbox" value="voidMoon"> Void of Course Moon</label>
-        <label class="profile-check-row"><input type="checkbox" value="retroStart"> Retrograde starts</label>
-        <label class="profile-check-row"><input type="checkbox" value="retroDirect"> Planet goes direct</label>
-        <label class="profile-check-row"><input type="checkbox" value="importantTransit"> Important transit</label>
-        <label class="profile-check-row"><input type="checkbox" value="pythagoreanDay"> Pythagorean day number</label>
-        <label class="profile-check-row"><input type="checkbox" value="pyramidDay"> Pyramid day number</label>
+        <details class="notification-group" open>
+          <summary>Moon / Lunar phases</summary>
+          <div class="notification-group-body">
+            <label class="profile-check-row"><input type="checkbox" value="newMoon"> New Moon</label>
+            <label class="profile-check-row"><input type="checkbox" value="fullMoon"> Full Moon</label>
+            <label class="profile-check-row"><input type="checkbox" value="moonGuidance"> Moon guidance</label>
+            <label class="profile-check-row"><input type="checkbox" value="voidMoon"> Void of Course Moon</label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="moonAvoid" disabled> Moon avoid guidance <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="firstQuarterMoon" disabled> First Quarter Moon <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="lastQuarterMoon" disabled> Last Quarter Moon <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="moonPhaseChange" disabled> Moon phase changes <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="natalLunarToday" disabled> Natal lunar day <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="moonNatalAspect" disabled> Moon to natal aspect <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="voidMoonEnd" disabled> Void Moon ends <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="moonSignChange" disabled> Moon sign changes <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="eclipseReminder" disabled> Eclipses <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="newMoonTomorrow" disabled> New Moon tomorrow <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="fullMoonTomorrow" disabled> Full Moon tomorrow <span class="notification-coming-soon">NEXT</span></label>
+          </div>
+        </details>
+        <details class="notification-group">
+          <summary>Retrograde</summary>
+          <div class="notification-group-body">
+            <label class="profile-check-row"><input type="checkbox" value="retroStart"> Retrograde starts</label>
+            <label class="profile-check-row"><input type="checkbox" value="retroDirect"> Planet goes direct</label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="stationRetroToday" disabled> Station retrograde today <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="stationDirectToday" disabled> Station direct today <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="retroStartTomorrow" disabled> Retrograde starts tomorrow <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="retroDirectTomorrow" disabled> Planet direct tomorrow <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="activeRetroSummary" disabled> Active retrograde summary <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="natalRetroReminder" disabled> Natal retrograde reminder <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="mercuryRetroSpecial" disabled> Mercury retrograde special <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="venusRetroSpecial" disabled> Venus retrograde special <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="marsRetroSpecial" disabled> Mars retrograde special <span class="notification-coming-soon">NEXT</span></label>
+          </div>
+        </details>
+        <details class="notification-group">
+          <summary>Transits</summary>
+          <div class="notification-group-body">
+            <label class="profile-check-row"><input type="checkbox" value="importantTransit"> Important transit</label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="exactTransit" disabled> Exact transit <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="challengingTransit" disabled> Challenging transit <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="positiveTransit" disabled> Positive transit <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="majorTransit" disabled> Major transit <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="moonTransitNatalMoon" disabled> Moon transit natal Moon <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="saturnTransitWarning" disabled> Saturn transit warning <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="jupiterTransitOpportunity" disabled> Jupiter transit opportunity <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="marsTransitEnergy" disabled> Mars transit energy <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="venusTransitRelationship" disabled> Venus transit relationship <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="transitTomorrow" disabled> Tomorrow's transit <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="weeklyTransitSummary" disabled> Weekly transit summary <span class="notification-coming-soon">NEXT</span></label>
+          </div>
+        </details>
+        <details class="notification-group" open>
+          <summary>Numerology</summary>
+          <div class="notification-group-body">
+            <label class="profile-check-row"><input type="checkbox" value="pythagoreanDay"> Pythagorean day code</label>
+            <label class="profile-check-row"><input type="checkbox" value="pyramidDay"> Pyramidal day code</label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="personalDay" disabled> Personal day <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="personalMonth" disabled> Personal month <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="personalYear" disabled> Personal year <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="dailyNumerologyAdvice" disabled> Daily numerology advice <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="challengingNumerologyDay" disabled> Challenging numerology day <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="favorableNumerologyDay" disabled> Favorable numerology day <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="master11Day" disabled> Master 11 day <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="master22Day" disabled> Master 22 day <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="repeatingCodeDay" disabled> Repeating code day <span class="notification-coming-soon">NEXT</span></label>
+          </div>
+        </details>
+        <details class="notification-group">
+          <summary>Charts / Relationship / Location</summary>
+          <div class="notification-group-body">
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="birthdayReminder" disabled> Birthday reminder <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="sunSeasonStart" disabled> Sun season start <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="moonSignDaily" disabled> Daily Moon sign <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="ascendantDaily" disabled> Daily Ascendant focus <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="natalChartReminder" disabled> Natal chart reminder <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="houseActivation" disabled> House activation <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="planetFocus" disabled> Planet focus <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="synastryReminder" disabled> Synastry reminder <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="partnerTransit" disabled> Partner transit <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="relationshipTalkDay" disabled> Relationship talk day <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="relationshipChallengeDay" disabled> Relationship challenge day <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="venusMarsRelationship" disabled> Venus/Mars relationship <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="moonCompatibility" disabled> Moon compatibility <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="astrocartographyCity" disabled> Astrocartography city <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="travelLineGood" disabled> Good travel line <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="travelLineCaution" disabled> Caution travel line <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="venusLineOpportunity" disabled> Venus line opportunity <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="jupiterLineOpportunity" disabled> Jupiter line opportunity <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="saturnPlutoLineCaution" disabled> Saturn/Pluto line caution <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="locationEnergyReminder" disabled> Location energy reminder <span class="notification-coming-soon">NEXT</span></label>
+          </div>
+        </details>
+        <details class="notification-group">
+          <summary>Books / App</summary>
+          <div class="notification-group-body">
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="newBook" disabled> New book <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="freePdfReminder" disabled> Free PDF reminder <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="bookRecommendation" disabled> Book recommendation <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="seasonBookRelease" disabled> Season book release <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="ownerProfileReminder" disabled> Owner profile reminder <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="saveProfileReminder" disabled> Save profile reminder <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="dailySummary" disabled> Daily summary <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="morningGuidance" disabled> Morning guidance <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="eveningReflection" disabled> Evening reflection <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="weeklySummary" disabled> Weekly summary <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="monthlySummary" disabled> Monthly summary <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="importantDay" disabled> Important day <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="avoidBigDecisions" disabled> Avoid big decisions <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="goodForAction" disabled> Good for action <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="goodForRest" disabled> Good for rest <span class="notification-coming-soon">NEXT</span></label>
+          </div>
+        </details>
       </div>
       <div class="profile-note">
         Notifications use the owner birth data. Moon alerts and local sky timing use the city of residence, so keep it updated.
@@ -8273,6 +8578,15 @@ function openAstro(){
       <button class="profile-save-btn" type="button" onclick="saveOwnerProfile()">SAVE</button>
       <button class="profile-cancel-btn" type="button" onclick="closeOwnerProfile()">CANCEL</button>
     </div>
+  </div>
+</div>
+
+
+<div id="notificationInfoModal" class="notification-info-modal">
+  <div class="notification-info-panel">
+    <button class="notification-info-close" type="button" onclick="closeNotificationInfo()">X</button>
+    <div id="notificationInfoTitle" class="notification-info-title">Notification</div>
+    <div id="notificationInfoBody" class="notification-info-body"></div>
   </div>
 </div>
 
