@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Astrology App - Transits</title>
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: white;
+  text-align: center;
+  margin: 0;
+  padding: 5px;
+}
+
+.left-bar{
+  position:absolute;
+  top:10px;
+  left:12px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  z-index:9999;
+}
+
+.top-bar{
+  position:absolute;
+  top:10px;
+  right:12px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  z-index:9999;
+}
+
+.icon-btn{
+  width:30px;
+  height:30px;
+  border-radius:8px;
+  background:#1e293b;
+  border:1px solid rgba(56,189,248,0.25);
+  color:#94a3b8;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:0.2s;
+  padding:0;
+}
+
+.icon-btn:hover{
+  color:#38bdf8;
+  border-color:#38bdf8;
+  box-shadow:0 0 10px rgba(56,189,248,0.35);
+}
+
+.icon-btn svg{
+  width:18px;
+  height:18px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.city-wrap{position:relative}
+.city-dropdown{display:none;position:absolute;top:calc(100% + 4px);left:0;width:220px;max-height:250px;overflow-y:auto;background:#1e293b;border:1px solid #38bdf8;border-radius:8px;z-index:1000;box-shadow:0 0 15px rgba(56,189,248,0.4)}
+
+.header{
+  width:100%;
+  padding:48px 84px 8px;
+  background:#0f172a;
+}
+
+.title{
+  position:absolute;
+  top:12px;
+  left:84px;
+  right:84px;
+  height:30px;
+  line-height:30px;
+  font-size:clamp(13px,5vw,22px);
+  font-weight:700;
+  color:#FFD700;
+  letter-spacing:clamp(0px,.5vw,2px);
+  text-shadow:0 0 12px rgba(255,215,0,0.35);
+  text-align:center;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:clip;
+  z-index:9998;
+}
+
+.subtitle{
+  margin-top:6px;
+  color:#94a3b8;
+  font-size:12px;
+}
+
+.calc-source-status{
+  margin:0 0 5px;
+  color:#4ade80;
+  font-size:10px;
+  line-height:1.1;
+  text-align:center;
+  opacity:.82;
+}
+
+.calc-source-status.fallback{
+  color:#f6cb71;
+}
+
+.container{
+  width:100%;
+  max-width:900px;
+  margin:auto;
+  padding:12px;
+}
+
+.card{
+  background:rgba(10,20,35,0.78);
+  border-radius:20px;
+  border:1px solid rgba(56,189,248,0.12);
+  padding:16px;
+  margin-top:16px;
+}
+
+.section-title{
+  color:#FFD700;
+  font-size:18px;
+  margin-bottom:14px;
+  text-shadow:0 0 8px rgba(255,215,0,0.2);
+}
+
+.input-line{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:8px;
+    margin:10px auto 6px;
+    max-width:340px;
+    padding:0 10px;
+}
+
+.input-line .input-wrap{
+    flex-shrink:0;
+    background:transparent;
+    border-radius:0;
+    padding:0;
+    box-shadow:none;
+}
+
+.input-line input[type="text"]{
+    background:#1e293b;
+    border:1px solid #38bdf8;
+    border-radius:8px;
+    padding:8px 6px;
+    color:white;
+    font-size:12px;
+    outline:none;
+    transition:0.3s;
+    text-align:center;
+    box-shadow:0 0 10px rgba(56,189,248,0.4);
+    width:76px;
+    height:34px;
+    box-sizing:border-box;
+}
+
+.input-line #birthDate{
+    width:86px;
+}
+
+.input-line #birthTime{
+    width:64px;
+}
+
+.input-line #birthCity{
+    width:88px;
+}
+
+.input-line input[type="text"]:focus{
+    border-color:#38bdf8;
+    box-shadow:0 0 10px rgba(56,189,248,0.3);
+}
+
+.input-line input[type="text"]:hover{
+    box-shadow:0 0 15px rgba(56,189,248,0.8);
+}
+
+.input-line input[type="text"]::placeholder{
+    color:#64748b;
+}
+
+.birth-panel{
+    margin-top:6px;
+    padding:0;
+}
+
+.savedIconBox{
+    width:34px;
+    height:34px;
+    background:#1e293b;
+    border-radius:8px;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 0 10px rgba(56,189,248,0.4);
+    border:1px solid #38bdf8;
+    position:relative;
+    flex-shrink:0;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.savedIconBox:hover{
+    box-shadow:0 0 15px rgba(56,189,248,0.7);
+    transform:scale(1.05);
+}
+
+.savedCountBox{
+    position:absolute;
+    top:-8px;
+    right:-8px;
+    background:#334155;
+    color:#dbeafe;
+    font-size:9px;
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+    border:1px solid rgba(56,189,248,0.45);
+}
+
+.savedPanel{
+    display:none;
+    position:fixed;
+    top:58px;
+    right:0;
+    width:280px;
+    height:calc(100% - 58px);
+    background:#1e293b;
+    z-index:9000;
+    padding:46px 15px 20px;
+    overflow-y:auto;
+    box-shadow:-5px 0 20px rgba(255,215,0,.16);
+    border-left:1px solid rgba(255,215,0,.45);
+}
+
+.savedPanelClose{
+    position:absolute;
+    top:14px;
+    left:15px;
+    font-size:20px;
+    color:#FFD700;
+    cursor:pointer;
+}
+
+.savedPanelTitle{
+    color:#FFD700;
+    margin-bottom:15px;
+    font-size:14px;
+    text-align:center;
+    text-shadow:0 0 10px rgba(255,215,0,.36);
+}
+
+.saved-edit-contact{color:#FFD700!important;font-size:12px!important;cursor:pointer!important;padding:5px 6px!important;border:1px solid rgba(255,215,0,.55)!important;border-radius:7px!important;font-weight:800!important;line-height:1!important;margin-right:3px!important;box-shadow:0 0 7px rgba(255,215,0,.18)!important}
+
+.calc-btn{
+    background:linear-gradient(135deg,#FFD700,#f59e0b);
+    color:#0f172a;
+    font-weight:bold;
+    border:none;
+    border-radius:10px;
+    padding:10px 20px;
+    cursor:pointer;
+    transition:0.3s;
+    font-size:13px;
+    margin-top:10px;
+}
+
+.calc-btn:hover{
+    transform:scale(1.02);
+    box-shadow:0 0 20px rgba(255,215,0,0.4);
+}
+
+/* ===== DATE PICKER ===== */
+.date-picker-row{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin:14px 0;
+    flex-wrap:wrap;
+}
+
+.date-picker-row input{
+    background:#1e293b;
+    border:1px solid rgba(56,189,248,0.2);
+    border-radius:10px;
+    padding:8px 12px;
+    color:#e2e8f0;
+    font-size:13px;
+    outline:none;
+}
+
+.date-picker-row input:focus{
+    border-color:#38bdf8;
+}
+
+/* ===== TRANSIT ITEM ===== */
+.transit-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:8px 9px;
+  margin-bottom:6px;
+  background:#1e293b;
+  border-radius:10px;
+  border-left:4px solid #38bdf8;
+  border-top:1px solid rgba(56,189,248,0.08);
+  border-right:1px solid rgba(56,189,248,0.08);
+  border-bottom:1px solid rgba(56,189,248,0.08);
+  transition:0.25s;
+  cursor:pointer;
+  position:relative;
+  overflow:hidden;
+}
+
+.transit-item:hover{
+  transform:scale(1.01);
+  box-shadow: 0 0 14px rgba(56,189,248,0.25);
+}
+
+.transit-item.expanded{
+  border-left-color:#FFD700;
+}
+
+.transit-item.positive{border-left-color:#4ade80;}
+.transit-item.challenge{border-left-color:#fb7185;}
+.transit-item.neutral{border-left-color:#38bdf8;}
+
+.left{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  text-align:left;
+  flex:1;
+}
+
+.aspect{
+  font-size:14px;
+  font-weight:bold;
+  color:white;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.aspect-icon{
+    font-size:16px;
+}
+
+.description{
+  color:#94a3b8;
+  font-size:11px;
+}
+
+.orb{
+  color:#dbeafe;
+  font-size:12px;
+  min-width:58px;
+  text-align:right;
+}
+
+.orb-separator{
+    font-size:10px;
+    color:#64748b;
+    margin-top:4px;
+}
+
+/* ===== TRANSIT DETAILS ===== */
+.transit-details{
+    display:none;
+    margin-top:8px;
+    padding-top:8px;
+    border-top:1px solid rgba(56,189,248,0.1);
+    text-align:left;
+}
+
+.transit-details.show{
+    display:block;
+    animation:slideDown 0.3s ease;
+}
+
+@keyframes slideDown{
+    from{ opacity:0; transform:translateY(-10px); }
+    to{ opacity:1; transform:translateY(0); }
+}
+
+.detail-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap:10px;
+    margin-bottom:12px;
+}
+
+.detail-box{
+    background:rgba(15,23,42,0.6);
+    border-radius:10px;
+    padding:10px;
+    border:1px solid rgba(56,189,248,0.08);
+}
+
+.detail-label{
+    font-size:10px;
+    color:#64748b;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin-bottom:4px;
+}
+
+.detail-value{
+    font-size:13px;
+    color:#e2e8f0;
+    font-weight:600;
+}
+
+.transit-meaning{
+    font-size:12px;
+    color:#94a3b8;
+    line-height:1.6;
+    margin-top:8px;
+}
+
+.transit-meaning strong{
+    color:#FFD700;
+}
+
+.transit-timing{
+    display:flex;
+    gap:16px;
+    margin-top:10px;
+    flex-wrap:wrap;
+}
+
+.timing-item{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:11px;
+    color:#64748b;
+}
+
+.timing-dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+}
+
+.timing-dot.approaching{ background:#f59e0b; }
+.timing-dot.exact{ background:#ef4444; }
+.timing-dot.separating{ background:#4ade80; }
+
+/* ===== FILTER TABS ===== */
+.filter-tabs{
+    display:flex;
+    gap:6px;
+    margin-bottom:14px;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.filter-tab{
+    padding:6px 14px;
+    border-radius:999px;
+    border:1px solid rgba(56,189,248,0.2);
+    background:transparent;
+    color:#94a3b8;
+    font-size:12px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.filter-tab:hover, .filter-tab.active{
+    background:rgba(56,189,248,0.15);
+    color:#38bdf8;
+    border-color:rgba(56,189,248,0.4);
+}
+
+/* ===== TRANSIT TIMELINE ===== */
+.transit-timeline{
+    margin:6px 0 2px;
+    padding:4px 0;
+}
+
+.timeline-track{
+    position:relative;
+    height:4px;
+    background:#1e293b;
+    border-radius:2px;
+    margin:5px 0;
+}
+
+.timeline-progress{
+    position:absolute;
+    left:0;
+    top:0;
+    height:100%;
+    border-radius:2px;
+    transition:width 1s ease-out;
+}
+
+.timeline-progress.positive{ background:linear-gradient(90deg, #4ade80, #22c55e); }
+.timeline-progress.challenge{ background:linear-gradient(90deg, #fb7185, #ef4444); }
+.timeline-progress.neutral{ background:linear-gradient(90deg, #38bdf8, #0ea5e9); }
+
+.timeline-labels{
+    display:flex;
+    justify-content:space-between;
+    font-size:10px;
+    color:#64748b;
+    margin-top:2px;
+}
+
+/* ===== NATAL POSITIONS MINI ===== */
+.natal-mini{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:8px;
+    margin-top:10px;
+}
+
+.natal-pos{
+    background:#1e293b;
+    border-radius:10px;
+    padding:10px;
+    border:1px solid rgba(56,189,248,0.08);
+    text-align:center;
+    transition:0.3s;
+}
+
+.natal-pos:hover{
+    border-color:rgba(56,189,248,0.2);
+}
+
+.natal-pos-planet{
+    font-size:12px;
+    color:#FFD700;
+    font-weight:600;
+}
+
+.natal-pos-sign{
+    font-size:11px;
+    color:#94a3b8;
+    margin-top:2px;
+}
+
+.natal-pos-degree{
+    font-size:10px;
+    color:#64748b;
+}
+
+/* ===== UPCOMING TRANSITS ===== */
+.upcoming-list{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:10px;
+}
+
+.upcoming-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:#1e293b;
+    border-radius:10px;
+    padding:10px 14px;
+    border:1px solid rgba(56,189,248,0.08);
+    transition:0.3s;
+    text-align:left;
+}
+
+.upcoming-item:hover{
+    border-color:rgba(56,189,248,0.2);
+}
+
+.upcoming-date{
+    font-size:11px;
+    color:#94a3b8;
+    min-width:80px;
+}
+
+.upcoming-transit{
+    font-size:13px;
+    color:#e2e8f0;
+    font-weight:600;
+    flex:1;
+}
+
+.upcoming-type{
+    font-size:10px;
+    padding:3px 8px;
+    border-radius:999px;
+    font-weight:bold;
+}
+
+.upcoming-type.positive{ background:rgba(74,222,128,0.15); color:#4ade80; }
+.upcoming-type.challenge{ background:rgba(251,113,133,0.15); color:#fb7185; }
+.upcoming-type.neutral{ background:rgba(56,189,248,0.15); color:#38bdf8; }
+
+/* ===== RETROGRADE IMPACT ===== */
+.retro-impact{
+    background:linear-gradient(135deg, rgba(251,113,133,0.05), rgba(245,158,11,0.05));
+    border:1px solid rgba(251,113,133,0.15);
+    border-radius:14px;
+    padding:14px;
+    margin-top:12px;
+    text-align:left;
+}
+
+.retro-impact-title{
+    color:#fb7185;
+    font-size:14px;
+    font-weight:bold;
+    margin-bottom:8px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.retro-impact-text{
+    font-size:12px;
+    color:#94a3b8;
+    line-height:1.6;
+}
+
+/* ===== ASPECT LEGEND ===== */
+.aspect-legend{
+    display:flex;
+    justify-content:center;
+    gap:16px;
+    margin:14px 0;
+    flex-wrap:wrap;
+}
+
+.legend-item{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:11px;
+    color:#94a3b8;
+}
+
+.legend-symbol{
+    font-size:14px;
+    font-weight:bold;
+}
+
+/* ===== BUTTONS ===== */
+.buttons{
+  display:flex;
+  gap:10px;
+  margin-top:18px;
+}
+
+button{
+  flex:1;
+  padding:10px;
+  border-radius:14px;
+  border:none;
+  background:linear-gradient(135deg,#38bdf8,#0ea5e9);
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+  font-size:13px;
+}
+
+button:hover{
+  transform:scale(1.02);
+  box-shadow: 0 0 20px rgba(56,189,248,0.6);
+}
+
+button.gold{
+    background:linear-gradient(135deg,#FFD700,#f59e0b);
+    color:#0f172a;
+}
+
+button.secondary{
+    background:linear-gradient(135deg,#475569,#334155);
+}
+
+/* ===== FOOTER ===== */
+.footer{
+  text-align:center;
+  padding:25px;
+  color:#64748b;
+  font-size:11px;
+}
+
+/* ===== BORDERS ===== */
+.positive{ border-left:4px solid #4ade80; }
+.challenge{ border-left:4px solid #fb7185; }
+.neutral{ border-left:4px solid #38bdf8; }
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:700px){
+    .transit-item{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:12px;
+    }
+    .orb{
+        width:100%;
+        text-align:center;
+    }
+    .buttons{ flex-direction:column; }
+    .detail-grid{ grid-template-columns:1fr 1fr; }
+    .natal-mini{ grid-template-columns: repeat(2, 1fr); }
+    .input-line{max-width:320px;gap:6px;padding:0}
+    .input-line #birthDate{width:82px}
+    .input-line #birthTime{width:60px}
+    .input-line #birthCity{width:82px}
+}
+
+/* ===== UNIFIED BIRTH INPUTS ===== */
+:root{--birth-field-width:clamp(76px,23vw,92px);--birth-field-height:34px;--birth-field-font:clamp(9px,2.8vw,12px)}
+.input-line,.natal-input-line{display:flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;flex-wrap:nowrap!important;width:100%!important;max-width:calc((var(--birth-field-width) * 3) + 58px)!important;margin-left:auto!important;margin-right:auto!important;padding-left:4px!important;padding-right:4px!important}
+.input-line .input-wrap{flex:0 0 var(--birth-field-width)!important;width:var(--birth-field-width)!important;min-width:0!important;margin:0!important;background:transparent!important;border-radius:0!important;padding:0!important;box-shadow:none!important}
+.input-line input[type="text"],.input-line select,.natal-input-line input{width:var(--birth-field-width)!important;flex:0 0 var(--birth-field-width)!important;height:var(--birth-field-height)!important;min-height:var(--birth-field-height)!important;line-height:normal!important;padding:0 6px!important;font-size:var(--birth-field-font)!important;letter-spacing:0!important;text-align:center!important;border-radius:8px!important;box-sizing:border-box!important;background:#1e293b!important;border:1px solid #38bdf8!important;color:#fff!important;box-shadow:0 0 10px rgba(56,189,248,0.4)!important;outline:none!important}
+#input,#dateInput,#birthDate,#input1,#input2,#natalDate,#ownerBirthDate{width:var(--birth-field-width)!important}
+#timeInput,#birthTime,#timeInput1,#timeInput2,#natalTime,#ownerBirthTime{width:var(--birth-field-width)!important}
+#cityInput,#birthCity,#cityInput1,#cityInput2,#ownerBirthCity,#ownerCurrentCity{width:var(--birth-field-width)!important}
+#savedIcon,.savedIconBox{width:34px!important;height:34px!important;min-width:34px!important;flex:0 0 34px!important;border-radius:8px!important}
+.cityDropdown,.city-dropdown,.owner-city-dropdown{width:min(220px,calc(100vw - 20px))!important;max-width:calc(100vw - 20px)!important}
+.natal-input-line button{height:var(--birth-field-height)!important;min-height:var(--birth-field-height)!important;padding:0 10px!important;font-size:var(--birth-field-font)!important;white-space:nowrap!important;flex:0 0 auto!important}
+
+/* ===== MOBILE WIDTH SAFETY ===== */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+*,*::before,*::after{box-sizing:border-box}
+img,video,canvas,svg{max-width:100%;height:auto}
+input,select,textarea,button{max-width:100%;min-width:0}
+table{max-width:100%;border-collapse:collapse}
+@media(max-width:480px){
+    body{padding-left:4px!important;padding-right:4px!important}
+    .container,.card{width:100%!important;max-width:100%!important}
+    .input-line{max-width:100%!important;gap:6px!important;padding-left:4px!important;padding-right:4px!important}
+    .input-line #birthDate{width:82px!important}
+    .input-line #birthTime{width:58px!important}
+    .input-line #birthCity{width:78px!important}
+    .filter-tabs{max-width:100%!important;gap:4px!important}
+    .filter-tab{min-width:0!important;padding-left:6px!important;padding-right:6px!important;font-size:10px!important}
+    .transit-item,.upcoming-item,.natal-mini,.detail-grid{max-width:100%!important}
+    .natal-mini,.detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+    .savedPanel{width:min(280px,100vw)!important}
+    .title{font-size:clamp(20px,8vw,30px)!important;letter-spacing:1px!important}
+}
+/* ===== UNIFIED BIRTH INPUTS FINAL OVERRIDE ===== */
+.input-line,.natal-input-line{flex-wrap:nowrap!important}
+.input-line .input-wrap,.input-line input[type="text"],.input-line select,.natal-input-line input,#input,#dateInput,#birthDate,#input1,#input2,#natalDate,#timeInput,#birthTime,#timeInput1,#timeInput2,#natalTime,#cityInput,#birthCity,#cityInput1,#cityInput2{width:var(--birth-field-width)!important;flex-basis:var(--birth-field-width)!important;font-size:var(--birth-field-font)!important;height:var(--birth-field-height)!important}
+.title,.header-title{white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;font-size:clamp(13px,5vw,22px)!important;letter-spacing:clamp(0px,.5vw,2px)!important}
+
+/* ===== COMPACT VERTICAL SPACING ===== */
+body{padding-top:4px!important;padding-bottom:4px!important}
+.header{padding-top:42px!important;padding-bottom:2px!important}
+.title,.header-title{top:8px!important;height:26px!important;line-height:26px!important}
+.left-bar,.top-bar{top:8px!important}
+#tabs,.tabs,.transit-tabs{gap:4px!important;margin-top:6px!important;margin-bottom:6px!important}
+.tab,.transit-tab{padding-top:5px!important;padding-bottom:5px!important;min-height:30px!important}
+.section{padding-top:2px!important;padding-bottom:2px!important}
+.container{padding-top:4px!important;padding-bottom:4px!important}
+.input-line,.natal-input-line{margin-top:4px!important;margin-bottom:4px!important;gap:5px!important}
+.card,.panel,.box,.content-card,.result-card{margin-top:8px!important;margin-bottom:8px!important;padding-top:10px!important;padding-bottom:10px!important}
+.transit-item,.station-card{padding-top:6px!important;padding-bottom:6px!important;margin-bottom:5px!important}
+h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!important}
+
+/* ===== INNER BOX TEXT COMPACT ===== */
+.card{border-radius:14px!important;padding:8px!important;margin-top:6px!important;margin-bottom:6px!important}
+.section-title{font-size:17px!important;line-height:1.1!important;margin:0 0 8px!important}
+.subtitle{line-height:1.15!important;margin-top:2px!important;margin-bottom:4px!important}
+.calc-source-status{margin-top:1px!important;margin-bottom:2px!important;line-height:1.05!important}
+.calc-source-status + .container{padding-top:2px!important}
+.natal-mini{gap:6px!important}
+.natal-pos{padding:6px 5px!important;border-radius:8px!important;min-height:0!important}
+.natal-pos-planet{font-size:12px!important;line-height:1.1!important;margin:0!important}
+.natal-pos-sign{font-size:10.5px!important;line-height:1.1!important;margin-top:3px!important}
+.natal-pos-degree{font-size:9.5px!important;line-height:1.05!important;margin-top:1px!important}
+.date-picker-row{gap:5px!important;margin:6px 0!important}
+.date-picker-row input{height:34px!important;padding:4px 8px!important}
+.date-picker-row .calc-btn{height:34px!important;padding:4px 10px!important;border-radius:9px!important}
+.birth-panel > .calc-btn{display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;width:min(340px,calc(100vw - 40px))!important;max-width:340px!important;min-height:34px!important;margin:8px auto 4px!important;padding:8px 10px!important;line-height:1.05!important;font-size:13px!important}
+.filter-tabs{gap:4px!important;margin-bottom:6px!important}
+.filter-tab{padding:4px 7px!important;font-size:9.5px!important;line-height:1!important}
+.aspect-legend{gap:8px!important;margin-top:6px!important}
+.legend-item{gap:3px!important;font-size:10px!important;line-height:1.1!important}
+.transit-item,.upcoming-item{padding:6px 7px!important;border-radius:9px!important;line-height:1.15!important}
+.left{gap:2px!important}
+.transit-title,.upcoming-transit{line-height:1.15!important}
+.description,.transit-meaning,.retro-impact-text{line-height:1.25!important}
+.detail-grid{gap:6px!important}
+.detail-box{padding:7px!important}
+.transit-timing{gap:8px!important;margin-top:6px!important}
+
+.transit-item{display:block!important;padding:6px 7px!important}
+.transit-summary{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:6px!important;align-items:start!important}
+.transit-main{min-width:0!important;text-align:left!important}
+.aspect{font-size:13px!important;line-height:1.05!important;gap:3px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.aspect-icon{font-size:14px!important}
+.orb{min-width:44px!important;text-align:right!important;font-size:10px!important;line-height:1!important;padding-top:1px!important;color:#dbeafe!important}
+.orb-value{font-size:15px!important;font-weight:800!important;line-height:1!important;color:#fff!important;text-shadow:0 0 8px rgba(56,189,248,.45)!important}
+.orb-house{font-size:9px!important;line-height:1.05!important;margin-top:2px!important;color:#64748b!important;white-space:nowrap!important}
+.description{font-size:10.5px!important;line-height:1.1!important;margin-top:2px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.transit-timeline{margin:4px 0 0!important;padding:2px 0 0!important}
+.timeline-track{height:3px!important;margin:3px 0!important}
+.timeline-labels{font-size:9px!important;line-height:1!important;margin-top:1px!important}
+#savedCount,.savedCountBox{
+    top:-6px!important;
+    right:-6px!important;
+    background:#334155!important;
+    color:#dbeafe!important;
+    font-size:9px!important;
+    width:16px!important;
+    height:16px!important;
+    border-radius:50%!important;
+    align-items:center!important;
+    justify-content:center!important;
+    font-weight:bold!important;
+    border:1px solid rgba(56,189,248,0.45)!important;
+    box-shadow:0 0 6px rgba(56,189,248,0.25)!important;
+}
+
+/* ===== TRANSIT NATAL POSITIONS: 4 x 2 COMPACT ===== */
+.natal-mini{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:5px!important;
+}
+
+.natal-pos{
+    padding:5px 3px!important;
+    min-width:0!important;
+    text-align:center!important;
+}
+
+.natal-pos-planet,
+.natal-pos-sign,
+.natal-pos-degree{
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:ellipsis!important;
+}
+
+.natal-pos-planet{font-size:10px!important}
+.natal-pos-sign{font-size:9px!important;margin-top:2px!important}
+.natal-pos-degree{font-size:8.5px!important}
+
+/* ===== ASTROLOGY GOLD THEME ===== */
+:root{--astro-gold:#FFD700;--astro-gold-2:#f59e0b;--astro-gold-soft:rgba(255,215,0,.36);--astro-gold-glow:rgba(255,215,0,.34)}
+.left-btn,.action-btn,.icon-btn,#savedIcon,.savedIconBox{border-color:var(--astro-gold-soft)!important;color:var(--astro-gold)!important;box-shadow:0 0 10px rgba(255,215,0,.16)!important}
+.left-btn:hover,.action-btn:hover,.icon-btn:hover,#savedIcon:hover,.savedIconBox:hover{border-color:var(--astro-gold)!important;color:#fff4b0!important;box-shadow:0 0 14px var(--astro-gold-glow)!important}
+.input-line input[type="text"],.input-line select,.natal-input-line input,.cityDropdown,.city-dropdown,#cityDropdown,.owner-city-dropdown{border-color:var(--astro-gold)!important;box-shadow:0 0 10px rgba(255,215,0,.26)!important}
+.input-line input[type="text"]:hover,.input-line select:hover,.natal-input-line input:hover{box-shadow:0 0 14px rgba(255,215,0,.46)!important}
+.analyze-btn,.calc-btn,button.gold,.buttons button:not(.left-btn):not(.action-btn):not(.icon-btn){background:linear-gradient(135deg,var(--astro-gold),var(--astro-gold-2))!important;color:#0f172a!important;border-color:rgba(255,215,0,.65)!important;box-shadow:0 0 12px rgba(255,215,0,.24)!important}
+.filter-tab,.lunar-tab,.planet-toggle,.phase-btn{border-color:var(--astro-gold-soft)!important;color:#f6cb71!important}
+.filter-tab:hover,.filter-tab.active,.lunar-tab:hover,.lunar-tab.active,.planet-toggle:hover,.planet-toggle.active,.phase-btn:hover,.phase-btn.active{background:rgba(255,215,0,.15)!important;border-color:var(--astro-gold)!important;color:var(--astro-gold)!important;box-shadow:0 0 10px rgba(255,215,0,.22)!important}
+.card,.panel,.box,.content-card,.result-card,.side-card,.info-card,.saved-card{border-color:rgba(255,215,0,.18)!important}
+#savedIcon svg,.savedIconBox svg,#savedIcon svg *,.savedIconBox svg *{stroke:var(--astro-gold)!important;filter:drop-shadow(0 0 5px rgba(255,215,0,.65))!important}
+#savedCount,.savedCountBox{background:var(--astro-gold)!important;color:#0f172a!important;border:1px solid rgba(255,215,0,.9)!important;box-shadow:0 0 7px rgba(255,215,0,.38)!important}
+.date-picker-row input[type="date"],#transitDate{border:1px solid rgba(255,215,0,.85)!important;box-shadow:none!important;background:#1e293b!important;color:#fff!important}
+.date-picker-row input[type="date"]:focus,#transitDate:focus{border-color:var(--astro-gold)!important;box-shadow:0 0 6px rgba(255,215,0,.22)!important;outline:none!important}
+.date-picker-row input[type="date"]::-webkit-calendar-picker-indicator,#transitDate::-webkit-calendar-picker-indicator{filter:sepia(1) saturate(5) hue-rotate(5deg) brightness(1.2)!important;opacity:.9!important}
+
+</style>
+</head>
+<body>
+
+<div class="left-bar">
+    <button class="icon-btn" onclick="goBack()" title="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <button class="icon-btn" onclick="exitApp()" title="Exit"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button>
+</div>
+<div class="top-bar">
+    <button class="icon-btn" onclick="sharePage()" title="Share"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+    <button class="icon-btn" onclick="appPrintPage()" title="Print"><svg viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg></button>
+</div>
+
+<div class="header">
+    <div class="title">TRANSITS</div>
+    <div class="subtitle">Current planetary influences & upcoming events</div>
+</div>
+<div class="calc-source-status" id="calcSourceStatus">Calculating source...</div>
+
+<div class="container">
+
+    <!-- BIRTH DATA -->
+    <div class="birth-panel">
+        <div class="input-line">
+            <div class="input-wrap">
+                <input type="text" id="birthDate" placeholder="DD.MM.YYYY" oninput="formatBirthDate(this)" onblur="validateBirthDateInput(this)" onkeypress="if(event.key==='Enter'){calculateTransits()}" maxlength="10" autocomplete="off">
+            </div>
+            <input type="text" id="birthTime" placeholder="HH:MM" oninput="formatBirthTime(this)" onblur="validateBirthTimeInput(this)" onkeypress="if(event.key==='Enter'){calculateTransits()}" maxlength="5" autocomplete="off">
+            <div class="city-wrap">
+                <input type="text" id="birthCity" placeholder="City..." autocomplete="off">
+                <div class="city-dropdown" id="birthCityDropdown"></div>
+            </div>
+            <div class="savedIconBox" id="savedIcon" onclick="toggleSavedPanel()" title="Saved contacts">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M9 12h6"/><path d="M9 16h6"/></svg>
+                <span class="savedCountBox" id="savedCount">0</span>
+            </div>
+        </div>
+        <button class="calc-btn" onclick="calculateTransits()">Calculate My Transits</button>
+    </div>
+
+    <!-- NATAL POSITIONS MINI -->
+    <div class="card">
+        <div class="section-title">NATAL POSITIONS</div>
+        <div class="natal-mini">
+            <div class="natal-pos"><div class="natal-pos-planet">☉ Sun</div><div class="natal-pos-sign">♌ Leo</div><div class="natal-pos-degree">15°22'</div></div>
+            <div class="natal-pos"><div class="natal-pos-planet">☾ Moon</div><div class="natal-pos-sign">♓ Pisces</div><div class="natal-pos-degree">8°15'</div></div>
+            <div class="natal-pos"><div class="natal-pos-planet">☿ Mercury</div><div class="natal-pos-sign">♌ Leo</div><div class="natal-pos-degree">22°08'</div></div>
+            <div class="natal-pos"><div class="natal-pos-planet">♀ Venus</div><div class="natal-pos-sign">♍ Virgo</div><div class="natal-pos-degree">5°44'</div></div>
+            <div class="natal-pos"><div class="natal-pos-planet">♂ Mars</div><div class="natal-pos-sign">♏ Scorpio</div><div class="natal-pos-degree">18°33'</div></div>
+            <div class="natal-pos"><div class="natal-pos-planet">♃ Jupiter</div><div class="natal-pos-sign">♋ Cancer</div><div class="natal-pos-degree">10°05'</div></div>
+            <div class="natal-pos"><div class="natal-pos-planet">♄ Saturn</div><div class="natal-pos-sign">♓ Pisces</div><div class="natal-pos-degree">3°18'</div></div>
+            <div class="natal-pos"><div class="natal-pos-planet">♅ Uranus</div><div class="natal-pos-sign">♊ Gemini</div><div class="natal-pos-degree">28°47'</div></div>
+        </div>
+    </div>
+
+    <!-- DATE PICKER FOR TRANSIT DATE -->
+    <div class="card">
+        <div class="section-title">TRANSIT DATE</div>
+        <div class="date-picker-row">
+            <input type="date" id="transitDate" value="2026-05-17">
+            <button class="calc-btn" style="margin:0;padding:8px 16px;font-size:12px;" onclick="setToday()">Today</button>
+            <button class="calc-btn" style="margin:0;padding:8px 16px;font-size:12px;" onclick="setTomorrow()">Tomorrow</button>
+        </div>
+    </div>
+
+    <!-- ACTIVE TRANSITS -->
+    <div class="card">
+        <div class="section-title">ACTIVE TRANSITS</div>
+
+        <div class="filter-tabs">
+            <div class="filter-tab active" onclick="filterTransits('all')">All</div>
+            <div class="filter-tab" onclick="filterTransits('positive')">Positive</div>
+            <div class="filter-tab" onclick="filterTransits('challenge')">Challenging</div>
+            <div class="filter-tab" onclick="filterTransits('neutral')">Neutral</div>
+            <div class="filter-tab" onclick="filterTransits('major')">Major Only</div>
+        </div>
+
+        <div class="aspect-legend">
+            <div class="legend-item"><span class="legend-symbol">☌</span> Conjunction 0°</div>
+            <div class="legend-item"><span class="legend-symbol">□</span> Square 90°</div>
+            <div class="legend-item"><span class="legend-symbol">△</span> Trine 120°</div>
+            <div class="legend-item"><span class="legend-symbol">⚹</span> Sextile 60°</div>
+            <div class="legend-item"><span class="legend-symbol">☍</span> Opposition 180°</div>
+        </div>
+
+        <div id="transitList"></div>
+    </div>
+
+    <!-- RETROGRADE IMPACT -->
+    <div class="card">
+        <div class="section-title">RETROGRADE IMPACT</div>
+        <div class="retro-impact">
+            <div class="retro-impact-title">⚠️ Mercury Retrograde in Gemini</div>
+            <div class="retro-impact-text">Mercury is retrograde in your 3rd house of communication. This affects how you express yourself, process information, and interact with your immediate environment. Old conversations may resurface. Review contracts carefully. It's an excellent time for editing, research, and reconnecting with siblings or neighbors. Avoid signing major agreements until June 3rd.</div>
+        </div>
+        <div class="retro-impact" style="margin-top:10px;">
+            <div class="retro-impact-title">⚠️ Saturn Retrograde in Pisces</div>
+            <div class="retro-impact-text">Saturn is retrograde conjunct your natal Moon. This brings emotional restructuring and karmic lessons around security, family, and nurturing. Old emotional patterns surface for healing. You may feel more serious or isolated. Use this time for deep inner work, setting healthy boundaries, and releasing emotional baggage.</div>
+        </div>
+    </div>
+
+    <!-- UPCOMING TRANSITS -->
+    <div class="card">
+        <div class="section-title">UPCOMING TRANSITS</div>
+        <div class="upcoming-list">
+            <div class="upcoming-item">
+                <span class="upcoming-date">May 20</span>
+                <span class="upcoming-transit">☉ Sun enters ♊ Gemini</span>
+                <span class="upcoming-type neutral">Shift</span>
+            </div>
+            <div class="upcoming-item">
+                <span class="upcoming-date">May 24</span>
+                <span class="upcoming-transit">🌕 Full Moon in ♐ Sagittarius</span>
+                <span class="upcoming-type positive">Full Moon</span>
+            </div>
+            <div class="upcoming-item">
+                <span class="upcoming-date">May 28</span>
+                <span class="upcoming-transit">♂ Mars Trine ☉ Natal Sun</span>
+                <span class="upcoming-type positive">Trine</span>
+            </div>
+            <div class="upcoming-item">
+                <span class="upcoming-date">Jun 3</span>
+                <span class="upcoming-transit">☿ Mercury Station Direct</span>
+                <span class="upcoming-type neutral">Station</span>
+            </div>
+            <div class="upcoming-item">
+                <span class="upcoming-date">Jun 6</span>
+                <span class="upcoming-transit">♀ Venus Square ♄ Natal Saturn</span>
+                <span class="upcoming-type challenge">Square</span>
+            </div>
+            <div class="upcoming-item">
+                <span class="upcoming-date">Jun 10</span>
+                <span class="upcoming-transit">♃ Jupiter Conjunct ☾ Natal Moon</span>
+                <span class="upcoming-type positive">Conjunct</span>
+            </div>
+            <div class="upcoming-item">
+                <span class="upcoming-date">Jun 15</span>
+                <span class="upcoming-transit">♇ Pluto Opposite ☿ Natal Mercury</span>
+                <span class="upcoming-type challenge">Opposition</span>
+            </div>
+            <div class="upcoming-item">
+                <span class="upcoming-date">Jun 21</span>
+                <span class="upcoming-transit">☉ Sun enters ♋ Cancer (Solstice)</span>
+                <span class="upcoming-type neutral">Season</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="footer">
+    Local Swiss Ephemeris • Real-time Transit Calculation • Retrograde & Station Tracking
+</div>
+
+<div class="savedPanel" id="savedPanel">
+    <div class="savedPanelClose" onclick="toggleSavedPanel()">&times;</div>
+    <h3 class="savedPanelTitle">SAVED CONTACTS</h3>
+    <div id="savedList"></div>
+</div>
+
+<script>
+
+/* ===== TRANSIT DATA ===== */
+const sampleTransits = [
+    {
+        transit: "♄ Saturn",
+        transitIcon: "♄",
+        aspect: "☌ Conjunct",
+        aspectShort: "☌",
+        natal: "☾ Moon",
+        natalIcon: "☾",
+        orb: "0°32'",
+        type: "challenge",
+        major: true,
+        description: "Emotional pressure and inner restructuring",
+        start: "2026-03-15",
+        end: "2026-08-23",
+        exact: "2026-05-20",
+        timing: "approaching",
+        meaning: "Saturn conjunct natal Moon brings serious emotional lessons. You may feel lonely, restricted, or burdened by family responsibilities. This is a karmic time to build emotional maturity, set boundaries, and create lasting security. Old childhood issues may resurface for healing.",
+        house: "4th House",
+        progress: 35
+    },
+    {
+        transit: "♃ Jupiter",
+        transitIcon: "♃",
+        aspect: "△ Trine",
+        aspectShort: "△",
+        natal: "☉ Sun",
+        natalIcon: "☉",
+        orb: "1°11'",
+        type: "positive",
+        major: true,
+        description: "Expansion, luck and confidence",
+        start: "2026-04-01",
+        end: "2026-06-15",
+        exact: "2026-05-10",
+        timing: "separating",
+        meaning: "Jupiter trine natal Sun is one of the best transits for growth and success. Opportunities flow easily, confidence is high, and others see you favorably. Travel, education, and creative projects are blessed. It's a time of expansion in all areas ruled by your Sun.",
+        house: "1st House",
+        progress: 65
+    },
+    {
+        transit: "♂ Mars",
+        transitIcon: "♂",
+        aspect: "☍ Opposition",
+        aspectShort: "☍",
+        natal: "☿ Mercury",
+        natalIcon: "☿",
+        orb: "2°04'",
+        type: "challenge",
+        major: true,
+        description: "Mental tension and impulsive communication",
+        start: "2026-05-10",
+        end: "2026-05-25",
+        exact: "2026-05-17",
+        timing: "exact",
+        meaning: "Mars opposite Mercury creates mental agitation and argumentative energy. You may speak before thinking, leading to conflicts. Drive carefully and avoid heated debates. Channel this energy into productive debate, writing, or physical exercise. Watch for accidents involving hands or vehicles.",
+        house: "7th House",
+        progress: 50
+    },
+    {
+        transit: "♀ Venus",
+        transitIcon: "♀",
+        aspect: "⚹ Sextile",
+        aspectShort: "⚹",
+        natal: "ASC",
+        natalIcon: "ASC",
+        orb: "0°48'",
+        type: "positive",
+        major: false,
+        description: "Charm, attraction and social harmony",
+        start: "2026-05-15",
+        end: "2026-05-20",
+        exact: "2026-05-17",
+        timing: "exact",
+        meaning: "Venus sextile Ascendant enhances your appearance and social magnetism. People are drawn to you. Good for dating, social events, and making favorable first impressions. Your natural charm is amplified. A great time for beauty treatments, shopping, and romantic encounters.",
+        house: "1st House",
+        progress: 50
+    },
+    {
+        transit: "☾ Moon",
+        transitIcon: "☾",
+        aspect: "☌ Conjunct",
+        aspectShort: "☌",
+        natal: "♀ Venus",
+        natalIcon: "♀",
+        orb: "0°12'",
+        type: "neutral",
+        major: false,
+        description: "Strong emotional sensitivity",
+        start: "2026-05-17",
+        end: "2026-05-18",
+        exact: "2026-05-17",
+        timing: "exact",
+        meaning: "Moon conjunct natal Venus heightens emotional sensitivity around love and beauty. You crave affection and harmony. Relationships feel more intense. Good for romantic moments, artistic expression, and connecting with loved ones. Mood may shift quickly based on relationship dynamics.",
+        house: "5th House",
+        progress: 50
+    },
+    {
+        transit: "♅ Uranus",
+        transitIcon: "♅",
+        aspect: "□ Square",
+        aspectShort: "□",
+        natal: "♃ Jupiter",
+        natalIcon: "♃",
+        orb: "1°45'",
+        type: "challenge",
+        major: true,
+        description: "Sudden changes in beliefs and expansion",
+        start: "2026-01-01",
+        end: "2026-12-31",
+        exact: "2026-05-15",
+        timing: "approaching",
+        meaning: "Uranus square Jupiter shakes up your belief system and expansion plans. Unexpected opportunities or disruptions challenge your worldview. Be open to new perspectives but avoid reckless risks. Freedom vs growth tension. Travel plans may change suddenly.",
+        house: "9th House",
+        progress: 40
+    },
+    {
+        transit: "♆ Neptune",
+        transitIcon: "♆",
+        aspect: "△ Trine",
+        aspectShort: "△",
+        natal: "☉ Sun",
+        natalIcon: "☉",
+        orb: "0°55'",
+        type: "positive",
+        major: true,
+        description: "Spiritual inspiration and creative flow",
+        start: "2026-02-01",
+        end: "2026-08-01",
+        exact: "2026-05-01",
+        timing: "separating",
+        meaning: "Neptune trine Sun brings spiritual awakening and creative inspiration. Your intuition is heightened. Artistic and healing abilities flourish. You may feel more compassionate and connected to the divine. Avoid escapism and maintain healthy boundaries. Dreams are vivid and meaningful.",
+        house: "12th House",
+        progress: 70
+    },
+    {
+        transit: "☉ Sun",
+        transitIcon: "☉",
+        aspect: "⚹ Sextile",
+        aspectShort: "⚹",
+        natal: "♂ Mars",
+        natalIcon: "♂",
+        orb: "2°30'",
+        type: "positive",
+        major: false,
+        description: "Vitality and assertive energy boost",
+        start: "2026-05-15",
+        end: "2026-05-20",
+        exact: "2026-05-17",
+        timing: "exact",
+        meaning: "Sun sextile Mars boosts your physical energy and drive. You feel more confident and assertive. Good for physical activity, competitive endeavors, and taking initiative. Leadership qualities shine. Channel excess energy productively to avoid irritability.",
+        house: "6th House",
+        progress: 50
+    },
+    {
+        transit: "♇ Pluto",
+        transitIcon: "♇",
+        aspect: "□ Square",
+        aspectShort: "□",
+        natal: "ASC",
+        natalIcon: "ASC",
+        orb: "3°10'",
+        type: "challenge",
+        major: true,
+        description: "Deep transformation of identity and appearance",
+        start: "2026-01-01",
+        end: "2026-12-31",
+        exact: "2026-06-15",
+        timing: "approaching",
+        meaning: "Pluto square Ascendant is a profound identity transformation. Power struggles in relationships, obsession with appearance, or deep psychological shifts. You may attract intense people. Let go of old masks and embrace authentic self. Therapy and shadow work are highly beneficial.",
+        house: "1st House",
+        progress: 25
+    },
+    {
+        transit: "☿ Mercury",
+        transitIcon: "☿",
+        aspect: "☌ Conjunct",
+        aspectShort: "☌",
+        natal: "☊ North Node",
+        natalIcon: "☊",
+        orb: "1°20'",
+        type: "neutral",
+        major: false,
+        description: "Mental focus on destiny and life path",
+        start: "2026-05-10",
+        end: "2026-05-25",
+        exact: "2026-05-17",
+        timing: "exact",
+        meaning: "Mercury conjunct North Node brings fated conversations and mental alignment with your soul purpose. Important messages, meetings, or ideas guide your destiny. Pay attention to synchronicities. Writing, teaching, or speaking about your path is favored.",
+        house: "10th House",
+        progress: 50
+    }
+];
+
+/* ===== RENDER TRANSITS ===== */
+function renderTransits(){
+    const container = document.getElementById('transitList');
+    container.innerHTML = '';
+
+    sampleTransits.forEach((t, index) => {
+        const item = document.createElement('div');
+        item.className = `transit-item ${t.type}`;
+        item.dataset.type = t.type;
+        item.dataset.major = t.major;
+        item.onclick = () => toggleDetails(index);
+
+        const timingClass = t.timing === 'approaching' ? 'approaching' : t.timing === 'exact' ? 'exact' : 'separating';
+        const timingLabel = t.timing === 'approaching' ? 'Approaching' : t.timing === 'exact' ? 'Exact today' : 'Separating';
+
+        item.innerHTML = `
+            <div class="transit-summary">
+                <div class="transit-main">
+                    <div class="aspect">
+                        <span class="aspect-icon">${t.transitIcon}</span>
+                        ${t.transit} ${t.aspectShort} ${t.natalIcon} ${t.natal}
+                    </div>
+                    <div class="description">${t.description}</div>
+                </div>
+                <div class="orb">
+                    <div class="orb-value">${t.orb}</div>
+                    <div class="orb-house">${t.house}</div>
+                </div>
+            </div>
+            <div class="left" style="flex:1;">
+                <div class="transit-timeline">
+                    <div class="timeline-track">
+                        <div class="timeline-progress ${t.type}" style="width:${t.progress}%"></div>
+                    </div>
+                    <div class="timeline-labels">
+                        <span>${formatDate(t.start)}</span>
+                        <span style="color:${t.timing === 'exact' ? '#ef4444' : '#64748b'}">${timingLabel}</span>
+                        <span>${formatDate(t.end)}</span>
+                    </div>
+                </div>
+                <div class="transit-details" id="details-${index}">
+                    <div class="detail-grid">
+                        <div class="detail-box">
+                            <div class="detail-label">Transit Start</div>
+                            <div class="detail-value">${formatDate(t.start)}</div>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-label">Exact Date</div>
+                            <div class="detail-value" style="color:${t.timing === 'exact' ? '#ef4444' : '#e2e8f0'}">${formatDate(t.exact)}</div>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-label">Transit End</div>
+                            <div class="detail-value">${formatDate(t.end)}</div>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-label">Affected House</div>
+                            <div class="detail-value">${t.house}</div>
+                        </div>
+                    </div>
+                    <div class="transit-meaning"><strong>What this means:</strong> ${t.meaning}</div>
+                    <div class="transit-timing">
+                        <div class="timing-item"><div class="timing-dot ${timingClass}"></div>${timingLabel}</div>
+                        <div class="timing-item">📅 ${daysUntil(t.exact)} days until exact</div>
+                        <div class="timing-item">⏱️ Orb: ${t.orb}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(item);
+    });
+}
+
+function toggleDetails(index){
+    const details = document.getElementById('details-' + index);
+    const item = details.closest('.transit-item');
+    details.classList.toggle('show');
+    item.classList.toggle('expanded');
+}
+
+function formatDate(dateStr){
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function daysUntil(dateStr){
+    const target = new Date(dateStr);
+    const today = new Date();
+    const diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+    return diff > 0 ? diff : 0;
+}
+
+/* ===== FILTER ===== */
+function filterTransits(type){
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+
+    document.querySelectorAll('.transit-item').forEach(item => {
+        let show = true;
+        if(type === 'positive') show = item.dataset.type === 'positive';
+        else if(type === 'challenge') show = item.dataset.type === 'challenge';
+        else if(type === 'neutral') show = item.dataset.type === 'neutral';
+        else if(type === 'major') show = item.dataset.major === 'true';
+
+        item.style.display = show ? 'flex' : 'none';
+    });
+}
+
+/* ===== CALCULATE ===== */
+function calculateTransits(){
+    const btn = event.target;
+    btn.textContent = '✦ Calculating...';
+    btn.disabled = true;
+
+    setTimeout(() => {
+        btn.textContent = '✓ Transits Updated!';
+        btn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
+
+        // Randomize orbs slightly
+        document.querySelectorAll('.transit-item').forEach((item, i) => {
+            const orbDiv = item.querySelector('.orb-value');
+            if(orbDiv){
+                const base = parseFloat(orbDiv.textContent) || 0;
+                const variation = 0;
+                orbDiv.textContent = Math.abs(base + variation).toFixed(1) + "°";
+            }
+        });
+
+        setTimeout(() => {
+            btn.textContent = '✦ Calculate My Transits';
+            btn.style.background = 'linear-gradient(135deg,#FFD700,#f59e0b)';
+            btn.disabled = false;
+        }, 2000);
+    }, 1500);
+}
+
+/* ===== DATE PICKER ===== */
+function setToday(){
+    document.getElementById('transitDate').value = new Date().toISOString().split('T')[0];
+}
+
+function setTomorrow(){
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    document.getElementById('transitDate').value = tomorrow.toISOString().split('T')[0];
+}
+
+/* ===== EXPORT ===== */
+function exportTransits(){
+    const data = {
+        date: new Date().toISOString(),
+        birthData: {
+            date: document.getElementById('birthDate').value,
+            time: document.getElementById('birthTime').value,
+            city: document.getElementById('birthCity').value
+        },
+        transits: sampleTransits.map(t => ({
+            transit: t.transit,
+            aspect: t.aspect,
+            natal: t.natal,
+            orb: t.orb,
+            type: t.type,
+            description: t.description
+        }))
+    };
+
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `transits_${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+/* ===== REFRESH ===== */
+function refreshTransits(){
+    document.getElementById('transitList').innerHTML = '';
+    setTimeout(() => {
+        renderTransits();
+    }, 300);
+}
+
+/* ===== REAL TRANSIT ENGINE ===== */
+const transitBodies=[
+    {key:"sun",name:"Sun",symbol:"\u2609",speed:"fast"},
+    {key:"moon",name:"Moon",symbol:"\u263D",speed:"moon"},
+    {key:"mercury",name:"Mercury",symbol:"\u263F",speed:"fast"},
+    {key:"venus",name:"Venus",symbol:"\u2640",speed:"fast"},
+    {key:"mars",name:"Mars",symbol:"\u2642",speed:"medium"},
+    {key:"jupiter",name:"Jupiter",symbol:"\u2643",speed:"slow"},
+    {key:"saturn",name:"Saturn",symbol:"\u2644",speed:"slow"},
+    {key:"uranus",name:"Uranus",symbol:"\u2645",speed:"slow"},
+    {key:"neptune",name:"Neptune",symbol:"\u2646",speed:"slow"},
+    {key:"pluto",name:"Pluto",symbol:"\u2647",speed:"slow"}
+];
+const transitAspectDefs=[
+    {name:"Conjunction",short:"\u260C",angle:0,orb:6,type:"neutral"},
+    {name:"Sextile",short:"\u26B9",angle:60,orb:4,type:"positive"},
+    {name:"Square",short:"\u25A1",angle:90,orb:5,type:"challenge"},
+    {name:"Trine",short:"\u25B3",angle:120,orb:5,type:"positive"},
+    {name:"Opposition",short:"\u260D",angle:180,orb:6,type:"challenge"}
+];
+const transitSignNames=["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
+const transitSignSymbols=["\u2648","\u2649","\u264A","\u264B","\u264C","\u264D","\u264E","\u264F","\u2650","\u2651","\u2652","\u2653"];
+let transitSweCache=null, transitModCache=null;
+function normalize(deg){deg%=360;return deg<0?deg+360:deg}
+function toRad(deg){return deg*Math.PI/180}
+function julianDay(date){return date.getTime()/86400000+2440587.5}
+function normalizeDateForCalc(value){const clean=String(value||"").replace(/[^0-9]/g,"");if(clean.length!==8)return value||"";const us=ownerUnits()==="US"&&+clean.slice(0,2)<=12;return(us?clean.slice(2,4):clean.slice(0,2))+"."+(us?clean.slice(0,2):clean.slice(2,4))+"."+clean.slice(4,8)}
+function normalizeTimeForCalc(value){const raw=String(value||"").trim();const us=/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i.exec(raw);if(us){let h=+us[1];if(us[3].toUpperCase()==="PM"&&h<12)h+=12;if(us[3].toUpperCase()==="AM"&&h===12)h=0;return String(h).padStart(2,"0")+":"+us[2]}const clean=raw.replace(/[^0-9]/g,"");return clean.length===4?clean.slice(0,2)+":"+clean.slice(2,4):(raw||"12:00")}
+function formatInputTimeForUnits(value){const m=/^(\d{2}):(\d{2})$/.exec(value||"");if(ownerUnits()==="US"&&m){let h=+m[1];const ap=h>=12?"PM":"AM";h=h%12||12;return String(h).padStart(2,"0")+":"+m[2]+" "+ap}return value||""}
+function parseAstroDate(value){const m=/^(\d{2})\.(\d{2})\.(\d{4})$/.exec(normalizeDateForCalc(value));if(!m)throw new Error("Use date format DD.MM.YYYY");return{day:+m[1],month:+m[2],year:+m[3]}}
+function parseAstroTime(value){const m=/^(\d{2}):(\d{2})$/.exec(normalizeTimeForCalc(value||"12:00"));return m?{hours:+m[1],minutes:+m[2]}:{hours:12,minutes:0}}
+function getZonedOffsetMinutes(year,month,day,hour,minute,timeZone){const utcGuess=Date.UTC(year,month-1,day,hour,minute);const parts=new Intl.DateTimeFormat("en-US",{timeZone,hour12:false,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"}).formatToParts(new Date(utcGuess)).reduce((a,p)=>(a[p.type]=p.value,a),{});const asUTC=Date.UTC(+parts.year,+parts.month-1,+parts.day,+parts.hour,+parts.minute,+parts.second);return(asUTC-utcGuess)/60000}
+function localBirthToUtc(date,time,coords){if(coords.tz){const offset=getZonedOffsetMinutes(date.year,date.month,date.day,time.hours,time.minutes,coords.tz);return new Date(Date.UTC(date.year,date.month-1,date.day,time.hours,time.minutes)-offset*60000)}const offset=Math.round((coords.lon||0)/15*60);return new Date(Date.UTC(date.year,date.month-1,date.day,time.hours,time.minutes)-offset*60000)}
+function gmst(jd){const T=(jd-2451545.0)/36525;return normalize(280.46061837+360.98564736629*(jd-2451545)+.000387933*T*T-T*T*T/38710000)}
+function calculateAscMc(jd,lat,lon){const eps=toRad(23.439291);const theta=toRad(normalize(gmst(jd)+lon));const phi=toRad(lat);const mc=normalize(Math.atan2(Math.sin(theta),Math.cos(theta)*Math.cos(eps))*180/Math.PI);const asc=normalize(Math.atan2(-Math.cos(theta),Math.sin(theta)*Math.cos(eps)+Math.tan(phi)*Math.sin(eps))*180/Math.PI);return{asc,mc}}
+function equalHouses(asc){return Array.from({length:12},(_,i)=>normalize(asc+i*30))}
+function houseOf(lon,cusps){const p=normalize(lon);for(let i=0;i<12;i++){const c1=normalize(cusps[i]);const c2=normalize(cusps[(i+1)%12]);if(c2<c1){if(p>=c1||p<c2)return i+1}else if(p>=c1&&p<c2)return i+1}return 1}
+function signOf(lon){const idx=Math.floor(normalize(lon)/30)%12;return{idx,name:transitSignNames[idx],symbol:transitSignSymbols[idx],degree:normalize(lon)%30}}
+function formatPosition(lon){const s=signOf(lon);const deg=Math.floor(s.degree);const min=Math.round((s.degree-deg)*60);return `${s.symbol} ${s.name} ${deg}\u00B0${String(min).padStart(2,"0")}'`}
+function angleDiff(a,b){let d=Math.abs(normalize(a)-normalize(b));return d>180?360-d:d}
+function formatOrb(orb){const deg=Math.floor(orb);const min=Math.round((orb-deg)*60);return `${deg}\u00B0${String(min).padStart(2,"0")}'`}
+function fallbackLongitude(jd,key){const T=(jd-2451545.0)/36525;let M=0,L=0;switch(key){case"sun":M=357.52911+35999.05029*T;L=280.46646+36000.76983*T+1.914602*Math.sin(toRad(M))+.019993*Math.sin(toRad(2*M));break;case"moon":M=134.963+477198.867*T;L=218.316+481267.881*T+6.289*Math.sin(toRad(M));break;case"mercury":M=174.796+149472.515*T;L=252.251+149472.674*T+23.44*Math.sin(toRad(M))+2.98*Math.sin(toRad(2*M));break;case"venus":M=50.416+58519.813*T;L=181.98+58517.816*T+.775*Math.sin(toRad(M));break;case"mars":M=19.373+19140.299*T;L=355.433+19140.299*T+10.691*Math.sin(toRad(M));break;case"jupiter":M=20.02+3034.906*T;L=34.351+3034.906*T+5.555*Math.sin(toRad(M));break;case"saturn":M=317.02+1222.114*T;L=50.077+1222.114*T+6.406*Math.sin(toRad(M));break;case"uranus":M=141.05+428.467*T;L=314.055+428.467*T+5.332*Math.sin(toRad(M));break;case"neptune":M=256.225+218.459*T;L=304.348+218.459*T+2.552*Math.sin(toRad(M));break;case"pluto":L=238.929+145.208*T+17.1*Math.sin(toRad(238.9+145.2*T));break}return normalize(L)}
+async function getTransitSwe(){if(transitSweCache)return{mod:transitModCache,swe:transitSweCache};const mod=await import("./vendor/swisseph/swisseph-local.js");const swe=new mod.SwissEphemeris();await swe.init();transitModCache=mod;transitSweCache=swe;return{mod,swe}}
+function planetId(mod,key){return mod.Planet[key.charAt(0).toUpperCase()+key.slice(1)]}
+function setCalcSourceStatus(source){const el=document.getElementById("calcSourceStatus");if(!el)return;const precise=source==="Local Swiss Ephemeris";el.classList.toggle("fallback",!precise);el.textContent=precise?"Swiss Ephemeris loaded - precise transit calculation.":"Fallback calculation used - approximate transit formulas."}
+async function calcBodyPositions(jd,cusps){try{const {mod,swe}=await getTransitSwe();const positions=transitBodies.map(b=>{const pos=swe.calculatePosition(jd,planetId(mod,b.key),mod.CalculationFlag.SwissEphemeris|mod.CalculationFlag.Speed);const longitude=normalize(pos.longitude);return{...b,longitude,house:houseOf(longitude,cusps),speed:pos.longitudeSpeed||0}});positions.source="Local Swiss Ephemeris";return positions}catch(e){const positions=transitBodies.map(b=>{const longitude=fallbackLongitude(jd,b.key);return{...b,longitude,house:houseOf(longitude,cusps),speed:0}});positions.source="browser formulas";return positions}}
+async function calculateNatalAndTransits(){const date=parseAstroDate(document.getElementById("birthDate").value);const time=parseAstroTime(document.getElementById("birthTime").value);const city=(document.getElementById("birthCity").value||"Belgrade").trim();const coords=transitCityData[city]||transitCityData.Belgrade;const utc=localBirthToUtc(date,time,coords);const natalJd=julianDay(utc);const angles=calculateAscMc(natalJd,coords.lat,coords.lon);const cusps=equalHouses(angles.asc);const natal=await calcBodyPositions(natalJd,cusps);const tDate=new Date(document.getElementById("transitDate").value+"T12:00:00Z");const transit=await calcBodyPositions(julianDay(tDate),cusps);const source=natal.source==="Local Swiss Ephemeris"&&transit.source==="Local Swiss Ephemeris"?"Local Swiss Ephemeris":"browser formulas";return{natal,transit,cusps,angles,city,transitDate:tDate,source}}
+function transitMeaning(t,n,aspect,type){const action={positive:"opens an easier flow",challenge:"creates pressure and asks for adjustment",neutral:"marks a strong activation"}[type];return `${t.name} ${aspect.name.toLowerCase()} natal ${n.name} ${action} between ${t.name.toLowerCase()} themes and your natal ${n.name.toLowerCase()} pattern. Watch timing, mood and choices around the affected house.`}
+function transitWindow(body,date){const pace=body.key==="moon"?"moon":["sun","mercury","venus"].includes(body.key)?"fast":body.key==="mars"?"medium":"slow";const days={moon:1,fast:4,medium:10,slow:45}[pace]||10;const start=new Date(date.getTime()-days*86400000);const end=new Date(date.getTime()+days*86400000);return{start:start.toISOString().slice(0,10),end:end.toISOString().slice(0,10)}}
+function timingFromOrb(orb){return orb<0.5?"exact":orb<2?"approaching":"separating"}
+function findTransitAspects(data){
+    const found=[];
+    data.transit.forEach(t=>{
+        data.natal.forEach(n=>{
+            const diff=angleDiff(t.longitude,n.longitude);
+            transitAspectDefs.forEach(def=>{
+                const orb=Math.abs(diff-def.angle);
+                if(orb<=def.orb){
+                    const win=transitWindow(t,data.transitDate);
+                    found.push({
+                        transit:t.symbol+" "+t.name,
+                        transitIcon:t.symbol,
+                        aspect:def.short+" "+def.name,
+                        aspectShort:def.short,
+                        natal:n.symbol+" Natal "+n.name,
+                        natalIcon:n.symbol,
+                        orb:formatOrb(orb),
+                        orbValue:orb,
+                        type:def.type,
+                        major:["sun","moon","mercury","venus","mars","jupiter","saturn"].includes(t.key)&&["sun","moon","mercury","venus","mars","jupiter","saturn"].includes(n.key),
+                        description:`${t.name} ${def.name} natal ${n.name}`,
+                        start:win.start,
+                        end:win.end,
+                        exact:data.transitDate.toISOString().slice(0,10),
+                        timing:timingFromOrb(orb),
+                        meaning:transitMeaning(t,n,def,def.type),
+                        house:n.house+"th House",
+                        progress:Math.max(10,Math.min(90,Math.round((1-orb/(def.orb+0.01))*100)))
+                    });
+                }
+            });
+        });
+    });
+    return found.sort((a,b)=>(b.major-a.major)||a.orbValue-b.orbValue).slice(0,12);
+}
+function renderNatalPositions(positions){const grid=document.querySelector(".natal-mini");if(!grid)return;grid.innerHTML=positions.slice(0,8).map(p=>`<div class="natal-pos"><div class="natal-pos-planet">${p.symbol} ${p.name}</div><div class="natal-pos-sign">${signOf(p.longitude).symbol} ${signOf(p.longitude).name}</div><div class="natal-pos-degree">${formatPosition(p.longitude).split(" ").slice(2).join(" ")}</div></div>`).join("")}
+function renderRetroImpactFromData(transits){const box=document.querySelector(".retro-impact")?.parentElement;if(!box)return;const selected=transits.filter(t=>t.type==="challenge").slice(0,2);box.querySelectorAll(".retro-impact").forEach(el=>el.remove());if(selected.length===0){box.insertAdjacentHTML("beforeend",'<div class="retro-impact"><div class="retro-impact-title">No heavy transit pressure</div><div class="retro-impact-text">Current calculated aspects show a lighter day. Use it for integration, planning and steady movement.</div></div>');return}selected.forEach(t=>box.insertAdjacentHTML("beforeend",`<div class="retro-impact" style="margin-top:10px;"><div class="retro-impact-title">${t.transit} ${t.aspect} ${t.natal}</div><div class="retro-impact-text">${t.meaning}</div></div>`))}
+function renderUpcomingFromData(transits){const list=document.querySelector(".upcoming-list");if(!list)return;list.innerHTML=transits.slice(0,8).map(t=>`<div class="upcoming-item"><span class="upcoming-date">${formatDate(t.exact)}</span><span class="upcoming-transit">${t.transit} ${t.aspectShort} ${t.natal}</span><span class="upcoming-type ${t.type}">${t.aspect.replace(t.aspectShort,"").trim()}</span></div>`).join("")}
+async function calculateTransits(evt){const btn=evt&&evt.target?evt.target:document.querySelector(".calc-btn");try{if(btn){btn.textContent="Calculating...";btn.disabled=true}const data=await calculateNatalAndTransits();setCalcSourceStatus(data.source);const aspects=findTransitAspects(data);sampleTransits.splice(0,sampleTransits.length,...aspects);renderNatalPositions(data.natal);renderTransits();renderRetroImpactFromData(aspects);renderUpcomingFromData(aspects);if(btn){btn.textContent="Transits Updated";btn.style.background="linear-gradient(135deg,#22c55e,#16a34a)"}}catch(e){alert(e.message||"Transits could not be calculated.")}finally{if(btn){setTimeout(()=>{btn.textContent="Calculate My Transits";btn.style.background="linear-gradient(135deg,#FFD700,#f59e0b)";btn.disabled=false},1200)}}}
+
+/* ===== INIT ===== */
+let transitCities=["Belgrade","Novi Sad","Nis","Kragujevac","Subotica","Zagreb","Split","Sarajevo","Banja Luka","Podgorica","Budva","Skopje","Ljubljana","Vienna","Budapest","Athens","Sofia","Bucharest","Istanbul","Rome","Milan","Madrid","Barcelona","Paris","London","Berlin","Munich","Amsterdam","Brussels","Zurich","Prague","Warsaw","Stockholm","Oslo","Copenhagen","Helsinki","Dublin","Lisbon","Moscow","Kyiv","New York","Los Angeles","Chicago","Miami","Toronto","Vancouver","Mexico City","Buenos Aires","Sao Paulo","Rio de Janeiro","Cairo","Dubai","Doha","Riyadh","Tel Aviv","Mumbai","New Delhi","Bangkok","Singapore","Hong Kong","Beijing","Shanghai","Tokyo","Seoul","Sydney","Melbourne","Auckland","Cape Town","Johannesburg"];
+const transitCityData={"Belgrade":{lat:44.7866,lon:20.4489,tz:"Europe/Belgrade"},"Novi Sad":{lat:45.2671,lon:19.8335,tz:"Europe/Belgrade"},"Nis":{lat:43.3209,lon:21.8958,tz:"Europe/Belgrade"},"Kragujevac":{lat:44.0128,lon:20.9114,tz:"Europe/Belgrade"},"Subotica":{lat:46.1005,lon:19.6651,tz:"Europe/Belgrade"},"Zagreb":{lat:45.815,lon:15.9819,tz:"Europe/Zagreb"},"Sarajevo":{lat:43.8563,lon:18.4131,tz:"Europe/Sarajevo"},"Podgorica":{lat:42.4304,lon:19.2594,tz:"Europe/Podgorica"},"Skopje":{lat:41.9981,lon:21.4254,tz:"Europe/Skopje"},"London":{lat:51.5074,lon:-0.1278,tz:"Europe/London"},"Paris":{lat:48.8566,lon:2.3522,tz:"Europe/Paris"},"Berlin":{lat:52.52,lon:13.405,tz:"Europe/Berlin"},"New York":{lat:40.7128,lon:-74.006,tz:"America/New_York"},"Los Angeles":{lat:34.0522,lon:-118.2437,tz:"America/Los_Angeles"},"Tokyo":{lat:35.6762,lon:139.6503,tz:"Asia/Tokyo"},"Sydney":{lat:-33.8688,lon:151.2093,tz:"Australia/Sydney"},"Dubai":{lat:25.2048,lon:55.2708,tz:"Asia/Dubai"}};
+async function loadSharedCityCatalog(){try{const html=await fetch("index.html").then(r=>r.text());const cityMatch=/const worldCities\s*=\s*(\[[\s\S]*?\]);/.exec(html);if(cityMatch){const sharedCities=Function("return "+cityMatch[1])();transitCities=[...new Set([...transitCities,...sharedCities])].sort((a,b)=>a.localeCompare(b))}const coordMatch=/const cityCoords\s*=\s*(\{[\s\S]*?\n\};)/.exec(html);if(coordMatch){const sharedCoords=Function("return "+coordMatch[1].replace(/;$/,""))();Object.entries(sharedCoords).forEach(([name,coords])=>{if(!transitCityData[name])transitCityData[name]={lat:coords.lat,lon:coords.lon}})}}catch(e){console.warn("Shared city catalog could not be loaded.",e)}}
+function setupTransitCityAutocomplete(){const input=document.getElementById("birthCity");const dropdown=document.getElementById("birthCityDropdown");if(!input||!dropdown)return;input.addEventListener("input",function(){const val=this.value.toLowerCase();if(!val){dropdown.style.display="none";return}const matches=transitCities.filter(city=>city.toLowerCase().includes(val)).slice(0,10);dropdown.innerHTML=matches.map(city=>'<div onclick="selectTransitCity(\''+city.replace(/'/g,"\\'")+'\')" style="padding:8px 12px;cursor:pointer;color:white;font-size:12px;border-bottom:1px solid #334155">'+city+'</div>').join("");dropdown.style.display=matches.length?"block":"none"});document.addEventListener("click",function(e){if(!input.contains(e.target)&&!dropdown.contains(e.target))dropdown.style.display="none"})}
+function selectTransitCity(city){document.getElementById("birthCity").value=city;document.getElementById("birthCityDropdown").style.display="none"}
+function initTransitFromParams(){const params=new URLSearchParams(window.location.search);let owner=null;try{owner=JSON.parse(localStorage.getItem("numerology_owner_profile")||"null")}catch(e){}document.getElementById("birthDate").value=params.get("date")||(owner&&owner.birthDate)||"";document.getElementById("birthTime").value=params.get("time")||(owner&&owner.birthTime)||"";document.getElementById("birthCity").value=params.get("city")||(owner&&owner.birthCity)||"Belgrade";document.getElementById("transitDate").value=new Date().toISOString().slice(0,10)}
+function goBack(){const date=document.getElementById("birthDate").value;const time=document.getElementById("birthTime").value;const city=document.getElementById("birthCity").value;let url="chart.html";if(date){url+="?date="+encodeURIComponent(date);if(time)url+="&time="+encodeURIComponent(time);if(city)url+="&city="+encodeURIComponent(city)}window.location.href=url}
+function exitApp(){appExit("index.html")}
+function appCopyText(text,message){if(navigator.clipboard&&window.isSecureContext){return navigator.clipboard.writeText(text).then(()=>{if(message)alert(message)}).catch(()=>appCopyTextFallback(text,message))}return appCopyTextFallback(text,message)}
+function appCopyTextFallback(text,message){const input=document.createElement("textarea");input.value=text;input.setAttribute("readonly","");input.style.position="fixed";input.style.left="-9999px";document.body.appendChild(input);input.select();try{document.execCommand("copy");if(message)alert(message)}catch(e){alert(text)}document.body.removeChild(input);return Promise.resolve()}
+async function appShare(shareData){try{if(window.Android&&typeof window.Android.share==="function"){window.Android.share(shareData.title||document.title,shareData.text||"",shareData.url||location.href);return}if(window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.Share){await window.Capacitor.Plugins.Share.share(shareData);return}if(navigator.share){await navigator.share(shareData);return}}catch(error){console.warn("Native share failed",error)}await appCopyText(shareData.url||location.href,"Link copied to clipboard.")}
+function appPrintPage(){try{if(window.Android&&typeof window.Android.printPage==="function"){window.Android.printPage();return}window.print()}catch(e){alert("Print is not available in this app view.")}}
+function appExit(fallbackUrl){try{if(window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App&&window.Capacitor.Plugins.App.exitApp){window.Capacitor.Plugins.App.exitApp();return}if(navigator.app&&typeof navigator.app.exitApp==="function"){navigator.app.exitApp();return}if(window.Android&&typeof window.Android.exitApp==="function"){window.Android.exitApp();return}window.close()}catch(e){}setTimeout(()=>{window.location.href=fallbackUrl||"index.html"},120)}
+async function sharePage(){await appShare({title:"Transits",text:"Transit analysis",url:window.location.href})}
+window.appCopyText=appCopyText;window.appShare=appShare;window.appPrintPage=appPrintPage;window.appExit=appExit;window.sharePage=sharePage;
+function formatBirthDate(input){let value=input.value.replace(/[^0-9]/g,"").slice(0,8);let formatted="";if(value.length>=2)formatted+=value.slice(0,2)+".";else formatted+=value;if(value.length>=4)formatted+=value.slice(2,4)+".";else if(value.length>2)formatted+=value.slice(2);if(value.length>=5)formatted+=value.slice(4);input.value=formatted}
+function validateBirthDateInput(input){if(!input.value)return;const normalized=normalizeDateForCalc(input.value);if(/^\d{2}\.\d{2}\.\d{4}$/.test(normalized))input.value=ownerUnits()==="US"?displayDateByUnits(normalized):normalized;input.style.borderColor=/^\d{2}\.\d{2}\.\d{4}$/.test(normalized)?"#38bdf8":"#ef4444"}
+function formatBirthTime(input){let val=input.value.replace(/[^0-9]/g,"").slice(0,4);if(val.length<4){input.value=val;return}let hh=Math.min(23,+val.slice(0,2));let mm=Math.min(59,+val.slice(2));input.value=formatInputTimeForUnits(String(hh).padStart(2,"0")+":"+String(mm).padStart(2,"0"))}
+function validateBirthTimeInput(input){if(!input.value)return;const normalized=normalizeTimeForCalc(input.value);input.value=formatInputTimeForUnits(normalized);input.style.borderColor=/^\d{2}:\d{2}$/.test(normalized)?"#38bdf8":"#ef4444"}
+function escapeHtml(value){return String(value||"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]))}
+function getStoredContacts(){try{return JSON.parse(localStorage.getItem("numerology_dates")||"[]")}catch(e){return[]}}
+function getSavedDates(){let dates=getStoredContacts();try{const profile=JSON.parse(localStorage.getItem("numerology_owner_profile")||"null");const name=[profile&&profile.firstName,profile&&profile.lastName].filter(Boolean).join(" ").trim();if(name){dates=dates.filter(item=>item.id!=="owner-profile"&&!item.ownerProfile);dates.unshift({id:"owner-profile",ownerProfile:true,locked:true,name,date:profile.birthDate||"",time:profile.birthTime||"",city:profile.birthCity||"",isTwin:!!profile.isTwin,isTwin3:!!profile.isTwin3})}}catch(e){}return dates}
+function updateSavedCount(){const icon=document.getElementById("savedIcon");const badge=document.getElementById("savedCount");const count=getSavedDates().length;if(icon)icon.style.display="flex";if(!badge)return;badge.textContent=count;badge.style.display=count>0?"flex":"none"}
+function toggleSavedPanel(){const panel=document.getElementById("savedPanel");if(!panel)return;if(panel.style.display==="block"){panel.style.display="none"}else{panel.style.display="block";renderSavedList()}}
+function loadSavedDate(dateStr,timeStr,city){document.getElementById("birthDate").value=dateStr||"";document.getElementById("birthTime").value=timeStr||"12:00";document.getElementById("birthCity").value=city||"Belgrade";toggleSavedPanel();calculateTransits()}
+function deleteSavedDate(id){if(id==="owner-profile"){alert("Owner profile cannot be deleted from contacts.");return}if(!confirm("Delete this saved contact?"))return;const saved=getStoredContacts().filter(item=>String(item.id)!==String(id)&&item.id!=="owner-profile"&&!item.ownerProfile);localStorage.setItem("numerology_dates",JSON.stringify(saved));updateSavedCount();renderSavedList()}function editSavedDate(id){if(id==="owner-profile")return;let saved=[];try{saved=JSON.parse(localStorage.getItem("numerology_dates")||"[]")}catch(e){saved=[]}const item=saved.find(x=>String(x.id)===String(id));if(!item)return;const n=prompt("Edit contact name",item.name||"");if(n===null)return;const d=prompt("Edit date (DD.MM.YYYY)",item.date||"");if(d===null)return;const t=prompt("Edit time (HH:MM)",item.time||"");if(t===null)return;const c=prompt("Edit city",item.city||"");if(c===null)return;item.name=n.trim()||item.name||"Saved contact";item.date=normalizeDateForCalc(d.trim());item.time=normalizeTimeForCalc(t.trim());item.city=c.trim();item.updatedAt=new Date().toISOString();localStorage.setItem("numerology_dates",JSON.stringify(saved));updateSavedCount();renderSavedList()}
+function ownerUnits(){try{return(JSON.parse(localStorage.getItem("numerology_owner_profile")||"{}").units)||"EU"}catch(e){return"EU"}}
+function displayDateByUnits(date){const m=/^(\d{2})\.(\d{2})\.(\d{4})$/.exec(date||"");return ownerUnits()==="US"&&m?m[2]+"."+m[1]+"."+m[3]:(date||"")}
+function displayTimeByUnits(time){const m=/^(\d{2}):(\d{2})$/.exec(time||"");if(ownerUnits()==="US"&&m){let h=+m[1];const ap=h>=12?"PM":"AM";h=h%12||12;return String(h).padStart(2,"0")+":"+m[2]+" "+ap}return time||""}
+function formatSavedContactDetails(item){let details=displayDateByUnits(item.date);if(item.time)details+=" "+displayTimeByUnits(item.time);if(item.city)details+=" "+item.city;return details}
+function renderSavedList(){const container=document.getElementById("savedList");if(!container)return;const saved=getSavedDates();if(saved.length===0){container.innerHTML='<div style="color:#64748b;text-align:center;padding:20px;font-size:12px">No saved contacts</div>';return}container.innerHTML=saved.map(item=>{const isOwner=item.id==="owner-profile"||item.ownerProfile||item.locked;const name=escapeHtml(item.name||"Saved contact");if(isOwner){return`<div class="saved-contact-item" data-date="${escapeHtml(item.date)}" data-time="${escapeHtml(item.time||"")}" data-city="${escapeHtml(item.city||"")}" style="background:#FFD700;color:#0f172a;border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:0.3s;border:1px solid rgba(255,215,0,.75);text-align:center;"><div style="color:#0f172a;font-weight:bold;font-size:13px">${name}</div></div>`}const detailMarkup=`<div style="color:#94a3b8;font-size:11px;margin-top:2px">${escapeHtml(formatSavedContactDetails(item))}</div>`;const editMarkup=`<span class="saved-edit-contact" data-id="${escapeHtml(item.id)}" title="Edit saved contact">EDIT</span>`;const deleteMarkup=`<span class="delete-saved-contact" data-id="${escapeHtml(item.id)}" style="color:#ef4444;font-size:16px;cursor:pointer;padding:5px" title="Delete saved contact">&#128465;&#65039;</span>`;return`<div class="saved-contact-item" data-date="${escapeHtml(item.date)}" data-time="${escapeHtml(item.time||"")}" data-city="${escapeHtml(item.city||"")}" style="background:#0f172a;border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:0.3s;border:1px solid #334155;"><div style="display:flex;justify-content:space-between;align-items:center;text-align:left;"><div><div style="color:#f6cb71;font-weight:bold;font-size:13px">${name}</div>${detailMarkup}</div><div style="display:flex;align-items:center;gap:2px">${editMarkup}${deleteMarkup}</div></div></div>`}).join("");container.querySelectorAll(".saved-contact-item").forEach(el=>{el.addEventListener("click",()=>loadSavedDate(el.dataset.date,el.dataset.time,el.dataset.city));el.addEventListener("mouseenter",()=>el.style.borderColor="#FFD700");el.addEventListener("mouseleave",()=>el.style.borderColor="#334155")});container.querySelectorAll(".delete-saved-contact").forEach(el=>el.addEventListener("click",evt=>{evt.stopPropagation();deleteSavedDate(el.dataset.id)}));container.querySelectorAll(".saved-edit-contact").forEach(el=>el.addEventListener("click",evt=>{evt.stopPropagation();editSavedDate(el.dataset.id)}))}
+function applyUnitFormatToTransitInputs(){const date=document.getElementById("birthDate");const time=document.getElementById("birthTime");if(date){const normalized=normalizeDateForCalc(date.value);date.placeholder=ownerUnits()==="US"?"MM.DD.YYYY":"DD.MM.YYYY";if(normalized)date.value=ownerUnits()==="US"?displayDateByUnits(normalized):normalized}if(time){const normalized=normalizeTimeForCalc(time.value);time.placeholder=ownerUnits()==="US"?"HH:MM AM/PM":"HH:MM";time.maxLength=ownerUnits()==="US"?8:5;if(normalized)time.value=formatInputTimeForUnits(normalized)}}
+initTransitFromParams();
+applyUnitFormatToTransitInputs();
+loadSharedCityCatalog();
+setupTransitCityAutocomplete();
+updateSavedCount();
+calculateTransits();
+
+// Animate progress bars
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        document.querySelectorAll('.timeline-progress').forEach(bar => {
+            const width = bar.style.width;
+            bar.style.width = '0%';
+            setTimeout(() => {
+                bar.style.width = width;
+            }, 100);
+        });
+    }, 300);
+});
+
+</script>
+
+</body>
+</html>

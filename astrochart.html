@@ -1,16 +1,11 @@
 ﻿<!DOCTYPE html>
-<html lang="en" style="background:#0f172a;">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0f172a">
 <title>Astrology App</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html{
-  background:#0f172a;
-  min-height:100%;
-}
 body{
   font-family: Arial;
   background: #0f172a;
@@ -18,7 +13,6 @@ body{
   text-align: center;
   margin: 0;
   padding: 5px;
-  min-height:100dvh;
 }
 
 /* ===== TITLE ===== */
@@ -160,340 +154,6 @@ body{
 
 .input-line input[type="text"]:hover {
   box-shadow: 0 0 15px rgba(56,189,248,0.8);
-}
-
-.portal-entry {
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  margin-top:8px;
-  scroll-margin-top:92px;
-}
-
-.portal-switch-arc {
-  display:none;
-  width:clamp(194px, 54vw, 246px);
-  height:51px;
-  margin-top:-50px;
-  overflow:visible;
-  cursor:pointer;
-  outline:none;
-  -webkit-tap-highlight-color:transparent;
-}
-
-.portal-switch-text {
-  color:#38bdf8;
-  fill:currentColor;
-  font-size:14px;
-  font-weight:bold;
-  letter-spacing:1px;
-  text-transform:uppercase;
-  text-shadow:0 0 8px rgba(56,189,248,.62);
-  transition:color .2s ease, text-shadow .2s ease;
-  animation:portalSwitchBlueGlow 1.8s ease-in-out infinite alternate;
-}
-
-.portal-switch-arc:hover .portal-switch-text {
-  color:#7dd3fc;
-  text-shadow:0 0 13px rgba(56,189,248,.9);
-}
-
-.portal-switch-arc:focus,
-.portal-switch-arc:focus-visible {
-  outline:none;
-}
-
-.cosmic-portal-shell.show + .portal-switch-arc {
-  display:block;
-}
-
-@keyframes portalSwitchBlueGlow {
-  from { filter:drop-shadow(0 0 3px rgba(56,189,248,.35)); }
-  to { filter:drop-shadow(0 0 9px rgba(56,189,248,.82)); }
-}
-
-.cosmic-portal-shell {
-  display:none;
-  position:relative;
-  width:clamp(154px, 43vw, 196px);
-  aspect-ratio:1;
-  align-items:center;
-  justify-content:center;
-  filter:none;
-}
-
-.cosmic-portal-shell::before,
-.cosmic-portal-shell::after {
-  content:"";
-  position:absolute;
-  inset:-2%;
-  width:auto;
-  height:auto;
-  border-radius:50%;
-  pointer-events:none;
-  z-index:1;
-}
-
-.cosmic-portal-shell::before {
-  background:conic-gradient(from 270deg, rgba(255,215,0,.5) 0deg 180deg, transparent 180deg 360deg);
-  filter:blur(6px);
-  opacity:.7;
-}
-
-.cosmic-portal-shell::after {
-  background:conic-gradient(from 90deg, rgba(56,189,248,.55) 0deg 180deg, transparent 180deg 360deg);
-  filter:blur(6px);
-  opacity:.7;
-}
-
-.cosmic-portal-shell.show {
-  display:flex;
-  animation:portalRise .45s ease-out both;
-}
-
-.cosmic-portal {
-  position:absolute;
-  inset:0;
-  border-radius:50%;
-  overflow:hidden;
-  background:url("images/krug.png") center / 154% 154% no-repeat;
-  border:0;
-  box-shadow:none;
-  transform:rotate(75deg);
-  z-index:2;
-}
-
-.portal-ring-labels {
-  position:absolute;
-  inset:3px;
-  z-index:4;
-  pointer-events:none;
-  overflow:visible;
-}
-
-.portal-ring-label {
-  font-family:Georgia, "Times New Roman", serif;
-  font-size:15px;
-  font-weight:700;
-  letter-spacing:.35px;
-  text-transform:uppercase;
-}
-
-.portal-ring-label.gold {
-  fill:#050b17;
-  filter:none;
-}
-
-.portal-ring-label.blue {
-  fill:#ffffff;
-  filter:none;
-}
-
-.cosmic-portal::before {
-  display:none;
-}
-
-.cosmic-portal::after {
-  display:none;
-}
-
-.portal-hotspot {
-  position:absolute;
-  z-index:5;
-  border:0;
-  background:transparent;
-  cursor:pointer;
-  font-family:inherit;
-  font-weight:900;
-  letter-spacing:.5px;
-  text-transform:uppercase;
-  text-shadow:0 1px 2px rgba(0,0,0,.55);
-  transition:transform .18s ease, filter .18s ease;
-}
-
-.portal-hotspot:hover {
-  transform:none;
-  filter:none;
-}
-
-.portal-zodiac:hover,
-.portal-code:hover {
-  transform:translateY(-50%);
-}
-
-.portal-zodiac {
-  left:50%;
-  top:50%;
-  width:50%;
-  height:auto;
-  color:#050b17;
-  font-size:clamp(44px, 14vw, 64px);
-  font-family:Georgia, "Times New Roman", serif;
-  text-shadow:0 1px 1px rgba(255,215,0,.45);
-  transform:translateY(-50%);
-}
-
-.portal-zodiac img {
-  display:block;
-  width:81%;
-  max-height:105px;
-  object-fit:contain;
-  margin:auto;
-  mix-blend-mode:multiply;
-  filter:contrast(1.2);
-  pointer-events:none;
-}
-
-.portal-code {
-  left:0;
-  top:50%;
-  width:50%;
-  height:58%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#dff7ff;
-  font-size:clamp(38px, 12vw, 58px);
-  transform:translateY(-50%);
-}
-
-.portal-code-ring {
-  position:relative;
-  width:clamp(68px, 19vw, 92px);
-  aspect-ratio:1;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  pointer-events:none;
-}
-
-.portal-code-ring svg {
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  overflow:visible;
-}
-
-.portal-code-ring text {
-  fill:#ffffff;
-  font-size:8px;
-  font-weight:700;
-  letter-spacing:1.2px;
-  text-shadow:0 0 5px rgba(255,255,255,.45);
-}
-
-.portal-code-number {
-  position:relative;
-  z-index:2;
-  color:transparent;
-  -webkit-text-stroke:1.25px rgba(255,255,255,.82);
-  text-stroke:1.25px rgba(255,255,255,.82);
-  text-shadow:0 0 8px rgba(56,189,248,.38);
-}
-
-.portal-code small,
-.portal-zodiac small {
-  display:block;
-  margin-top:2px;
-  font-size:8px;
-  line-height:1;
-  opacity:.82;
-}
-
-@keyframes portalRise {
-  from { opacity:0; transform:translateY(8px) scale(.92); }
-  to { opacity:1; transform:translateY(0) scale(1); }
-}
-
-body.portal-arrive {
-  background:#0f172a;
-  animation:portalPageFadeIn 1.9s ease-out both;
-}
-
-body.portal-arrive::before {
-  content:"";
-  position:fixed;
-  inset:0;
-  z-index:199900;
-  background:#0f172a;
-  pointer-events:none;
-  animation:portalCurtainOut 1.25s ease-out forwards;
-}
-
-body.portal-arrive .footer {
-  position:fixed!important;
-  left:0!important;
-  right:0!important;
-  bottom:0!important;
-  transform:none!important;
-}
-
-body.portal-arrive .cosmic-portal-shell.show {
-  animation:portalSpinIn 1.9s cubic-bezier(.1,.75,.2,1) both!important;
-}
-
-.portal-fade-curtain {
-  position:fixed;
-  inset:0;
-  z-index:199900;
-  background:#0f172a;
-  opacity:0;
-  pointer-events:none;
-  animation:portalCurtainIn 1.05s ease-in 1.45s forwards;
-}
-
-body.portal-return-transition > *:not(.footer):not(.portal-fade-curtain) {
-  transform-origin:center center;
-  animation:portalPageFadeOut 2.2s ease-in forwards;
-}
-
-body.portal-return-transition .footer {
-  position:fixed!important;
-  left:0!important;
-  right:0!important;
-  bottom:0!important;
-  transform:none!important;
-  animation:none!important;
-}
-
-body.portal-return-transition .cosmic-portal-shell.show {
-  animation:portalSpinOut 2.2s cubic-bezier(.45,0,.05,1) forwards!important;
-}
-
-@keyframes portalPageFadeIn {
-  0% { opacity:0; filter:blur(5px); }
-  100% { opacity:1; filter:blur(0); }
-}
-
-@keyframes portalSpinIn {
-  0% { transform:rotate(-760deg) scale(.92); opacity:0; }
-  42% { transform:rotate(-260deg) scale(1.03); opacity:.88; }
-  100% { transform:rotate(0deg) scale(1); opacity:1; }
-}
-
-@keyframes portalCurtainOut {
-  0% { opacity:1; }
-  100% { opacity:0; visibility:hidden; }
-}
-
-@keyframes portalCurtainIn {
-  from { opacity:0; }
-  to { opacity:1; }
-}
-
-@keyframes portalPageFadeOut {
-  0% { opacity:1; filter:blur(0); transform:scale(1); }
-  55% { opacity:.72; filter:blur(.6px); transform:scale(.995); }
-  100% { opacity:0; filter:blur(5px); transform:scale(.985); }
-}
-
-@keyframes portalSpinOut {
-  0% { transform:rotate(0deg) scale(1); filter:none; opacity:1; }
-  30% { transform:rotate(70deg) scale(1.02); }
-  68% { transform:rotate(520deg) scale(1.05); opacity:.9; }
-  100% { transform:rotate(1180deg) scale(.92); opacity:0; }
 }
 
 #timeInput {
@@ -952,7 +612,7 @@ body.portal-return-transition .cosmic-portal-shell.show {
 /* ===== FOOTER ===== */
 .footer {
   position: fixed;
-  bottom: 0!important;
+  bottom: 0;
   left: 0;
   width: 100%;
   background: #0f172a;
@@ -1049,7 +709,7 @@ table{max-width:100%;border-collapse:collapse}
 body{padding-top:4px!important;padding-bottom:4px!important}
 .title,.header-title{top:8px!important;height:26px!important;line-height:26px!important}
 .left-bar,.top-bar{top:8px!important}
-#tabs,.tabs{display:flex!important;margin-top:8px!important;margin-bottom:6px!important;gap:5px!important}
+#tabs,.tabs{display:none!important}
 .tab{padding-top:5px!important;padding-bottom:5px!important}
 .section{padding-top:2px!important;padding-bottom:2px!important}
 .input-line,.natal-input-line{margin-top:4px!important;margin-bottom:4px!important;gap:5px!important}
@@ -1058,9 +718,7 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 .subtitle{padding-top:40px!important;margin-bottom:2px!important}
 .calc-source-status{margin-top:1px!important;margin-bottom:2px!important;line-height:1.05!important}
 .calc-source-status + .section{margin-top:2px!important}
-#analyzeBtn,#astroContent{display:none!important}
-.analyze-btn{display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;line-height:1.05!important;min-height:34px!important;margin:8px auto 4px!important;font-size:13px!important}
-#astroChart > div[style*="margin-top:10px"]{margin-top:4px!important}
+.analyze-btn{display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;line-height:1.05!important;min-height:34px!important;margin:8px auto 4px!important;font-size:13px!important;width:min(340px,calc(100vw - 40px))!important;max-width:340px!important}
 
 /* ===== INNER BOX TEXT COMPACT ===== */
 .card,.panel,.box,.content-card,.result-card,.planet-card,.aspect-card,.house-card{border-radius:12px!important;padding:8px!important;margin-top:6px!important;margin-bottom:6px!important}
@@ -1140,12 +798,13 @@ p,.subtitle,.description,.small,.note{line-height:1.25!important;margin-top:2px!
 </div>
 
 <!-- TITLE -->
-<div class="title">ASTROLOGY APP</div>
-<div class="subtitle">Choose an astrology section</div>
+<div class="title">ASTRO CHART</div>
+<div class="subtitle">Natal planetary positions, houses and aspects</div>
+<div class="calc-source-status" id="calcSourceStatus">Waiting for calculation.</div>
 
 <!-- TABS - 2 REDA PO 3 -->
 <div class="tabs" id="tabs">
-  <div class="tab unlocked active" onclick="openAstroChart()">ASTRO CHART</div>
+  <div class="tab active" data-tab="astroChart">ASTRO CHART</div>
   <div class="tab unlocked"
 onclick="openTransit()">
 TRANSITS
@@ -1162,7 +821,7 @@ ASTROCARTOGRAPHY
 </div>
 
 <div class="tab unlocked"
-onclick="openSinastrija()">
+onclick="window.location.href='sinastrija.html'">
 SINASTRIJA
 </div>
 
@@ -1215,30 +874,6 @@ LUNAR PHASES
 
   <div style="margin-top:10px; font-size:11px; color:white; opacity:0.8;">
     (enter your date of birth, time, and place)
-  </div>
-
-  <div id="astroEntryPortal" class="portal-entry">
-    <div id="cosmicPortalShell" class="cosmic-portal-shell" aria-label="Numerology and astrology portal">
-      <div class="cosmic-portal" aria-hidden="true"></div>
-      <svg class="portal-ring-labels" viewBox="0 0 200 200" aria-hidden="true">
-        <defs>
-          <path id="portalTopArc" d="M 10 103 A 90 90 0 0 1 190 103"></path>
-          <path id="portalBottomArc" d="M 10 106 A 90 90 0 0 0 190 106"></path>
-        </defs>
-        <text class="portal-ring-label gold"><textPath href="#portalTopArc" startOffset="50%" text-anchor="middle">ASTROLOGY SIGN</textPath></text>
-        <text class="portal-ring-label blue"><textPath href="#portalBottomArc" startOffset="50%" text-anchor="middle">NUMEROLOGY CODE</textPath></text>
-      </svg>
-      <button id="portalZodiac" class="portal-hotspot portal-zodiac" type="button" onclick="openAstroChart()" title="Open Astro Chart"></button>
-      <button id="portalCode" class="portal-hotspot portal-code" type="button" onclick="openPortalCodeInNumerology()" title="Open numerological code"></button>
-    </div>
-    <svg class="portal-switch-arc" viewBox="0 0 220 42" role="button" tabindex="0" aria-label="Change to Numerology App" onclick="startPortalToNumerology()" onkeydown="if(event.key==='Enter' || event.key===' '){ event.preventDefault(); startPortalToNumerology(); }">
-      <defs>
-        <path id="portalSwitchArc" d="M 14 9 A 110 110 0 0 0 206 9"></path>
-      </defs>
-      <text class="portal-switch-text">
-        <textPath href="#portalSwitchArc" startOffset="50%" text-anchor="middle">Change to Numerology</textPath>
-      </text>
-    </svg>
   </div>
 
   <!-- ANALYZE BUTTON -->
@@ -1360,10 +995,10 @@ LUNAR PHASES
     box-shadow:0 0 30px rgba(56,189,248,0.4);
   ">
     <h3 style="color:#38bdf8; margin-bottom:15px; text-shadow:0 0 10px rgba(56,189,248,0.6);">
-      Save Profile
+      Save Date
     </h3>
     <div style="margin-bottom:15px; color:#94a3b8; font-size:12px;">
-      Birth data: <span id="saveModalDate" style="color:#f6cb71; font-weight:bold;"></span>
+      Date: <span id="saveModalDate" style="color:#f6cb71; font-weight:bold;"></span>
     </div>
     <input type="text" id="saveNameInput" placeholder="Enter name..." style="
       width:100%;
@@ -1423,7 +1058,7 @@ LUNAR PHASES
     cursor:pointer;
   ">&times;</div>
   <h3 style="color:#FFD700; margin-bottom:15px; font-size:14px; text-align:center; text-shadow:0 0 10px rgba(255,215,0,.36);">
-    SAVED PROFILES
+    SAVED DATES
   </h3>
   <div id="savedList"></div>
 </div>
@@ -1558,21 +1193,21 @@ function goBack() {
   saveAstroReturnState(date, time, city);
 
   const params = new URLSearchParams(window.location.search);
-  let backUrl = "index.html?astroReturn=1";
+  let backUrl = "chart.html?";
   if(date) {
-    backUrl += "&date=" + encodeURIComponent(date);
+    backUrl += "date=" + encodeURIComponent(date);
     if(time) backUrl += "&time=" + encodeURIComponent(time);
     if(city) backUrl += "&city=" + encodeURIComponent(city);
   }
+  if(!date) backUrl += "date=";
   backUrl += "&isTwin=" + encodeURIComponent(params.get("isTwin") || "false");
   backUrl += "&isTwin3=" + encodeURIComponent(params.get("isTwin3") || "false");
-  backUrl += "#astroEntry";
   sessionStorage.setItem("returningFromChart", "true");
   sessionStorage.setItem("astroReturnUrl", backUrl);
   window.location.assign(backUrl);
 }
 
-function buildAstroSectionUrl(page){
+function openAstrocartography(){
   const date = readInputDate();
   const time = readInputTime();
   const city = document.getElementById("cityInput").value;
@@ -1580,37 +1215,64 @@ function buildAstroSectionUrl(page){
 
   saveAstroReturnState(date, time, city);
 
-  let url = page + "?date=" + encodeURIComponent(date);
+  let url = "astrocartography.html?date=" + encodeURIComponent(date);
   if(time) url += "&time=" + encodeURIComponent(time);
   if(city) url += "&city=" + encodeURIComponent(city);
   url += "&isTwin=" + encodeURIComponent(params.get("isTwin") || "false");
   url += "&isTwin3=" + encodeURIComponent(params.get("isTwin3") || "false");
-  return url;
-}
 
-function openAstroChart(){
-  const url = buildAstroSectionUrl("astrochart.html");
   window.location.href = url;
 }
 
-function openAstrocartography(){
-  window.location.href = buildAstroSectionUrl("astrocartography.html");
-}
-
 function openTransit(){
-  window.location.href = buildAstroSectionUrl("transit.html");
+  const date = readInputDate();
+  const time = readInputTime();
+  const city = document.getElementById("cityInput").value;
+  const params = new URLSearchParams(window.location.search);
+
+  saveAstroReturnState(date, time, city);
+
+  let url = "transit.html?date=" + encodeURIComponent(date);
+  if(time) url += "&time=" + encodeURIComponent(time);
+  if(city) url += "&city=" + encodeURIComponent(city);
+  url += "&isTwin=" + encodeURIComponent(params.get("isTwin") || "false");
+  url += "&isTwin3=" + encodeURIComponent(params.get("isTwin3") || "false");
+
+  window.location.href = url;
 }
 
 function openLunarPhases(){
-  window.location.href = buildAstroSectionUrl("lunarphases.html");
+  const date = readInputDate();
+  const time = readInputTime();
+  const city = document.getElementById("cityInput").value;
+  const params = new URLSearchParams(window.location.search);
+
+  saveAstroReturnState(date, time, city);
+
+  let url = "lunarphases.html?date=" + encodeURIComponent(date);
+  if(time) url += "&time=" + encodeURIComponent(time);
+  if(city) url += "&city=" + encodeURIComponent(city);
+  url += "&isTwin=" + encodeURIComponent(params.get("isTwin") || "false");
+  url += "&isTwin3=" + encodeURIComponent(params.get("isTwin3") || "false");
+
+  window.location.href = url;
 }
 
 function openRetrogradnost(){
-  window.location.href = buildAstroSectionUrl("retrogradnost.html");
-}
+  const date = readInputDate();
+  const time = readInputTime();
+  const city = document.getElementById("cityInput").value;
+  const params = new URLSearchParams(window.location.search);
 
-function openSinastrija(){
-  window.location.href = buildAstroSectionUrl("sinastrija.html");
+  saveAstroReturnState(date, time, city);
+
+  let url = "retrogradnost.html?date=" + encodeURIComponent(date);
+  if(time) url += "&time=" + encodeURIComponent(time);
+  if(city) url += "&city=" + encodeURIComponent(city);
+  url += "&isTwin=" + encodeURIComponent(params.get("isTwin") || "false");
+  url += "&isTwin3=" + encodeURIComponent(params.get("isTwin3") || "false");
+
+  window.location.href = url;
 }
 
 // ===== DATE FORMATTING =====
@@ -1654,131 +1316,6 @@ function readInputDate(){
 
 function readInputTime(){
   return normalizeTimeForCalc(document.getElementById("timeInput").value);
-}
-
-function reducePortalNumber(num){
-  while(num > 9){
-    num = String(num).split("").reduce((sum, digit) => sum + Number(digit), 0);
-  }
-  return num;
-}
-
-function portalCodeFromDate(dateValue){
-  const raw = normalizeDateForCalc(dateValue || "").replace(/\D/g, "");
-  if(!raw) return "";
-  return reducePortalNumber(raw.split("").reduce((sum, digit) => sum + Number(digit), 0));
-}
-
-function portalZodiacFromDate(dateValue){
-  const parts = normalizeDateForCalc(dateValue || "").split(".");
-  if(parts.length < 2) return "";
-  const day = parseInt(parts[0], 10);
-  const month = parseInt(parts[1], 10);
-  if ((day >= 21 && month == 3) || (day <= 19 && month == 4)) return "ARIES";
-  if ((day >= 20 && month == 4) || (day <= 20 && month == 5)) return "TAURUS";
-  if ((day >= 21 && month == 5) || (day <= 20 && month == 6)) return "GEMINI";
-  if ((day >= 21 && month == 6) || (day <= 22 && month == 7)) return "CANCER";
-  if ((day >= 23 && month == 7) || (day <= 22 && month == 8)) return "LEO";
-  if ((day >= 23 && month == 8) || (day <= 22 && month == 9)) return "VIRGO";
-  if ((day >= 23 && month == 9) || (day <= 22 && month == 10)) return "LIBRA";
-  if ((day >= 23 && month == 10) || (day <= 21 && month == 11)) return "SCORPIO";
-  if ((day >= 22 && month == 11) || (day <= 21 && month == 12)) return "SAGITTARIUS";
-  if ((day >= 22 && month == 12) || (day <= 19 && month == 1)) return "CAPRICORN";
-  if ((day >= 20 && month == 1) || (day <= 18 && month == 2)) return "AQUARIUS";
-  return "PISCES";
-}
-
-function portalZodiacSymbol(name){
-  return {
-    ARIES:"\u2648", TAURUS:"\u2649", GEMINI:"\u264A", CANCER:"\u264B",
-    LEO:"\u264C", VIRGO:"\u264D", LIBRA:"\u264E", SCORPIO:"\u264F",
-    SAGITTARIUS:"\u2650", CAPRICORN:"\u2651", AQUARIUS:"\u2652", PISCES:"\u2653"
-  }[String(name || "").toUpperCase()] || "";
-}
-
-function portalZodiacImagePath(name){
-  return {
-    ARIES:"images/aries.png",
-    TAURUS:"images/Taurus.png",
-    GEMINI:"images/gemini.png",
-    CANCER:"images/cancer.png",
-    LEO:"images/leo.png",
-    VIRGO:"images/virgo.png",
-    LIBRA:"images/libra.png",
-    SCORPIO:"images/scorpion.png",
-    SAGITTARIUS:"images/sagittarius.png",
-    CAPRICORN:"images/goat.png",
-    AQUARIUS:"images/aquarius.png",
-    PISCES:"images/pisces.png"
-  }[String(name || "").toUpperCase()] || "";
-}
-
-function updateAstrologyPortal(){
-  const shell = document.getElementById("cosmicPortalShell");
-  const codeBtn = document.getElementById("portalCode");
-  const zodiacBtn = document.getElementById("portalZodiac");
-  if(!shell || !codeBtn || !zodiacBtn) return;
-  const date = readInputDate();
-  if(!date || !validateDate(date)){
-    shell.classList.remove("show");
-    return;
-  }
-  const code = portalCodeFromDate(date);
-  const zodiac = portalZodiacFromDate(date);
-  shell.classList.add("show");
-  shell.dataset.code = code;
-  shell.dataset.zodiac = zodiac;
-  codeBtn.innerHTML = `<span class="portal-code-ring">
-    <svg viewBox="0 0 100 100" aria-hidden="true">
-      <defs>
-        <path id="portalCodeMiningArc" d="M 18 50 A 32 32 0 0 1 82 50"></path>
-      </defs>
-      <text><textPath href="#portalCodeMiningArc" startOffset="50%" text-anchor="middle">CLICK FOR MEANING</textPath></text>
-    </svg>
-    <span class="portal-code-number">${code}</span>
-  </span>`;
-  const imagePath = portalZodiacImagePath(zodiac);
-  zodiacBtn.innerHTML = imagePath
-    ? `<img src="${imagePath}" alt="${zodiac}">`
-    : `<span>${portalZodiacSymbol(zodiac)}</span>`;
-}
-
-function openPortalCodeInNumerology(){
-  const code = document.getElementById("cosmicPortalShell")?.dataset.code || portalCodeFromDate(readInputDate());
-  const date = readInputDate();
-  const time = readInputTime();
-  const city = document.getElementById("cityInput").value;
-  sessionStorage.setItem("openNumerologyCode", code);
-  saveAstroReturnState(date, time, city);
-  let backUrl = "index.html?astroReturn=1";
-  if(date) backUrl += "&date=" + encodeURIComponent(date);
-  if(time) backUrl += "&time=" + encodeURIComponent(time);
-  if(city) backUrl += "&city=" + encodeURIComponent(city);
-  backUrl += "#astroEntry";
-  window.location.href = backUrl;
-}
-
-function startPortalToNumerology(){
-  if(!document.querySelector(".portal-fade-curtain")){
-    const curtain = document.createElement("div");
-    curtain.className = "portal-fade-curtain";
-    document.body.appendChild(curtain);
-  }
-  document.body.classList.add("portal-return-transition");
-  setTimeout(returnToNumerologyApp, 2200);
-}
-
-function returnToNumerologyApp(){
-  const date = readInputDate();
-  const time = readInputTime();
-  const city = document.getElementById("cityInput").value;
-  saveAstroReturnState(date, time, city);
-  let backUrl = "index.html?astroReturn=1";
-  if(date) backUrl += "&date=" + encodeURIComponent(date);
-  if(time) backUrl += "&time=" + encodeURIComponent(time);
-  if(city) backUrl += "&city=" + encodeURIComponent(city);
-  backUrl += "#astroEntry";
-  window.location.href = backUrl;
 }
 
 function applyUnitFormatToInputs(){
@@ -2007,7 +1544,7 @@ function saveAstroReturnState(date, time, city){
   }));
 }
 
-// ===== SAVED PROFILES FUNCTIONS =====
+// ===== SAVED DATES FUNCTIONS =====
 function getSavedDates(){
   let saved = localStorage.getItem('numerology_dates');
   let dates = saved ? JSON.parse(saved) : [];
@@ -2050,139 +1587,6 @@ function ownerUnits(){
   try{return (JSON.parse(localStorage.getItem('numerology_owner_profile') || '{}').units) || 'EU'}catch(e){return 'EU'}
 }
 
-const APP_TRANSLATIONS = {
-  sr: {
-    "Astrology App": "Astrološka aplikacija",
-    "Choose an astrology section": "Izaberi astrološku sekciju",
-    "ASTRO CHART": "ASTRO KARTA",
-    "Calculate My Chart": "Izračunaj moju kartu",
-    "(enter your date of birth, time, and place)": "(unesi datum, vreme i mesto rođenja)",
-    "Change to Numerology": "Pređi na numerologiju",
-    "CLICK FOR MEANING": "KLIKNI ZA ZNAČENJE",
-    "Save Profile": "Sačuvaj profil",
-    "Birth data:": "Podaci rođenja:",
-    "Enter name...": "Unesi ime...",
-    "SAVED PROFILES": "SAČUVANI PROFILI",
-    "No saved profiles": "Nema sačuvanih profila",
-    "Please enter a profile name": "Unesi ime profila",
-    "Delete this saved profile?": "Obrisati ovaj sačuvani profil?",
-    "Owner profile cannot be deleted from contacts.": "Profil vlasnika ne može biti obrisan iz kontakata.",
-    "OWNER": "VLASNIK",
-    "EDIT": "IZMENI",
-    "TWIN": "BLIZANAC",
-    "3rd TWIN": "TREĆI BLIZANAC",
-    "SAVE": "SAČUVAJ",
-    "CANCEL": "OTKAŽI",
-    "Calculating...": "Računam...",
-    "House": "Kuća",
-    "NATAL CHART": "NATALNA KARTA",
-    "TRANSIT": "TRANZITI",
-    "SYNASTRY": "SINASTRIJA",
-    "RETROGRADE": "RETROGRADNOST",
-    "LUNAR PHASES": "MESEČEVE FAZE"
-  }
-};
-
-let isApplyingLanguage = false;
-let languageObserverStarted = false;
-
-function getAppSettings(){
-  try{return JSON.parse(localStorage.getItem('numerology_app_settings') || '{}')}catch(e){return {}}
-}
-
-function ambientAudio(){
-  let audio = document.getElementById('appAmbientAudio');
-  if(!audio){
-    audio = document.createElement('audio');
-    audio.id = 'appAmbientAudio';
-    audio.src = 'images/music.mp3';
-    audio.loop = true;
-    audio.preload = 'auto';
-    document.body.appendChild(audio);
-  }
-  return audio;
-}
-
-function syncAmbientAudio(){
-  const settings = getAppSettings();
-  const audio = ambientAudio();
-  audio.volume = Math.max(0, Math.min(1, Number(settings.volume ?? 35) / 100));
-  if(settings.soundEnabled){
-    audio.play().catch(() => {
-      const next = getAppSettings();
-      next.soundEnabled = false;
-      localStorage.setItem('numerology_app_settings', JSON.stringify(next));
-    });
-  }else{
-    audio.pause();
-  }
-}
-
-function initAmbientAudioUnlock(){
-  const unlock = () => syncAmbientAudio();
-  document.addEventListener('pointerdown', unlock, { once:true });
-  document.addEventListener('keydown', unlock, { once:true });
-}
-
-function compactI18nText(value){
-  return String(value || '').replace(/\s+/g, ' ').trim();
-}
-
-function translateI18nValue(value, lang){
-  const key = compactI18nText(value);
-  return (APP_TRANSLATIONS[lang] && APP_TRANSLATIONS[lang][key]) || null;
-}
-
-function applyLanguage(root = document.body){
-  const lang = getAppSettings().language || 'en';
-  document.documentElement.lang = lang;
-  if(!root) return;
-  isApplyingLanguage = true;
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-    acceptNode(node){
-      const parent = node.parentElement;
-      if(!parent || ['SCRIPT','STYLE','TEXTAREA'].includes(parent.tagName)) return NodeFilter.FILTER_REJECT;
-      return compactI18nText(node.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
-    }
-  });
-  const textNodes = [];
-  while(walker.nextNode()) textNodes.push(walker.currentNode);
-  textNodes.forEach(node => {
-    if(!node.__i18nOriginalText) node.__i18nOriginalText = node.nodeValue;
-    const original = node.__i18nOriginalText;
-    const translated = lang === 'en' ? original : (translateI18nValue(original, lang) || original);
-    const leading = original.match(/^\s*/)?.[0] || '';
-    const trailing = original.match(/\s*$/)?.[0] || '';
-    node.nodeValue = leading + translated + trailing;
-  });
-  root.querySelectorAll('input[placeholder], textarea[placeholder]').forEach(el => {
-    if(!el.dataset.i18nOriginalPlaceholder) el.dataset.i18nOriginalPlaceholder = el.getAttribute('placeholder') || '';
-    const translated = translateI18nValue(el.dataset.i18nOriginalPlaceholder, lang);
-    el.setAttribute('placeholder', lang === 'en' ? el.dataset.i18nOriginalPlaceholder : (translated || el.dataset.i18nOriginalPlaceholder));
-  });
-  root.querySelectorAll('[title], [aria-label]').forEach(el => {
-    ['title','aria-label'].forEach(attr => {
-      if(!el.hasAttribute(attr)) return;
-      const key = 'i18nOriginal' + attr.replace(/(^|-)([a-z])/g, (_, __, c) => c.toUpperCase());
-      if(!el.dataset[key]) el.dataset[key] = el.getAttribute(attr) || '';
-      const translated = translateI18nValue(el.dataset[key], lang);
-      el.setAttribute(attr, lang === 'en' ? el.dataset[key] : (translated || el.dataset[key]));
-    });
-  });
-  isApplyingLanguage = false;
-}
-
-function startLanguageObserver(){
-  if(languageObserverStarted || !document.body) return;
-  languageObserverStarted = true;
-  const observer = new MutationObserver(() => {
-    if(isApplyingLanguage) return;
-    clearTimeout(window.__languageApplyTimer);
-    window.__languageApplyTimer = setTimeout(() => applyLanguage(), 40);
-  });
-  observer.observe(document.body, { childList:true, subtree:true });
-}
-
 function displayDateByUnits(date){
   const m = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(date || '');
   return ownerUnits() === 'US' && m ? m[2] + '.' + m[1] + '.' + m[3] : (date || '');
@@ -2206,26 +1610,6 @@ function formatSavedContactDetails(item){
   return details;
 }
 
-function normalizeSavedCompareText(value){
-  return String(value || '').trim().replace(/\s+/g, ' ').toLowerCase();
-}
-
-function currentInputMatchesOwner(dateStr, timeStr, city){
-  try{
-    const profile = JSON.parse(localStorage.getItem('numerology_owner_profile') || 'null');
-    if(!profile) return false;
-    const ownerDate = normalizeDateForCalc(profile.birthDate || '');
-    const ownerTime = normalizeTimeForCalc(profile.birthTime || '');
-    return (
-      normalizeDateForCalc(dateStr || '') === ownerDate &&
-      normalizeTimeForCalc(timeStr || '') === ownerTime &&
-      normalizeSavedCompareText(city) === normalizeSavedCompareText(profile.birthCity)
-    );
-  }catch(e){
-    return false;
-  }
-}
-
 function offerSaveDate(dateStr){
   if(skipSavePrompt){
     skipSavePrompt = false;
@@ -2234,13 +1618,9 @@ function offerSaveDate(dateStr){
   let timeStr = document.getElementById("timeInput") ? document.getElementById("timeInput").value : "";
   let city = document.getElementById("cityInput") ? document.getElementById("cityInput").value : "";
 
-  if(currentInputMatchesOwner(dateStr, timeStr, city)) return;
-
   let saved = getSavedDates();
   let exists = saved.some(function(d) {
-    return normalizeDateForCalc(d.date || '') === normalizeDateForCalc(dateStr || '') &&
-      normalizeTimeForCalc(d.time || '') === normalizeTimeForCalc(timeStr || '') &&
-      normalizeSavedCompareText(d.city) === normalizeSavedCompareText(city);
+    return d.date === dateStr && d.time === timeStr && d.city === city;
   });
   if(exists) return;
 
@@ -2264,7 +1644,7 @@ function closeSaveModal(){
 function confirmSaveDate(){
   let name = document.getElementById('saveNameInput').value.trim();
   if(!name){
-    alert('Please enter a profile name');
+    alert('Please enter a name');
     return;
   }
 
@@ -2292,7 +1672,7 @@ function deleteSavedDate(id){
     alert('Owner profile cannot be deleted from contacts.');
     return;
   }
-  if(!confirm('Delete this saved profile?')) return;
+  if(!confirm('Delete this saved date?')) return;
   let saved = getSavedDates().filter(function(d) { return String(d.id) !== String(id); });
   saveDatesList(saved);
   renderSavedList();
@@ -2352,7 +1732,7 @@ function renderSavedList(){
   let saved = getSavedDates();
 
   if(saved.length === 0){
-    container.innerHTML = '<div style="color:#64748b; text-align:center; padding:20px; font-size:12px;">No saved profiles</div>';
+    container.innerHTML = '<div style="color:#64748b; text-align:center; padding:20px; font-size:12px;">No saved dates</div>';
     return;
   }
 
@@ -2791,21 +2171,6 @@ window.onload = function(){
   if(time) document.getElementById("timeInput").value = time;
   if(city) document.getElementById("cityInput").value = city;
   applyUnitFormatToInputs();
-  updateAstrologyPortal();
-  try{
-    if(sessionStorage.getItem("portalArriveAstrology") === "1"){
-      sessionStorage.removeItem("portalArriveAstrology");
-      document.body.classList.add("portal-arrive");
-      setTimeout(() => document.body.classList.remove("portal-arrive"), 2100);
-    }
-  }catch(e){}
-  ["input","timeInput","cityInput"].forEach(id => {
-    const el = document.getElementById(id);
-    if(el) el.addEventListener("input", updateAstrologyPortal);
-  });
-  document.documentElement.lang = 'en';
-  syncAmbientAudio();
-  initAmbientAudioUnlock();
 };
 </script>
 

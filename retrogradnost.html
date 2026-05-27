@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retrograde Planets</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 5px;
+    overflow-x:hidden;
+}
+
+.header-bar{position:relative;width:100%;padding:10px 12px;display:flex;align-items:center;justify-content:center;min-height:50px}
+.left-bar{position:absolute;top:10px;left:12px;z-index:9999;display:flex;align-items:center;gap:6px}
+.left-btn,.action-btn{width:30px;height:30px;border-radius:8px;background:#1e293b;border:1px solid rgba(56,189,248,0.25);color:#94a3b8;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:0.2s;padding:0;flex:none}
+.left-btn:hover,.action-btn:hover{color:#38bdf8;border-color:#38bdf8;box-shadow:0 0 10px rgba(56,189,248,0.35)}
+.left-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.action-btn svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.header-title{font-size:clamp(13px,5vw,22px);font-weight:bold;color:#FFD700;letter-spacing:clamp(0px,.5vw,2px);text-shadow:0 0 12px rgba(255,215,0,0.35);padding:0 72px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:clip;line-height:30px}
+.top-bar{position:absolute;top:10px;right:12px;z-index:9999}
+.action-group{display:flex;align-items:center;gap:6px}
+
+.subtitle{
+    margin-top:6px;
+    color:#94a3b8;
+    font-size:12px;
+}
+
+.calc-source-status{
+    margin:0 0 5px;
+    color:#4ade80;
+    font-size:10px;
+    line-height:1.1;
+    text-align:center;
+    opacity:.82;
+}
+
+.calc-source-status.fallback{
+    color:#f6cb71;
+}
+
+.container{
+    width:100%;
+    max-width:900px;
+    margin:auto;
+    padding:12px;
+}
+
+.card{
+    background:rgba(10,20,35,0.78);
+    border-radius:14px;
+    border:1px solid rgba(56,189,248,0.12);
+    padding:12px;
+    margin-top:12px;
+}
+
+.section-title{
+    color:#FFD700;
+    font-size:16px;
+    line-height:1.25;
+    margin-bottom:12px;
+    text-shadow: 0 0 8px rgba(255,215,0,0.2);
+    overflow-wrap:anywhere;
+}
+
+/* ===== RETROGRADE ITEM ===== */
+.retro-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:8px 9px;
+    margin-bottom:6px;
+    background:#1e293b;
+    border-radius:10px;
+    border-left:4px solid #fb7185;
+    border-top:1px solid rgba(56,189,248,0.08);
+    border-right:1px solid rgba(56,189,248,0.08);
+    border-bottom:1px solid rgba(56,189,248,0.08);
+    transition:0.25s;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+}
+
+.retro-item:hover{
+    transform:scale(1.01);
+    box-shadow: 0 0 14px rgba(56,189,248,0.25);
+}
+
+.retro-item.expanded{
+    border-left-color:#FFD700;
+}
+
+.retro-item.direct{
+    border-left-color:#4ade80;
+}
+
+.retro-item.station{
+    border-left-color:#f59e0b;
+}
+
+.left{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    text-align:left;
+    flex:1;
+}
+
+.planet{
+    font-size:14px;
+    font-weight:bold;
+    color:white;
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+.planet-icon{
+    font-size:16px;
+}
+
+.description{
+    color:#94a3b8;
+    font-size:10.5px;
+    line-height:1.35;
+}
+
+.status{
+    font-size:10px;
+    color:#fb7185;
+    font-weight:bold;
+    text-shadow: 0 0 8px rgba(251,113,133,0.35);
+    min-width:60px;
+    text-align:right;
+}
+
+.status.direct{
+    color:#4ade80;
+    text-shadow: 0 0 8px rgba(74,222,128,0.35);
+}
+
+.status.station{
+    color:#f59e0b;
+    text-shadow: 0 0 8px rgba(245,158,11,0.35);
+}
+
+/* ===== EXPANDED DETAILS ===== */
+.retro-details{
+    display:none;
+    margin-top:8px;
+    padding-top:8px;
+    border-top:1px solid rgba(56,189,248,0.1);
+    text-align:left;
+}
+
+.retro-details.show{
+    display:block;
+    animation:slideDown 0.3s ease;
+}
+
+@keyframes slideDown{
+    from{ opacity:0; transform:translateY(-10px); }
+    to{ opacity:1; transform:translateY(0); }
+}
+
+.detail-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap:10px;
+    margin-bottom:12px;
+}
+
+.detail-box{
+    background:rgba(15,23,42,0.6);
+    border-radius:10px;
+    padding:10px;
+    border:1px solid rgba(56,189,248,0.08);
+}
+
+.detail-label{
+    font-size:10px;
+    color:#64748b;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin-bottom:4px;
+}
+
+.detail-value{
+    font-size:13px;
+    color:#e2e8f0;
+    font-weight:600;
+}
+
+.detail-value.retro{ color:#fb7185; }
+.detail-value.direct{ color:#4ade80; }
+
+.retro-meaning{
+    font-size:12px;
+    color:#94a3b8;
+    line-height:1.6;
+    margin-top:8px;
+}
+
+.retro-meaning strong{
+    color:#FFD700;
+}
+
+/* ===== TIMELINE ===== */
+.timeline-wrapper{
+    margin:4px 0 2px;
+    padding:2px 0;
+}
+
+.timeline-track{
+    position:relative;
+    height:4px;
+    background:#1e293b;
+    border-radius:3px;
+    margin:4px 0;
+}
+
+.timeline-progress{
+    position:absolute;
+    left:0;
+    top:0;
+    height:100%;
+    border-radius:3px;
+    background:linear-gradient(90deg, #fb7185, #f59e0b);
+    transition:width 1s ease-out;
+}
+
+.timeline-progress.direct{
+    background:linear-gradient(90deg, #4ade80, #22c55e);
+}
+
+.timeline-progress.station{
+    background:linear-gradient(90deg, #f59e0b, #FFD700);
+}
+
+.timeline-labels{
+    display:flex;
+    justify-content:space-between;
+    font-size:8.5px;
+    color:#64748b;
+    margin-top:2px;
+}
+
+/* ===== CALENDAR VIEW ===== */
+.calendar-grid{
+    display:grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap:3px;
+    margin:10px auto 0;
+    max-width:420px;
+    width:100%;
+}
+
+.calendar-day{
+    aspect-ratio:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    background:#1e293b;
+    border-radius:6px;
+    font-size:10px;
+    color:#94a3b8;
+    cursor:pointer;
+    transition:0.3s;
+    border:1px solid transparent;
+    position:relative;
+}
+
+.calendar-day:hover{
+    border-color:rgba(56,189,248,0.3);
+    color:#e2e8f0;
+}
+
+.calendar-day.retro{
+    background:rgba(251,113,133,0.15);
+    border-color:rgba(251,113,133,0.3);
+    color:#fb7185;
+    font-weight:bold;
+}
+
+.calendar-day.station{
+    background:rgba(245,158,11,0.15);
+    border-color:rgba(245,158,11,0.3);
+    color:#f59e0b;
+    font-weight:bold;
+}
+
+.calendar-day.today{
+    background:rgba(255,215,0,0.15);
+    border-color:#FFD700;
+    color:#FFD700;
+    font-weight:bold;
+}
+
+.calendar-day .day-num{
+    font-size:12px;
+}
+
+.calendar-day .day-planet{
+    font-size:8px;
+    margin-top:2px;
+    max-width:100%;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+}
+
+.calendar-header{
+    display:grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap:3px;
+    margin-bottom:6px;
+    max-width:420px;
+    width:100%;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.calendar-header-day{
+    text-align:center;
+    font-size:10px;
+    color:#64748b;
+    text-transform:uppercase;
+    letter-spacing:1px;
+}
+
+/* ===== FILTER TABS ===== */
+.filter-tabs{
+    display:flex;
+    gap:6px;
+    margin-bottom:14px;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.filter-tab{
+    padding:6px 14px;
+    border-radius:999px;
+    border:1px solid rgba(56,189,248,0.2);
+    background:transparent;
+    color:#94a3b8;
+    font-size:12px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.filter-tab:hover, .filter-tab.active{
+    background:rgba(56,189,248,0.15);
+    color:#38bdf8;
+    border-color:rgba(56,189,248,0.4);
+}
+
+/* ===== NATAL RETROGRADE CHECK ===== */
+.natal-check{
+    background:rgba(255,215,0,0.05);
+    border:1px solid rgba(255,215,0,0.15);
+    border-radius:14px;
+    padding:14px;
+    margin-top:14px;
+    text-align:left;
+}
+
+.natal-check-title{
+    color:#FFD700;
+    font-size:14px;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.natal-input-line{
+    display:flex;
+    gap:8px;
+    margin-bottom:10px;
+}
+
+.natal-input-line input{
+    flex:1;
+    background:#1e293b;
+    border:1px solid rgba(56,189,248,0.2);
+    border-radius:8px;
+    padding:8px 10px;
+    color:#e2e8f0;
+    font-size:12px;
+    outline:none;
+}
+
+.natal-input-line input:focus{
+    border-color:#38bdf8;
+}
+
+.natal-input-line button{
+    flex:none;
+    padding:8px 16px;
+    font-size:12px;
+}
+
+.natal-result{
+    display:none;
+    margin-top:10px;
+}
+
+.natal-result.show{
+    display:block;
+}
+
+.natal-retro-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    margin-top:8px;
+}
+
+.natal-retro-chip{
+    background:rgba(251,113,133,0.15);
+    border:1px solid rgba(251,113,133,0.3);
+    border-radius:999px;
+    padding:4px 10px;
+    font-size:11px;
+    color:#fb7185;
+}
+
+/* ===== RETROGRADE MEANINGS TABLE ===== */
+.meanings-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+    font-size:11px;
+    table-layout:fixed;
+}
+
+.meanings-table th{
+    background:rgba(56,189,248,0.15);
+    color:#38bdf8;
+    padding:7px;
+    text-align:left;
+    font-weight:600;
+}
+
+.meanings-table td{
+    padding:7px;
+    border-bottom:1px solid rgba(56,189,248,0.08);
+    color:#cbd5e1;
+    line-height:1.35;
+    overflow-wrap:anywhere;
+}
+
+.meanings-table tr:hover td{
+    background:rgba(56,189,248,0.05);
+}
+
+.meanings-table .planet-cell{
+    font-weight:600;
+    color:#FFD700;
+}
+
+/* ===== STATION DATES ===== */
+.station-list{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+    margin-top:8px;
+}
+
+.station-planet-list{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    margin-top:10px;
+    padding-top:10px;
+    border-top:1px solid rgba(148,163,184,0.16);
+}
+
+.station-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:#1e293b;
+    border-radius:8px;
+    padding:6px 9px;
+    border:1px solid rgba(56,189,248,0.08);
+    transition:0.3s;
+}
+
+.station-item:hover{
+    border-color:rgba(56,189,248,0.2);
+}
+
+.station-date{
+    font-size:10px;
+    color:#94a3b8;
+    min-width:64px;
+}
+
+.station-planet{
+    font-size:11px;
+    color:#e2e8f0;
+    font-weight:600;
+    flex:1;
+    text-align:left;
+}
+
+.station-type{
+    font-size:9px;
+    padding:2px 6px;
+    border-radius:999px;
+    font-weight:bold;
+    white-space:nowrap;
+}
+
+.station-type.rx{
+    background:rgba(251,113,133,0.15);
+    color:#fb7185;
+}
+
+.station-type.direct{
+    background:rgba(74,222,128,0.15);
+    color:#4ade80;
+}
+
+/* ===== BUTTONS ===== */
+.buttons{
+    display:flex;
+    gap:10px;
+    margin-top:18px;
+}
+
+button{
+    flex:1;
+    padding:10px;
+    border-radius:14px;
+    border:none;
+    background:linear-gradient(135deg,#38bdf8,#0ea5e9);
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+    font-size:13px;
+}
+
+button:hover{
+    transform:scale(1.02);
+    box-shadow: 0 0 20px rgba(56,189,248,0.6);
+}
+
+button.gold{
+    background:linear-gradient(135deg,#FFD700,#f59e0b);
+    color:#0f172a;
+}
+
+button.secondary{
+    background:linear-gradient(135deg,#475569,#334155);
+}
+
+/* ===== FOOTER ===== */
+.footer{
+    text-align:center;
+    padding:25px;
+    color:#64748b;
+    font-size:11px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:700px){
+    .retro-item{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:10px;
+    }
+    .status{
+        width:100%;
+        text-align:center;
+    }
+    .header-title{font-size:18px;padding:0 66px;letter-spacing:1.5px}
+    .container{padding:8px}
+    .buttons{ flex-direction:column; }
+    .detail-grid{ grid-template-columns:1fr 1fr; }
+    .calendar-grid,.calendar-header{max-width:292px;gap:2px}
+    .calendar-day{font-size:8px;border-radius:5px}
+    .calendar-day .day-num{font-size:10px}
+    .calendar-day .day-planet{font-size:7px}
+    .natal-input-line{ flex-direction:column; }
+    .meanings-table{font-size:10px}
+    .meanings-table th,.meanings-table td{padding:6px 4px}
+    .meanings-table th:nth-child(3),.meanings-table td:nth-child(3),
+    .meanings-table th:nth-child(4),.meanings-table td:nth-child(4){display:none}
+}
+
+/* ===== UNIFIED BIRTH INPUTS ===== */
+:root{--birth-field-width:clamp(76px,23vw,92px);--birth-field-height:34px;--birth-field-font:clamp(9px,2.8vw,12px)}
+.input-line,.natal-input-line{display:flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;flex-wrap:nowrap!important;width:100%!important;max-width:calc((var(--birth-field-width) * 3) + 58px)!important;margin-left:auto!important;margin-right:auto!important;padding-left:4px!important;padding-right:4px!important}
+.input-line .input-wrap{flex:0 0 var(--birth-field-width)!important;width:var(--birth-field-width)!important;min-width:0!important;margin:0!important;background:transparent!important;border-radius:0!important;padding:0!important;box-shadow:none!important}
+.input-line input[type="text"],.input-line select,.natal-input-line input{width:var(--birth-field-width)!important;flex:0 0 var(--birth-field-width)!important;height:var(--birth-field-height)!important;min-height:var(--birth-field-height)!important;line-height:normal!important;padding:0 6px!important;font-size:var(--birth-field-font)!important;letter-spacing:0!important;text-align:center!important;border-radius:8px!important;box-sizing:border-box!important;background:#1e293b!important;border:1px solid #38bdf8!important;color:#fff!important;box-shadow:0 0 10px rgba(56,189,248,0.4)!important;outline:none!important}
+#input,#dateInput,#birthDate,#input1,#input2,#natalDate,#ownerBirthDate{width:var(--birth-field-width)!important}
+#timeInput,#birthTime,#timeInput1,#timeInput2,#natalTime,#ownerBirthTime{width:var(--birth-field-width)!important}
+#cityInput,#birthCity,#cityInput1,#cityInput2,#ownerBirthCity,#ownerCurrentCity{width:var(--birth-field-width)!important}
+#savedIcon,.savedIconBox{width:34px!important;height:34px!important;min-width:34px!important;flex:0 0 34px!important;border-radius:8px!important}
+.cityDropdown,.city-dropdown,.owner-city-dropdown{width:min(220px,calc(100vw - 20px))!important;max-width:calc(100vw - 20px)!important}
+.natal-input-line button{height:var(--birth-field-height)!important;min-height:var(--birth-field-height)!important;padding:0 10px!important;font-size:var(--birth-field-font)!important;white-space:nowrap!important;flex:0 0 auto!important}
+
+/* ===== MOBILE WIDTH SAFETY ===== */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+*,*::before,*::after{box-sizing:border-box}
+img,video,canvas,svg{max-width:100%;height:auto}
+input,select,textarea,button{max-width:100%;min-width:0}
+table{max-width:100%;border-collapse:collapse}
+@media(max-width:480px){
+    body{padding-left:4px!important;padding-right:4px!important}
+    .container,.card{width:100%!important;max-width:100%!important}
+    .filter-tabs{max-width:100%!important;gap:4px!important}
+    .filter-tab{min-width:0!important;padding-left:8px!important;padding-right:8px!important;font-size:11px!important}
+    .retro-item,.station-card,.retro-focus,.natal-input-line{max-width:100%!important}
+    .natal-input-line{gap:6px!important}
+    .natal-input-line input{width:100%!important}
+    .meanings-table{display:block;overflow-x:auto;white-space:normal}
+    .calendar-grid,.calendar-header{max-width:100%!important}
+    .title{font-size:clamp(20px,8vw,30px)!important;letter-spacing:1px!important}
+}
+/* ===== UNIFIED BIRTH INPUTS FINAL OVERRIDE ===== */
+.input-line,.natal-input-line{flex-wrap:nowrap!important}
+.input-line .input-wrap,.input-line input[type="text"],.input-line select,.natal-input-line input,#input,#dateInput,#birthDate,#input1,#input2,#natalDate,#timeInput,#birthTime,#timeInput1,#timeInput2,#natalTime,#cityInput,#birthCity,#cityInput1,#cityInput2{width:var(--birth-field-width)!important;flex-basis:var(--birth-field-width)!important;font-size:var(--birth-field-font)!important;height:var(--birth-field-height)!important}
+.title,.header-title{white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;font-size:clamp(13px,5vw,22px)!important;letter-spacing:clamp(0px,.5vw,2px)!important}
+
+/* ===== COMPACT VERTICAL SPACING ===== */
+body{padding-top:4px!important;padding-bottom:4px!important}
+.header-bar{padding-top:6px!important;padding-bottom:4px!important;min-height:42px!important}
+.title,.header-title{height:26px!important;line-height:26px!important}
+.left-bar,.top-bar{top:8px!important}
+#tabs,.tabs,.filter-tabs{gap:4px!important;margin-top:6px!important;margin-bottom:6px!important}
+.tab,.filter-tab{padding-top:5px!important;padding-bottom:5px!important;min-height:30px!important}
+.section{padding-top:2px!important;padding-bottom:2px!important}
+.container{padding-top:4px!important;padding-bottom:4px!important}
+.input-line,.natal-input-line{margin-top:4px!important;margin-bottom:4px!important;gap:5px!important}
+.card,.panel,.box,.content-card,.result-card{margin-top:8px!important;margin-bottom:8px!important;padding-top:10px!important;padding-bottom:10px!important}
+.retro-item,.station-card{padding-top:6px!important;padding-bottom:6px!important;margin-bottom:5px!important}
+.retro-details{margin-top:5px!important;padding-top:5px!important}
+h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!important}
+
+/* ===== INNER BOX TEXT COMPACT ===== */
+.card{border-radius:12px!important;padding:8px!important;margin-top:6px!important;margin-bottom:6px!important}
+.section-title{font-size:16px!important;line-height:1.1!important;margin:0 0 7px!important}
+.subtitle{line-height:1.15!important;margin-top:2px!important;margin-bottom:4px!important}
+.calc-source-status{margin-top:1px!important;margin-bottom:2px!important;line-height:1.05!important}
+.calc-source-status + .container{padding-top:2px!important}
+.filter-tabs{gap:4px!important;margin-bottom:6px!important}
+.filter-tab{padding:4px 8px!important;font-size:10px!important;line-height:1!important;min-height:28px!important}
+.retro-item,.station-item{padding:6px 7px!important;border-radius:9px!important;margin-bottom:5px!important;line-height:1.15!important}
+.left{gap:2px!important}
+.planet{font-size:13px!important;line-height:1.1!important;gap:4px!important}
+.planet-icon{font-size:15px!important}
+.description,.retro-details,.detail-value,.retro-focus-text,.natal-meaning{font-size:10.5px!important;line-height:1.25!important}
+.status{font-size:9.5px!important}
+.detail-grid{gap:6px!important}
+.detail-box,.retro-focus,.natal-result,.station-planet-list .retro-item{padding:7px!important}
+.station-list{gap:5px!important}
+.station-date,.station-planet,.station-type{line-height:1.1!important}
+
+.station-planet-list{display:flex!important;flex-direction:column!important;gap:5px!important}
+.retro-item{display:block!important;padding:6px 7px!important;border-radius:9px!important}
+.retro-summary{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:6px!important;align-items:start!important}
+.retro-main{min-width:0!important;text-align:left!important}
+.retro-meta{min-width:58px!important;text-align:right!important;line-height:1!important;padding-top:1px!important}
+.retro-meta .status{display:block!important;min-width:0!important;text-align:right!important;font-size:9px!important;line-height:1!important;margin:0!important}
+.retro-sign-degree{font-size:9px!important;color:#64748b!important;line-height:1.05!important;margin-top:3px!important;white-space:nowrap!important}
+.retro-item .planet{font-size:13px!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.retro-item .description{font-size:10.5px!important;line-height:1.1!important;margin-top:2px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.retro-item .timeline-wrapper{margin:4px 0 0!important;padding:2px 0 0!important}
+.retro-item .timeline-track{height:3px!important;margin:3px 0!important}
+.retro-item .timeline-labels{font-size:9px!important;line-height:1!important;margin-top:1px!important}
+.filter-tab,
+.natal-input-line button{
+    font-family:Arial,sans-serif!important;
+    font-size:13px!important;
+    font-weight:bold!important;
+    letter-spacing:0!important;
+    line-height:1!important;
+    text-transform:none!important;
+}
+.natal-input-line button{
+    border-radius:9px!important;
+    padding-left:10px!important;
+    padding-right:10px!important;
+}
+.natal-check .natal-input-line{
+    flex-direction:row!important;
+    flex-wrap:nowrap!important;
+    align-items:center!important;
+    justify-content:center!important;
+    gap:5px!important;
+    width:100%!important;
+    max-width:calc((var(--birth-field-width) * 2) + 58px)!important;
+    margin:4px auto!important;
+    padding:0 4px!important;
+}
+.natal-check #natalDate,
+.natal-check #natalTime{
+    width:var(--birth-field-width)!important;
+    flex:0 0 var(--birth-field-width)!important;
+    height:var(--birth-field-height)!important;
+    min-height:var(--birth-field-height)!important;
+    line-height:normal!important;
+    padding:0 6px!important;
+    font-size:var(--birth-field-font)!important;
+    letter-spacing:0!important;
+    text-align:center!important;
+    border-radius:8px!important;
+    box-sizing:border-box!important;
+    background:#1e293b!important;
+    border:1px solid #38bdf8!important;
+    color:#fff!important;
+    box-shadow:0 0 10px rgba(56,189,248,0.4)!important;
+    outline:none!important;
+}
+.natal-check .natal-input-line button{
+    flex:0 0 auto!important;
+    height:var(--birth-field-height)!important;
+    min-height:var(--birth-field-height)!important;
+    padding:0 10px!important;
+    border-radius:8px!important;
+}
+
+/* ===== ASTROLOGY GOLD THEME ===== */
+:root{--astro-gold:#FFD700;--astro-gold-2:#f59e0b;--astro-gold-soft:rgba(255,215,0,.36);--astro-gold-glow:rgba(255,215,0,.34)}
+.left-btn,.action-btn,.icon-btn,#savedIcon,.savedIconBox{border-color:var(--astro-gold-soft)!important;color:var(--astro-gold)!important;box-shadow:0 0 10px rgba(255,215,0,.16)!important}
+.left-btn:hover,.action-btn:hover,.icon-btn:hover,#savedIcon:hover,.savedIconBox:hover{border-color:var(--astro-gold)!important;color:#fff4b0!important;box-shadow:0 0 14px var(--astro-gold-glow)!important}
+.input-line input[type="text"],.input-line select,.natal-input-line input,.cityDropdown,.city-dropdown,#cityDropdown,.owner-city-dropdown{border-color:var(--astro-gold)!important;box-shadow:0 0 10px rgba(255,215,0,.26)!important}
+.input-line input[type="text"]:hover,.input-line select:hover,.natal-input-line input:hover{box-shadow:0 0 14px rgba(255,215,0,.46)!important}
+.analyze-btn,.calc-btn,button.gold,.buttons button:not(.left-btn):not(.action-btn):not(.icon-btn),.natal-input-line button{background:linear-gradient(135deg,var(--astro-gold),var(--astro-gold-2))!important;color:#0f172a!important;border-color:rgba(255,215,0,.65)!important;box-shadow:0 0 12px rgba(255,215,0,.24)!important}
+.filter-tab,.lunar-tab,.planet-toggle,.phase-btn{border-color:var(--astro-gold-soft)!important;color:#f6cb71!important}
+.filter-tab:hover,.filter-tab.active,.lunar-tab:hover,.lunar-tab.active,.planet-toggle:hover,.planet-toggle.active,.phase-btn:hover,.phase-btn.active{background:rgba(255,215,0,.15)!important;border-color:var(--astro-gold)!important;color:var(--astro-gold)!important;box-shadow:0 0 10px rgba(255,215,0,.22)!important}
+.card,.panel,.box,.content-card,.result-card,.side-card,.info-card,.saved-card{border-color:rgba(255,215,0,.18)!important}
+#savedIcon svg,.savedIconBox svg,#savedIcon svg *,.savedIconBox svg *{stroke:var(--astro-gold)!important;filter:drop-shadow(0 0 5px rgba(255,215,0,.65))!important}
+#savedCount,.savedCountBox{background:var(--astro-gold)!important;color:#0f172a!important;border:1px solid rgba(255,215,0,.9)!important;box-shadow:0 0 7px rgba(255,215,0,.38)!important}
+.natal-check-inline{background:transparent!important;border:none!important;box-shadow:none!important;padding:0!important;margin:0!important}
+.retro-tab-extra .natal-check:not(.natal-check-inline){padding:8px 10px!important}
+.retro-tab-extra .retro-meaning{font-size:10.5px!important;line-height:1.28!important;margin-top:3px!important;margin-bottom:4px!important}
+.retro-tab-extra .natal-retro-list{margin-top:6px!important;gap:4px!important}
+.retro-tab-extra .natal-retro-chip{padding:4px 8px!important;font-size:10px!important}
+.natal-check #natalDate,.natal-check #natalTime{border-color:rgba(255,215,0,.85)!important;box-shadow:none!important;background:#1e293b!important}
+.natal-check #natalDate:focus,.natal-check #natalTime:focus{border-color:var(--astro-gold)!important;box-shadow:0 0 6px rgba(255,215,0,.22)!important}
+
+</style>
+</head>
+<body>
+
+<div class="header-bar">
+    <div class="left-bar">
+        <button class="left-btn" onclick="goBack()" title="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button>
+        <button class="left-btn" onclick="exitApp()" title="Exit"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button>
+    </div>
+    <div class="header-title">RETROGRADE</div>
+    <div class="top-bar">
+        <div class="action-group">
+            <button class="action-btn" id="shareBtn" type="button" title="Share"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>
+            <button class="action-btn" id="printBtn" type="button" title="Print"><svg viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg></button>
+        </div>
+    </div>
+</div>
+<div class="subtitle">Current retrograde planetary motion & natal check</div>
+<div class="calc-source-status" id="calcSourceStatus">Calculating source...</div>
+
+<div class="container">
+
+    <!-- ACTIVE RETROGRADES -->
+    <div class="card">
+        <div class="section-title">ACTIVE RETROGRADES</div>
+
+        <div class="filter-tabs">
+            <div class="filter-tab active" onclick="filterRetro('retro')">Retrograde</div>
+            <div class="filter-tab" onclick="filterRetro('station')">Station</div>
+        </div>
+
+        <div id="retroList"></div>
+    </div>
+
+    <!-- RETROGRADE FOCUS -->
+    <div class="card retro-tab-extra">
+        <div class="section-title">RETROGRADE FOCUS</div>
+        <div class="natal-check">
+            <div class="natal-check-title" id="retroFocusTitle">Current focus</div>
+            <div class="retro-meaning" id="retroFocusText">Retrograde focus will appear here.</div>
+            <div class="natal-retro-list" id="retroFocusChips"></div>
+        </div>
+    </div>
+
+    <!-- STATION DATES -->
+    <div class="card station-tab-card">
+        <div class="section-title">UPCOMING STATIONS</div>
+        <div class="station-list" id="stationList"></div>
+        <div class="station-planet-list" id="stationPlanetList"></div>
+    </div>
+
+    <!-- NATAL RETROGRADE CHECK -->
+    <div class="card retro-tab-extra">
+        <div class="section-title">NATAL RETROGRADE CHECK</div>
+        <div class="natal-check natal-check-inline">
+            <div class="natal-check-title">Check your birth chart for retrograde planets</div>
+            <div class="natal-input-line">
+                <input type="text" id="natalDate" placeholder="DD.MM.YYYY" maxlength="10" oninput="formatRetroDateInput(this)">
+                <input type="text" id="natalTime" placeholder="HH:MM" maxlength="5" oninput="formatRetroTimeInput(this)">
+                <button class="gold" onclick="checkNatalRetro()">Check</button>
+            </div>
+            <div class="natal-result" id="natalResult">
+                <div style="font-size:12px;color:#94a3b8;margin-bottom:6px;">Retrograde planets in your natal chart:</div>
+                <div class="natal-retro-list" id="natalRetroList"></div>
+                <div class="retro-meaning" id="natalMeaning" style="margin-top:10px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RETROGRADE MEANINGS -->
+    <div class="card retro-tab-extra">
+        <div class="section-title">RETROGRADE MEANINGS BY PLANET</div>
+        <table class="meanings-table">
+            <thead>
+                <tr><th>Planet</th><th>Retrograde Meaning</th><th>Shadow Period</th><th>Frequency</th></tr>
+            </thead>
+            <tbody>
+                <tr><td class="planet-cell">☿ Mercury</td><td>Review, rethink, reconnect. Miscommunication, tech issues, travel delays.</td><td>~2 weeks before/after</td><td>3-4x / year (3 weeks)</td></tr>
+                <tr><td class="planet-cell">♀ Venus</td><td>Reevaluate love, values, money. Old flames return. Financial review.</td><td>~2 weeks before/after</td><td>~1x / 18 months (6 weeks)</td></tr>
+                <tr><td class="planet-cell">♂ Mars</td><td>Redirect anger, review actions. Slower initiative, internalized drive.</td><td>~2 weeks before/after</td><td>~1x / 2 years (2-3 months)</td></tr>
+                <tr><td class="planet-cell">♃ Jupiter</td><td>Reassess beliefs, growth, opportunities. Internal expansion.</td><td>~1 month before/after</td><td>~1x / year (4 months)</td></tr>
+                <tr><td class="planet-cell">♄ Saturn</td><td>Karmic restructuring, discipline review. Hard lessons internalized.</td><td>~1 month before/after</td><td>~1x / year (4-5 months)</td></tr>
+                <tr><td class="planet-cell">♅ Uranus</td><td>Sudden insights, rebellion review. Breakthroughs from within.</td><td>~1 month before/after</td><td>~1x / year (5 months)</td></tr>
+                <tr><td class="planet-cell">♆ Neptune</td><td>Dreams, illusions, spirituality revisited. Creative blocks or bursts.</td><td>~1 month before/after</td><td>~1x / year (5-6 months)</td></tr>
+                <tr><td class="planet-cell">♇ Pluto</td><td>Deep transformation, power review. Shadow work and regeneration.</td><td>~1 month before/after</td><td>~1x / year (5-6 months)</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<div class="footer">
+    Local Swiss Ephemeris • Retrograde Detection • Station & Shadow Tracking
+</div>
+
+<script src="app-notifications.js"></script>
+<script>
+
+/* ===== RETROGRADE DATA ===== */
+const retrogrades = [
+    {
+        planet: "Mercury ☿",
+        icon: "☿",
+        status: "Retrograde",
+        type: "retro",
+        description: "Communication, technology and travel delays",
+        start: "2026-05-10",
+        end: "2026-06-03",
+        stationRx: "2026-05-10",
+        stationDirect: "2026-06-03",
+        sign: "♊ Gemini",
+        degree: "18°",
+        meaning: "Revisit how you communicate and process information. Old conversations resurface. Perfect for editing, reviewing, and reconnecting. Avoid signing contracts if possible.",
+        progress: 65
+    },
+    {
+        planet: "Venus ♀",
+        icon: "♀",
+        status: "Direct",
+        type: "direct",
+        description: "Love, beauty, and values flowing forward",
+        start: "2026-03-15",
+        end: "2026-04-07",
+        stationRx: "2026-07-20",
+        stationDirect: "2026-09-05",
+        sign: "♌ Leo",
+        degree: "5°",
+        meaning: "Venus is direct now. Express love freely, make financial decisions, start new relationships. The retrograde review period is over.",
+        progress: 100
+    },
+    {
+        planet: "Mars ♂",
+        icon: "♂",
+        status: "Direct",
+        type: "direct",
+        description: "Action, drive, and passion moving forward",
+        start: "2025-12-06",
+        end: "2026-02-23",
+        stationRx: "2026-12-10",
+        stationDirect: "2027-02-15",
+        sign: "♋ Cancer",
+        degree: "22°",
+        meaning: "Mars is direct. Take action, initiate projects, assert yourself. Energy is externalized and productive.",
+        progress: 100
+    },
+    {
+        planet: "Jupiter ♃",
+        icon: "♃",
+        status: "Direct",
+        type: "direct",
+        description: "Expansion, luck, and growth flowing outward",
+        start: "2025-10-09",
+        end: "2026-02-04",
+        stationRx: "2026-10-12",
+        stationDirect: "2027-02-08",
+        sign: "♋ Cancer",
+        degree: "10°",
+        meaning: "Jupiter is direct. Expand your horizons, take risks, grow. Opportunities are external and visible.",
+        progress: 100
+    },
+    {
+        planet: "Saturn ♄",
+        icon: "♄",
+        status: "Retrograde",
+        type: "retro",
+        description: "Karmic lessons and internal restructuring",
+        start: "2026-03-15",
+        end: "2026-08-23",
+        stationRx: "2026-03-15",
+        stationDirect: "2026-08-23",
+        sign: "♓ Pisces",
+        degree: "3°",
+        meaning: "Internal restructuring of boundaries and responsibilities. Karmic debts surface for review. Perfect for deep discipline work and letting go of old structures.",
+        progress: 40
+    },
+    {
+        planet: "Uranus ♅",
+        icon: "♅",
+        status: "Direct",
+        type: "direct",
+        description: "Innovation, freedom, and change moving forward",
+        start: "2025-09-01",
+        end: "2026-01-10",
+        stationRx: "2026-09-05",
+        stationDirect: "2027-01-15",
+        sign: "♊ Gemini",
+        degree: "28°",
+        meaning: "Uranus is direct. Embrace change, innovate, break free. Sudden insights manifest externally.",
+        progress: 100
+    },
+    {
+        planet: "Neptune ♆",
+        icon: "♆",
+        status: "Retrograde",
+        type: "retro",
+        description: "Illusions, intuition and subconscious processes",
+        start: "2026-03-30",
+        end: "2026-10-06",
+        stationRx: "2026-03-30",
+        stationDirect: "2026-10-06",
+        sign: "♈ Aries",
+        degree: "2°",
+        meaning: "Dreams and intuition turn inward. Spiritual illusions dissolve. Creative blocks may surface for healing. Perfect for meditation, dream work, and artistic revision.",
+        progress: 35
+    },
+    {
+        planet: "Pluto ♇",
+        icon: "♇",
+        status: "Retrograde",
+        type: "retro",
+        description: "Deep transformation, power, and regeneration",
+        start: "2026-05-04",
+        end: "2026-10-12",
+        stationRx: "2026-05-04",
+        stationDirect: "2026-10-12",
+        sign: "♒ Aquarius",
+        degree: "3°",
+        meaning: "Shadow work intensifies. Power dynamics internalize. Deep psychological transformation. Old traumas resurface for healing and integration.",
+        progress: 20
+    }
+];
+
+/* ===== RENDER RETROGRADES ===== */
+function renderRetro(containerId='retroList', filterFn=null, detailPrefix='details'){
+    const container = document.getElementById(containerId);
+    if(!container)return;
+    container.innerHTML = '';
+
+    retrogrades.forEach((r, index) => {
+        if(filterFn && !filterFn(r))return;
+        const item = document.createElement('div');
+        item.className = 'retro-item ' + r.type;
+        item.dataset.type = r.type;
+        const detailId = detailPrefix + '-' + index;
+        item.onclick = () => toggleDetails(detailId);
+
+        item.innerHTML = `
+            <div class="retro-summary">
+                <div class="retro-main">
+                    <div class="planet"><span class="planet-icon">${r.icon}</span> ${r.planet.replace(r.icon,'').trim()}</div>
+                    <div class="description">${r.description}</div>
+                </div>
+                <div class="retro-meta">
+                    <span class="status ${r.type}">${r.status}</span>
+                    <div class="retro-sign-degree">${r.sign} ${r.degree}</div>
+                </div>
+            </div>
+            <div class="left" style="flex:1;">
+                <div class="timeline-wrapper">
+                    <div class="timeline-track">
+                        <div class="timeline-progress ${r.type}" style="width:${r.progress}%"></div>
+                    </div>
+                    <div class="timeline-labels">
+                        <span>${formatDate(r.start)}</span>
+                        <span>${r.status}</span>
+                        <span>${formatDate(r.end)}</span>
+                    </div>
+                </div>
+                <div class="retro-details" id="${detailId}">
+                    <div class="detail-grid">
+                        <div class="detail-box">
+                            <div class="detail-label">Station Retrograde</div>
+                            <div class="detail-value retro">${formatDate(r.stationRx)}</div>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-label">Station Direct</div>
+                            <div class="detail-value direct">${formatDate(r.stationDirect)}</div>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-label">Current Sign</div>
+                            <div class="detail-value">${r.sign}</div>
+                        </div>
+                        <div class="detail-box">
+                            <div class="detail-label">Current Degree</div>
+                            <div class="detail-value">${r.degree}</div>
+                        </div>
+                    </div>
+                    <div class="retro-meaning"><strong>What this means:</strong> ${r.meaning}</div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(item);
+    });
+}
+
+function toggleDetails(id){
+    const details = document.getElementById(id);
+    if(!details)return;
+    const item = details.closest('.retro-item');
+    details.classList.toggle('show');
+    item.classList.toggle('expanded');
+}
+
+function formatDate(dateStr){
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+/* ===== FILTER ===== */
+function filterRetro(type, sourceEl){
+    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    if(sourceEl)sourceEl.classList.add('active');
+    else if(typeof event!=="undefined"&&event.target)event.target.classList.add('active');
+
+    const isStation = type === 'station';
+    let visible=0;
+    document.querySelectorAll('.retro-empty').forEach(el=>el.remove());
+    const retroList = document.getElementById('retroList');
+    if(retroList)retroList.style.display = 'none';
+    document.querySelectorAll('#retroList .retro-item').forEach(item => {
+        const show = false;
+        item.style.display = 'none';
+        if(show)visible++;
+    });
+    document.querySelectorAll('.retro-tab-extra').forEach(card => {
+        card.style.display = isStation ? 'none' : '';
+    });
+    document.querySelectorAll('.station-tab-card').forEach(card => {
+        card.style.display = isStation ? '' : 'none';
+    });
+}
+
+/* ===== CALENDAR ===== */
+function renderCalendar(){
+    const grid = document.getElementById('calendarGrid');
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    // Empty cells for start
+    for(let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++){
+        const empty = document.createElement('div');
+        empty.className = 'calendar-day';
+        empty.style.visibility = 'hidden';
+        grid.appendChild(empty);
+    }
+
+    // Days
+    for(let day = 1; day <= daysInMonth; day++){
+        const cell = document.createElement('div');
+        const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+        const isToday = day === today.getDate();
+
+        let type = '';
+        let planets = [];
+
+        retrogrades.forEach(r => {
+            const start = new Date(r.start);
+            const end = new Date(r.end);
+            const check = new Date(dateStr);
+            if(check >= start && check <= end){
+                type = 'retro';
+                planets.push(r.icon);
+            }
+        });
+
+        cell.className = 'calendar-day' + (type ? ' ' + type : '') + (isToday ? ' today' : '');
+        cell.innerHTML = `<span class="day-num">${day}</span>${planets.length ? `<span class="day-planet">${planets.join('')}</span>` : ''}`;
+        grid.appendChild(cell);
+    }
+}
+
+/* ===== STATIONS ===== */
+function renderStations(){
+    const list = document.getElementById('stationList');
+    const stations = [];
+    const now = new Date();
+    const limit = new Date(now.getTime());
+    limit.setMonth(limit.getMonth() + 2);
+
+    retrogrades.forEach(r => {
+        stations.push({ date: r.stationRx, planet: r.planet, type: 'rx', label: 'Station Retrograde' });
+        stations.push({ date: r.stationDirect, planet: r.planet, type: 'direct', label: 'Station Direct' });
+    });
+
+    const upcoming = stations
+        .filter(s => {
+            const d = new Date(s.date);
+            return d >= now && d <= limit;
+        })
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    if(upcoming.length === 0){
+        list.innerHTML = '<div style="color:#64748b;text-align:center;padding:12px;font-size:12px">No stations in the next two months.</div>';
+        return;
+    }
+
+    upcoming.forEach(s => {
+        const item = document.createElement('div');
+        item.className = 'station-item';
+        item.innerHTML = `
+            <span class="station-date">${formatDate(s.date)}</span>
+            <span class="station-planet">${s.planet}</span>
+            <span class="station-type ${s.type}">${s.label}</span>
+        `;
+        list.appendChild(item);
+    });
+}
+
+/* ===== NATAL CHECK ===== */
+function checkNatalRetro(){
+    const date = document.getElementById('natalDate').value;
+    const time = document.getElementById('natalTime').value;
+
+    if(!date){
+        alert('Please enter your birth date');
+        return;
+    }
+
+    // Simulate natal retrograde check
+    const simulatedRetro = [
+        { planet: '☿ Mercury', meaning: 'Deep thinker, revises before speaking, may struggle with expression but has profound inner wisdom.' },
+        { planet: '♀ Venus', meaning: 'Reevaluates love constantly, may attract karmic relationships, learns love through reflection.' },
+        { planet: '♂ Mars', meaning: 'Internalized anger, strategic action, may hesitate but acts with precision when ready.' },
+        { planet: '♃ Jupiter', meaning: 'Inner faith, philosophical depth, growth comes through introspection rather than external expansion.' },
+        { planet: '♄ Saturn', meaning: 'Heavy karmic lessons, deep discipline, may feel restricted but builds lasting inner strength.' },
+        { planet: '♅ Uranus', meaning: 'Unique internal insights, rebels quietly, innovation comes in bursts of inspiration.' },
+        { planet: '♆ Neptune', meaning: 'Deep dreamer, spiritual confusion possible, artistic genius through inner vision.' },
+        { planet: '♇ Pluto', meaning: 'Intense inner transformation, power struggles internalized, profound healing potential.' }
+    ];
+
+    // Random selection for demo
+    const count = 1;
+    const selected = [];
+    const indices = new Set();
+    while(indices.size < count) indices.add(0);
+    indices.forEach(i => selected.push(simulatedRetro[i]));
+
+    const resultDiv = document.getElementById('natalResult');
+    const listDiv = document.getElementById('natalRetroList');
+    const meaningDiv = document.getElementById('natalMeaning');
+
+    listDiv.innerHTML = selected.map(s => `<span class="natal-retro-chip">${s.planet}</span>`).join('');
+    meaningDiv.innerHTML = '<strong style="color:#FFD700">Natal Retrograde Theme:</strong> ' +
+        (selected.length > 2
+            ? 'You have multiple retrograde planets, indicating a deeply introspective soul with karmic lessons to integrate in this lifetime. Your growth comes from within.'
+            : 'You have a focused retrograde signature. The energy of ' + selected.map(s => s.planet.split(' ')[1]).join(' and ') + ' operates internally, giving you unique depth in these areas.');
+
+    resultDiv.classList.add('show');
+}
+
+/* ===== NOTIFICATIONS ===== */
+function toggleNotifications(){
+    const enabled = localStorage.getItem('retroNotifications') === 'true';
+    localStorage.setItem('retroNotifications', !enabled);
+    alert('Retrograde alerts ' + (!enabled ? 'enabled' : 'disabled') + '! You will be notified before planetary stations.');
+}
+
+/* ===== REFRESH ===== */
+function refreshRetro(){
+    document.getElementById('retroList').innerHTML = '';
+    document.getElementById('stationList').innerHTML = '';
+    document.getElementById('stationPlanetList').innerHTML = '';
+    setTimeout(() => {
+        renderRetro('stationPlanetList', null, 'station-details');
+        filterRetro('retro', document.querySelector('.filter-tab'));
+        renderRetroFocus();
+        renderStations();
+    }, 300);
+}
+
+/* ===== LIVE RETROGRADE LOGIC ===== */
+const retroPlanetDefs=[
+  {key:"Mercury",symbol:"\u263F",meaning:"Mind, speech, timing, contracts and travel turn inward for review."},
+  {key:"Venus",symbol:"\u2640",meaning:"Love, values, beauty and money ask for reconsideration."},
+  {key:"Mars",symbol:"\u2642",meaning:"Action, anger, desire and initiative become internalized and strategic."},
+  {key:"Jupiter",symbol:"\u2643",meaning:"Growth, faith, education and opportunity are refined from within."},
+  {key:"Saturn",symbol:"\u2644",meaning:"Responsibility, structure, limits and karmic lessons become personal work."},
+  {key:"Uranus",symbol:"\u2645",meaning:"Freedom, disruption and originality work through internal breakthroughs."},
+  {key:"Neptune",symbol:"\u2646",meaning:"Dreams, intuition, ideals and confusion are quietly dissolved and revised."},
+  {key:"Pluto",symbol:"\u2647",meaning:"Power, shadow work and transformation move through deep inner pressure."}
+];
+const retroSignNames=["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
+const retroSignSymbols=["\u2648","\u2649","\u264A","\u264B","\u264C","\u264D","\u264E","\u264F","\u2650","\u2651","\u2652","\u2653"];
+let retroSweCache=null, retroModCache=null;
+function parseRetroDate(value){const m=/^(\d{2})\.(\d{2})\.(\d{4})$/.exec(value||"");if(!m)throw new Error("Use date format DD.MM.YYYY");return{day:+m[1],month:+m[2],year:+m[3]}}
+function parseRetroTime(value){const m=/^(\d{2}):(\d{2})$/.exec(value||"12:00");return m?{hours:+m[1],minutes:+m[2]}:{hours:12,minutes:0}}
+function formatRetroDateInput(input){let v=input.value.replace(/\D/g,"").slice(0,8);if(v.length>=5)v=v.slice(0,2)+"."+v.slice(2,4)+"."+v.slice(4);else if(v.length>=3)v=v.slice(0,2)+"."+v.slice(2);input.value=v}
+function formatRetroTimeInput(input){let v=input.value.replace(/\D/g,"").slice(0,4);if(v.length>=3)v=v.slice(0,2)+":"+v.slice(2);input.value=v}
+function retroJulian(date){return date.getTime()/86400000+2440587.5}
+function retroNormalize(deg){deg%=360;return deg<0?deg+360:deg}
+function retroSign(longitude){const idx=Math.floor(retroNormalize(longitude)/30)%12;return{symbol:retroSignSymbols[idx],name:retroSignNames[idx],degree:Math.floor(retroNormalize(longitude)%30)}}
+function retroDateFromInput(date,time){return new Date(Date.UTC(date.year,date.month-1,date.day,time.hours,time.minutes))}
+async function getRetroSwe(){if(retroSweCache)return{mod:retroModCache,swe:retroSweCache};if(location.protocol==="file:"){const err=new Error("swisseph-unavailable");err.code="SWISSEPH_UNAVAILABLE";throw err}const mod=await import("./vendor/swisseph/swisseph-local.js");const swe=new mod.SwissEphemeris();await swe.init();retroModCache=mod;retroSweCache=swe;return{mod,swe}}
+function retroPlanetId(mod,key){return mod.Planet[key]}
+function setCalcSourceStatus(source){const el=document.getElementById("calcSourceStatus");if(!el)return;const precise=source==="Local Swiss Ephemeris";el.classList.toggle("fallback",!precise);el.textContent=precise?"Swiss Ephemeris loaded - precise retrograde calculation.":"Fallback calculation used - Swiss module not available."}
+async function retroSpeedAt(jd,key){const {mod,swe}=await getRetroSwe();const pos=swe.calculatePosition(jd,retroPlanetId(mod,key),mod.CalculationFlag.SwissEphemeris|mod.CalculationFlag.Speed);const speed=Number(pos.longitudeSpeed??pos.speed??0);return{longitude:retroNormalize(pos.longitude),speed:Number.isFinite(speed)?speed:0}}
+async function findNearestStation(baseDate,key,direction){let prev=null;let prevDate=null;for(let i=0;i<=260;i+=4){const d=new Date(baseDate.getTime()+direction*i*86400000);const data=await retroSpeedAt(retroJulian(d),key);if(prev!==null&&Math.sign(prev)!==Math.sign(data.speed)){return d.toISOString().slice(0,10)}prev=data.speed;prevDate=d}return prevDate?prevDate.toISOString().slice(0,10):baseDate.toISOString().slice(0,10)}
+async function buildRetroData(baseDate){const jd=retroJulian(baseDate);const rows=[];for(const def of retroPlanetDefs){const data=await retroSpeedAt(jd,def.key);const sign=retroSign(data.longitude);const isStation=Math.abs(data.speed)<0.002;const isRetro=data.speed<0;const prev=await findNearestStation(baseDate,def.key,-1);const next=await findNearestStation(baseDate,def.key,1);rows.push({planet:def.key+" "+def.symbol,icon:def.symbol,status:isStation?"Station":isRetro?"Retrograde":"Direct",type:isStation?"station":isRetro?"retro":"direct",description:isRetro?def.meaning:"Moving direct: "+def.meaning.replace("turn inward for review","flows outward again"),start:isRetro?prev:prev,end:isRetro?next:next,stationRx:isRetro?prev:next,stationDirect:isRetro?next:prev,sign:sign.symbol+" "+sign.name,degree:sign.degree+"\u00B0",meaning:def.meaning,progress:isRetro?55:isStation?50:100,speed:data.speed})}return rows}
+function renderRetroFocus(){const retro=retrogrades.filter(r=>r.type==="retro");const station=retrogrades.filter(r=>r.type==="station");const title=document.getElementById("retroFocusTitle");const text=document.getElementById("retroFocusText");const chips=document.getElementById("retroFocusChips");if(!title||!text||!chips)return;title.textContent=retro.length?retro.length+" planets retrograde now":station.length?"Station focus":"No major retrogrades now";const focusItems=retro.length?retro:station.slice(0,2);chips.innerHTML=focusItems.length?focusItems.map(r=>'<span class="natal-retro-chip">'+r.icon+' '+r.planet.replace(r.icon,"").trim()+'</span>').join(""):'<span class="natal-retro-chip" style="color:#4ade80;border-color:rgba(74,222,128,.35);background:rgba(74,222,128,.12)">Direct flow</span>';if(retro.length){const names=retro.map(r=>r.planet.replace(r.icon,"").trim()).join(", ");text.innerHTML="<strong>Focus:</strong> "+names+" are asking for review, patience and inner adjustment. Use this period for editing choices, cleaning old patterns and noticing where life slows down on purpose."}else if(station.length){text.innerHTML="<strong>Focus:</strong> Station energy is louder than usual. Move slowly around decisions and watch what starts changing direction."}else{text.innerHTML="<strong>Focus:</strong> The sky is mostly direct. Use this period for outward movement, decisions and visible progress."}}
+async function renderLiveRetro(){const now=new Date();try{const data=await buildRetroData(now);setCalcSourceStatus("Local Swiss Ephemeris");retrogrades.splice(0,retrogrades.length,...data);document.getElementById('retroList').innerHTML='';document.getElementById('stationList').innerHTML='';document.getElementById('stationPlanetList').innerHTML='';document.querySelector('.section-title').textContent='ACTIVE RETROGRADES';renderRetro('stationPlanetList',null,'station-details');filterRetro('retro',document.querySelector('.filter-tab'));renderRetroFocus();renderStations()}catch(e){if(e&&e.code!=="SWISSEPH_UNAVAILABLE")console.warn("Live retrograde calculation failed, using bundled fallback.",e);setCalcSourceStatus("browser formulas");document.getElementById('retroList').innerHTML='';renderRetro('stationPlanetList',null,'station-details');filterRetro('retro',document.querySelector('.filter-tab'));renderRetroFocus();renderStations()}}
+async function calculateNatalRetro(dateValue,timeValue){const resultDiv=document.getElementById('natalResult');const listDiv=document.getElementById('natalRetroList');const meaningDiv=document.getElementById('natalMeaning');try{const date=parseRetroDate(dateValue);const time=parseRetroTime(timeValue);const jd=retroJulian(retroDateFromInput(date,time));const selected=[];for(const def of retroPlanetDefs){const data=await retroSpeedAt(jd,def.key);if(data.speed<0)selected.push(def)}if(selected.length===0){listDiv.innerHTML='<span class="natal-retro-chip" style="color:#4ade80;border-color:rgba(74,222,128,.35);background:rgba(74,222,128,.12)">No natal retrogrades</span>';meaningDiv.innerHTML='<strong style="color:#FFD700">Natal Retrograde Theme:</strong> Your chart has no major natal retrograde planets in this set. Retrograde lessons may arrive more through transits than as a constant natal signature.'}else{listDiv.innerHTML=selected.map(s=>`<span class="natal-retro-chip">${s.symbol} ${s.key}</span>`).join('');meaningDiv.innerHTML='<strong style="color:#FFD700">Natal Retrograde Theme:</strong> '+(selected.length>2?'Multiple natal retrogrades show a strongly reflective chart. Growth tends to come from inner timing, review and private integration.':'A focused natal retrograde signature shows where energy works inward first: '+selected.map(s=>s.key).join(', ')+'.')}resultDiv.classList.add('show')}catch(e){if(e&&e.code==="SWISSEPH_UNAVAILABLE"){listDiv.innerHTML='<span class="natal-retro-chip">☿ Mercury</span>';meaningDiv.innerHTML='<strong style="color:#FFD700">Natal Retrograde Theme:</strong> Detailed natal retrograde calculation is available in the app/server view. This view is using fallback retrograde guidance.';resultDiv.classList.add('show');return}alert('Natal retrograde could not be calculated.')}}
+function checkNatalRetro(){const date=document.getElementById('natalDate').value;const time=document.getElementById('natalTime').value;if(!date){alert('Please enter your birth date');return}calculateNatalRetro(date,time)}
+function refreshRetro(){renderLiveRetro()}
+function goBack(){const date=document.getElementById('natalDate').value;const time=document.getElementById('natalTime').value;let url='chart.html';if(date){url+='?date='+encodeURIComponent(date);if(time)url+='&time='+encodeURIComponent(time)}window.location.href=url}
+function exitApp(){appExit("index.html")}
+function appCopyText(text,message){if(navigator.clipboard&&window.isSecureContext){return navigator.clipboard.writeText(text).then(()=>{if(message)alert(message)}).catch(()=>appCopyTextFallback(text,message))}return appCopyTextFallback(text,message)}
+function appCopyTextFallback(text,message){const input=document.createElement("textarea");input.value=text;input.setAttribute("readonly","");input.style.position="fixed";input.style.left="-9999px";document.body.appendChild(input);input.select();try{document.execCommand("copy");if(message)alert(message)}catch(e){alert(text)}document.body.removeChild(input);return Promise.resolve()}
+async function appShare(shareData){try{if(window.Android&&typeof window.Android.share==="function"){window.Android.share(shareData.title||document.title,shareData.text||"",shareData.url||location.href);return}if(window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.Share){await window.Capacitor.Plugins.Share.share(shareData);return}if(navigator.share){await navigator.share(shareData);return}}catch(error){console.warn("Native share failed",error)}await appCopyText(shareData.url||location.href,"Link copied to clipboard.")}
+function appPrintPage(){try{if(window.Android&&typeof window.Android.printPage==="function"){window.Android.printPage();return}window.print()}catch(e){alert("Print is not available in this app view.")}}
+function appExit(fallbackUrl){try{if(window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App&&window.Capacitor.Plugins.App.exitApp){window.Capacitor.Plugins.App.exitApp();return}if(navigator.app&&typeof navigator.app.exitApp==="function"){navigator.app.exitApp();return}if(window.Android&&typeof window.Android.exitApp==="function"){window.Android.exitApp();return}window.close()}catch(e){}setTimeout(()=>{window.location.href=fallbackUrl||"index.html"},120)}
+window.appCopyText=appCopyText;window.appShare=appShare;window.appPrintPage=appPrintPage;window.appExit=appExit;
+document.getElementById('printBtn').addEventListener('click',()=>appPrintPage());
+document.getElementById('shareBtn').addEventListener('click',async()=>{await appShare({title:"Retrograde",text:"Retrograde report",url:window.location.href})});
+
+/* ===== INIT ===== */
+window.addEventListener('load',()=>{const params=new URLSearchParams(window.location.search);const date=params.get('date');const time=params.get('time');if(date)document.getElementById('natalDate').value=date;if(time)document.getElementById('natalTime').value=time;renderLiveRetro();if(date)calculateNatalRetro(date,time||'12:00')});
+
+</script>
+
+</body>
+</html>
