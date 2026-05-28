@@ -1880,6 +1880,63 @@ body.saved-panel-open #numberHint{
   box-shadow:0 0 7px rgba(56,189,248,0.45)!important;
 }
 
+body.primary-astrology .title{
+  color:#FFD700!important;
+  text-shadow:0 0 12px rgba(255,215,0,.45)!important;
+}
+body.primary-astrology .left-btn,
+body.primary-astrology .action-btn,
+body.primary-astrology #savedIcon{
+  border-color:rgba(255,215,0,.45)!important;
+  color:#FFD700!important;
+  box-shadow:0 0 10px rgba(255,215,0,.18)!important;
+}
+body.primary-astrology .left-btn:hover,
+body.primary-astrology .action-btn:hover,
+body.primary-astrology #savedIcon:hover{
+  border-color:#FFD700!important;
+  color:#fff4b0!important;
+  box-shadow:0 0 14px rgba(255,215,0,.42)!important;
+}
+body.primary-astrology .input-line input[type="text"],
+body.primary-astrology .input-line select,
+body.primary-astrology #cityDropdown{
+  border-color:#FFD700!important;
+  box-shadow:0 0 10px rgba(255,215,0,.28)!important;
+}
+body.primary-astrology .input-line input[type="text"]:hover,
+body.primary-astrology .input-line select:hover{
+  box-shadow:0 0 15px rgba(255,215,0,.5)!important;
+}
+body.primary-astrology .analyze-btn{
+  background:linear-gradient(135deg,#FFD700,#f59e0b)!important;
+  color:#0f172a!important;
+  box-shadow:0 0 15px rgba(255,215,0,.35)!important;
+}
+body.primary-astrology #savedIcon svg,
+body.primary-astrology #savedIcon svg *{
+  stroke:#FFD700!important;
+  filter:drop-shadow(0 0 5px rgba(255,215,0,.65))!important;
+}
+body.primary-astrology #savedCount{
+  background:#FFD700!important;
+  color:#0f172a!important;
+  border-color:rgba(255,215,0,.9)!important;
+}
+body.primary-astrology #disclaimerPanel{
+  border-color:#FFD700!important;
+  box-shadow:0 0 40px rgba(255,215,0,.3)!important;
+}
+body.primary-astrology #disclaimerTitle{
+  color:#FFD700!important;
+  text-shadow:0 0 10px rgba(255,215,0,.6)!important;
+}
+body.primary-astrology #disclaimerAcceptBtn{
+  background:linear-gradient(135deg,#FFD700,#f59e0b)!important;
+  color:#0f172a!important;
+  box-shadow:0 0 15px rgba(255,215,0,.4)!important;
+}
+
 </style>
 </head>
 
@@ -2043,7 +2100,7 @@ body.saved-panel-open #numberHint{
     </div>
   </div>
 
-<div style="
+<div id="homeInputHint" style="
   margin-top:6px;
   font-size:11px;
   color:white;
@@ -2051,11 +2108,11 @@ body.saved-panel-open #numberHint{
   (enter your date of birth, time, and place)
 </div>
 
-  <button class="analyze-btn" onclick="generate()">ANALYZE</button>
+  <button id="primaryActionBtn" class="analyze-btn" onclick="generate()">ANALYZE</button>
 
 <div id="introContainer">
 
-  <video id="introVideo" width="100%" muted playsinline autoplay style="opacity:0; transition:opacity 0.5s;" onloadeddata="this.style.opacity=1">
+  <video id="introVideo" width="100%" muted playsinline autoplay loop style="opacity:0; transition:opacity 0.5s;" onloadeddata="this.style.opacity=1">
     <source src="images/video.mp4" type="video/mp4">
   </video>
 
@@ -5743,7 +5800,18 @@ function startPortalToAstrology(){
   }, 2850);
 }
 
+function openPrimaryAstrology(){
+  const pageUrl = buildAstroPageUrl("chart.html");
+  if(!pageUrl) return;
+  try{ sessionStorage.setItem("portalArriveAstrology", "1"); }catch(e){}
+  window.location.href = pageUrl;
+}
+
 function generate(){
+  if(primaryPage() === "astrology"){
+    openPrimaryAstrology();
+    return;
+  }
 
   document.getElementById("tabs").style.display="flex";
   document.body.classList.add("has-tabs");
@@ -7254,6 +7322,7 @@ window.openOwnerFromSetupMessage = openOwnerFromSetupMessage;
 
 // Proveri disclaimer pri uÄitavanju
 document.addEventListener('DOMContentLoaded', function(){
+  applyPrimaryPageSettings();
   checkDisclaimer();
   applyAppUnitFormatToInputs();
 });
@@ -7374,10 +7443,12 @@ function ownerProfileToContact(profile){
 }
 
 function getAppSettings(){
+  const defaults = { language:'en', soundEnabled:false, volume:35, primaryPage:'numerology' };
   try{
-    return JSON.parse(window.localStorage.getItem('numerology_app_settings') || '{}');
+    const saved = JSON.parse(window.localStorage.getItem('numerology_app_settings') || '{}');
+    return Object.assign({}, defaults, saved && typeof saved === 'object' ? saved : {});
   }catch(e){
-    return {};
+    return defaults;
   }
 }
 
@@ -7530,27 +7601,54 @@ function loadAppSettings(){
   const lang = document.getElementById('appLanguage');
   const sound = document.getElementById('appSoundEnabled');
   const volume = document.getElementById('appVolume');
+  const primaryNumerology = document.getElementById('appPrimaryNumerology');
+  const primaryAstrology = document.getElementById('appPrimaryAstrology');
   if(lang) lang.value = 'en';
   if(sound) sound.checked = !!settings.soundEnabled;
   if(volume) volume.value = settings.volume ?? 35;
-  [lang, sound, volume].forEach(control => {
+  if(primaryNumerology) primaryNumerology.checked = (settings.primaryPage || 'numerology') !== 'astrology';
+  if(primaryAstrology) primaryAstrology.checked = settings.primaryPage === 'astrology';
+  [lang, sound, volume, primaryNumerology, primaryAstrology].forEach(control => {
     if(control && !control.dataset.settingsBound){
       control.dataset.settingsBound = '1';
       control.addEventListener(control.type === 'range' ? 'input' : 'change', saveAppSettings);
     }
   });
   document.documentElement.lang = 'en';
+  applyPrimaryPageSettings();
 }
 
 function saveAppSettings(){
   const settings = {
     language: 'en',
     soundEnabled: !!document.getElementById('appSoundEnabled')?.checked,
-    volume: Number(document.getElementById('appVolume')?.value || 35)
+    volume: Number(document.getElementById('appVolume')?.value || 35),
+    primaryPage: document.getElementById('appPrimaryAstrology')?.checked ? 'astrology' : 'numerology'
   };
   window.localStorage.setItem('numerology_app_settings', JSON.stringify(settings));
   document.documentElement.lang = 'en';
+  applyPrimaryPageSettings();
   syncAmbientAudio();
+}
+
+function primaryPage(){
+  return getAppSettings().primaryPage === 'astrology' ? 'astrology' : 'numerology';
+}
+
+function applyPrimaryPageSettings(){
+  const isAstrology = primaryPage() === 'astrology';
+  document.body.classList.toggle('primary-astrology', isAstrology);
+  const title = document.querySelector('.title');
+  const action = document.getElementById('primaryActionBtn');
+  const hint = document.getElementById('homeInputHint');
+  const tabs = document.getElementById('tabs');
+  if(title) title.textContent = isAstrology ? 'Astrology App' : 'Numerology App';
+  if(action) action.textContent = isAstrology ? 'OPEN ASTROLOGY' : 'ANALYZE';
+  if(hint) hint.textContent = isAstrology ? '(enter your birth date, time and place to open astrology)' : '(enter your date of birth, time, and place)';
+  if(!hasAnalyzedFlag && tabs){
+    tabs.style.display = 'none';
+    document.body.classList.remove('has-tabs');
+  }
 }
 
 function ambientAudio(){
@@ -8549,6 +8647,10 @@ function openAstro(){
     </div>
 
     <div id="ownerSettingsTab" class="profile-tab-panel">
+      <div class="profile-options-title">First page</div>
+      <label class="profile-check-row"><input type="radio" name="appPrimaryPage" value="numerology" id="appPrimaryNumerology"> Numerology</label>
+      <label class="profile-check-row"><input type="radio" name="appPrimaryPage" value="astrology" id="appPrimaryAstrology"> Astrology</label>
+
       <div class="profile-options-title">Date format</div>
       <label class="profile-check-row"><input type="radio" name="ownerUnits" value="EU" id="ownerUnitsEU" onchange="applyOwnerUnitFormat('EU')"> EU metric</label>
       <label class="profile-check-row"><input type="radio" name="ownerUnits" value="US" id="ownerUnitsUS" onchange="applyOwnerUnitFormat('US')"> US imperial</label>
@@ -8700,7 +8802,7 @@ function openAstro(){
   align-items:center;
   z-index:999999;
 ">
-  <div style="
+  <div id="disclaimerPanel" style="
     background:#1e293b;
     padding:30px 25px;
     border-radius:15px;
@@ -8715,7 +8817,7 @@ function openAstro(){
       margin-bottom:15px;
     ">&#9888;&#65039;</div>
 
-    <h3 style="
+    <h3 id="disclaimerTitle" style="
       color:#38bdf8;
       margin-bottom:20px;
       font-size:16px;
@@ -8734,7 +8836,7 @@ function openAstro(){
       This application is intended for informational and entertainment purposes only. Results and interpretations are subjective opinions and do not constitute professional advice. By using this application, you accept full responsibility for your decisions and actions.
     </p>
 
-    <button onclick="acceptDisclaimer()" style="
+    <button id="disclaimerAcceptBtn" onclick="acceptDisclaimer()" style="
       width:100%;
       padding:12px;
       background:linear-gradient(135deg, #38bdf8, #0ea5e9);

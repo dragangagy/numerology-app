@@ -18,29 +18,29 @@ body{font-family:Arial,sans-serif;background:#0f172a;color:white;text-align:cent
 .top-bar{position:absolute;top:10px;right:12px;z-index:20}.action-group{display:flex;align-items:center;gap:6px}
 .subtitle{margin-top:3px;color:#94a3b8;font-size:12px;opacity:.82}
 .container{width:100%;max-width:920px;margin:auto;padding:12px}
-.input-line{display:flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;flex-wrap:nowrap!important;width:100%!important;max-width:360px!important;margin:10px auto 4px!important;padding:0 4px!important}
+.input-card{background:transparent;border:none;padding:4px 0 4px;margin-top:4px}
+.input-line{display:flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;flex-wrap:nowrap!important;width:100%!important;max-width:360px!important;margin:0 auto!important;padding:0 4px!important}
 .input-line input{width:var(--birth-field-width,82px)!important;flex:0 0 var(--birth-field-width,82px)!important;height:var(--birth-field-height,30px)!important;min-height:var(--birth-field-height,30px)!important;background:#1e293b;border:1px solid #94a3b8;color:white;border-radius:8px!important;padding:0 6px!important;font-size:var(--birth-field-font,11px)!important;outline:none;box-shadow:0 0 10px rgba(148,163,184,.18);text-align:center;box-sizing:border-box!important}
-.primary-btn{height:34px;border:none;border-radius:8px;background:linear-gradient(135deg,#cbd5e1,#64748b);color:#0f172a;font-size:12px;font-weight:800;letter-spacing:.5px;padding:0 14px;cursor:pointer;box-shadow:0 0 12px rgba(148,163,184,.24)}
-.main-action-row{display:flex;justify-content:center;margin-top:10px}
-.main-action-row .primary-btn{min-width:130px}
+.primary-btn{width:90%;max-width:340px;min-height:34px;border:none;border-radius:14px;background:linear-gradient(135deg,#cbd5e1,#64748b);color:#0f172a;font-size:13px;font-weight:800;letter-spacing:.5px;padding:10px;cursor:pointer;box-shadow:0 0 12px rgba(148,163,184,.24);display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.05;margin:0 auto}
+.main-action-row{display:flex;justify-content:center;margin-top:8px}
 .savedIconBox{width:34px!important;height:34px!important;min-width:34px!important;flex:0 0 34px!important;background:#1e293b;border-radius:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(148,163,184,.18);border:1px solid #94a3b8;position:relative;cursor:pointer;transition:.3s;color:#cbd5e1}
 .savedCountBox{position:absolute;top:-8px;right:-8px;background:#cbd5e1;color:#0f172a;font-size:9px;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;font-weight:bold;border:1px solid rgba(226,232,240,.8)}
 .savedPanel{display:none;position:fixed;top:58px;right:0;width:280px;height:calc(100% - 58px);background:#1e293b;z-index:9000;padding:46px 15px 20px;overflow-y:auto;box-shadow:-5px 0 20px rgba(148,163,184,.16);border-left:1px solid rgba(148,163,184,.45)}
 .savedPanelClose{position:absolute;top:14px;left:15px;font-size:20px;color:#e2e8f0;cursor:pointer}
 .savedPanelTitle{color:#e2e8f0;margin-bottom:15px;font-size:14px;text-shadow:0 0 10px rgba(148,163,184,.28)}
 .savedItem{background:#0f172a;border:1px solid rgba(148,163,184,.24);border-radius:8px;padding:10px;margin-bottom:8px;text-align:left;cursor:pointer}
-.tabs{display:flex;justify-content:center;gap:6px;margin:12px auto 4px;max-width:520px;padding:0 8px;flex-wrap:wrap}
+.tabs{display:flex;justify-content:center;gap:6px;margin:10px auto 6px;max-width:520px;padding:0 8px;flex-wrap:wrap}
 .tab{min-height:34px;border-radius:8px;background:#1e293b;border:1px solid rgba(148,163,184,.22);color:#cbd5e1;font-size:11px;font-weight:800;letter-spacing:.4px;cursor:pointer;transition:.25s;padding:0 12px}
 .tab:hover,.tab.active{color:white;border-color:#cbd5e1;box-shadow:0 0 12px rgba(148,163,184,.22);background:#334155}
 .panel{display:none}.panel.active{display:block}
-.card{background:rgba(10,20,35,.78);border-radius:12px;border:1px solid rgba(148,163,184,.22);padding:14px;margin-top:14px;box-shadow:0 0 22px rgba(0,0,0,.18)}
+.card{background:#1e293b;border-radius:10px;border:1px solid rgba(148,163,184,.22);padding:8px;margin-top:8px;box-shadow:0 0 22px rgba(0,0,0,.18)}
 .section-title{color:#e2e8f0;font-size:17px;line-height:1.25;margin-bottom:12px;text-shadow:0 0 10px rgba(148,163,184,.22)}
 .tarot-card{width:min(72vw,230px);min-height:330px;margin:10px auto;border-radius:14px;background:linear-gradient(160deg,#334155,#0f172a 45%,#1e293b);border:1px solid rgba(148,163,184,.48);box-shadow:0 0 28px rgba(148,163,184,.18);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:18px}
 .tarot-symbol{font-size:54px;color:#e2e8f0;text-shadow:0 0 18px rgba(148,163,184,.4);margin-bottom:14px}
 .tarot-name{font-size:24px;font-weight:900;color:#fff;line-height:1.15}
 .tarot-sub{font-size:12px;color:#cbd5e1;margin-top:8px}
 .spread{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-top:12px}
-.mini-card{background:#1e293b;border:1px solid rgba(148,163,184,.18);border-radius:10px;padding:12px;text-align:left}
+.mini-card{background:#0f172a;border:1px solid rgba(148,163,184,.18);border-radius:10px;padding:8px;text-align:left}
 .label{font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
 .value{font-size:13px;color:#fee2e2;line-height:1.45}
 .note{margin-top:10px;color:#94a3b8;font-size:11px;line-height:1.4;opacity:.82}
@@ -65,22 +65,24 @@ body{font-family:Arial,sans-serif;background:#0f172a;color:white;text-align:cent
   </div>
 </div>
 <div class="container">
-  <div class="input-line">
-    <input id="birthDate" type="text" placeholder="DD.MM.YYYY" maxlength="10">
-    <input id="birthTime" type="text" placeholder="HH:MM" maxlength="5">
-    <input id="birthCity" type="text" placeholder="City">
-    <div class="savedIconBox" onclick="toggleSavedPanel()" title="Saved profiles">
-      <svg viewBox="0 0 24 24" style="width:19px;height:19px;fill:none;stroke:#cbd5e1;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px rgba(148,163,184,0.5))"><path d="M8 4h8"></path><path d="M9 2h6a1 1 0 0 1 1 1v2H8V3a1 1 0 0 1 1-1z"></path><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="M8 11h8"></path><path d="M8 16h5"></path></svg>
-      <span id="savedCountBox" class="savedCountBox">0</span>
-    </div>
-  </div>
-  <div class="main-action-row">
-    <button class="primary-btn" onclick="drawDaily()">DRAW</button>
-  </div>
   <div class="tabs">
     <button class="tab active" data-tab="daily" onclick="showTab('daily')">Daily</button>
     <button class="tab" data-tab="spreadPanel" onclick="showTab('spreadPanel')">3 Cards</button>
     <button class="tab" data-tab="meaning" onclick="showTab('meaning')">Meaning</button>
+  </div>
+  <div class="input-card">
+    <div class="input-line">
+      <input id="birthDate" type="text" placeholder="DD.MM.YYYY" maxlength="10">
+      <input id="birthTime" type="text" placeholder="HH:MM" maxlength="5">
+      <input id="birthCity" type="text" placeholder="City">
+      <div class="savedIconBox" onclick="toggleSavedPanel()" title="Saved profiles">
+        <svg viewBox="0 0 24 24" style="width:19px;height:19px;fill:none;stroke:#cbd5e1;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px rgba(148,163,184,0.5))"><path d="M8 4h8"></path><path d="M9 2h6a1 1 0 0 1 1 1v2H8V3a1 1 0 0 1 1-1z"></path><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="M8 11h8"></path><path d="M8 16h5"></path></svg>
+        <span id="savedCountBox" class="savedCountBox">0</span>
+      </div>
+    </div>
+    <div class="main-action-row">
+      <button class="primary-btn" onclick="drawDaily()">DRAW</button>
+    </div>
   </div>
   <div id="daily" class="panel active">
     <div class="card">

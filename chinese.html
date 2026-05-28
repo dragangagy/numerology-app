@@ -18,12 +18,11 @@ body{font-family:Arial,sans-serif;background:#0f172a;color:white;text-align:cent
 .top-bar{position:absolute;top:10px;right:12px;z-index:20}.action-group{display:flex;align-items:center;gap:6px}
 .container{width:100%;max-width:920px;margin:auto;padding:12px}
 .subtitle{margin-top:3px;color:#fca5a5;font-size:12px;opacity:.82}
-.input-card{background:transparent;border:none;padding:8px 0 4px;margin-top:8px}
+.input-card{background:transparent;border:none;padding:4px 0 4px;margin-top:4px}
 .input-line{display:flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;flex-wrap:nowrap!important;width:100%!important;max-width:360px!important;margin:0 auto!important;padding:0 4px!important}
 .input-line input{width:var(--birth-field-width,82px)!important;flex:0 0 var(--birth-field-width,82px)!important;height:var(--birth-field-height,30px)!important;min-height:var(--birth-field-height,30px)!important;background:#1e293b;border:1px solid #ef4444;color:white;border-radius:8px!important;padding:0 6px!important;font-size:var(--birth-field-font,11px)!important;outline:none;box-shadow:0 0 10px rgba(239,68,68,.28);text-align:center;box-sizing:border-box!important}
-.primary-btn{height:34px;border:none;border-radius:8px;background:linear-gradient(135deg,#ef4444,#991b1b);color:white;font-size:12px;font-weight:800;letter-spacing:.5px;padding:0 14px;cursor:pointer;box-shadow:0 0 12px rgba(239,68,68,.35)}
-.main-action-row{display:flex;justify-content:center;margin-top:10px}
-.main-action-row .primary-btn{min-width:130px}
+.primary-btn{width:90%;max-width:340px;min-height:34px;border:none;border-radius:14px;background:linear-gradient(135deg,#ef4444,#991b1b);color:white;font-size:13px;font-weight:800;letter-spacing:.5px;padding:10px;cursor:pointer;box-shadow:0 0 12px rgba(239,68,68,.35);display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.05;margin:0 auto}
+.main-action-row{display:flex;justify-content:center;margin-top:8px}
 .primary-btn:hover{box-shadow:0 0 18px rgba(239,68,68,.6);transform:translateY(-1px)}
 .savedIconBox{width:34px!important;height:34px!important;min-width:34px!important;flex:0 0 34px!important;background:#1e293b;border-radius:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(239,68,68,.3);border:1px solid #ef4444;position:relative;cursor:pointer;transition:.3s;color:#fecaca}
 .savedCountBox{position:absolute;top:-8px;right:-8px;background:#450a0a;color:#fecaca;font-size:9px;width:16px;height:16px;border-radius:50%;display:none;align-items:center;justify-content:center;font-weight:bold;border:1px solid rgba(248,113,113,.55)}
@@ -32,24 +31,24 @@ body{font-family:Arial,sans-serif;background:#0f172a;color:white;text-align:cent
 .savedPanelTitle{color:#ff3b3b;margin-bottom:15px;font-size:14px;text-shadow:0 0 10px rgba(239,68,68,.36)}
 .savedItem{background:#0f172a;border:1px solid rgba(248,113,113,.24);border-radius:8px;padding:10px;margin-bottom:8px;text-align:left;cursor:pointer}
 .savedItem:hover{border-color:#ef4444;box-shadow:0 0 10px rgba(239,68,68,.25)}
-.tabs{display:flex;justify-content:center;gap:6px;margin:12px auto 4px;max-width:650px;padding:0 8px;flex-wrap:wrap}
+.tabs{display:flex;justify-content:center;gap:6px;margin:10px auto 6px;max-width:650px;padding:0 8px;flex-wrap:wrap}
 .tab{min-height:34px;border-radius:8px;background:#1e293b;border:1px solid rgba(248,113,113,.22);color:#fca5a5;font-size:11px;font-weight:800;letter-spacing:.4px;cursor:pointer;transition:.25s;padding:0 12px}
 .tab:hover,.tab.active{color:white;border-color:#ef4444;box-shadow:0 0 12px rgba(239,68,68,.3);background:#334155}
 .panel{display:none}.panel.active{display:block}
-.card{background:rgba(10,20,35,.78);border-radius:12px;border:1px solid rgba(248,113,113,.18);padding:14px;margin-top:14px;box-shadow:0 0 22px rgba(0,0,0,.18)}
+.card{background:#1e293b;border-radius:10px;border:1px solid rgba(248,113,113,.18);padding:8px;margin-top:8px;box-shadow:0 0 22px rgba(0,0,0,.18)}
 .section-title{color:#ff3b3b;font-size:17px;line-height:1.25;margin-bottom:12px;text-shadow:0 0 10px rgba(239,68,68,.28)}
 .hero-animal{font-size:68px;line-height:1;margin:12px 0 8px;text-shadow:0 0 20px rgba(239,68,68,.45)}
 .big-name{font-size:30px;color:#fff;font-weight:900;letter-spacing:1px}
 .meta{color:#fca5a5;font-size:13px;margin-top:6px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:12px}
-.box{background:#1e293b;border:1px solid rgba(248,113,113,.15);border-radius:10px;padding:11px;text-align:left}
+.box{background:#0f172a;border:1px solid rgba(248,113,113,.15);border-radius:10px;padding:8px;text-align:left}
 .label{font-size:10px;color:#fb7185;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
 .value{font-size:13px;color:#fee2e2;line-height:1.45}
 .text-block{color:#fee2e2;font-size:13px;line-height:1.6;text-align:left}
 .compat-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:10px}
-.pill{background:#1e293b;border:1px solid rgba(248,113,113,.18);border-radius:10px;padding:9px;color:#fee2e2;font-size:12px}
+.pill{background:#0f172a;border:1px solid rgba(248,113,113,.18);border-radius:10px;padding:8px;color:#fee2e2;font-size:12px}
 .year-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(74px,1fr));gap:7px;margin-top:10px}
-.year-cell{background:#1e293b;border:1px solid rgba(248,113,113,.14);border-radius:8px;padding:8px;font-size:11px;color:#fecaca}
+.year-cell{background:#0f172a;border:1px solid rgba(248,113,113,.14);border-radius:8px;padding:8px;font-size:11px;color:#fecaca}
 .coming-note{margin-top:10px;color:#fca5a5;font-size:11px;line-height:1.4;opacity:.8}
 @media(max-width:460px){.header-title{font-size:14px;padding:0 66px}.input-line{gap:6px}.tab{flex:1;padding:0 6px}.hero-animal{font-size:58px}}
 </style>
@@ -73,6 +72,15 @@ body{font-family:Arial,sans-serif;background:#0f172a;color:white;text-align:cent
 </div>
 
 <div class="container">
+  <div class="tabs">
+    <button class="tab active" data-tab="overview" onclick="showTab('overview')">Overview</button>
+    <button class="tab" data-tab="element" onclick="showTab('element')">Element</button>
+    <button class="tab" data-tab="compat" onclick="showTab('compat')">Compatibility</button>
+    <button class="tab" data-tab="today" onclick="showTab('today')">Today</button>
+    <button class="tab" data-tab="years" onclick="showTab('years')">Years</button>
+    <button class="tab" data-tab="signs" onclick="showTab('signs')">Signs</button>
+  </div>
+
   <div class="input-card">
     <div class="input-line">
       <input id="birthDate" type="text" placeholder="DD.MM.YYYY" maxlength="10">
@@ -86,15 +94,6 @@ body{font-family:Arial,sans-serif;background:#0f172a;color:white;text-align:cent
     <div class="main-action-row">
       <button class="primary-btn" onclick="calculateChinese()">GO</button>
     </div>
-  </div>
-
-  <div class="tabs">
-    <button class="tab active" data-tab="overview" onclick="showTab('overview')">Overview</button>
-    <button class="tab" data-tab="element" onclick="showTab('element')">Element</button>
-    <button class="tab" data-tab="compat" onclick="showTab('compat')">Compatibility</button>
-    <button class="tab" data-tab="today" onclick="showTab('today')">Today</button>
-    <button class="tab" data-tab="years" onclick="showTab('years')">Years</button>
-    <button class="tab" data-tab="signs" onclick="showTab('signs')">Signs</button>
   </div>
 
   <div id="overview" class="panel active">
