@@ -544,7 +544,7 @@ body {
 }
 
 .cosmic-portal-shell.show + .portal-switch-arc {
-  display:block;
+  display:none;
 }
 
 @keyframes portalSwitchGoldGlow {
@@ -562,11 +562,12 @@ body {
 .cosmic-portal-shell {
   display:none;
   position:relative;
-  width:clamp(154px, 43vw, 196px);
+  width:clamp(162px, 44.2vw, 213px);
   aspect-ratio:1;
   align-items:center;
   justify-content:center;
   filter:none;
+  margin-top:10px;
 }
 
 .cosmic-portal-shell::before,
@@ -582,15 +583,13 @@ body {
 }
 
 .cosmic-portal-shell::before {
-  background:conic-gradient(from 270deg, rgba(255,215,0,.5) 0deg 180deg, transparent 180deg 360deg);
-  filter:blur(6px);
-  opacity:.7;
+  background:conic-gradient(from -90deg, rgba(56,189,248,.5), rgba(239,68,68,.5), rgba(255,215,0,.55), rgba(226,232,240,.45), rgba(56,189,248,.5));
+  filter:blur(8px);
+  opacity:.72;
 }
 
 .cosmic-portal-shell::after {
-  background:conic-gradient(from 90deg, rgba(56,189,248,.55) 0deg 180deg, transparent 180deg 360deg);
-  filter:blur(6px);
-  opacity:.7;
+  display:none;
 }
 
 .cosmic-portal-shell.show {
@@ -603,37 +602,41 @@ body {
   inset:0;
   border-radius:50%;
   overflow:hidden;
-  background:url("images/krug.png") center / 154% 154% no-repeat;
+  background:url("images/portal.png") center / contain no-repeat;
   border:0;
   box-shadow:none;
-  transform:rotate(75deg);
+  transform:none;
   z-index:2;
 }
 
 .portal-ring-labels {
   position:absolute;
-  inset:3px;
+  inset:-12%;
+  transform:translate(26px,28px);
   z-index:4;
-  pointer-events:none;
+  pointer-events:auto;
   overflow:visible;
 }
 
 .portal-ring-label {
   font-family:Georgia, "Times New Roman", serif;
-  font-size:15px;
+  font-size:13px;
   font-weight:700;
-  letter-spacing:.35px;
+  letter-spacing:.85px;
   text-transform:uppercase;
+  text-shadow:0 1px 4px rgba(0,0,0,.75);
+  cursor:pointer;
 }
 
-.portal-ring-label.gold {
-  fill:#050b17;
-  filter:none;
-}
+.portal-ring-label{animation:portalLabelPulse 4s ease-in-out infinite}
+.portal-ring-label.blue{fill:#38bdf8;filter:drop-shadow(0 0 4px rgba(56,189,248,.75));animation-delay:0s}
+.portal-ring-label.silver{fill:#e2e8f0;filter:drop-shadow(0 0 4px rgba(226,232,240,.7));animation-delay:1s}
+.portal-ring-label.gold{fill:#FFD700;filter:drop-shadow(0 0 4px rgba(255,215,0,.72));animation-delay:2s}
+.portal-ring-label.red{fill:#ef4444;filter:drop-shadow(0 0 4px rgba(239,68,68,.75));animation-delay:3s}
 
-.portal-ring-label.blue {
-  fill:#ffffff;
-  filter:none;
+@keyframes portalLabelPulse{
+  0%,18%,100%{opacity:.58;filter:drop-shadow(0 0 3px currentColor)}
+  7%{opacity:1;filter:drop-shadow(0 0 12px currentColor) drop-shadow(0 0 20px currentColor)}
 }
 
 .cosmic-portal::before {
@@ -659,31 +662,154 @@ body {
 }
 
 .portal-hotspot:hover {
-  transform:none;
   filter:none;
 }
 
-.portal-zodiac:hover,
-.portal-code:hover {
-  transform:translateY(-50%);
+.portal-label{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:1px;
+  width:100%;
+  height:100%;
+  color:white;
+  font-size:9px;
+  line-height:1;
+  font-weight:900;
+  letter-spacing:.5px;
+  text-shadow:0 1px 5px rgba(0,0,0,.82);
+  pointer-events:none;
+}
+
+.portal-label strong{font-size:14px;line-height:1}
+.portal-label small{font-size:8px;opacity:.9}
+
+.portal-symbol{
+  width:71.43%;
+  height:71.43%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+}
+
+.portal-symbol strong{
+  font-size:clamp(32px, 11vw, 52px);
+  line-height:1;
+}
+
+.portal-code-number{
+  font-size:clamp(26px, 9vw, 42px);
+  line-height:1;
+}
+
+.portal-chinese-mark{
+  flex-direction:column;
+  gap:2px;
+}
+
+.portal-chinese-han{
+  font-size:clamp(28px, 10vw, 48px);
+  line-height:.9;
+  color:#fff7ed;
+  text-shadow:0 0 9px rgba(239,68,68,.75), 0 1px 4px rgba(0,0,0,.85);
+}
+
+.portal-chinese-animal{
+  font-size:clamp(8px, 2.5vw, 12px);
+  line-height:1;
+  color:#fee2e2;
+  letter-spacing:.8px;
+}
+
+.portal-tarot-fan{
+  position:relative;
+  width:71.43%;
+  height:71.43%;
+}
+
+.portal-card{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:34%;
+  height:58%;
+  border:1px solid rgba(255,255,255,.82);
+  border-radius:3px;
+  box-shadow:0 0 7px rgba(226,232,240,.42), inset 0 0 0 2px rgba(15,23,42,.28);
+  transform-origin:50% 90%;
+}
+
+.portal-card::before{
+  content:"";
+  position:absolute;
+  inset:26% 22%;
+  border:1px solid rgba(255,255,255,.74);
+  border-radius:50%;
+}
+
+.portal-card::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:rgba(255,255,255,.88);
+  box-shadow:0 0 8px rgba(255,255,255,.65);
+  transform:translate(-50%,-50%);
+}
+
+.portal-card:nth-child(1){background:linear-gradient(160deg,#fef3c7,#f97316 48%,#7c2d12);transform:translate(-50%,-50%) rotate(-20deg)}
+.portal-card:nth-child(2){background:linear-gradient(160deg,#dcfce7,#22c55e 48%,#14532d);transform:translate(-50%,-56%) rotate(0deg)}
+.portal-card:nth-child(3){background:linear-gradient(160deg,#dbeafe,#8b5cf6 48%,#312e81);transform:translate(-50%,-50%) rotate(20deg)}
+
+.portal-zodiac,
+.portal-code,
+.portal-chinese,
+.portal-tarot{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:42%;
+  height:42%;
+  border-radius:50%;
+}
+
+.portal-code {
+  left:50%;
+  top:21%;
+  transform:translate(-50%,-50%);
+  color:#dff7ff;
 }
 
 .portal-zodiac {
   left:50%;
+  bottom:21%;
+  transform:translate(-50%,50%);
+  color:#fff3a3;
+}
+
+.portal-chinese {
+  left:21%;
   top:50%;
-  width:50%;
-  height:auto;
-  color:#050b17;
-  font-size:clamp(44px, 14vw, 64px);
-  font-family:Georgia, "Times New Roman", serif;
-  text-shadow:0 1px 1px rgba(255,215,0,.45);
-  transform:translateY(-50%);
+  transform:translate(-50%,-50%);
+  color:#fee2e2;
+}
+
+.portal-tarot {
+  right:21%;
+  top:50%;
+  transform:translate(50%,-50%);
+  color:#f8fafc;
 }
 
 .portal-zodiac img {
   display:block;
-  width:81%;
-  max-height:105px;
+  width:100%;
+  max-height:100%;
   object-fit:contain;
   margin:auto;
   mix-blend-mode:multiply;
@@ -691,23 +817,10 @@ body {
   pointer-events:none;
 }
 
-.portal-code {
-  left:0;
-  top:50%;
-  width:50%;
-  height:58%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#dff7ff;
-  font-size:clamp(38px, 12vw, 58px);
-  transform:translateY(-50%);
-}
-
 .portal-code-ring {
   position:relative;
-  width:clamp(68px, 19vw, 92px);
-  aspect-ratio:1;
+  width:71.43%;
+  height:71.43%;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -2142,14 +2255,20 @@ body.primary-astrology #disclaimerAcceptBtn{
       <div class="cosmic-portal" aria-hidden="true"></div>
       <svg class="portal-ring-labels" viewBox="0 0 200 200" aria-hidden="true">
         <defs>
-          <path id="portalTopArc" d="M 10 103 A 90 90 0 0 1 190 103"></path>
-          <path id="portalBottomArc" d="M 10 106 A 90 90 0 0 0 190 106"></path>
+          <path id="portalTopArc" d="M 24 35 A 92 92 0 0 1 176 35"></path>
+          <path id="portalRightArc" d="M 165 24 A 92 92 0 0 1 165 176"></path>
+          <path id="portalBottomArc" d="M 24 165 A 92 92 0 0 0 176 165"></path>
+          <path id="portalLeftArc" d="M 35 176 A 92 92 0 0 1 35 24"></path>
         </defs>
-        <text class="portal-ring-label gold"><textPath href="#portalTopArc" startOffset="50%" text-anchor="middle">ASTROLOGY SIGN</textPath></text>
-        <text class="portal-ring-label blue"><textPath href="#portalBottomArc" startOffset="50%" text-anchor="middle">NUMEROLOGY CODE</textPath></text>
+        <text class="portal-ring-label blue" onclick="openPortalCode()"><textPath href="#portalTopArc" startOffset="50%" text-anchor="middle">NUMEROLOGY CODE</textPath></text>
+        <text class="portal-ring-label silver" onclick="openPortalTarot()"><textPath href="#portalRightArc" startOffset="50%" text-anchor="middle">TAROT MEANING</textPath></text>
+        <text class="portal-ring-label gold" dy="9" onclick="startPortalToAstrology()"><textPath href="#portalBottomArc" startOffset="50%" text-anchor="middle">ASTROLOGY SIGN</textPath></text>
+        <text class="portal-ring-label red" onclick="openPortalChinese()"><textPath href="#portalLeftArc" startOffset="50%" text-anchor="middle">CHINESE ZODIAC</textPath></text>
       </svg>
       <button id="portalZodiac" class="portal-hotspot portal-zodiac" type="button" onclick="startPortalToAstrology()" title="Open Astrology App"></button>
       <button id="portalCode" class="portal-hotspot portal-code" type="button" onclick="openPortalCode()" title="Open numerological code"></button>
+      <button id="portalChinese" class="portal-hotspot portal-chinese" type="button" onclick="openPortalChinese()" title="Open Chinese Zodiac"></button>
+      <button id="portalTarot" class="portal-hotspot portal-tarot" type="button" onclick="openPortalTarot()" title="Open Tarot Cards"></button>
     </div>
     <svg class="portal-switch-arc" viewBox="0 0 220 42" role="button" tabindex="0" aria-label="Change to Astrology App" onclick="startPortalToAstrology()" onkeydown="if(event.key==='Enter' || event.key===' '){ event.preventDefault(); startPortalToAstrology(); }">
       <defs>
@@ -5733,10 +5852,37 @@ function zodiacImagePath(name){
   }[String(name || "").toUpperCase()] || "";
 }
 
+const portalChineseAnimals=[
+  {key:"Rat",han:"\u9F20"},{key:"Ox",han:"\u725B"},{key:"Tiger",han:"\u864E"},{key:"Rabbit",han:"\u5154"},
+  {key:"Dragon",han:"\u9F99"},{key:"Snake",han:"\u86C7"},{key:"Horse",han:"\u9A6C"},{key:"Goat",han:"\u7F8A"},
+  {key:"Monkey",han:"\u7334"},{key:"Rooster",han:"\u9E21"},{key:"Dog",han:"\u72D7"},{key:"Pig",han:"\u732A"}
+];
+const portalChineseNewYear={1960:"28.01",1961:"15.02",1962:"05.02",1963:"25.01",1964:"13.02",1965:"02.02",1966:"21.01",1967:"09.02",1968:"30.01",1969:"17.02",1970:"06.02",1971:"27.01",1972:"15.02",1973:"03.02",1974:"23.01",1975:"11.02",1976:"31.01",1977:"18.02",1978:"07.02",1979:"28.01",1980:"16.02",1981:"05.02",1982:"25.01",1983:"13.02",1984:"02.02",1985:"20.02",1986:"09.02",1987:"29.01",1988:"17.02",1989:"06.02",1990:"27.01",1991:"15.02",1992:"04.02",1993:"23.01",1994:"10.02",1995:"31.01",1996:"19.02",1997:"07.02",1998:"28.01",1999:"16.02",2000:"05.02",2001:"24.01",2002:"12.02",2003:"01.02",2004:"22.01",2005:"09.02",2006:"29.01",2007:"18.02",2008:"07.02",2009:"26.01",2010:"14.02",2011:"03.02",2012:"23.01",2013:"10.02",2014:"31.01",2015:"19.02",2016:"08.02",2017:"28.01",2018:"16.02",2019:"05.02",2020:"25.01",2021:"12.02",2022:"01.02",2023:"22.01",2024:"10.02",2025:"29.01",2026:"17.02",2027:"06.02",2028:"26.01",2029:"13.02",2030:"03.02"};
+
+function portalParseDate(value){
+  const m=/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/.exec(String(value||"").trim());
+  return m?{d:+m[1],m:+m[2],y:+m[3]}:null;
+}
+
+function portalChineseFromDate(value){
+  const date=portalParseDate(value);
+  if(!date) return {key:"",han:"\u4E2D"};
+  const cny=(portalChineseNewYear[date.y]||"04.02").split(".");
+  let year=date.y;
+  if(date.m<+cny[1] || (date.m===+cny[1] && date.d<+cny[0])) year--;
+  return portalChineseAnimals[((year-2020)%12+12)%12];
+}
+
+function portalTarotFanMarkup(){
+  return '<span class="portal-symbol portal-tarot-fan"><i class="portal-card"></i><i class="portal-card"></i><i class="portal-card"></i></span>';
+}
+
 function setCosmicPortal(mainNum, zodiacName){
   const shell = document.getElementById("cosmicPortalShell");
   const codeBtn = document.getElementById("portalCode");
   const zodiacBtn = document.getElementById("portalZodiac");
+  const chineseBtn = document.getElementById("portalChinese");
+  const tarotBtn = document.getElementById("portalTarot");
   if(!shell || !codeBtn || !zodiacBtn) return;
   shell.classList.add("show");
   shell.dataset.code = mainNum;
@@ -5752,8 +5898,11 @@ function setCosmicPortal(mainNum, zodiacName){
   </span>`;
   const imagePath = zodiacImagePath(zodiacName);
   zodiacBtn.innerHTML = imagePath
-    ? `<img src="${imagePath}" alt="${zodiacName}">`
-    : `<span>${zodiacSymbol(zodiacName)}</span>`;
+    ? `<span class="portal-symbol"><img src="${imagePath}" alt="${zodiacName}"></span>`
+    : `<span class="portal-symbol"><strong>${zodiacSymbol(zodiacName)}</strong></span>`;
+  const chinese=portalChineseFromDate(document.getElementById("input")?.value);
+  if(chineseBtn) chineseBtn.innerHTML = `<span class="portal-symbol portal-chinese-mark"><span class="portal-chinese-han">${chinese.han}</span><span class="portal-chinese-animal">${chinese.key.toUpperCase()}</span></span>`;
+  if(tarotBtn) tarotBtn.innerHTML = portalTarotFanMarkup();
 }
 
 function openPortalCode(){
@@ -5789,6 +5938,10 @@ function startPortalToAstrology(){
   const pageUrl = buildAstroPageUrl("chart.html");
   if(!pageUrl) return;
   try{ sessionStorage.setItem("portalArriveAstrology", "1"); }catch(e){}
+  startPortalTransitionTo(pageUrl);
+}
+
+function startPortalTransitionTo(pageUrl){
   if(!document.querySelector(".portal-fade-curtain")){
     const curtain = document.createElement("div");
     curtain.className = "portal-fade-curtain";
@@ -5798,6 +5951,20 @@ function startPortalToAstrology(){
   setTimeout(() => {
     window.location.href = pageUrl;
   }, 2850);
+}
+
+function openPortalModule(page){
+  const pageUrl = buildAstroPageUrl(page);
+  if(!pageUrl) return;
+  startPortalTransitionTo(pageUrl);
+}
+
+function openPortalChinese(){
+  openPortalModule("chinese.html");
+}
+
+function openPortalTarot(){
+  openPortalModule("tarot.html");
 }
 
 function openPrimaryAstrology(){
