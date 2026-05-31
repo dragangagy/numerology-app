@@ -7,24 +7,30 @@
       ".notification-info-panel{width:min(92vw,380px);background:#0f172a;border:1px solid rgba(56,189,248,.45);border-radius:12px;box-shadow:0 0 26px rgba(56,189,248,.28);color:white;padding:16px;position:relative}",
       ".notification-info-close{position:absolute;top:8px;right:8px;width:30px;height:30px;border:1px solid rgba(148,163,184,.36);border-radius:8px;background:#1e293b;color:white;cursor:pointer;font-weight:bold}",
       ".notification-info-title{color:#38bdf8;font-size:15px;font-weight:bold;padding-right:34px;margin-bottom:8px}",
+      ".notification-info-image{display:none;width:min(48vw,150px);max-height:240px;object-fit:contain;margin:0 auto 10px;border-radius:8px;box-shadow:0 0 16px rgba(56,189,248,.2)}",
       ".notification-info-body{color:#e2e8f0;font-size:13px;line-height:1.5;white-space:pre-line}"
     ].join("\n");
     document.head.appendChild(style);
     const modal = document.createElement("div");
     modal.id = "notificationInfoModal";
     modal.className = "notification-info-modal";
-    modal.innerHTML = '<div class="notification-info-panel"><button class="notification-info-close" type="button" aria-label="Close">X</button><div id="notificationInfoTitle" class="notification-info-title">Notification</div><div id="notificationInfoBody" class="notification-info-body"></div></div>';
+    modal.innerHTML = '<div class="notification-info-panel"><button class="notification-info-close" type="button" aria-label="Close">X</button><div id="notificationInfoTitle" class="notification-info-title">Notification</div><img id="notificationInfoImage" class="notification-info-image" alt=""><div id="notificationInfoBody" class="notification-info-body"></div></div>';
     modal.querySelector("button").addEventListener("click", closeNotificationInfo);
     document.body.appendChild(modal);
   }
 
-  function showNotificationInfo(title, body){
+  function showNotificationInfo(title, body, image){
     ensureModal();
     const modal = document.getElementById("notificationInfoModal");
     const titleEl = document.getElementById("notificationInfoTitle");
     const bodyEl = document.getElementById("notificationInfoBody");
+    const imageEl = document.getElementById("notificationInfoImage");
     if(titleEl)titleEl.textContent = title || "Notification";
     if(bodyEl)bodyEl.textContent = body || "";
+    if(imageEl){
+      if(image){imageEl.src = image; imageEl.style.display = "block"}
+      else{imageEl.removeAttribute("src"); imageEl.style.display = "none"}
+    }
     if(modal)modal.style.display = "flex";
   }
 
@@ -41,6 +47,7 @@
         topic,
         title: params.get("notificationTitle") || "Notification",
         body: params.get("notificationBody") || "Open the related section for more details.",
+        image: params.get("notificationImage") || "",
         tab: params.get("notificationTab") || ""
       };
     }
@@ -49,10 +56,10 @@
     if(pending.tab && typeof window.showTab === "function"){
       try{ window.showTab(pending.tab); }catch(e){}
     }
-    showNotificationInfo(pending.title, pending.body);
+    showNotificationInfo(pending.title, pending.body, pending.image);
     if(topic && history.replaceState){
       const cleanParams = new URLSearchParams(window.location.search);
-      ["notificationTopic","notificationTitle","notificationBody","notificationTab"].forEach(key => cleanParams.delete(key));
+      ["notificationTopic","notificationTitle","notificationBody","notificationImage","notificationTab"].forEach(key => cleanParams.delete(key));
       const query = cleanParams.toString();
       history.replaceState({}, document.title, window.location.pathname + (query ? "?"+query : "") + (window.location.hash || ""));
     }

@@ -1763,6 +1763,16 @@ body {
   margin-bottom:8px;
 }
 
+.notification-info-image{
+  display:none;
+  width:min(48vw,150px);
+  max-height:240px;
+  object-fit:contain;
+  margin:0 auto 10px;
+  border-radius:8px;
+  box-shadow:0 0 16px rgba(56,189,248,.2);
+}
+
 .notification-info-body{
   color:#e2e8f0;
   font-size:13px;
@@ -5938,10 +5948,6 @@ function startPortalToAstrology(){
   const pageUrl = buildAstroPageUrl("chart.html");
   if(!pageUrl) return;
   try{ sessionStorage.setItem("portalArriveAstrology", "1"); }catch(e){}
-  startPortalTransitionTo(pageUrl);
-}
-
-function startPortalTransitionTo(pageUrl){
   if(!document.querySelector(".portal-fade-curtain")){
     const curtain = document.createElement("div");
     curtain.className = "portal-fade-curtain";
@@ -5956,7 +5962,7 @@ function startPortalTransitionTo(pageUrl){
 function openPortalModule(page){
   const pageUrl = buildAstroPageUrl(page);
   if(!pageUrl) return;
-  startPortalTransitionTo(pageUrl);
+  window.location.href = pageUrl;
 }
 
 function openPortalChinese(){
@@ -7610,7 +7616,7 @@ function ownerProfileToContact(profile){
 }
 
 function getAppSettings(){
-  const defaults = { language:'en', soundEnabled:false, volume:35, primaryPage:'numerology' };
+  const defaults = { language:'en', soundEnabled:false, volume:35, primaryPage:'numerology', tarotReversedEnabled:true, tarotRotateReversed:true };
   try{
     const saved = JSON.parse(window.localStorage.getItem('numerology_app_settings') || '{}');
     return Object.assign({}, defaults, saved && typeof saved === 'object' ? saved : {});
@@ -7770,12 +7776,16 @@ function loadAppSettings(){
   const volume = document.getElementById('appVolume');
   const primaryNumerology = document.getElementById('appPrimaryNumerology');
   const primaryAstrology = document.getElementById('appPrimaryAstrology');
+  const tarotReversed = document.getElementById('appTarotReversedEnabled');
+  const tarotRotate = document.getElementById('appTarotRotateReversed');
   if(lang) lang.value = 'en';
   if(sound) sound.checked = !!settings.soundEnabled;
   if(volume) volume.value = settings.volume ?? 35;
   if(primaryNumerology) primaryNumerology.checked = (settings.primaryPage || 'numerology') !== 'astrology';
   if(primaryAstrology) primaryAstrology.checked = settings.primaryPage === 'astrology';
-  [lang, sound, volume, primaryNumerology, primaryAstrology].forEach(control => {
+  if(tarotReversed) tarotReversed.checked = settings.tarotReversedEnabled !== false;
+  if(tarotRotate) tarotRotate.checked = settings.tarotRotateReversed !== false;
+  [lang, sound, volume, primaryNumerology, primaryAstrology, tarotReversed, tarotRotate].forEach(control => {
     if(control && !control.dataset.settingsBound){
       control.dataset.settingsBound = '1';
       control.addEventListener(control.type === 'range' ? 'input' : 'change', saveAppSettings);
@@ -7790,7 +7800,9 @@ function saveAppSettings(){
     language: 'en',
     soundEnabled: !!document.getElementById('appSoundEnabled')?.checked,
     volume: Number(document.getElementById('appVolume')?.value || 35),
-    primaryPage: document.getElementById('appPrimaryAstrology')?.checked ? 'astrology' : 'numerology'
+    primaryPage: document.getElementById('appPrimaryAstrology')?.checked ? 'astrology' : 'numerology',
+    tarotReversedEnabled: !!document.getElementById('appTarotReversedEnabled')?.checked,
+    tarotRotateReversed: !!document.getElementById('appTarotRotateReversed')?.checked
   };
   window.localStorage.setItem('numerology_app_settings', JSON.stringify(settings));
   document.documentElement.lang = 'en';
@@ -7835,7 +7847,7 @@ function syncAmbientAudio(){
   const settings = getAppSettings();
   const audio = ambientAudio();
   audio.volume = Math.max(0, Math.min(1, Number(settings.volume ?? 35) / 100));
-  if(settings.soundEnabled){
+  if(settings.soundEnabled && !document.hidden && document.hasFocus()){
     audio.play().catch(() => {
       if(document.getElementById('appSoundEnabled')) document.getElementById('appSoundEnabled').checked = false;
       const next = getAppSettings();
@@ -7847,10 +7859,25 @@ function syncAmbientAudio(){
   }
 }
 
+function pauseAmbientAudio(){
+  const audio = document.getElementById('appAmbientAudio');
+  if(audio) audio.pause();
+}
+
+function bindAmbientAudioLifecycle(){
+  if(window.__ambientAudioLifecycleBound) return;
+  window.__ambientAudioLifecycleBound = true;
+  document.addEventListener('visibilitychange', () => document.hidden ? pauseAmbientAudio() : syncAmbientAudio());
+  window.addEventListener('blur', pauseAmbientAudio);
+  window.addEventListener('focus', syncAmbientAudio);
+  window.addEventListener('pagehide', pauseAmbientAudio);
+}
+
 function initAmbientAudioUnlock(){
   const unlock = () => syncAmbientAudio();
   document.addEventListener('pointerdown', unlock, { once:true });
   document.addEventListener('keydown', unlock, { once:true });
+  bindAmbientAudioLifecycle();
 }
 
 function showOwnerProfileTab(tabId){
@@ -7918,6 +7945,7 @@ function notificationTabForTopic(topic){
   const location = ['astrocartographyCity','travelLineGood','travelLineCaution','venusLineOpportunity','jupiterLineOpportunity','saturnPlutoLineCaution','locationEnergyReminder'];
   const books = ['newBook','freePdfReminder','bookRecommendation','seasonBookRelease'];
   const settings = ['ownerProfileReminder','saveProfileReminder'];
+  if(topic === 'tarotDailyCard') return 'daily';
   if(numerology.includes(topic)) return topic === 'pythagoreanDay' ? 'pitagora' : 'analysis';
   if(books.includes(topic)) return 'store';
   if(settings.includes(topic)) return 'home';
@@ -7933,6 +7961,7 @@ function openNotificationInfoFromParams(){
       topic,
       title: params.get('notificationTitle') || 'Notification',
       body: params.get('notificationBody') || 'Open the related section for more details.',
+      image: params.get('notificationImage') || '',
       tab: params.get('notificationTab') || notificationTabForTopic(topic)
     };
   }
@@ -7940,23 +7969,29 @@ function openNotificationInfoFromParams(){
   if(!pending || !pending.topic) return;
   const title = pending.title;
   const body = pending.body;
+  const image = pending.image || '';
   const tab = pending.tab || notificationTabForTopic(pending.topic);
   document.body.classList.remove('detail-active');
   if(tab) showTab(tab);
-  setTimeout(() => showNotificationInfo(title, body), 120);
+  setTimeout(() => showNotificationInfo(title, body, image), 120);
   if(topic && history.replaceState){
     const clean = window.location.pathname + (window.location.hash || '');
     history.replaceState({}, document.title, clean);
   }
 }
 
-function showNotificationInfo(title, body){
+function showNotificationInfo(title, body, image){
   const modal = document.getElementById('notificationInfoModal');
   if(!modal) return;
   const titleEl = document.getElementById('notificationInfoTitle');
   const bodyEl = document.getElementById('notificationInfoBody');
+  const imageEl = document.getElementById('notificationInfoImage');
   if(titleEl) titleEl.textContent = title || 'Notification';
   if(bodyEl) bodyEl.textContent = body || '';
+  if(imageEl){
+    if(image){imageEl.src = image; imageEl.style.display = 'block'}
+    else{imageEl.removeAttribute('src'); imageEl.style.display = 'none'}
+  }
   modal.style.display = 'flex';
 }
 
@@ -8762,6 +8797,12 @@ function openAstro(){
             <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="repeatingCodeDay" disabled> Repeating code day <span class="notification-coming-soon">NEXT</span></label>
           </div>
         </details>
+        <details class="notification-group" open>
+          <summary>Tarot</summary>
+          <div class="notification-group-body">
+            <label class="profile-check-row"><input type="checkbox" value="tarotDailyCard"> Daily Tarot Card</label>
+          </div>
+        </details>
         <details class="notification-group">
           <summary>Charts / Relationship / Location</summary>
           <div class="notification-group-body">
@@ -8838,6 +8879,9 @@ function openAstro(){
         <span class="profile-options-title">Volume</span>
         <input type="range" id="appVolume" min="0" max="100" value="35">
       </div>
+      <div class="profile-options-title">Tarot cards</div>
+      <label class="profile-check-row"><input type="checkbox" id="appTarotReversedEnabled"> Use reversed cards</label>
+      <label class="profile-check-row"><input type="checkbox" id="appTarotRotateReversed"> Rotate reversed card image</label>
       <div class="profile-note">
         Sound controls are ready for a future ambient or affirmation audio file. Language options are not available yet.
       </div>
@@ -8855,6 +8899,7 @@ function openAstro(){
   <div class="notification-info-panel">
     <button class="notification-info-close" type="button" onclick="closeNotificationInfo()">X</button>
     <div id="notificationInfoTitle" class="notification-info-title">Notification</div>
+    <img id="notificationInfoImage" class="notification-info-image" alt="">
     <div id="notificationInfoBody" class="notification-info-body"></div>
   </div>
 </div>

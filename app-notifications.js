@@ -80,6 +80,26 @@
     const p3 = reduceDigit(p1 + p2);
     return [p1,p2,p3];
   }
+  function seedText(value){
+    let h=0;
+    value=String(value||"");
+    for(let i=0;i<value.length;i++)h=((h<<5)-h)+value.charCodeAt(i)|0;
+    return Math.abs(h);
+  }
+  async function loadTarotDeck(){
+    try{
+      const response = await fetch("tarot_deck_master.json",{cache:"no-store"});
+      const data = await response.json();
+      return Array.isArray(data.cards) ? data.cards : [];
+    }catch(e){
+      return [
+        {id:0,name:"The Fool",upright:"New beginnings, freedom, adventure.",keywords:"new beginnings, innocence, freedom",image:"images/tarot/0.jpg"},
+        {id:1,name:"The Magician",upright:"Manifestation and skill.",keywords:"manifestation, skill, power",image:"images/tarot/I.jpg"},
+        {id:2,name:"The High Priestess",upright:"Intuition and inner wisdom.",keywords:"intuition, mystery, wisdom",image:"images/tarot/II.jpg"},
+        {id:20,name:"Judgement",upright:"Awakening and renewal.",keywords:"awakening, evaluation, calling",image:"images/tarot/XX.jpg"}
+      ];
+    }
+  }
   function pythagoreanCodeForDate(ownerDate, targetDate){
     const base = pythagoreanBaseFromDate(ownerDate);
     if(base[0] === 0 && base[1] === 0 && base[2] === 0)return "0";
@@ -218,6 +238,7 @@
   function notificationTabForTopic(topic){
     if(topic==="pythagoreanDay")return "pitagora";
     if(topic==="pyramidDay")return "analysis";
+    if(topic==="tarotDailyCard")return "daily";
     if(/^newBook|freePdf|bookRecommendation|seasonBook/.test(topic))return "store";
     return "home";
   }
@@ -229,6 +250,8 @@
     const relation = ["synastryReminder","partnerTransit","relationshipTalkDay","relationshipChallengeDay","venusMarsRelationship","moonCompatibility"];
     const location = ["astrocartographyCity","travelLineGood","travelLineCaution","venusLineOpportunity","jupiterLineOpportunity","saturnPlutoLineCaution","locationEnergyReminder"];
     const chart = ["birthdayReminder","sunSeasonStart","moonSignDaily","ascendantDaily","natalChartReminder","houseActivation","planetFocus"];
+    const tarot = ["tarotDailyCard"];
+    if(tarot.includes(topic))return "tarot.html";
     if(lunar.includes(topic))return "lunarphases.html";
     if(retro.includes(topic))return "retrogradnost.html";
     if(transit.includes(topic))return "transit.html";
@@ -253,6 +276,7 @@
     params.set("notificationTopic", event.topic || "");
     params.set("notificationTitle", event.title || "Notification");
     params.set("notificationBody", event.body || "");
+    if(event.image)params.set("notificationImage", event.image);
     params.set("notificationTab", notificationTabForTopic(event.topic || ""));
     const page = notificationPageForTopic(event.topic || "");
     const base = location.href.split("#")[0].split("?")[0].replace(/[^\/\\]*$/, page);
@@ -261,15 +285,17 @@
 
   function withNotificationOpenData(events, owner){
     return events.map(event => {
+      const imageUrl = event.image ? new URL(event.image, location.href).href : "";
       const route = {
         page:notificationPageForTopic(event.topic || ""),
         tab:notificationTabForTopic(event.topic || ""),
         topic:event.topic || "",
         title:event.title || "",
-        body:event.body || ""
+        body:event.body || "",
+        image:event.image || ""
       };
       const openUrl = notificationOpenUrl(event, owner);
-      return {...event,route,openUrl,url:openUrl};
+      return {...event,imageUrl:imageUrl || event.image || "",route,openUrl,url:openUrl};
     });
   }
 
@@ -406,6 +432,33 @@
     }
     return events;
   }
+  async function buildDailyTarotEvents(owner, topics, days){
+    if(!topics.includes("tarotDailyCard"))return [];
+    const deck = await loadTarotDeck();
+    if(!deck.length)return [];
+    const events = [];
+    const now = new Date();
+    const ownerKey = [owner && owner.birthDate, owner && owner.birthTime, owner && (owner.birthCity || owner.currentCity)].filter(Boolean).join("|") || "owner";
+    for(let i=0;i<days;i++){
+      const d = new Date(now);
+      d.setDate(now.getDate()+i);
+      const dayKey = d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+      const card = deck[seedText(ownerKey+"|"+dayKey+"|daily") % deck.length];
+      const image = card && card.image ? card.image : "images/tarot/back.png";
+      events.push({
+        id:"tarotDailyCard-"+isoLocal(d,8,10).slice(0,10),
+        topic:"tarotDailyCard",
+        title:"Daily Tarot Card",
+        body:"Your card for today is "+(card.name || "ready")+". "+(card.upright || "Tap to open your daily tarot card."),
+        at:isoLocal(d,8,10),
+        image,
+        icon:image,
+        largeIcon:image,
+        bigPicture:image
+      });
+    }
+    return events;
+  }
 
   async function buildNotificationSchedule(owner){
     const topics = owner && owner.notificationsEnabled ? (owner.notificationTopics || []) : [];
@@ -413,6 +466,7 @@
     const events = [
       ...buildLunarEvents(owner, topics, 90),
       ...buildDailyNumerologyEvents(owner, topics, 14),
+      ...(await buildDailyTarotEvents(owner, topics, 14)),
       ...buildImportantTransitEvents(owner, topics, 30),
       ...(await buildRetroEvents(topics, 90))
     ];
@@ -451,7 +505,10 @@
             title: event.title,
             body: event.body,
             schedule: {at:new Date(event.at)},
-            extra: {topic:event.topic, notificationId:event.id, route:event.route, url:event.openUrl, openUrl:event.openUrl}
+            attachments: event.imageUrl ? [{id:"image",url:event.imageUrl}] : undefined,
+            largeIcon: event.imageUrl || event.largeIcon || event.image,
+            smallIcon: event.icon,
+            extra: {topic:event.topic, notificationId:event.id, route:event.route, url:event.openUrl, openUrl:event.openUrl, image:event.image || "", imageUrl:event.imageUrl || ""}
           }))
         });
         return "capacitor";

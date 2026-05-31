@@ -1734,26 +1734,12 @@ function openSinastrija(){
   window.location.href = buildAstroSectionUrl("sinastrija.html");
 }
 
-function startPortalToSection(page){
-  const url = buildAstroSectionUrl(page);
-  if(!url) return;
-  if(!document.querySelector(".portal-fade-curtain")){
-    const curtain = document.createElement("div");
-    curtain.className = "portal-fade-curtain";
-    document.body.appendChild(curtain);
-  }
-  document.body.classList.add("portal-return-transition");
-  setTimeout(() => {
-    window.location.href = url;
-  }, 2200);
-}
-
 function openPortalChinese(){
-  startPortalToSection("chinese.html");
+  window.location.href = buildAstroSectionUrl("chinese.html");
 }
 
 function openPortalTarot(){
-  startPortalToSection("tarot.html");
+  window.location.href = buildAstroSectionUrl("tarot.html");
 }
 
 // ===== DATE FORMATTING =====
@@ -2283,7 +2269,7 @@ function syncAmbientAudio(){
   const settings = getAppSettings();
   const audio = ambientAudio();
   audio.volume = Math.max(0, Math.min(1, Number(settings.volume ?? 35) / 100));
-  if(settings.soundEnabled){
+  if(settings.soundEnabled && !document.hidden && document.hasFocus()){
     audio.play().catch(() => {
       const next = getAppSettings();
       next.soundEnabled = false;
@@ -2294,10 +2280,25 @@ function syncAmbientAudio(){
   }
 }
 
+function pauseAmbientAudio(){
+  const audio = document.getElementById('appAmbientAudio');
+  if(audio) audio.pause();
+}
+
+function bindAmbientAudioLifecycle(){
+  if(window.__ambientAudioLifecycleBound) return;
+  window.__ambientAudioLifecycleBound = true;
+  document.addEventListener('visibilitychange', () => document.hidden ? pauseAmbientAudio() : syncAmbientAudio());
+  window.addEventListener('blur', pauseAmbientAudio);
+  window.addEventListener('focus', syncAmbientAudio);
+  window.addEventListener('pagehide', pauseAmbientAudio);
+}
+
 function initAmbientAudioUnlock(){
   const unlock = () => syncAmbientAudio();
   document.addEventListener('pointerdown', unlock, { once:true });
   document.addEventListener('keydown', unlock, { once:true });
+  bindAmbientAudioLifecycle();
 }
 
 function compactI18nText(value){
