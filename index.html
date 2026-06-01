@@ -7,12 +7,28 @@
 <title>Pyramid App</title>
 <script src="app-shared-state.js"></script>
 <script src="app-notification-open.js"></script>
+<script>
+try{
+  if(sessionStorage.getItem("portalArriveNumerology") === "1"){
+    document.documentElement.classList.add("portal-arrive-pending");
+  }
+}catch(e){}
+</script>
 
 <style>
 
 html {
   background:#0f172a;
   min-height:100%;
+}
+
+html.portal-arrive-pending body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:199901;
+  background:#0f172a;
+  pointer-events:none;
 }
 
 #contactCollage {
@@ -611,8 +627,10 @@ body {
 
 .portal-ring-labels {
   position:absolute;
-  inset:-12%;
-  transform:translate(26px,28px);
+  inset:0;
+  width:100%;
+  height:100%;
+  transform:none;
   z-index:4;
   pointer-events:auto;
   overflow:visible;
@@ -733,38 +751,34 @@ body {
   position:absolute;
   left:50%;
   top:50%;
-  width:34%;
-  height:58%;
-  border:1px solid rgba(255,255,255,.82);
-  border-radius:3px;
-  box-shadow:0 0 7px rgba(226,232,240,.42), inset 0 0 0 2px rgba(15,23,42,.28);
+  width:42%;
+  height:68%;
+  border:1px solid rgba(255,255,255,.72);
+  border-radius:4px;
+  box-shadow:0 0 7px rgba(226,232,240,.42);
   transform-origin:50% 90%;
+  overflow:hidden;
+  background:#020617;
 }
 
 .portal-card::before{
-  content:"";
-  position:absolute;
-  inset:26% 22%;
-  border:1px solid rgba(255,255,255,.74);
-  border-radius:50%;
+  display:none;
 }
 
 .portal-card::after{
-  content:"";
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:5px;
-  height:5px;
-  border-radius:50%;
-  background:rgba(255,255,255,.88);
-  box-shadow:0 0 8px rgba(255,255,255,.65);
-  transform:translate(-50%,-50%);
+  display:none;
 }
 
-.portal-card:nth-child(1){background:linear-gradient(160deg,#fef3c7,#f97316 48%,#7c2d12);transform:translate(-50%,-50%) rotate(-20deg)}
-.portal-card:nth-child(2){background:linear-gradient(160deg,#dcfce7,#22c55e 48%,#14532d);transform:translate(-50%,-56%) rotate(0deg)}
-.portal-card:nth-child(3){background:linear-gradient(160deg,#dbeafe,#8b5cf6 48%,#312e81);transform:translate(-50%,-50%) rotate(20deg)}
+.portal-card img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.portal-card:nth-child(1){transform:translate(-58%,-50%) rotate(-20deg)}
+.portal-card:nth-child(2){transform:translate(-50%,-58%) rotate(0deg)}
+.portal-card:nth-child(3){transform:translate(-42%,-50%) rotate(20deg)}
 
 .portal-zodiac,
 .portal-code,
@@ -783,6 +797,8 @@ body {
   top:21%;
   transform:translate(-50%,-50%);
   color:#dff7ff;
+  width:54%;
+  height:54%;
 }
 
 .portal-zodiac {
@@ -804,6 +820,8 @@ body {
   top:50%;
   transform:translate(50%,-50%);
   color:#f8fafc;
+  width:54%;
+  height:54%;
 }
 
 .portal-zodiac img {
@@ -925,6 +943,33 @@ body {
   animation:vortexOut .9s ease-out .75s forwards;
 }
 
+body.portal-arrive {
+  background:#0f172a;
+  animation:portalPageFadeIn 1.9s ease-out both;
+}
+
+body.portal-arrive::before {
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:199900;
+  background:#0f172a;
+  pointer-events:none;
+  animation:portalCurtainOut 1.25s ease-out forwards;
+}
+
+body.portal-arrive .footer {
+  position:fixed!important;
+  left:0!important;
+  right:0!important;
+  bottom:0!important;
+  transform:none!important;
+}
+
+body.portal-arrive .cosmic-portal-shell.show {
+  animation:portalSpinIn 1.9s cubic-bezier(.1,.75,.2,1) both!important;
+}
+
 body.portal-transition > *:not(#cosmicVortexOverlay):not(.footer) {
   transform-origin:center center;
   animation:portalPageFadeOut 2.85s ease-in forwards;
@@ -955,6 +1000,22 @@ body.portal-transition .footer {
 
 body.portal-transition .cosmic-portal-shell {
   animation:portalSpinOut 2.85s cubic-bezier(.45,0,.05,1) forwards!important;
+}
+
+@keyframes portalPageFadeIn {
+  0% { opacity:0; filter:blur(5px); }
+  100% { opacity:1; filter:blur(0); }
+}
+
+@keyframes portalSpinIn {
+  0% { transform:rotate(-760deg) scale(.92); opacity:0; }
+  42% { transform:rotate(-260deg) scale(1.03); opacity:.88; }
+  100% { transform:rotate(0deg) scale(1); opacity:1; }
+}
+
+@keyframes portalCurtainOut {
+  0% { opacity:1; }
+  100% { opacity:0; visibility:hidden; }
 }
 
 @keyframes vortexSpin {
@@ -2265,10 +2326,10 @@ body.primary-astrology #disclaimerAcceptBtn{
       <div class="cosmic-portal" aria-hidden="true"></div>
       <svg class="portal-ring-labels" viewBox="0 0 200 200" aria-hidden="true">
         <defs>
-          <path id="portalTopArc" d="M 24 35 A 92 92 0 0 1 176 35"></path>
-          <path id="portalRightArc" d="M 165 24 A 92 92 0 0 1 165 176"></path>
-          <path id="portalBottomArc" d="M 24 165 A 92 92 0 0 0 176 165"></path>
-          <path id="portalLeftArc" d="M 35 176 A 92 92 0 0 1 35 24"></path>
+          <path id="portalTopArc" d="M 22 38 A 95 95 0 0 1 178 38"></path>
+          <path id="portalRightArc" d="M 162 22 A 95 95 0 0 1 162 178"></path>
+          <path id="portalBottomArc" d="M 22 162 A 95 95 0 0 0 178 162"></path>
+          <path id="portalLeftArc" d="M 38 178 A 95 95 0 0 1 38 22"></path>
         </defs>
         <text class="portal-ring-label blue" onclick="openPortalCode()"><textPath href="#portalTopArc" startOffset="50%" text-anchor="middle">NUMEROLOGY CODE</textPath></text>
         <text class="portal-ring-label silver" onclick="openPortalTarot()"><textPath href="#portalRightArc" startOffset="50%" text-anchor="middle">TAROT MEANING</textPath></text>
@@ -5884,7 +5945,7 @@ function portalChineseFromDate(value){
 }
 
 function portalTarotFanMarkup(){
-  return '<span class="portal-symbol portal-tarot-fan"><i class="portal-card"></i><i class="portal-card"></i><i class="portal-card"></i></span>';
+  return '<span class="portal-symbol portal-tarot-fan"><i class="portal-card"><img src="images/tarot/king of penacles.jpg" alt=""></i><i class="portal-card"><img src="images/tarot/back.png" alt=""></i><i class="portal-card"><img src="images/tarot/queen of penacles.jpg" alt=""></i></span>';
 }
 
 function setCosmicPortal(mainNum, zodiacName){
@@ -5919,6 +5980,21 @@ function openPortalCode(){
   const shell = document.getElementById("cosmicPortalShell");
   const code = shell && shell.dataset.code ? parseInt(shell.dataset.code, 10) : parseInt(document.getElementById("mainNumber").innerText, 10);
   if(code) openDetail(code);
+}
+
+function runPortalVortex(done){
+  if(!document.querySelector(".portal-fade-curtain")){
+    const curtain = document.createElement("div");
+    curtain.className = "portal-fade-curtain";
+    document.body.appendChild(curtain);
+  }
+  document.body.classList.add("portal-transition");
+  setTimeout(() => {
+    document.body.classList.remove("portal-transition");
+    const curtain = document.querySelector(".portal-fade-curtain");
+    if(curtain) curtain.remove();
+    if(typeof done === "function") done();
+  }, 2850);
 }
 
 function buildVortexTokens(core, mainNum){
@@ -5962,7 +6038,15 @@ function startPortalToAstrology(){
 function openPortalModule(page){
   const pageUrl = buildAstroPageUrl(page);
   if(!pageUrl) return;
-  window.location.href = pageUrl;
+  if(!document.querySelector(".portal-fade-curtain")){
+    const curtain = document.createElement("div");
+    curtain.className = "portal-fade-curtain";
+    document.body.appendChild(curtain);
+  }
+  document.body.classList.add("portal-transition");
+  setTimeout(() => {
+    window.location.href = pageUrl;
+  }, 2850);
 }
 
 function openPortalChinese(){
@@ -8503,6 +8587,74 @@ function openPendingNumerologyCode(){
   }
 }
 
+function restoreNumerologyPortalOnly(){
+  const inputVal = document.getElementById("input").value;
+  if(!validateDate(inputVal)) return;
+  const raw = inputVal.replace(/\D/g,'');
+  if(!raw) return;
+  const sum = raw.split('').reduce((a,b)=>a + +b, 0);
+  const mainNum = reduce(sum);
+  hasAnalyzedFlag = true;
+
+  const mainLabel = document.getElementById("mainLabel");
+  if(mainLabel) mainLabel.style.display = "none";
+
+  const numEl = document.getElementById("mainNumber");
+  if(numEl){
+    numEl.innerText = mainNum;
+    numEl.style.display = "none";
+    numEl.classList.add("show-number");
+    numEl.style.animation = "glowBig 1s infinite alternate";
+    numEl.style.cursor = "pointer";
+    numEl.onclick = function(){ openDetail(mainNum); };
+  }
+
+  const numberHint = document.getElementById("numberHint");
+  if(numberHint) numberHint.style.display = "none";
+
+  const parts = inputVal.split(".");
+  const zodiac = getZodiac(parseInt(parts[0]), parseInt(parts[1]));
+  setCosmicPortal(mainNum, zodiac);
+
+  const zodiacEl = document.getElementById("zodiac");
+  if(zodiacEl){
+    zodiacEl.innerText = zodiac;
+    zodiacEl.classList.add("show-fade");
+    zodiacEl.style.cursor = "pointer";
+    zodiacEl.onclick = function(){ startPortalToAstrology(); };
+  }
+
+  const subZodiacEl = document.getElementById("subZodiac");
+  if(subZodiacEl){
+    subZodiacEl.innerText = zodiac;
+    subZodiacEl.onclick = function(){ startPortalToAstrology(); };
+  }
+}
+
+function hideIntroAndFooterAfterAstroReturn(){
+  const intro = document.getElementById("introContainer");
+  if(intro) intro.style.display = "none";
+
+  const video = document.getElementById("introVideo");
+  if(video){
+    video.pause();
+    video.style.display = "none";
+  }
+
+  const footer = document.querySelector(".footer");
+  if(footer) footer.style.display = "none";
+}
+
+function applyPortalArriveNumerology(){
+  try{
+    if(sessionStorage.getItem("portalArriveNumerology") !== "1") return;
+    sessionStorage.removeItem("portalArriveNumerology");
+    document.body.classList.add("portal-arrive");
+    document.documentElement.classList.remove("portal-arrive-pending");
+    setTimeout(() => document.body.classList.remove("portal-arrive"), 2100);
+  }catch(e){}
+}
+
 var astroReturnRestored = false;
 
 function restoreAstroReturnState(){
@@ -8536,9 +8688,11 @@ function restoreAstroReturnState(){
     if(document.getElementById("twinCheck3")) document.getElementById("twinCheck3").checked = urlTwin3 === "true";
 
     skipSavePrompt = true;
-    generate();
+    restoreNumerologyPortalOnly();
     showHomeTabWithTabs();
-    openPendingNumerologyCode();
+    hideIntroAndFooterAfterAstroReturn();
+    applyPortalArriveNumerology();
+    sessionStorage.removeItem("openNumerologyCode");
 
     setTimeout(scrollToAstroEntry, 350);
     setTimeout(scrollToAstroEntry, 800);
@@ -8586,9 +8740,11 @@ function restoreAstroReturnState(){
   if(document.getElementById("twinCheck3")) document.getElementById("twinCheck3").checked = !!state.isTwin3;
 
   skipSavePrompt = true;
-  generate();
+  restoreNumerologyPortalOnly();
   showHomeTabWithTabs();
-  openPendingNumerologyCode();
+  hideIntroAndFooterAfterAstroReturn();
+  applyPortalArriveNumerology();
+  sessionStorage.removeItem("openNumerologyCode");
 
   setTimeout(scrollToAstroEntry, 350);
   setTimeout(scrollToAstroEntry, 800);
@@ -8624,6 +8780,7 @@ function buildAstroPageUrl(page){
   if(time) pageUrl += `&time=${encodeURIComponent(time)}`;
   if(city) pageUrl += `&city=${encodeURIComponent(city)}`;
   pageUrl += `&isTwin=${isTwin}&isTwin3=${isTwin3}`;
+  pageUrl += `&from=index`;
   pageUrl += `&returnUrl=${encodeURIComponent(returnUrl)}`;
   return pageUrl;
 }

@@ -7,11 +7,27 @@
 <title>Astrology App</title>
 <script src="app-shared-state.js"></script>
 <script src="app-notification-open.js"></script>
+<script>
+try{
+  if(sessionStorage.getItem("portalArriveAstrology") === "1"){
+    document.documentElement.classList.add("portal-arrive-pending");
+  }
+}catch(e){}
+</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html{
   background:#0f172a;
   min-height:100%;
+}
+
+html.portal-arrive-pending body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:199901;
+  background:#0f172a;
+  pointer-events:none;
 }
 body{
   font-family: Arial;
@@ -267,8 +283,10 @@ body{
 
 .portal-ring-labels {
   position:absolute;
-  inset:-12%;
-  transform:translate(26px,28px);
+  inset:0;
+  width:100%;
+  height:100%;
+  transform:none;
   z-index:4;
   pointer-events:auto;
   overflow:visible;
@@ -389,38 +407,34 @@ body{
   position:absolute;
   left:50%;
   top:50%;
-  width:34%;
-  height:58%;
-  border:1px solid rgba(255,255,255,.82);
-  border-radius:3px;
-  box-shadow:0 0 7px rgba(226,232,240,.42), inset 0 0 0 2px rgba(15,23,42,.28);
+  width:42%;
+  height:68%;
+  border:1px solid rgba(255,255,255,.72);
+  border-radius:4px;
+  box-shadow:0 0 7px rgba(226,232,240,.42);
   transform-origin:50% 90%;
+  overflow:hidden;
+  background:#020617;
 }
 
 .portal-card::before{
-  content:"";
-  position:absolute;
-  inset:26% 22%;
-  border:1px solid rgba(255,255,255,.74);
-  border-radius:50%;
+  display:none;
 }
 
 .portal-card::after{
-  content:"";
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:5px;
-  height:5px;
-  border-radius:50%;
-  background:rgba(255,255,255,.88);
-  box-shadow:0 0 8px rgba(255,255,255,.65);
-  transform:translate(-50%,-50%);
+  display:none;
 }
 
-.portal-card:nth-child(1){background:linear-gradient(160deg,#fef3c7,#f97316 48%,#7c2d12);transform:translate(-50%,-50%) rotate(-20deg)}
-.portal-card:nth-child(2){background:linear-gradient(160deg,#dcfce7,#22c55e 48%,#14532d);transform:translate(-50%,-56%) rotate(0deg)}
-.portal-card:nth-child(3){background:linear-gradient(160deg,#dbeafe,#8b5cf6 48%,#312e81);transform:translate(-50%,-50%) rotate(20deg)}
+.portal-card img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+.portal-card:nth-child(1){transform:translate(-58%,-50%) rotate(-20deg)}
+.portal-card:nth-child(2){transform:translate(-50%,-58%) rotate(0deg)}
+.portal-card:nth-child(3){transform:translate(-42%,-50%) rotate(20deg)}
 
 .portal-zodiac,
 .portal-code,
@@ -439,6 +453,8 @@ body{
   top:21%;
   transform:translate(-50%,-50%);
   color:#dff7ff;
+  width:54%;
+  height:54%;
 }
 
 .portal-zodiac {
@@ -460,6 +476,8 @@ body{
   top:50%;
   transform:translate(50%,-50%);
   color:#f8fafc;
+  width:54%;
+  height:54%;
 }
 
 .portal-zodiac img {
@@ -556,14 +574,16 @@ body.portal-arrive .cosmic-portal-shell.show {
   background:#0f172a;
   opacity:0;
   pointer-events:none;
-  animation:portalCurtainIn 1.05s ease-in 1.45s forwards;
+  animation:portalCurtainIn 1.15s ease-in 1.7s forwards;
 }
 
+body.portal-transition > *:not(.footer):not(.portal-fade-curtain),
 body.portal-return-transition > *:not(.footer):not(.portal-fade-curtain) {
   transform-origin:center center;
-  animation:portalPageFadeOut 2.2s ease-in forwards;
+  animation:portalPageFadeOut 2.85s ease-in forwards;
 }
 
+body.portal-transition .footer,
 body.portal-return-transition .footer {
   position:fixed!important;
   left:0!important;
@@ -573,8 +593,9 @@ body.portal-return-transition .footer {
   animation:none!important;
 }
 
+body.portal-transition .cosmic-portal-shell,
 body.portal-return-transition .cosmic-portal-shell.show {
-  animation:portalSpinOut 2.2s cubic-bezier(.45,0,.05,1) forwards!important;
+  animation:portalSpinOut 2.85s cubic-bezier(.45,0,.05,1) forwards!important;
 }
 
 @keyframes portalPageFadeIn {
@@ -886,6 +907,270 @@ body.portal-return-transition .cosmic-portal-shell.show {
   stroke-linecap:round;
   stroke-linejoin:round;
 }
+
+#chartBackIcon{
+  display:none;
+}
+
+body.chart-loaded #chartOwnerIcon{
+  display:none;
+}
+
+body.chart-loaded #chartBackIcon{
+  display:block;
+}
+.profile-modal-panel{
+  background:#1e293b;
+  padding:18px;
+  border-radius:12px;
+  width:90%;
+  max-width:360px;
+  max-height:86vh;
+  overflow-y:auto;
+  text-align:left;
+  box-shadow:0 0 28px rgba(255,215,0,0.35);
+  border:1px solid rgba(255,215,0,0.25);
+}
+
+.profile-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.profile-field{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.profile-field.full{
+  grid-column:1 / -1;
+}
+
+.profile-field label,
+.profile-options-title{
+  color:#94a3b8;
+  font-size:10px;
+  letter-spacing:.7px;
+  text-transform:uppercase;
+}
+
+.profile-field input{
+  background:#0f172a;
+  border:1px solid rgba(255,215,0,0.55);
+  border-radius:8px;
+  color:white;
+  padding:8px;
+  font-size:12px;
+  outline:none;
+}
+
+.profile-city-wrap{
+  position:relative;
+}
+
+.owner-city-dropdown{
+  display:none;
+  position:absolute;
+  top:calc(100% + 4px);
+  left:0;
+  width:100%;
+  max-height:210px;
+  overflow-y:auto;
+  background:#1e293b;
+  border:1px solid #FFD700;
+  border-radius:8px;
+  z-index:100000;
+  box-shadow:0 0 15px rgba(255,215,0,0.4);
+}
+
+.profile-check-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  color:white;
+  font-size:12px;
+  padding:5px 0;
+}
+
+.profile-check-row input{
+  accent-color:#FFD700;
+}
+
+.profile-note{
+  color:#94a3b8;
+  font-size:11px;
+  line-height:1.45;
+  background:rgba(15,23,42,0.55);
+  border:1px solid rgba(255,215,0,0.12);
+  border-radius:8px;
+  padding:9px;
+  margin-top:8px;
+}
+
+.profile-actions{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-top:14px;
+}
+
+.profile-save-btn,
+.profile-cancel-btn{
+  border:none;
+  border-radius:8px;
+  padding:8px 18px;
+  color:white;
+  font-weight:bold;
+  font-size:12px;
+  cursor:pointer;
+}
+
+.profile-save-btn{
+  background:linear-gradient(135deg, #FFD700, #f59e0b);
+}
+
+.profile-cancel-btn{
+  background:#334155;
+}
+
+.profile-tabs{
+  display:flex;
+  gap:6px;
+  margin:0 0 12px;
+}
+
+.profile-tab{
+  flex:1;
+  border:1px solid rgba(255,215,0,.32);
+  background:#0f172a;
+  color:#94a3b8;
+  border-radius:8px;
+  padding:8px 4px;
+  font-size:10px;
+  font-weight:bold;
+  letter-spacing:.5px;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+
+.profile-tab.active{
+  color:white;
+  border-color:#FFD700;
+  box-shadow:0 0 10px rgba(255,215,0,.32);
+}
+
+.profile-tab-panel{
+  display:none;
+}
+
+.profile-tab-panel.active{
+  display:block;
+}
+
+.profile-modal-panel #ownerFirstName,
+.profile-modal-panel #ownerLastName,
+.profile-modal-panel #ownerBirthDate,
+.profile-modal-panel #ownerBirthTime,
+.profile-modal-panel #ownerBirthCity,
+.profile-modal-panel #ownerCurrentCity{
+  width:100%!important;
+  flex-basis:auto!important;
+  height:34px!important;
+}
+
+.profile-setting-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:9px 0;
+  border-bottom:1px solid rgba(255,215,0,.12);
+}
+
+.profile-setting-row:last-child{
+  border-bottom:0;
+}
+
+.profile-setting-row select,
+.profile-setting-row input[type="range"]{
+  width:130px;
+}
+
+.profile-setting-row.disabled{
+  opacity:.42;
+  filter:grayscale(1);
+}
+
+.profile-setting-row.disabled select{
+  cursor:not-allowed;
+}
+
+.profile-coming-soon{
+  color:#94a3b8;
+  font-size:9px;
+  font-weight:bold;
+  letter-spacing:.7px;
+}
+
+.notification-group{
+  background:rgba(15,23,42,.48);
+  border:1px solid rgba(255,215,0,.14);
+  border-radius:8px;
+  margin:7px 0;
+  overflow:hidden;
+}
+
+.notification-group summary{
+  color:#e2e8f0;
+  cursor:pointer;
+  font-size:11px;
+  font-weight:bold;
+  letter-spacing:.4px;
+  list-style:none;
+  padding:9px 10px;
+  text-transform:uppercase;
+}
+
+.notification-group summary::-webkit-details-marker{
+  display:none;
+}
+
+.notification-group summary::after{
+  content:"+";
+  float:right;
+  color:#FFD700;
+}
+
+.notification-group[open] summary::after{
+  content:"-";
+}
+
+.notification-group-body{
+  border-top:1px solid rgba(255,215,0,.12);
+  padding:4px 10px 8px;
+}
+
+.notification-option-disabled{
+  opacity:.38;
+  filter:grayscale(1);
+  cursor:not-allowed;
+}
+
+.notification-option-disabled input{
+  cursor:not-allowed;
+}
+
+.notification-coming-soon{
+  color:#94a3b8;
+  font-size:9px;
+  font-weight:bold;
+  letter-spacing:.5px;
+  margin-left:auto;
+}
+
+
 /* ===== TOP RIGHT BUTTONS ===== */
 .top-bar{
   position:absolute;
@@ -1227,8 +1512,12 @@ p,.subtitle,.description,.small,.note{line-height:1.25!important;margin-top:2px!
 
 <!-- LEFT BUTTONS -->
 <div class="left-bar">
-  <button class="left-btn" onclick="goBack()" title="Back">
-    <svg viewBox="0 0 24 24">
+  <button class="left-btn" onclick="handleChartLeftButton()" title="Owner / Back">
+    <svg id="chartOwnerIcon" viewBox="0 0 24 24">
+      <path d="M20 21a8 8 0 0 0-16 0"/>
+      <circle cx="12" cy="7" r="4"/>
+    </svg>
+    <svg id="chartBackIcon" viewBox="0 0 24 24">
       <path d="M15 18l-6-6 6-6"/>
     </svg>
   </button>
@@ -1337,10 +1626,10 @@ LUNAR PHASES
       <div class="cosmic-portal" aria-hidden="true"></div>
       <svg class="portal-ring-labels" viewBox="0 0 200 200" aria-hidden="true">
         <defs>
-          <path id="portalTopArc" d="M 24 35 A 92 92 0 0 1 176 35"></path>
-          <path id="portalRightArc" d="M 165 24 A 92 92 0 0 1 165 176"></path>
-          <path id="portalBottomArc" d="M 24 165 A 92 92 0 0 0 176 165"></path>
-          <path id="portalLeftArc" d="M 35 176 A 92 92 0 0 1 35 24"></path>
+          <path id="portalTopArc" d="M 22 38 A 95 95 0 0 1 178 38"></path>
+          <path id="portalRightArc" d="M 162 22 A 95 95 0 0 1 162 178"></path>
+          <path id="portalBottomArc" d="M 22 162 A 95 95 0 0 0 178 162"></path>
+          <path id="portalLeftArc" d="M 38 178 A 95 95 0 0 1 38 22"></path>
         </defs>
         <text class="portal-ring-label blue" onclick="openPortalCodeInNumerology()"><textPath href="#portalTopArc" startOffset="50%" text-anchor="middle">NUMEROLOGY CODE</textPath></text>
         <text class="portal-ring-label silver" onclick="openPortalTarot()"><textPath href="#portalRightArc" startOffset="50%" text-anchor="middle">TAROT MEANING</textPath></text>
@@ -1549,6 +1838,240 @@ LUNAR PHASES
   <div id="savedList"></div>
 </div>
 
+<!-- OWNER PROFILE MODAL -->
+<div id="ownerProfileModal" style="
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.85);
+  justify-content:center;
+  align-items:center;
+  z-index:99999;
+">
+  <div class="profile-modal-panel">
+    <h3 style="color:#FFD700; text-align:center; margin:0 0 14px; text-shadow:0 0 10px rgba(255,215,0,0.45);">
+      OWNER PROFILE
+    </h3>
+
+    <div class="profile-tabs" role="tablist" aria-label="Owner profile sections">
+      <button class="profile-tab active" type="button" data-owner-tab="ownerData" onclick="showOwnerProfileTab('ownerData')">Owner</button>
+      <button class="profile-tab" type="button" data-owner-tab="ownerNotificationsTab" onclick="showOwnerProfileTab('ownerNotificationsTab')">Notifications</button>
+      <button class="profile-tab" type="button" data-owner-tab="ownerSettingsTab" onclick="showOwnerProfileTab('ownerSettingsTab')">Settings</button>
+    </div>
+
+    <div id="ownerData" class="profile-tab-panel active">
+      <div class="profile-grid">
+        <div class="profile-field">
+          <label for="ownerFirstName">First name</label>
+          <input type="text" id="ownerFirstName" autocomplete="given-name">
+        </div>
+        <div class="profile-field">
+          <label for="ownerLastName">Last name</label>
+          <input type="text" id="ownerLastName" autocomplete="family-name">
+        </div>
+        <div class="profile-field">
+          <label for="ownerBirthDate">Birth date</label>
+          <input type="text" id="ownerBirthDate" placeholder="DD.MM.YYYY" maxlength="10" oninput="formatDate(this)" onblur="validateDateInput(this)">
+        </div>
+        <div class="profile-field">
+          <label for="ownerBirthTime">Birth time</label>
+          <input type="text" id="ownerBirthTime" placeholder="HH:MM" maxlength="5" oninput="formatTime(this)" onblur="validateTimeInput(this)">
+        </div>
+        <div class="profile-field full">
+          <label for="ownerBirthCity">Birth place</label>
+          <div class="profile-city-wrap">
+            <input type="text" id="ownerBirthCity" placeholder="City of birth" autocomplete="off">
+            <div class="owner-city-dropdown" id="ownerBirthCityDropdown"></div>
+          </div>
+        </div>
+        <div class="profile-field full">
+          <label for="ownerCurrentCity">City of residence</label>
+          <div class="profile-city-wrap">
+            <input type="text" id="ownerCurrentCity" placeholder="Current city" autocomplete="off">
+            <div class="owner-city-dropdown" id="ownerCurrentCityDropdown"></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <div class="profile-options-title">Birth type</div>
+        <label class="profile-check-row"><input type="checkbox" id="ownerTwin"> Second Twin</label>
+        <label class="profile-check-row"><input type="checkbox" id="ownerTwin3"> 3rd Twin</label>
+      </div>
+    </div>
+
+    <div id="ownerNotificationsTab" class="profile-tab-panel">
+      <label class="profile-check-row"><input type="checkbox" id="ownerNotifications" onchange="toggleOwnerNotificationList()"> Receive notifications</label>
+      <div id="ownerNotificationList" style="display:none; margin-left:22px; padding-top:2px;">
+        <details class="notification-group" open>
+          <summary>Moon / Lunar phases</summary>
+          <div class="notification-group-body">
+            <label class="profile-check-row"><input type="checkbox" value="newMoon"> New Moon</label>
+            <label class="profile-check-row"><input type="checkbox" value="fullMoon"> Full Moon</label>
+            <label class="profile-check-row"><input type="checkbox" value="moonGuidance"> Moon guidance</label>
+            <label class="profile-check-row"><input type="checkbox" value="voidMoon"> Void of Course Moon</label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="moonAvoid" disabled> Moon avoid guidance <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="firstQuarterMoon" disabled> First Quarter Moon <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="lastQuarterMoon" disabled> Last Quarter Moon <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="moonPhaseChange" disabled> Moon phase changes <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="natalLunarToday" disabled> Natal lunar day <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="moonNatalAspect" disabled> Moon to natal aspect <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="voidMoonEnd" disabled> Void Moon ends <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="moonSignChange" disabled> Moon sign changes <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="eclipseReminder" disabled> Eclipses <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="newMoonTomorrow" disabled> New Moon tomorrow <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="fullMoonTomorrow" disabled> Full Moon tomorrow <span class="notification-coming-soon">NEXT</span></label>
+          </div>
+        </details>
+        <details class="notification-group">
+          <summary>Retrograde</summary>
+          <div class="notification-group-body">
+            <label class="profile-check-row"><input type="checkbox" value="retroStart"> Retrograde starts</label>
+            <label class="profile-check-row"><input type="checkbox" value="retroDirect"> Planet goes direct</label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="stationRetroToday" disabled> Station retrograde today <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="stationDirectToday" disabled> Station direct today <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="retroStartTomorrow" disabled> Retrograde starts tomorrow <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="retroDirectTomorrow" disabled> Planet direct tomorrow <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="activeRetroSummary" disabled> Active retrograde summary <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="natalRetroReminder" disabled> Natal retrograde reminder <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="mercuryRetroSpecial" disabled> Mercury retrograde special <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="venusRetroSpecial" disabled> Venus retrograde special <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="marsRetroSpecial" disabled> Mars retrograde special <span class="notification-coming-soon">NEXT</span></label>
+          </div>
+        </details>
+        <details class="notification-group">
+          <summary>Transits</summary>
+          <div class="notification-group-body">
+            <label class="profile-check-row"><input type="checkbox" value="importantTransit"> Important transit</label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="exactTransit" disabled> Exact transit <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="challengingTransit" disabled> Challenging transit <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="positiveTransit" disabled> Positive transit <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="majorTransit" disabled> Major transit <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="moonTransitNatalMoon" disabled> Moon transit natal Moon <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="saturnTransitWarning" disabled> Saturn transit warning <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="jupiterTransitOpportunity" disabled> Jupiter transit opportunity <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="marsTransitEnergy" disabled> Mars transit energy <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="venusTransitRelationship" disabled> Venus transit relationship <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="transitTomorrow" disabled> Tomorrow's transit <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="weeklyTransitSummary" disabled> Weekly transit summary <span class="notification-coming-soon">NEXT</span></label>
+          </div>
+        </details>
+        <details class="notification-group" open>
+          <summary>Numerology</summary>
+          <div class="notification-group-body">
+            <label class="profile-check-row"><input type="checkbox" value="pythagoreanDay"> Pythagorean day code</label>
+            <label class="profile-check-row"><input type="checkbox" value="pyramidDay"> Pyramidal day code</label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="personalDay" disabled> Personal day <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="personalMonth" disabled> Personal month <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="personalYear" disabled> Personal year <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="dailyNumerologyAdvice" disabled> Daily numerology advice <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="challengingNumerologyDay" disabled> Challenging numerology day <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="favorableNumerologyDay" disabled> Favorable numerology day <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="master11Day" disabled> Master 11 day <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="master22Day" disabled> Master 22 day <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="repeatingCodeDay" disabled> Repeating code day <span class="notification-coming-soon">NEXT</span></label>
+          </div>
+        </details>
+        <details class="notification-group" open>
+          <summary>Tarot</summary>
+          <div class="notification-group-body">
+            <label class="profile-check-row"><input type="checkbox" value="tarotDailyCard"> Daily Tarot Card</label>
+          </div>
+        </details>
+        <details class="notification-group">
+          <summary>Charts / Relationship / Location</summary>
+          <div class="notification-group-body">
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="birthdayReminder" disabled> Birthday reminder <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="sunSeasonStart" disabled> Sun season start <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="moonSignDaily" disabled> Daily Moon sign <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="ascendantDaily" disabled> Daily Ascendant focus <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="natalChartReminder" disabled> Natal chart reminder <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="houseActivation" disabled> House activation <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="planetFocus" disabled> Planet focus <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="synastryReminder" disabled> Synastry reminder <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="partnerTransit" disabled> Partner transit <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="relationshipTalkDay" disabled> Relationship talk day <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="relationshipChallengeDay" disabled> Relationship challenge day <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="venusMarsRelationship" disabled> Venus/Mars relationship <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="moonCompatibility" disabled> Moon compatibility <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="astrocartographyCity" disabled> Astrocartography city <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="travelLineGood" disabled> Good travel line <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="travelLineCaution" disabled> Caution travel line <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="venusLineOpportunity" disabled> Venus line opportunity <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="jupiterLineOpportunity" disabled> Jupiter line opportunity <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="saturnPlutoLineCaution" disabled> Saturn/Pluto line caution <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="locationEnergyReminder" disabled> Location energy reminder <span class="notification-coming-soon">NEXT</span></label>
+          </div>
+        </details>
+        <details class="notification-group">
+          <summary>Books / App</summary>
+          <div class="notification-group-body">
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="newBook" disabled> New book <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="freePdfReminder" disabled> Free PDF reminder <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="bookRecommendation" disabled> Book recommendation <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="seasonBookRelease" disabled> Season book release <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="ownerProfileReminder" disabled> Owner profile reminder <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="saveProfileReminder" disabled> Save profile reminder <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="dailySummary" disabled> Daily summary <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="morningGuidance" disabled> Morning guidance <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="eveningReflection" disabled> Evening reflection <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="weeklySummary" disabled> Weekly summary <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="monthlySummary" disabled> Monthly summary <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="importantDay" disabled> Important day <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="avoidBigDecisions" disabled> Avoid big decisions <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="goodForAction" disabled> Good for action <span class="notification-coming-soon">NEXT</span></label>
+            <label class="profile-check-row notification-option-disabled"><input type="checkbox" value="goodForRest" disabled> Good for rest <span class="notification-coming-soon">NEXT</span></label>
+          </div>
+        </details>
+      </div>
+      <div class="profile-note">
+        Notifications use the owner birth data. Moon alerts and local sky timing use the city of residence, so keep it updated.
+      </div>
+    </div>
+
+    <div id="ownerSettingsTab" class="profile-tab-panel">
+      <div class="profile-options-title">First page</div>
+      <label class="profile-check-row"><input type="radio" name="appPrimaryPage" value="numerology" id="appPrimaryNumerology"> Numerology</label>
+      <label class="profile-check-row"><input type="radio" name="appPrimaryPage" value="astrology" id="appPrimaryAstrology"> Astrology</label>
+
+      <div class="profile-options-title">Date format</div>
+      <label class="profile-check-row"><input type="radio" name="ownerUnits" value="EU" id="ownerUnitsEU" onchange="applyOwnerUnitFormat('EU')"> EU metric</label>
+      <label class="profile-check-row"><input type="radio" name="ownerUnits" value="US" id="ownerUnitsUS" onchange="applyOwnerUnitFormat('US')"> US imperial</label>
+
+      <div class="profile-setting-row disabled">
+        <span class="profile-options-title">Language</span>
+        <select id="appLanguage" disabled>
+          <option value="en">English</option>
+          <option value="sr">Srpski</option>
+        </select>
+        <span class="profile-coming-soon">COMING SOON</span>
+      </div>
+      <div class="profile-setting-row">
+        <span class="profile-options-title">Sound</span>
+        <label class="profile-check-row" style="padding:0;"><input type="checkbox" id="appSoundEnabled"> On / Off</label>
+      </div>
+      <div class="profile-setting-row">
+        <span class="profile-options-title">Volume</span>
+        <input type="range" id="appVolume" min="0" max="100" value="35">
+      </div>
+      <div class="profile-options-title">Tarot cards</div>
+      <label class="profile-check-row"><input type="checkbox" id="appTarotReversedEnabled"> Use reversed cards</label>
+      <label class="profile-check-row"><input type="checkbox" id="appTarotRotateReversed"> Rotate reversed card image</label>
+      <div class="profile-note">
+        Sound controls are ready for a future ambient or affirmation audio file. Language options are not available yet.
+      </div>
+    </div>
+
+    <div class="profile-actions">
+      <button class="profile-save-btn" type="button" onclick="saveOwnerProfile()">SAVE</button>
+      <button class="profile-cancel-btn" type="button" onclick="closeOwnerProfile()">CANCEL</button>
+    </div>
+  </div>
+</div>
+
+
+
 <script>
 // ===== GLOBALNE PROMENLJIVE =====
 let skipSavePrompt = false;
@@ -1672,6 +2195,159 @@ function exitApp(){
   appExit("index.html");
 }
 
+function handleChartLeftButton(){
+  if(document.body.classList.contains("chart-loaded")){
+    goBack();
+    return;
+  }
+  openOwnerProfile();
+}
+
+function getOwnerProfile(){
+  try{
+    return JSON.parse(localStorage.getItem("numerology_owner_profile") || "null");
+  }catch(e){
+    return null;
+  }
+}
+
+function ownerProfileDateToEu(value, units){
+  const clean = String(value || "").replace(/[^0-9]/g, "");
+  if(clean.length !== 8) return String(value || "").trim();
+  const day = units === "US" ? clean.slice(2,4) : clean.slice(0,2);
+  const month = units === "US" ? clean.slice(0,2) : clean.slice(2,4);
+  return day + "." + month + "." + clean.slice(4,8);
+}
+
+function ownerProfileTimeTo24(value){
+  const raw = String(value || "").trim();
+  const us = /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i.exec(raw);
+  if(us){
+    let h = +us[1];
+    if(us[3].toUpperCase() === "PM" && h < 12) h += 12;
+    if(us[3].toUpperCase() === "AM" && h === 12) h = 0;
+    return String(h).padStart(2,"0") + ":" + us[2];
+  }
+  const clean = raw.replace(/[^0-9]/g, "");
+  if(clean.length === 4) return clean.slice(0,2) + ":" + clean.slice(2,4);
+  return raw;
+}
+
+function formatOwnerProfileDate(value, units){
+  const m = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(value || "");
+  return units === "US" && m ? m[2] + "." + m[1] + "." + m[3] : (value || "");
+}
+
+function formatOwnerProfileTime(value, units){
+  const m = /^(\d{2}):(\d{2})$/.exec(value || "");
+  if(units === "US" && m){
+    let h = +m[1];
+    const suffix = h >= 12 ? "PM" : "AM";
+    h = h % 12 || 12;
+    return String(h).padStart(2,"0") + ":" + m[2] + " " + suffix;
+  }
+  return value || "";
+}
+
+function applyOwnerUnitFormat(units){
+  const eu = document.getElementById("ownerUnitsEU");
+  const us = document.getElementById("ownerUnitsUS");
+  if(eu) eu.checked = units !== "US";
+  if(us) us.checked = units === "US";
+  const date = document.getElementById("ownerBirthDate");
+  const time = document.getElementById("ownerBirthTime");
+  if(date) date.placeholder = units === "US" ? "MM.DD.YYYY" : "DD.MM.YYYY";
+  if(time) time.placeholder = units === "US" ? "HH:MM AM/PM" : "HH:MM";
+}
+
+function showOwnerProfileTab(tabId){
+  document.querySelectorAll(".profile-tab").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.ownerTab === tabId);
+  });
+  document.querySelectorAll(".profile-tab-panel").forEach(panel => {
+    panel.classList.toggle("active", panel.id === tabId);
+  });
+}
+
+function toggleOwnerNotificationList(){
+  const list = document.getElementById("ownerNotificationList");
+  const enabled = document.getElementById("ownerNotifications")?.checked;
+  if(list) list.style.display = enabled ? "block" : "none";
+}
+
+function openOwnerProfile(){
+  const modal = document.getElementById("ownerProfileModal");
+  setupCityAutocomplete("ownerBirthCity", "ownerBirthCityDropdown");
+  setupCityAutocomplete("ownerCurrentCity", "ownerCurrentCityDropdown");
+  const profile = getOwnerProfile() || {units:"EU"};
+  const units = profile.units || "EU";
+  const setValue = (id, value) => {
+    const el = document.getElementById(id);
+    if(el) el.value = value || "";
+  };
+  setValue("ownerFirstName", profile.firstName);
+  setValue("ownerLastName", profile.lastName);
+  setValue("ownerBirthDate", formatOwnerProfileDate(profile.birthDate, units));
+  setValue("ownerBirthTime", formatOwnerProfileTime(profile.birthTime, units));
+  setValue("ownerBirthCity", profile.birthCity);
+  setValue("ownerCurrentCity", profile.currentCity);
+  const twin = document.getElementById("ownerTwin");
+  const twin3 = document.getElementById("ownerTwin3");
+  const eu = document.getElementById("ownerUnitsEU");
+  const us = document.getElementById("ownerUnitsUS");
+  const notifications = document.getElementById("ownerNotifications");
+  if(twin) twin.checked = !!profile.isTwin;
+  if(twin3) twin3.checked = !!profile.isTwin3;
+  if(eu) eu.checked = units !== "US";
+  if(us) us.checked = units === "US";
+  if(notifications) notifications.checked = !!profile.notificationsEnabled;
+  document.querySelectorAll("#ownerNotificationList input[type=\"checkbox\"]").forEach(input => {
+    const topics = profile.notificationTopics || [];
+    input.checked = !input.disabled && topics.includes(input.value);
+  });
+  loadAppSettings();
+  applyOwnerUnitFormat(units);
+  showOwnerProfileTab("ownerData");
+  toggleOwnerNotificationList();
+  if(modal) modal.style.display = "flex";
+}
+
+function closeOwnerProfile(){
+  const modal = document.getElementById("ownerProfileModal");
+  if(modal) modal.style.display = "none";
+}
+
+function saveOwnerProfile(){
+  const units = document.getElementById("ownerUnitsUS")?.checked ? "US" : "EU";
+  const topics = [...document.querySelectorAll("#ownerNotificationList input[type=\"checkbox\"]:checked:not(:disabled)")].map(input => input.value);
+  const profile = {
+    firstName: document.getElementById("ownerFirstName")?.value.trim() || "",
+    lastName: document.getElementById("ownerLastName")?.value.trim() || "",
+    birthDate: ownerProfileDateToEu(document.getElementById("ownerBirthDate")?.value || "", units),
+    birthTime: ownerProfileTimeTo24(document.getElementById("ownerBirthTime")?.value || ""),
+    birthCity: document.getElementById("ownerBirthCity")?.value.trim() || "",
+    currentCity: document.getElementById("ownerCurrentCity")?.value.trim() || "",
+    isTwin: !!document.getElementById("ownerTwin")?.checked,
+    isTwin3: !!document.getElementById("ownerTwin3")?.checked,
+    notificationsEnabled: !!document.getElementById("ownerNotifications")?.checked,
+    notificationTopics: topics,
+    units
+  };
+  localStorage.setItem("numerology_owner_profile", JSON.stringify(profile));
+  saveAppSettings();
+  if(profile.birthDate) document.getElementById("input").value = formatOwnerProfileDate(profile.birthDate, units);
+  if(profile.birthTime) document.getElementById("timeInput").value = formatOwnerProfileTime(profile.birthTime, units);
+  if(profile.birthCity) document.getElementById("cityInput").value = profile.birthCity;
+  if(window.AppSharedState){
+    AppSharedState.saveLastAstroInput({date:profile.birthDate, time:profile.birthTime, city:profile.birthCity});
+  }
+  applyUnitFormatToInputs();
+  updateSavedCount();
+  renderSavedList();
+  updateAstrologyPortal();
+  closeOwnerProfile();
+}
+
 function goBack() {
   const date = readInputDate();
   const time = readInputTime();
@@ -1690,7 +2366,7 @@ function goBack() {
   backUrl += "#astroEntry";
   sessionStorage.setItem("returningFromChart", "true");
   sessionStorage.setItem("astroReturnUrl", backUrl);
-  window.location.assign(backUrl);
+  portalNavigateTo(backUrl);
 }
 
 function buildAstroSectionUrl(page){
@@ -1701,12 +2377,40 @@ function buildAstroSectionUrl(page){
 
   saveAstroReturnState(date, time, city);
 
+  let returnUrl = "chart.html";
+  if(date){
+    returnUrl += "?date=" + encodeURIComponent(date);
+    if(time) returnUrl += "&time=" + encodeURIComponent(time);
+    if(city) returnUrl += "&city=" + encodeURIComponent(city);
+    returnUrl += "&isTwin=" + encodeURIComponent(params.get("isTwin") || "false");
+    returnUrl += "&isTwin3=" + encodeURIComponent(params.get("isTwin3") || "false");
+  }
+
   let url = page + "?date=" + encodeURIComponent(date);
   if(time) url += "&time=" + encodeURIComponent(time);
   if(city) url += "&city=" + encodeURIComponent(city);
   url += "&isTwin=" + encodeURIComponent(params.get("isTwin") || "false");
   url += "&isTwin3=" + encodeURIComponent(params.get("isTwin3") || "false");
+  url += "&from=chart";
+  url += "&returnUrl=" + encodeURIComponent(returnUrl);
   return url;
+}
+
+function portalNavigateTo(url){
+  if(!url) return;
+  if(url.indexOf("index.html") !== -1){
+    try{ sessionStorage.setItem("portalArriveNumerology", "1"); }catch(e){}
+  }
+  if(!document.querySelector(".portal-fade-curtain")){
+    const curtain = document.createElement("div");
+    curtain.className = "portal-fade-curtain";
+    document.body.appendChild(curtain);
+  }
+  document.body.classList.add("portal-transition");
+  document.body.classList.add("portal-return-transition");
+  setTimeout(() => {
+    window.location.href = url;
+  }, 2850);
 }
 
 function openAstroChart(){
@@ -1735,11 +2439,11 @@ function openSinastrija(){
 }
 
 function openPortalChinese(){
-  window.location.href = buildAstroSectionUrl("chinese.html");
+  portalNavigateTo(buildAstroSectionUrl("chinese.html"));
 }
 
 function openPortalTarot(){
-  window.location.href = buildAstroSectionUrl("tarot.html");
+  portalNavigateTo(buildAstroSectionUrl("tarot.html"));
 }
 
 // ===== DATE FORMATTING =====
@@ -1864,7 +2568,7 @@ function portalChineseFromDate(value){
 }
 
 function portalTarotFanMarkup(){
-  return '<span class="portal-symbol portal-tarot-fan"><i class="portal-card"></i><i class="portal-card"></i><i class="portal-card"></i></span>';
+  return '<span class="portal-symbol portal-tarot-fan"><i class="portal-card"><img src="images/tarot/king of penacles.jpg" alt=""></i><i class="portal-card"><img src="images/tarot/back.png" alt=""></i><i class="portal-card"><img src="images/tarot/queen of penacles.jpg" alt=""></i></span>';
 }
 
 function updateAstrologyPortal(){
@@ -1903,18 +2607,17 @@ function updateAstrologyPortal(){
 }
 
 function openPortalCodeInNumerology(){
-  const code = document.getElementById("cosmicPortalShell")?.dataset.code || portalCodeFromDate(readInputDate());
   const date = readInputDate();
   const time = readInputTime();
   const city = document.getElementById("cityInput").value;
-  sessionStorage.setItem("openNumerologyCode", code);
+  sessionStorage.removeItem("openNumerologyCode");
   saveAstroReturnState(date, time, city);
   let backUrl = "index.html?astroReturn=1";
   if(date) backUrl += "&date=" + encodeURIComponent(date);
   if(time) backUrl += "&time=" + encodeURIComponent(time);
   if(city) backUrl += "&city=" + encodeURIComponent(city);
   backUrl += "#astroEntry";
-  window.location.href = backUrl;
+  portalNavigateTo(backUrl);
 }
 
 function startPortalToNumerology(){
@@ -1923,8 +2626,9 @@ function startPortalToNumerology(){
     curtain.className = "portal-fade-curtain";
     document.body.appendChild(curtain);
   }
+  document.body.classList.add("portal-transition");
   document.body.classList.add("portal-return-transition");
-  setTimeout(returnToNumerologyApp, 2200);
+  setTimeout(returnToNumerologyApp, 2850);
 }
 
 function returnToNumerologyApp(){
@@ -2064,10 +2768,12 @@ const worldCities = [
   "Buenos Aires","Sao Paulo","SÃ£o Paulo"
 ];
 
-function setupCityAutocomplete(){
-  let cityInput = document.getElementById("cityInput");
-  let dropdown = document.getElementById("cityDropdown");
+function setupCityAutocomplete(inputId = "cityInput", dropdownId = "cityDropdown"){
+  let cityInput = document.getElementById(inputId);
+  let dropdown = document.getElementById(dropdownId);
   if(!cityInput) return;
+  if(cityInput.dataset.cityAutocompleteReady === "1") return;
+  cityInput.dataset.cityAutocompleteReady = "1";
 
   cityInput.addEventListener("input", function(){
     let val = this.value.toLowerCase();
@@ -2082,7 +2788,7 @@ function setupCityAutocomplete(){
     if(dropdown){
       if(matches.length > 0){
         dropdown.innerHTML = matches.map(function(city){
-          return '<div onclick="selectCity(\'' + city.replace(/'/g, "\\'") + '\')" style="padding: 8px 12px; cursor: pointer; color: white; font-size: 12px; border-bottom: 1px solid #334155; transition: 0.2s;" onmouseover="this.style.background=\'#0f172a\'" onmouseout="this.style.background=\'transparent\'">' + city + '</div>';
+          return '<div onclick="selectCityForInput(\'' + inputId + '\',\'' + dropdownId + '\',\'' + city.replace(/'/g, "\\'") + '\')" style="padding: 8px 12px; cursor: pointer; color: white; font-size: 12px; border-bottom: 1px solid #334155; transition: 0.2s;" onmouseover="this.style.background=\'#0f172a\'" onmouseout="this.style.background=\'transparent\'">' + city + '</div>';
         }).join('');
         dropdown.style.display = "block";
       } else {
@@ -2098,11 +2804,15 @@ function setupCityAutocomplete(){
   });
 }
 
-function selectCity(city){
-  let cityInput = document.getElementById("cityInput");
-  let dropdown = document.getElementById("cityDropdown");
+function selectCityForInput(inputId, dropdownId, city){
+  let cityInput = document.getElementById(inputId);
+  let dropdown = document.getElementById(dropdownId);
   if(cityInput) cityInput.value = city;
   if(dropdown) dropdown.style.display = "none";
+}
+
+function selectCity(city){
+  selectCityForInput("cityInput", "cityDropdown", city);
 }
 
 // ===== CITY COORDS =====
@@ -2250,6 +2960,37 @@ let languageObserverStarted = false;
 
 function getAppSettings(){
   try{return JSON.parse(localStorage.getItem('numerology_app_settings') || '{}')}catch(e){return {}}
+}
+
+function loadAppSettings(){
+  const settings = getAppSettings();
+  const primary = settings.primaryPage === 'astrology' ? 'astrology' : 'numerology';
+  const primaryNumerology = document.getElementById('appPrimaryNumerology');
+  const primaryAstrology = document.getElementById('appPrimaryAstrology');
+  const soundEnabled = document.getElementById('appSoundEnabled');
+  const volume = document.getElementById('appVolume');
+  const tarotReversed = document.getElementById('appTarotReversedEnabled');
+  const tarotRotate = document.getElementById('appTarotRotateReversed');
+  if(primaryNumerology) primaryNumerology.checked = primary === 'numerology';
+  if(primaryAstrology) primaryAstrology.checked = primary === 'astrology';
+  if(soundEnabled) soundEnabled.checked = !!settings.soundEnabled;
+  if(volume) volume.value = Number(settings.volume ?? 35);
+  if(tarotReversed) tarotReversed.checked = !!settings.tarotReversedEnabled;
+  if(tarotRotate) tarotRotate.checked = !!settings.tarotRotateReversed;
+}
+
+function saveAppSettings(){
+  const settings = {
+    ...getAppSettings(),
+    language: 'en',
+    soundEnabled: !!document.getElementById('appSoundEnabled')?.checked,
+    volume: Number(document.getElementById('appVolume')?.value || 35),
+    primaryPage: document.getElementById('appPrimaryAstrology')?.checked ? 'astrology' : 'numerology',
+    tarotReversedEnabled: !!document.getElementById('appTarotReversedEnabled')?.checked,
+    tarotRotateReversed: !!document.getElementById('appTarotRotateReversed')?.checked
+  };
+  localStorage.setItem('numerology_app_settings', JSON.stringify(settings));
+  syncAmbientAudio();
 }
 
 function ambientAudio(){
@@ -2978,6 +3719,7 @@ window.onload = function(){
     if(sessionStorage.getItem("portalArriveAstrology") === "1"){
       sessionStorage.removeItem("portalArriveAstrology");
       document.body.classList.add("portal-arrive");
+      document.documentElement.classList.remove("portal-arrive-pending");
       setTimeout(() => document.body.classList.remove("portal-arrive"), 2100);
     }
   }catch(e){}
