@@ -18,12 +18,18 @@ body{font-family:Arial,sans-serif;background:#0f172a;color:white;text-align:cent
 .top-bar{position:absolute;top:10px;right:12px;z-index:20}.action-group{display:flex;align-items:center;gap:6px}
 .subtitle{margin-top:3px;color:#94a3b8;font-size:12px;opacity:.82}
 .container{width:100%;max-width:940px;margin:auto;padding:12px}
-.tabs{display:flex;justify-content:center;gap:6px;margin:10px auto 6px;max-width:720px;padding:0 8px;flex-wrap:wrap}
-.tab{min-height:34px;border-radius:8px;background:#1e293b;border:1px solid rgba(148,163,184,.22);color:#cbd5e1;font-size:11px;font-weight:800;letter-spacing:.4px;cursor:pointer;transition:.25s;padding:0 12px}
+.tabs{display:flex;justify-content:center;gap:6px;margin:10px auto 6px;max-width:390px;padding:0 8px;flex-wrap:wrap}
+.tab{flex:0 0 82px;min-height:34px;border-radius:8px;background:#1e293b;border:1px solid rgba(148,163,184,.22);color:#cbd5e1;font-size:11px;font-weight:800;letter-spacing:.4px;cursor:pointer;transition:.25s;padding:0 8px}
+.deck-tab{flex:0 0 calc(328px + 18px)}
 .tab:hover,.tab.active{color:white;border-color:#cbd5e1;box-shadow:0 0 12px rgba(148,163,184,.22);background:#334155}
 .input-card{background:transparent;border:none;padding:4px 0 4px;margin-top:4px}
 .input-line{display:flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;flex-wrap:nowrap!important;width:100%!important;max-width:360px!important;margin:0 auto!important;padding:0 4px!important}
 .input-line input{width:var(--birth-field-width,82px)!important;flex:0 0 var(--birth-field-width,82px)!important;height:var(--birth-field-height,30px)!important;min-height:var(--birth-field-height,30px)!important;background:#1e293b;border:1px solid #94a3b8;color:white;border-radius:8px!important;padding:0 6px!important;font-size:var(--birth-field-font,11px)!important;outline:none;box-shadow:0 0 10px rgba(148,163,184,.18);text-align:center;box-sizing:border-box!important}
+.love-inputs{max-width:390px;margin:0 auto 8px;display:flex;flex-direction:column;gap:6px}
+.love-person-label{color:#e2e8f0;font-size:10px;font-weight:900;letter-spacing:.7px;text-transform:uppercase;text-align:center;opacity:.9}
+.love-pair-label{color:#fff;font-size:12px;font-weight:900;letter-spacing:.5px;text-align:center;text-shadow:0 0 8px rgba(255,255,255,.24);margin-bottom:2px}
+.love-input-line{display:flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;flex-wrap:nowrap!important;width:100%!important;margin:0 auto!important;padding:0 4px!important}
+.love-input-line input{width:var(--birth-field-width,82px)!important;flex:0 0 var(--birth-field-width,82px)!important;height:var(--birth-field-height,30px)!important;min-height:var(--birth-field-height,30px)!important;background:#1e293b;border:1px solid #94a3b8;color:white;border-radius:8px!important;padding:0 6px!important;font-size:var(--birth-field-font,11px)!important;outline:none;box-shadow:0 0 10px rgba(148,163,184,.18);text-align:center;box-sizing:border-box!important}
 .primary-btn{width:90%;max-width:340px;min-height:34px;border:none;border-radius:14px;background:linear-gradient(135deg,#cbd5e1,#64748b);color:#0f172a;font-size:13px;font-weight:800;letter-spacing:.5px;padding:10px;cursor:pointer;box-shadow:0 0 12px rgba(148,163,184,.24);display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.05;margin:0 auto}
 .small-btn{min-height:30px;border-radius:8px;background:#1e293b;border:1px solid rgba(148,163,184,.28);color:#cbd5e1;font-size:10px;font-weight:800;padding:0 10px;cursor:pointer}
 .main-action-row{display:flex;justify-content:center;margin-top:8px}
@@ -32,6 +38,16 @@ body{font-family:Arial,sans-serif;background:#0f172a;color:white;text-align:cent
 .savedPanel{display:none;position:fixed;top:58px;right:0;width:280px;height:calc(100% - 58px);background:#1e293b;z-index:9000;padding:46px 15px 20px;overflow-y:auto;box-shadow:-5px 0 20px rgba(148,163,184,.16);border-left:1px solid rgba(148,163,184,.45)}
 .savedPanelClose{position:absolute;top:14px;left:15px;font-size:20px;color:#e2e8f0;cursor:pointer}.savedPanelTitle{color:#e2e8f0;margin-bottom:15px;font-size:14px;text-shadow:0 0 10px rgba(148,163,184,.28)}
 .savedItem{background:#0f172a;border:1px solid rgba(148,163,184,.24);border-radius:8px;padding:10px;margin-bottom:8px;text-align:left;cursor:pointer}
+.saved-edit-contact{color:#e2e8f0!important;font-size:11px!important;cursor:pointer!important;padding:5px 6px!important;border:1px solid rgba(226,232,240,.55)!important;border-radius:7px!important;font-weight:900!important;line-height:1!important;margin-right:3px!important;box-shadow:0 0 7px rgba(148,163,184,.18)!important}
+.profile-modal{display:none;position:fixed;inset:0;background:rgba(2,6,23,.86);z-index:100004;align-items:center;justify-content:center;padding:14px}
+.profile-modal-panel{width:min(94vw,390px);max-height:88vh;overflow:auto;background:#0f172a;border:1px solid rgba(226,232,240,.36);border-radius:12px;box-shadow:0 0 28px rgba(148,163,184,.28);padding:14px;text-align:left}
+.profile-modal-title{color:#fff;font-size:16px;font-weight:900;text-align:center;margin-bottom:10px}
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.profile-field.full{grid-column:1/-1}.profile-field label{display:block;color:#94a3b8;font-size:10px;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px}
+.profile-field input{width:100%;height:34px;border-radius:8px;border:1px solid rgba(226,232,240,.42);background:#1e293b;color:#fff;padding:0 8px;outline:none}
+.profile-check-row{display:flex;align-items:center;gap:8px;color:#e2e8f0;font-size:12px;margin-top:8px}
+.profile-check-row input{accent-color:#cbd5e1}
+.profile-modal-actions{display:flex;gap:8px;margin-top:12px}.profile-modal-actions button{flex:1;min-height:34px;border-radius:10px;border:1px solid rgba(226,232,240,.36);background:#1e293b;color:#fff;font-weight:900}.profile-modal-actions .save{background:#e2e8f0;color:#0f172a}
 .panel{display:none}.panel.active{display:block}
 .card{background:#1e293b;border-radius:10px;border:1px solid rgba(148,163,184,.22);padding:10px;margin-top:8px;box-shadow:0 0 22px rgba(0,0,0,.18)}
 .section-title{color:#e2e8f0;font-size:17px;line-height:1.25;margin-bottom:12px;text-shadow:0 0 10px rgba(148,163,184,.22)}
@@ -44,13 +60,18 @@ body{font-family:Arial,sans-serif;background:#0f172a;color:white;text-align:cent
 .tarot-face{position:absolute;inset:0;border-radius:14px;backface-visibility:hidden;overflow:hidden;border:1px solid rgba(148,163,184,.48);box-shadow:0 0 28px rgba(148,163,184,.18);background:#020617}
 .tarot-face-front img{width:100%;height:100%;object-fit:cover;display:block}
 .reversed-card-img{transform:rotate(180deg)}
-.tarot-face-back{transform:rotateY(180deg);display:flex;flex-direction:column;justify-content:center;gap:10px;padding:16px;background:url("images/tarot/back.png") center/cover no-repeat;text-align:center}
-.tarot-face-back::after{content:"";position:absolute;inset:0;background:rgba(2,6,23,.32);pointer-events:none}
+.tarot-face-back{transform:rotateY(180deg);display:flex;flex-direction:column;justify-content:center;gap:7px;padding:14px;background:url("images/tarot/back.png") center/cover no-repeat;text-align:center}
+.tarot-face-back::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(2,6,23,.2),rgba(2,6,23,.5));pointer-events:none}
 .tarot-face-back>*{position:relative;z-index:2}
 .tarot-back-name,.tarot-back-keywords,.tarot-back-basic{background:rgba(2,6,23,.58);border:1px solid rgba(226,232,240,.18);border-radius:8px;padding:6px 8px;backdrop-filter:blur(2px)}
 .tarot-back-name{font-size:18px;font-weight:900;color:#fff;line-height:1.15}
 .tarot-back-keywords{font-size:11px;color:#cbd5e1;line-height:1.35}
-.tarot-back-basic{font-size:12px;color:#e2e8f0;line-height:1.45}
+.tarot-back-basic{font-size:12px;color:#e2e8f0;line-height:1.42}
+.tarot-position-reading{display:flex;flex-direction:column;gap:6px;text-align:center}
+.tarot-position-title{font-size:13px;font-weight:900;color:#fff;line-height:1.22;text-shadow:0 0 8px rgba(255,255,255,.22)}
+.tarot-position-card-name{font-size:12px;font-weight:900;color:#e2e8f0;line-height:1.18;margin-top:2px}
+.tarot-position-line{font-size:11px;color:#e2e8f0;line-height:1.34;background:rgba(2,6,23,.46);border:1px solid rgba(226,232,240,.14);border-radius:8px;padding:7px 7px;margin-top:4px}
+.tarot-position-keywords{font-size:10px;color:#cbd5e1;line-height:1.25}
 .tarot-more-btn{border:1px solid rgba(226,232,240,.42);background:#e2e8f0;color:#0f172a;border-radius:999px;min-height:30px;padding:0 12px;font-size:10px;font-weight:900;letter-spacing:.7px;cursor:pointer;margin:4px auto 0}
 .spread-card-wrap{display:flex;flex-direction:column;gap:6px;align-items:center}
 .spread-position{font-size:10px;color:#94a3b8;text-transform:uppercase;letter-spacing:.8px;font-weight:800}
@@ -78,7 +99,7 @@ body{font-family:Arial,sans-serif;background:#0f172a;color:white;text-align:cent
 .three-caption{margin-top:6px;color:#fff;font-size:12px;font-weight:700;text-shadow:0 0 8px rgba(255,255,255,.28)}
 .three-caption span{color:#cbd5e1;transition:.2s}
 .three-caption span.active{color:#facc15;text-shadow:0 0 10px rgba(250,204,21,.65)}
-.celtic-card-shell{background:transparent;border:none;box-shadow:none;padding:4px 0 0;margin-top:4px}
+.celtic-card-shell,.love-card-shell{background:transparent;border:none;box-shadow:none;padding:4px 0 0;margin-top:4px}
 .celtic-fan{height:176px;max-width:390px;margin:8px auto 0;position:relative}
 .celtic-fan-card{position:absolute;top:26px;left:50%;width:58px;aspect-ratio:7/12;border-radius:8px;border:1px solid rgba(226,232,240,.38);background:#020617;box-shadow:0 10px 20px rgba(0,0,0,.34);overflow:hidden;cursor:pointer;transition:transform .25s,filter .25s,box-shadow .25s;transform-origin:50% 118%;padding:0}
 .celtic-fan-card img{width:100%;height:100%;object-fit:cover;display:block}
@@ -99,9 +120,11 @@ body{font-family:Arial,sans-serif;background:#0f172a;color:white;text-align:cent
 .celtic-selected-stage .tarot-flip-card{pointer-events:auto;width:min(70vw,245px);max-width:none;min-height:0;aspect-ratio:7/12}
 .celtic-selected-stage .tarot-flip-inner{height:auto;aspect-ratio:7/12}
 .celtic-selected-stage .tarot-face-front img{object-fit:contain;background:#020617}
-.celtic-caption{margin-top:6px;color:#fff;font-size:11px;font-weight:700;line-height:1.5;text-shadow:0 0 8px rgba(255,255,255,.28)}
+.celtic-caption,.love-caption{display:none;margin-top:6px;color:#fff;font-size:11px;font-weight:700;line-height:1.5;text-shadow:0 0 8px rgba(255,255,255,.28)}
 .celtic-caption span{color:#cbd5e1;transition:.2s;white-space:nowrap}
 .celtic-caption span.active{color:#facc15;text-shadow:0 0 10px rgba(250,204,21,.65)}
+.love-caption span{color:#cbd5e1;transition:.2s;white-space:nowrap}
+.love-caption span.active{color:#fb7185;text-shadow:0 0 10px rgba(251,113,133,.65)}
 .tarot-modal{display:none;position:fixed;inset:0;background:rgba(2,6,23,.86);z-index:100002;align-items:center;justify-content:center;padding:14px}
 .tarot-modal-panel{width:min(94vw,520px);max-height:86vh;overflow:auto;background:#0f172a;border:1px solid rgba(226,232,240,.36);border-radius:12px;box-shadow:0 0 28px rgba(148,163,184,.28);padding:14px;position:relative;text-align:left}
 .tarot-modal-close{position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:8px;border:1px solid rgba(148,163,184,.42);background:#1e293b;color:white;font-weight:900;cursor:pointer}
@@ -117,8 +140,12 @@ body{font-family:Arial,sans-serif;background:#0f172a;color:white;text-align:cent
 .inline-reading .label{margin-top:0}
 .inline-reading .reading-title{font-weight:900;color:#fff;font-size:13px;margin-top:10px}
 .inline-reading .reading-title:first-child{margin-top:0}
-.inline-reading .reading-line{margin-top:4px;color:#e2e8f0}
-.inline-reading .reading-keywords{margin-top:4px;color:#cbd5e1}
+.inline-reading .reading-card-name{font-weight:900;color:#e2e8f0;font-size:12px;margin-top:3px}
+.inline-reading .reading-line{margin-top:8px;color:#e2e8f0}
+.inline-reading .reading-keywords{margin-top:8px;color:#cbd5e1}
+.reading-block{background:transparent;border:1px solid rgba(148,163,184,.12);border-radius:10px;padding:10px;margin-top:9px;box-shadow:none;transition:.2s}
+.reading-block:first-child{margin-top:0}
+.reading-block.active{background:#1e293b;border-color:rgba(148,163,184,.34);box-shadow:0 0 14px rgba(0,0,0,.16)}
 .reversed-label{color:#ef4444;text-shadow:0 0 10px rgba(239,68,68,.45)}
 .inline-reading:empty{display:none}
 .tarot-corner{align-self:stretch;display:flex;justify-content:space-between;color:#94a3b8;font-size:11px;font-weight:bold;letter-spacing:.8px}
@@ -139,14 +166,16 @@ body{font-family:Arial,sans-serif;background:#0f172a;color:white;text-align:cent
 .deck-card{background:#020617;border:1px solid rgba(148,163,184,.28);border-radius:8px;padding:0;cursor:pointer;aspect-ratio:7/12;overflow:hidden;box-shadow:0 8px 16px rgba(0,0,0,.28)}
 .deck-card:hover,.deck-card.active{border-color:#e2e8f0;box-shadow:0 0 14px rgba(226,232,240,.35),0 8px 16px rgba(0,0,0,.28)}
 .deck-card img{width:100%;height:100%;object-fit:contain;background:#020617;display:block}
-.deck-detail{display:none;margin-top:12px}
+.deck-detail{display:none;margin:10px auto 0;max-width:440px;position:relative;padding-top:36px}
 .deck-detail.active{display:block}
-.deck-detail .reading-layout{grid-template-columns:minmax(220px,260px) 1fr}
-.deck-detail-stage .tarot-flip-card{width:min(70vw,245px);max-width:none;min-height:0;aspect-ratio:7/12}
+.deck-detail-close{position:absolute;top:0;left:0;width:30px;height:30px;border-radius:8px;border:1px solid rgba(226,232,240,.42);background:#1e293b;color:#fff;font-size:18px;font-weight:900;line-height:1;cursor:pointer;box-shadow:0 0 10px rgba(148,163,184,.18)}
+.deck-detail-layout{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+.deck-detail-stage .tarot-flip-card{width:min(74vw,260px);max-width:none;min-height:0;aspect-ratio:7/12}
 .deck-detail-stage .tarot-flip-inner{height:auto;aspect-ratio:7/12}
 .deck-detail-stage .tarot-face-front img{object-fit:contain;background:#020617}
+.deck-detail .text-panel{width:100%;max-width:420px;margin:0 auto;text-align:left}
 .note{margin-top:10px;color:#94a3b8;font-size:11px;line-height:1.4;opacity:.82}
-@media(max-width:700px){.reading-layout{grid-template-columns:1fr}.tarot-card{max-width:250px}.header-title{font-size:14px;padding:0 66px}.tab{flex:1;padding:0 6px}}
+@media(max-width:700px){.reading-layout{grid-template-columns:1fr}.tarot-card{max-width:250px}.header-title{font-size:14px;padding:0 66px}.tabs{max-width:360px}.tab{flex:0 0 calc(25% - 5px);padding:0 5px}.deck-tab{flex:0 0 calc(100% - 6px)}}
 @media print{.header-bar,.tabs,.input-card,.savedPanel,.deck-tools,.main-action-row{display:none!important}body{background:white;color:#111}.card,.text-panel,.mini-card{box-shadow:none;border-color:#bbb;background:white;color:#111}.value,.section-title{color:#111}}
 </style>
 </head>
@@ -172,14 +201,15 @@ body{font-family:Arial,sans-serif;background:#0f172a;color:white;text-align:cent
     <button class="tab active" data-tab="daily" onclick="showTab('daily')">Daily</button>
     <button class="tab" data-tab="spreadPanel" onclick="showTab('spreadPanel')">3 Cards</button>
     <button class="tab" data-tab="celticPanel" onclick="showTab('celticPanel')">Celtic</button>
-    <button class="tab" data-tab="deckPanel" onclick="showTab('deckPanel')">Deck</button>
+    <button class="tab" data-tab="lovePanel" onclick="showTab('lovePanel')">Love</button>
+    <button class="tab deck-tab" data-tab="deckPanel" onclick="showTab('deckPanel')">Deck - Meaning</button>
   </div>
   <div class="input-card">
     <div class="input-line">
       <input id="birthDate" type="text" placeholder="DD.MM.YYYY" maxlength="10">
       <input id="birthTime" type="text" placeholder="HH:MM" maxlength="5">
       <input id="birthCity" type="text" placeholder="City">
-      <div class="savedIconBox" onclick="toggleSavedPanel()" title="Saved profiles">
+      <div class="savedIconBox" onclick="toggleSavedPanel(undefined,'main')" title="Saved profiles">
         <svg viewBox="0 0 24 24" style="width:19px;height:19px;fill:none;stroke:#cbd5e1;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px rgba(148,163,184,0.5))"><path d="M8 4h8"></path><path d="M9 2h6a1 1 0 0 1 1 1v2H8V3a1 1 0 0 1 1-1z"></path><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="M8 11h8"></path><path d="M8 16h5"></path></svg>
         <span id="savedCountBox" class="savedCountBox">0</span>
       </div>
@@ -217,6 +247,28 @@ body{font-family:Arial,sans-serif;background:#0f172a;color:white;text-align:cent
       <div id="celticSummary" class="inline-reading"></div>
     </div>
   </div>
+  <div id="lovePanel" class="panel">
+    <div class="card love-card-shell">
+      <div class="love-inputs">
+        <div id="lovePairLabel" class="love-pair-label">Person A / Person B</div>
+        <div class="love-input-line">
+          <input id="loveDateB" type="text" placeholder="DD.MM.YYYY" maxlength="10">
+          <input id="loveTimeB" type="text" placeholder="HH:MM" maxlength="5">
+          <input id="loveCityB" type="text" placeholder="City">
+          <div class="savedIconBox" onclick="toggleSavedPanel(undefined,'loveB')" title="Saved profiles">
+            <svg viewBox="0 0 24 24" style="width:19px;height:19px;fill:none;stroke:#cbd5e1;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px rgba(148,163,184,0.5))"><path d="M8 4h8"></path><path d="M9 2h6a1 1 0 0 1 1 1v2H8V3a1 1 0 0 1 1-1z"></path><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="M8 11h8"></path><path d="M8 16h5"></path></svg>
+          </div>
+        </div>
+      </div>
+      <button class="primary-btn" onclick="drawLove()">DRAW 10 CARD</button>
+      <div id="loveSpread" class="celtic-fan"></div>
+      <div id="loveSelectedStage" class="celtic-selected-stage">
+        <div id="loveSelectedCard"></div>
+      </div>
+      <div id="loveCaption" class="love-caption">(<span data-love-caption="0">A feels B</span> / <span data-love-caption="1">B feels A</span> / <span data-love-caption="2">A sees B</span> / <span data-love-caption="3">B sees A</span> / <span data-love-caption="4">A desires</span> / <span data-love-caption="5">B desires</span> / <span data-love-caption="6">A lesson</span> / <span data-love-caption="7">B lesson</span> / <span data-love-caption="8">challenge</span> / <span data-love-caption="9">advice</span>)</div>
+      <div id="loveSummary" class="inline-reading"></div>
+    </div>
+  </div>
   <div id="deckPanel" class="panel">
     <div class="card">
       <div class="deck-tools">
@@ -228,10 +280,11 @@ body{font-family:Arial,sans-serif;background:#0f172a;color:white;text-align:cent
       </div>
       <div id="deckGrid" class="deck-grid"></div>
       <div id="deckDetail" class="deck-detail">
-      <div class="reading-layout">
-        <div id="selectedCardArt" class="deck-detail-stage"></div>
-        <div class="text-panel" id="meaningText"></div>
-      </div>
+        <button class="deck-detail-close" type="button" onclick="closeDeckDetail()">X</button>
+        <div class="deck-detail-layout">
+          <div id="selectedCardArt" class="deck-detail-stage"></div>
+          <div class="text-panel" id="meaningText"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -240,6 +293,43 @@ body{font-family:Arial,sans-serif;background:#0f172a;color:white;text-align:cent
   <div class="savedPanelClose" onclick="toggleSavedPanel()">X</div>
   <div class="savedPanelTitle">SAVED PROFILES</div>
   <div id="savedList"></div>
+</div>
+<div id="ownerProfileModal" class="profile-modal">
+  <div class="profile-modal-panel">
+    <div class="profile-modal-title">OWNER PROFILE</div>
+    <div class="profile-grid">
+      <div class="profile-field">
+        <label for="ownerFirstName">First name</label>
+        <input id="ownerFirstName" type="text">
+      </div>
+      <div class="profile-field">
+        <label for="ownerLastName">Last name</label>
+        <input id="ownerLastName" type="text">
+      </div>
+      <div class="profile-field">
+        <label for="ownerBirthDate">Birth date</label>
+        <input id="ownerBirthDate" type="text" placeholder="DD.MM.YYYY" maxlength="10">
+      </div>
+      <div class="profile-field">
+        <label for="ownerBirthTime">Birth time</label>
+        <input id="ownerBirthTime" type="text" placeholder="HH:MM" maxlength="5">
+      </div>
+      <div class="profile-field full">
+        <label for="ownerBirthCity">Birth place</label>
+        <input id="ownerBirthCity" type="text" placeholder="City of birth">
+      </div>
+      <div class="profile-field full">
+        <label for="ownerCurrentCity">City of residence</label>
+        <input id="ownerCurrentCity" type="text" placeholder="Current city">
+      </div>
+    </div>
+    <label class="profile-check-row"><input type="checkbox" id="ownerTwin"> Second Twin</label>
+    <label class="profile-check-row"><input type="checkbox" id="ownerTwin3"> 3rd Twin</label>
+    <div class="profile-modal-actions">
+      <button type="button" onclick="closeOwnerProfile()">CANCEL</button>
+      <button class="save" type="button" onclick="saveOwnerProfile()">SAVE</button>
+    </div>
+  </div>
 </div>
 <div id="tarotModal" class="tarot-modal">
   <div class="tarot-modal-panel">
@@ -253,10 +343,16 @@ const deck=[{"id":0,"name":"The Fool","arcana":"Major","suit":"Major","rank":"",
 let selectedCard=deck[0];
 let selectedContext=null;
 let lastReading=[];
+let spreadReading=[];
+let celticReading=[];
+let loveReading=[];
 let selectedSpreadIndex=-1;
 let selectedCelticIndex=-1;
+let selectedLoveIndex=-1;
+let savedTarget="main";
 const spreadLabels=["Past","Present","Future"];
 const celticLabels=["Present","Challenge","Foundation","Past","Goal","Near future","Self","Environment","Hopes/Fears","Outcome"];
+const loveLabels=["How A feels about B","How B feels about A","How A sees B","How B sees A","A hidden desires","B hidden desires","Lesson A is learning","Lesson B is learning","Current challenge","Advice"];
 const positionGuides={
 Daily:"your main message for today",
 Past:"what has shaped the situation and still echoes now",
@@ -270,7 +366,17 @@ Goal:"what you are reaching for or trying to understand",
 Self:"your inner stance, role, or personal energy",
 Environment:"outside influences, other people, or surrounding conditions",
 "Hopes/Fears":"what you want, worry about, or secretly expect",
-Outcome:"the likely result if the current pattern continues"
+Outcome:"the likely result if the current pattern continues",
+"How A feels about B":"the emotional tone Person A carries toward Person B",
+"How B feels about A":"the emotional tone Person B carries toward Person A",
+"How A sees B":"how Person A perceives Person B's role, energy, and presence",
+"How B sees A":"how Person B perceives Person A's role, energy, and presence",
+"A hidden desires":"what Person A may want but not fully express",
+"B hidden desires":"what Person B may want but not fully express",
+"Lesson A is learning":"the relationship lesson currently opening for Person A",
+"Lesson B is learning":"the relationship lesson currently opening for Person B",
+"Current challenge":"the main pressure or unresolved pattern between them",
+Advice:"the best guidance for this connection now"
 };
 function seed(extra=""){const d=new Date();const v=(birthDate.value||"owner")+"|"+d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()+"|"+extra;let h=0;for(let i=0;i<v.length;i++)h=((h<<5)-h)+v.charCodeAt(i)|0;return Math.abs(h)}
 function safe(v){return String(v||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
@@ -285,35 +391,68 @@ function orientationLabel(card){return isReversed(card)?"Reversed":"Upright"}
 function cardMeaning(card){return isReversed(card)?card.reversed:card.upright}
 function readingCards(count, extra){const revSeed=seed(extra+"-orientation");return drawIndexes(count,extra).map((idx,i)=>({...deck[idx],drawReversed:tarotReversedEnabled()&&((revSeed+i*13)%2)===1}))}
 function imageReverseClass(card){return isReversed(card)&&tarotRotateReversed()?" reversed-card-img":""}
-function cardArt(card){const imgClass='tarot-real-image'+imageReverseClass(card);const front=card.image&&!card.temporary_image?'<img class="'+imgClass+'" src="'+safe(card.image)+'" alt="'+safe(card.name)+'">':'<div class="tarot-symbol">'+safe(card.symbol)+'</div>';return '<div class="tarot-flip-card" onclick="toggleCardFlip(this)"><div class="tarot-flip-inner"><div class="tarot-face tarot-face-front">'+front+'</div><div class="tarot-face tarot-face-back"><div class="tarot-back-name">'+safe(card.name)+'</div><div class="tarot-back-keywords">'+safe(orientationLabel(card))+' / '+safe(card.keywords)+'</div><div class="tarot-back-basic">'+safe(shortText(cardMeaning(card)))+'</div><button class="tarot-more-btn" type="button" onclick="event.stopPropagation();openCardModal('+card.id+')">CLICK FOR MORE</button></div></div></div>'}
+function positionBackHtml(card, context){if(!context)return "";const key=context.key||(context.spread==="celtic"&&context.label==="Present"?"PresentCeltic":context.label);const guide=positionGuides[key]||positionGuides[context.label]||"the meaning of this position";const shownGuide=context.spread==="love"?loveText(guide):guide;return '<div class="tarot-position-reading"><div class="tarot-position-title">'+safe(context.label)+'</div><div class="tarot-position-card-name">'+safe(card.name)+orientationTitle(card)+'</div><div class="tarot-position-line">'+safe(cardMeaning(card))+'</div><div class="tarot-position-line">'+safe(shownGuide)+'.</div><div class="tarot-position-keywords">Keywords: '+safe(card.keywords)+'.</div></div>'}
+function cardArt(card, context=null){const imgClass='tarot-real-image'+imageReverseClass(card);const front=card.image&&!card.temporary_image?'<img class="'+imgClass+'" src="'+safe(card.image)+'" alt="'+safe(card.name)+'">':'<div class="tarot-symbol">'+safe(card.symbol)+'</div>';const back=positionBackHtml(card,context)||('<div class="tarot-back-name">'+safe(card.name)+'</div><div class="tarot-back-keywords">'+safe(orientationLabel(card))+' / '+safe(card.keywords)+'</div><div class="tarot-back-basic">'+safe(shortText(cardMeaning(card)))+'</div><button class="tarot-more-btn" type="button" onclick="event.stopPropagation();openCardModal('+card.id+')">CLICK FOR MORE</button>');return '<div class="tarot-flip-card" onclick="toggleCardFlip(this)"><div class="tarot-flip-inner"><div class="tarot-face tarot-face-front">'+front+'</div><div class="tarot-face tarot-face-back">'+back+'</div></div></div>'}
 function cardThumb(card, index){const imgClass=imageReverseClass(card)?' class="'+imageReverseClass(card).trim()+'"':'';const front=card.image&&!card.temporary_image?'<img'+imgClass+' src="'+safe(card.image)+'" alt="'+safe(card.name)+'">':'<div class="tarot-symbol">'+safe(card.symbol)+'</div>';return '<button class="three-fan-card" type="button" onclick="selectSpreadCard('+index+')">'+front+'</button>'}
 function celticThumb(card, index){const imgClass=imageReverseClass(card)?' class="'+imageReverseClass(card).trim()+'"':'';const front=card.image&&!card.temporary_image?'<img'+imgClass+' src="'+safe(card.image)+'" alt="'+safe(card.name)+'">':'<div class="tarot-symbol">'+safe(card.symbol)+'</div>';return '<button class="celtic-fan-card" type="button" onclick="selectCelticCard('+index+')">'+front+'</button>'}
-function contextMeaning(card, context){if(!context)return "";const key=context.spread==="celtic"&&context.label==="Present"?"PresentCeltic":context.label;const guide=positionGuides[key]||positionGuides[context.label]||"the meaning of this position";const focus=context.spread==="daily"?"Daily message":context.label+" position";return '<div class="mini-card"><div class="label">'+safe(focus)+'</div><div class="value"><b>'+safe(card.name)+' - '+safe(orientationLabel(card))+'</b><br>'+safe(guide)+'. '+safe(cardMeaning(card))+' Keywords to watch: '+safe(card.keywords)+'.</div></div>'}
+function loveThumb(card, index){const imgClass=imageReverseClass(card)?' class="'+imageReverseClass(card).trim()+'"':'';const front=card.image&&!card.temporary_image?'<img'+imgClass+' src="'+safe(card.image)+'" alt="'+safe(card.name)+'">':'<div class="tarot-symbol">'+safe(card.symbol)+'</div>';return '<button class="celtic-fan-card" type="button" onclick="selectLoveCard('+index+')">'+front+'</button>'}
+function contextMeaning(card, context){if(!context)return "";const key=context.key||(context.spread==="celtic"&&context.label==="Present"?"PresentCeltic":context.label);const guide=positionGuides[key]||positionGuides[context.label]||"the meaning of this position";const shownGuide=context.spread==="love"?loveText(guide):guide;const focus=context.spread==="daily"?"Daily message":context.label+" position";return '<div class="mini-card"><div class="label">'+safe(focus)+'</div><div class="value"><b>'+safe(card.name)+' - '+safe(orientationLabel(card))+'</b><br>'+safe(shownGuide)+'. '+safe(cardMeaning(card))+' Keywords to watch: '+safe(card.keywords)+'.</div></div>'}
 function orientationTitle(card){return isReversed(card)?' <span class="reversed-label">(Reversed)</span>':""}
-function readingBlock(title, card, guide){return '<div class="reading-title">'+safe(title)+' - '+safe(card.name)+orientationTitle(card)+'</div><div class="reading-line">'+safe(cardMeaning(card))+'</div><div class="reading-line">'+safe(guide)+'.</div><div class="reading-keywords">Keywords: '+safe(card.keywords)+'.</div>'}
-function inlineContextText(card, context){const key=context.spread==="celtic"&&context.label==="Present"?"PresentCeltic":context.label;const guide=positionGuides[key]||positionGuides[context.label]||"the meaning of this position";const focus=context.spread==="daily"?"Daily":context.label;return readingBlock(focus,card,guide)}
-function spreadCombinedText(cards){return cards.map((card,i)=>readingBlock(spreadLabels[i],card,positionGuides[spreadLabels[i]])).join("")}
-function celticCombinedText(cards){return cards.map((card,i)=>readingBlock(celticLabels[i],card,positionGuides[celticLabels[i]]||positionGuides.PresentCeltic)).join("")}
+function readingBlock(title, card, guide, group="", index=-1){const marker=group?' data-reading-group="'+safe(group)+'" data-reading-index="'+index+'"':"";return '<div class="reading-block"'+marker+'><div class="reading-title">'+safe(title)+'</div><div class="reading-card-name">'+safe(card.name)+orientationTitle(card)+'</div><div class="reading-line">'+safe(cardMeaning(card))+'</div><div class="reading-line">'+safe(guide)+'.</div><div class="reading-keywords">Keywords: '+safe(card.keywords)+'.</div></div>'}
+function inlineContextText(card, context){const key=context.key||(context.spread==="celtic"&&context.label==="Present"?"PresentCeltic":context.label);const guide=positionGuides[key]||positionGuides[context.label]||"the meaning of this position";const focus=context.spread==="daily"?"Daily":context.label;return readingBlock(focus,card,context.spread==="love"?loveText(guide):guide)}
+function spreadCombinedText(cards){return cards.map((card,i)=>readingBlock(spreadLabels[i],card,positionGuides[spreadLabels[i]],"spread",i)).join("")}
+function celticCombinedText(cards){return cards.map((card,i)=>readingBlock(celticLabels[i],card,positionGuides[celticLabels[i]]||positionGuides.PresentCeltic,"celtic",i)).join("")}
+function loveCombinedText(cards){return cards.map((card,i)=>readingBlock(loveLabel(i),card,loveText(positionGuides[loveLabels[i]]),"love",i)).join("")}
+function setActiveReadingBlock(group,index){document.querySelectorAll('[data-reading-group="'+group+'"]').forEach(el=>el.classList.toggle("active",Number(el.dataset.readingIndex)===index))}
 function meaningHtml(card, context=null){const special=contextMeaning(card,context);return '<div class="label">'+safe(card.arcana)+' / '+safe(card.suit)+'</div><div class="value"><b>'+safe(card.name)+'</b><br>'+safe(orientationLabel(card))+' / '+safe(card.keywords)+'</div><div class="detail-grid">'+special+'<div class="mini-card"><div class="label">Upright</div><div class="value">'+safe(card.upright)+'</div></div><div class="mini-card"><div class="label">Reversed</div><div class="value">'+safe(card.reversed)+'</div></div><div class="mini-card"><div class="label">Love</div><div class="value">'+safe(card.love)+'</div></div><div class="mini-card"><div class="label">Career</div><div class="value">'+safe(card.career)+'</div></div><div class="mini-card"><div class="label">Money</div><div class="value">'+safe(card.money)+'</div></div><div class="mini-card"><div class="label">Wellness</div><div class="value">'+safe(card.health)+'</div></div></div>'}
-function selectCard(card, switchMeaning=true, context=null){selectedCard=card;selectedContext=context;if(document.getElementById("selectedCardArt"))selectedCardArt.innerHTML=cardArt(card);if(document.getElementById("meaningText"))meaningText.innerHTML=meaningHtml(card,context);if(switchMeaning){showTab("deckPanel");deckDetail.classList.add("active");document.querySelectorAll(".deck-card").forEach(el=>el.classList.toggle("active",Number(el.dataset.cardId)===card.id));deckDetail.scrollIntoView({behavior:"smooth",block:"start"})}}
+function selectCard(card, switchMeaning=true, context=null){selectedCard=card;selectedContext=context;if(document.getElementById("selectedCardArt"))selectedCardArt.innerHTML=cardArt(card,context);if(document.getElementById("meaningText"))meaningText.innerHTML=meaningHtml(card,context);if(switchMeaning){showTab("deckPanel");deckDetail.classList.add("active");document.querySelectorAll(".deck-card").forEach(el=>el.classList.toggle("active",Number(el.dataset.cardId)===card.id));deckDetail.scrollIntoView({behavior:"smooth",block:"start"})}}
+function closeDeckDetail(){deckDetail.classList.remove("active");selectedCardArt.innerHTML="";meaningText.innerHTML="";document.querySelectorAll(".deck-card").forEach(el=>el.classList.remove("active"))}
 function drawIndexes(count, extra){let s=seed(extra), used=[];while(used.length<count){const i=(s+used.length*17)%deck.length;if(!used.includes(i))used.push(i);else s++}return used}
 function drawDaily(){const card=readingCards(1,"daily")[0];const context={spread:"daily",label:"Daily"};selectedCard=card;selectedContext=context;dailyCardArt.innerHTML=cardArt(card);dailyText.innerHTML=inlineContextText(card,context);selectCard(card,false,context);lastReading=[card];saveLast()}
 function renderSpread(targetId, labels, extra){const indexes=drawIndexes(labels.length,extra);lastReading=indexes.map(i=>deck[i]);document.getElementById(targetId).innerHTML=lastReading.map((card,i)=>'<div class="spread-card-wrap"><div class="spread-position">'+safe(labels[i])+'</div>'+cardArt(card)+'</div>').join("");saveLast()}
 function setSpreadCaption(index){document.querySelectorAll("[data-spread-caption]").forEach(el=>el.classList.toggle("active",Number(el.dataset.spreadCaption)===index))}
-function selectSpreadCard(index){const card=lastReading[index];if(!card)return;if(selectedSpreadIndex===index&&spreadSelectedStage.classList.contains("active")){selectedSpreadIndex=-1;document.querySelectorAll("#spread .three-fan-card").forEach(el=>el.classList.remove("active"));setSpreadCaption(-1);spreadSelectedStage.classList.remove("active");spreadSelectedCard.innerHTML="";return}selectedSpreadIndex=index;const context={spread:"three",label:spreadLabels[index]};selectedCard=card;selectedContext=context;document.querySelectorAll("#spread .three-fan-card").forEach((el,i)=>el.classList.toggle("active",i===index));setSpreadCaption(index);spreadSelectedStage.classList.add("active");spreadSelectedCard.innerHTML=cardArt(card);selectCard(card,false,context)}
-function drawSpread(){lastReading=readingCards(spreadLabels.length,"three");selectedSpreadIndex=-1;spread.innerHTML=lastReading.map((card,i)=>cardThumb(card,i)).join("");spreadSelectedCard.innerHTML="";spreadSelectedStage.classList.remove("active");setSpreadCaption(-1);spreadSummary.innerHTML=spreadCombinedText(lastReading);saveLast();showTab("spreadPanel")}
+function selectSpreadCard(index){const card=spreadReading[index];if(!card)return;if(selectedSpreadIndex===index&&spreadSelectedStage.classList.contains("active")){selectedSpreadIndex=-1;document.querySelectorAll("#spread .three-fan-card").forEach(el=>el.classList.remove("active"));setSpreadCaption(-1);setActiveReadingBlock("spread",-1);spreadSelectedStage.classList.remove("active");spreadSelectedCard.innerHTML="";return}selectedSpreadIndex=index;const context={spread:"three",label:spreadLabels[index]};selectedCard=card;selectedContext=context;document.querySelectorAll("#spread .three-fan-card").forEach((el,i)=>el.classList.toggle("active",i===index));setSpreadCaption(index);setActiveReadingBlock("spread",index);spreadSelectedStage.classList.add("active");spreadSelectedCard.innerHTML=cardArt(card,context);selectCard(card,false,context)}
+function drawSpread(){spreadReading=readingCards(spreadLabels.length,"three");lastReading=spreadReading;selectedSpreadIndex=-1;spread.innerHTML=spreadReading.map((card,i)=>cardThumb(card,i)).join("");spreadSelectedCard.innerHTML="";spreadSelectedStage.classList.remove("active");setSpreadCaption(-1);spreadSummary.innerHTML=spreadCombinedText(spreadReading);setActiveReadingBlock("spread",-1);saveLast();showTab("spreadPanel")}
 function setCelticCaption(index){document.querySelectorAll("[data-celtic-caption]").forEach(el=>el.classList.toggle("active",Number(el.dataset.celticCaption)===index))}
-function selectCelticCard(index){const card=lastReading[index];if(!card)return;if(selectedCelticIndex===index&&celticSelectedStage.classList.contains("active")){selectedCelticIndex=-1;document.querySelectorAll("#celticSpread .celtic-fan-card").forEach(el=>el.classList.remove("active"));setCelticCaption(-1);celticSelectedStage.classList.remove("active");celticSelectedCard.innerHTML="";return}selectedCelticIndex=index;const context={spread:"celtic",label:celticLabels[index]};selectedCard=card;selectedContext=context;document.querySelectorAll("#celticSpread .celtic-fan-card").forEach((el,i)=>el.classList.toggle("active",i===index));setCelticCaption(index);celticSelectedStage.classList.add("active");celticSelectedCard.innerHTML=cardArt(card);selectCard(card,false,context)}
-function drawCeltic(){lastReading=readingCards(celticLabels.length,"celtic");selectedCelticIndex=-1;celticSpread.innerHTML=lastReading.map((card,i)=>celticThumb(card,i)).join("");celticSelectedCard.innerHTML="";celticSelectedStage.classList.remove("active");setCelticCaption(-1);celticSummary.innerHTML=celticCombinedText(lastReading);saveLast();showTab("celticPanel")}
+function selectCelticCard(index){const card=celticReading[index];if(!card)return;if(selectedCelticIndex===index&&celticSelectedStage.classList.contains("active")){selectedCelticIndex=-1;document.querySelectorAll("#celticSpread .celtic-fan-card").forEach(el=>el.classList.remove("active"));setCelticCaption(-1);setActiveReadingBlock("celtic",-1);celticSelectedStage.classList.remove("active");celticSelectedCard.innerHTML="";return}selectedCelticIndex=index;const context={spread:"celtic",label:celticLabels[index]};selectedCard=card;selectedContext=context;document.querySelectorAll("#celticSpread .celtic-fan-card").forEach((el,i)=>el.classList.toggle("active",i===index));setCelticCaption(index);setActiveReadingBlock("celtic",index);celticSelectedStage.classList.add("active");celticSelectedCard.innerHTML=cardArt(card,context);selectCard(card,false,context)}
+function drawCeltic(){celticReading=readingCards(celticLabels.length,"celtic");lastReading=celticReading;selectedCelticIndex=-1;celticSpread.innerHTML=celticReading.map((card,i)=>celticThumb(card,i)).join("");celticSelectedCard.innerHTML="";celticSelectedStage.classList.remove("active");setCelticCaption(-1);celticSummary.innerHTML=celticCombinedText(celticReading);setActiveReadingBlock("celtic",-1);saveLast();showTab("celticPanel")}
+function loveSeedKey(){return "love|"+[birthDate.value,birthTime.value,birthCity.value,loveDateB.value,loveTimeB.value,loveCityB.value].join("|")}
+function saveLoveInputs(){try{localStorage.setItem("tarot_love_inputs",JSON.stringify({dateB:loveDateB.value,timeB:loveTimeB.value,cityB:loveCityB.value}))}catch(e){}}
+function loadLoveInputs(){let saved={};try{saved=JSON.parse(localStorage.getItem("tarot_love_inputs")||"{}")}catch(e){saved={}}loveDateB.value=saved.dateB||"";loveTimeB.value=saved.timeB||"";loveCityB.value=saved.cityB||""}
+function firstWord(name){return String(name||"").trim().split(/\s+/)[0]||""}
+function sameText(a,b){return String(a||"").trim().toLowerCase()===String(b||"").trim().toLowerCase()}
+function profileNameFor(date,time,city){const item=contacts().find(x=>sameText(x.date,date)&&sameText(x.time,time)&&sameText(x.city,city));return firstWord(item&&item.name)}
+function loveNameA(){return profileNameFor(birthDate.value,birthTime.value,birthCity.value)||"Person A"}
+function loveNameB(){return profileNameFor(loveDateB.value,loveTimeB.value,loveCityB.value)||"Person B"}
+function loveText(text){return String(text||"").replace(/\bPerson A\b/g,loveNameA()).replace(/\bPerson B\b/g,loveNameB()).replace(/\bA\b/g,loveNameA()).replace(/\bB\b/g,loveNameB())}
+function loveLabel(index){return loveText(loveLabels[index])}
+function loveCaptionShort(index){return loveLabel(index).replace(/^How /,"").replace(/^Current challenge$/,"challenge").replace(/^Advice$/,"advice")}
+function refreshLoveCaptionLabels(){document.querySelectorAll("[data-love-caption]").forEach(el=>{const i=Number(el.dataset.loveCaption);el.textContent=loveCaptionShort(i)})}
+function updateLovePairLabel(){if(document.getElementById("lovePairLabel"))lovePairLabel.textContent=loveNameA()+" / "+loveNameB();refreshLoveCaptionLabels()}
+function setLoveCaption(index){document.querySelectorAll("[data-love-caption]").forEach(el=>el.classList.toggle("active",Number(el.dataset.loveCaption)===index))}
+function selectLoveCard(index){const card=loveReading[index];if(!card)return;if(selectedLoveIndex===index&&loveSelectedStage.classList.contains("active")){selectedLoveIndex=-1;document.querySelectorAll("#loveSpread .celtic-fan-card").forEach(el=>el.classList.remove("active"));setLoveCaption(-1);setActiveReadingBlock("love",-1);loveSelectedStage.classList.remove("active");loveSelectedCard.innerHTML="";return}selectedLoveIndex=index;const context={spread:"love",label:loveLabel(index),key:loveLabels[index]};selectedCard=card;selectedContext=context;document.querySelectorAll("#loveSpread .celtic-fan-card").forEach((el,i)=>el.classList.toggle("active",i===index));setLoveCaption(index);setActiveReadingBlock("love",index);loveSelectedStage.classList.add("active");loveSelectedCard.innerHTML=cardArt(card,context);selectCard(card,false,context)}
+function drawLove(){saveLoveInputs();updateLovePairLabel();loveReading=readingCards(loveLabels.length,loveSeedKey());lastReading=loveReading;selectedLoveIndex=-1;loveSpread.innerHTML=loveReading.map((card,i)=>loveThumb(card,i)).join("");loveSelectedCard.innerHTML="";loveSelectedStage.classList.remove("active");setLoveCaption(-1);loveSummary.innerHTML=loveCombinedText(loveReading);setActiveReadingBlock("love",-1);saveLast();showTab("lovePanel")}
 function renderDeck(filter="Major"){document.querySelectorAll(".deck-tools .small-btn").forEach(btn=>btn.classList.toggle("active",btn.textContent.trim()===filter));deckDetail.classList.remove("active");const cards=deck.filter(c=>c.arcana===filter||c.suit===filter);deckGrid.innerHTML=cards.map(card=>'<button class="deck-card" type="button" data-card-id="'+card.id+'" onclick="selectCard(deck['+card.id+'],true,null)"><img src="'+safe(card.image)+'" alt="'+safe(card.name)+'"></button>').join("")}
 function openCardModal(id){const card=deck.find(c=>c.id===id);if(!card)return;selectedCard=card;tarotModalTitle.textContent=card.name;tarotModalBody.innerHTML=meaningHtml(card,selectedContext);tarotModal.style.display="flex"}
 function closeTarotModal(){tarotModal.style.display="none"}
 function saveLast(){try{localStorage.setItem("tarot_last_reading",JSON.stringify({updatedAt:new Date().toISOString(),cards:lastReading.map(c=>c.name)}))}catch(e){}if(window.AppSharedState)AppSharedState.saveLastAstroInput({date:birthDate.value,time:birthTime.value,city:birthCity.value})}
-function contacts(){return window.AppSharedState?AppSharedState.contactsWithOwner():JSON.parse(localStorage.getItem("numerology_dates")||"[]")}
-function renderSavedList(){const list=contacts();const count=document.getElementById("savedCountBox");count.textContent=list.length;count.style.display=list.length?"flex":"none";savedList.innerHTML=list.length?list.map(item=>'<div class="savedItem" onclick="loadSaved(\''+safe(item.id)+'\')"><b>'+safe(item.name)+'</b><br><span style="color:#94a3b8;font-size:11px">'+safe(item.date||"")+' '+safe(item.time||"")+' '+safe(item.city||"")+'</span></div>').join(""):'<div class="note">No saved profiles yet.</div>'}
-function loadSaved(id){const item=contacts().find(x=>String(x.id)===String(id));if(!item)return;birthDate.value=item.date||"";birthTime.value=item.time||"";birthCity.value=item.city||"";toggleSavedPanel(false);drawDaily()}
-function toggleSavedPanel(force){const p=document.getElementById("savedPanel");p.style.display=force===false?"none":(p.style.display==="block"?"none":"block");if(p.style.display==="block")renderSavedList()}
-function loadInitial(){const params=new URLSearchParams(location.search);const state=window.AppSharedState?AppSharedState.preferredAstroInput(params):{date:params.get("date")||"",time:params.get("time")||"",city:params.get("city")||""};birthDate.value=state.date||"";birthTime.value=state.time||"";birthCity.value=state.city||"";if(window.AppSharedState)AppSharedState.bindLastAstroInput({dateId:"birthDate",timeId:"birthTime",cityId:"birthCity"});renderSavedList();renderDeck("Major");if(params.get("notificationTopic")==="tarotDailyCard"){showTab("daily");setTimeout(drawDaily,120)}}
+function jsString(value){return JSON.stringify(String(value||""))}
+function getStoredContacts(){try{const v=JSON.parse(localStorage.getItem("numerology_dates")||"[]");return Array.isArray(v)?v.filter(x=>x&&x.id!=="owner-profile"&&!x.ownerProfile):[]}catch(e){return []}}
+function saveStoredContacts(list){if(window.AppSharedState)return AppSharedState.saveContacts(list);localStorage.setItem("numerology_dates",JSON.stringify(list))}
+function getOwnerProfile(){try{return JSON.parse(localStorage.getItem("numerology_owner_profile")||"null")}catch(e){return null}}
+function ownerContact(){if(window.AppSharedState&&AppSharedState.ownerContact)return AppSharedState.ownerContact();const p=getOwnerProfile();if(!p)return null;const name=[p.firstName,p.lastName].filter(Boolean).join(" ").trim();if(!name)return null;return{id:"owner-profile",ownerProfile:true,locked:true,name,date:p.birthDate||"",time:p.birthTime||"",city:p.birthCity||"",isTwin:!!p.isTwin,isTwin3:!!p.isTwin3}}
+function contacts(){return window.AppSharedState?AppSharedState.contactsWithOwner():[ownerContact(),...getStoredContacts()].filter(Boolean)}
+function contactDetails(item){return [item.date||"",item.time||"",item.city||""].filter(Boolean).join(" ")}
+function updateSavedCount(){const count=document.getElementById("savedCountBox");if(!count)return;const list=contacts();count.textContent=list.length;count.style.display=list.length?"flex":"none"}
+function renderSavedList(){const list=contacts();updateSavedCount();if(!list.length){savedList.innerHTML='<div class="note">No saved profiles</div>';return}savedList.innerHTML=list.map(item=>{const isOwner=item.id==="owner-profile"||item.ownerProfile||item.locked;const details=contactDetails(item);const click='loadSaved('+jsString(item.id)+')';const editClick='event.stopPropagation();editSavedDate('+jsString(item.id)+')';const deleteClick='event.stopPropagation();deleteSavedDate('+jsString(item.id)+')';if(isOwner)return '<div class="savedItem" style="background:linear-gradient(135deg,#cbd5e1,#64748b);color:#0f172a;border-color:rgba(226,232,240,.85);box-shadow:0 0 10px rgba(148,163,184,.28);text-align:center" onclick="'+safe(click)+'"><div style="font-weight:900;font-size:13px">'+safe(item.name||"Owner")+'</div></div>';const twin=item.isTwin?'<span style="background:#cbd5e1;color:#0f172a;font-size:9px;padding:2px 6px;border-radius:4px;margin-left:6px;font-weight:bold">TWIN</span>':"";const twin3=item.isTwin3?'<span style="background:#facc15;color:#0f172a;font-size:9px;padding:2px 6px;border-radius:4px;margin-left:6px;font-weight:bold">3rd TWIN</span>':"";return '<div class="savedItem" onclick="'+safe(click)+'"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div><div style="color:#e2e8f0;font-weight:bold;font-size:13px">'+safe(item.name||"Saved contact")+twin+twin3+'</div>'+(details?'<div style="color:#94a3b8;font-size:11px;margin-top:2px">'+safe(details)+'</div>':'')+'</div><div style="display:flex;align-items:center;gap:2px"><span class="saved-edit-contact" onclick="'+safe(editClick)+'">EDIT</span><span onclick="'+safe(deleteClick)+'" style="color:#ef4444;font-size:16px;cursor:pointer;padding:5px" title="Delete saved contact">&#128465;&#65039;</span></div></div></div>'}).join("")}
+function loadSaved(id){const item=contacts().find(x=>String(x.id)===String(id));if(!item)return;if(savedTarget==="loveB"){loveDateB.value=item.date||"";loveTimeB.value=item.time||"";loveCityB.value=item.city||"";saveLoveInputs();updateLovePairLabel();toggleSavedPanel(false);showTab("lovePanel");return}birthDate.value=item.date||"";birthTime.value=item.time||"";birthCity.value=item.city||"";updateLovePairLabel();toggleSavedPanel(false);drawDaily()}
+function toggleSavedPanel(force,target){if(target)savedTarget=target;const p=document.getElementById("savedPanel");p.style.display=force===false?"none":(p.style.display==="block"?"none":"block");if(p.style.display==="block")renderSavedList()}
+function openOwnerProfile(){const p=getOwnerProfile()||{};ownerFirstName.value=p.firstName||"";ownerLastName.value=p.lastName||"";ownerBirthDate.value=p.birthDate||"";ownerBirthTime.value=p.birthTime||"";ownerBirthCity.value=p.birthCity||"";ownerCurrentCity.value=p.currentCity||p.birthCity||"";ownerTwin.checked=!!p.isTwin;ownerTwin3.checked=!!p.isTwin3;ownerProfileModal.style.display="flex"}
+function closeOwnerProfile(){ownerProfileModal.style.display="none"}
+function saveOwnerProfile(){const p={firstName:ownerFirstName.value.trim(),lastName:ownerLastName.value.trim(),birthDate:ownerBirthDate.value.trim(),birthTime:ownerBirthTime.value.trim(),birthCity:ownerBirthCity.value.trim(),currentCity:ownerCurrentCity.value.trim(),isTwin:ownerTwin.checked,isTwin3:ownerTwin3.checked,updatedAt:new Date().toISOString()};localStorage.setItem("numerology_owner_profile",JSON.stringify(p));if(p.birthDate||p.birthTime||p.birthCity){birthDate.value=p.birthDate;birthTime.value=p.birthTime;birthCity.value=p.birthCity;if(window.AppSharedState)AppSharedState.saveLastAstroInput({date:p.birthDate,time:p.birthTime,city:p.birthCity,isTwin:p.isTwin,isTwin3:p.isTwin3})}closeOwnerProfile();renderSavedList()}
+function deleteSavedDate(id){if(id==="owner-profile"){alert("Owner profile cannot be deleted from contacts.");return}if(!confirm("Delete this saved profile?"))return;const next=getStoredContacts().filter(item=>String(item.id)!==String(id));saveStoredContacts(next);renderSavedList()}
+function editSavedDate(id){if(id==="owner-profile"){openOwnerProfile();return}const list=getStoredContacts();const item=list.find(x=>String(x.id)===String(id));if(!item)return;const nextName=prompt("Edit contact name",item.name||"");if(nextName===null)return;const nextDate=prompt("Edit date (DD.MM.YYYY)",item.date||"");if(nextDate===null)return;const nextTime=prompt("Edit time (HH:MM)",item.time||"");if(nextTime===null)return;const nextCity=prompt("Edit city",item.city||"");if(nextCity===null)return;item.name=nextName.trim()||item.name||"Saved contact";item.date=nextDate.trim();item.time=nextTime.trim();item.city=nextCity.trim();item.updatedAt=new Date().toISOString();saveStoredContacts(list);renderSavedList()}
+function loadInitial(){const params=new URLSearchParams(location.search);const state=window.AppSharedState?AppSharedState.preferredAstroInput(params):{date:params.get("date")||"",time:params.get("time")||"",city:params.get("city")||""};birthDate.value=state.date||"";birthTime.value=state.time||"";birthCity.value=state.city||"";if(window.AppSharedState)AppSharedState.bindLastAstroInput({dateId:"birthDate",timeId:"birthTime",cityId:"birthCity"});renderSavedList();renderDeck("Major");loadLoveInputs();["birthDate","birthTime","birthCity","loveDateB","loveTimeB","loveCityB"].forEach(id=>{const el=document.getElementById(id);if(el){el.addEventListener("input",updateLovePairLabel);el.addEventListener("change",()=>{saveLoveInputs();updateLovePairLabel()})}});updateLovePairLabel();if(params.get("notificationTopic")==="tarotDailyCard"){showTab("daily");setTimeout(drawDaily,120)}}
 function goBack(){if(window.AppSharedState)AppSharedState.saveLastAstroInput({date:birthDate.value,time:birthTime.value,city:birthCity.value});window.location.href="index.html?astroReturn=1&date="+encodeURIComponent(birthDate.value)+"&time="+encodeURIComponent(birthTime.value)+"&city="+encodeURIComponent(birthCity.value)+"#astroEntry"}
 function exitApp(){window.location.href="index.html"}
 async function sharePage(){const text="Tarot reading: "+(lastReading.length?lastReading.map(c=>c.name).join(", "):selectedCard.name);if(navigator.share){try{await navigator.share({title:"Tarot Cards",text,url:location.href});return}catch(e){}}try{await navigator.clipboard.writeText(location.href);alert("Link copied.")}catch(e){alert(text)}}
