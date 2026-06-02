@@ -4,6 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Astrology App</title>
+<link rel="icon" type="image/png" href="images/ikon.png">
+<link rel="apple-touch-icon" href="images/ikon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f172a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Pyramid App">
 <script src="app-shared-state.js"></script>
 <script src="app-notification-open.js"></script>
 <style>
@@ -328,11 +335,11 @@ body{
 }
 
 .row {
-  display: grid;
-  grid-template-columns: 80px 1fr 60px;
-  gap: 8px;
+  display: flex;
   align-items: center;
-  padding: 8px 0;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 0;
   border-bottom: 1px solid rgba(148,163,184,0.12);
   font-size: 12px;
 }
@@ -341,9 +348,9 @@ body{
   border-bottom: 0;
 }
 
-.name { font-weight: 700; }
-.pos { color: #dbeafe; }
-.house { color: #f6cb71; text-align: right; }
+.name { font-weight: 700; min-width:72px; }
+.pos { color: #dbeafe; flex:1; }
+.house { color: #f6cb71; text-align: right; min-width:56px; }
 
 .angles {
   display: grid;
@@ -355,20 +362,27 @@ body{
   background: rgba(15,23,42,0.65);
   border: 1px solid rgba(56,189,248,0.12);
   border-radius: 10px;
-  padding: 10px;
-  text-align: center;
+  padding: 8px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  text-align:left;
 }
 
 .angle-label {
   color: #FFD700;
   font-size: 10px;
-  margin-bottom: 3px;
+  margin-bottom: 0;
+  min-width:28px;
 }
 
 .angle-value {
   color: #dbeafe;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
+  flex:1;
+  text-align:right;
 }
 
 .aspect-row {
@@ -757,6 +771,72 @@ p,.subtitle,.description,.small,.note{line-height:1.25!important;margin-top:2px!
 #savedIcon svg,.savedIconBox svg,#savedIcon svg *,.savedIconBox svg *{stroke:var(--astro-gold)!important;filter:drop-shadow(0 0 5px rgba(255,215,0,.65))!important}
 #savedCount,.savedCountBox{background:var(--astro-gold)!important;color:#0f172a!important;border:1px solid rgba(255,215,0,.9)!important;box-shadow:0 0 7px rgba(255,215,0,.38)!important}
 
+
+
+/* ===== ASTRO POSITION HELP MODAL ===== */
+.position-help-btn{
+  flex:0 0 auto;
+  width:20px;
+  height:20px;
+  border-radius:50%;
+  border:1px solid rgba(255,215,0,.45);
+  background:rgba(15,23,42,.92);
+  color:#FFD700;
+  font-size:12px;
+  font-weight:800;
+  line-height:18px;
+  padding:0;
+  cursor:pointer;
+  box-shadow:0 0 7px rgba(255,215,0,.16);
+}
+.position-help-btn:hover{border-color:#FFD700;box-shadow:0 0 10px rgba(255,215,0,.32)}
+.position-help-modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:250000;
+  background:rgba(2,6,23,.78);
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+.position-help-panel{
+  width:min(92vw,430px);
+  max-height:82vh;
+  overflow:auto;
+  background:#0f172a;
+  border:1px solid rgba(255,215,0,.45);
+  border-radius:10px;
+  box-shadow:0 18px 45px rgba(0,0,0,.55),0 0 24px rgba(255,215,0,.18);
+  padding:18px;
+  color:#e5e7eb;
+  position:relative;
+}
+.position-help-close{
+  position:absolute;
+  top:10px;
+  right:10px;
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  border:1px solid rgba(255,215,0,.45);
+  background:#111827;
+  color:#FFD700;
+  font-size:18px;
+  line-height:1;
+  cursor:pointer;
+}
+.position-help-title{
+  color:#FFD700;
+  font-size:18px;
+  font-weight:800;
+  padding-right:38px;
+  margin-bottom:10px;
+}
+.position-help-body{font-size:14px;line-height:1.45;color:#dbeafe}
+.position-help-body p{margin:8px 0}
+.position-help-body strong{color:#f6cb71}
+
 </style>
 <base target="_blank">
 </head>
@@ -1060,7 +1140,7 @@ LUNAR PHASES
     cursor:pointer;
   ">&times;</div>
   <h3 style="color:#FFD700; margin-bottom:15px; font-size:14px; text-align:center; text-shadow:0 0 10px rgba(255,215,0,.36);">
-    SAVED DATES
+    SAVED PROFILES
   </h3>
   <div id="savedList"></div>
 </div>
@@ -1103,7 +1183,7 @@ async function appShare(shareData){
   await appCopyText(shareData.url||location.href,"Link copied to clipboard.");
 }
 function appPrintPage(){try{if(window.Android&&typeof window.Android.printPage==="function"){window.Android.printPage();return}window.print()}catch(e){alert("Print is not available in this app view.")}}
-function appExit(fallbackUrl){try{if(window.Capacitor?.Plugins?.App?.exitApp){window.Capacitor.Plugins.App.exitApp();return}if(navigator.app&&typeof navigator.app.exitApp==="function"){navigator.app.exitApp();return}if(window.Android&&typeof window.Android.exitApp==="function"){window.Android.exitApp();return}window.close()}catch(e){}setTimeout(()=>{window.location.href=fallbackUrl||"index.html"},120)}
+function appExit(fallbackUrl){if(window.closeNativeApp){window.closeNativeApp(fallbackUrl);return}try{window.close()}catch(e){}setTimeout(function(){window.location.href=fallbackUrl||"index.html"},160)}
 window.appCopyText=appCopyText;window.appShare=appShare;window.appPrintPage=appPrintPage;window.appExit=appExit;
 
 document.getElementById("printBtn").addEventListener("click", async () => {
@@ -1221,16 +1301,17 @@ function openAstrocartography(){
   let url = "astrocartography.html?date=" + encodeURIComponent(date);
   if(time) url += "&time=" + encodeURIComponent(time);
   if(city) url += "&city=" + encodeURIComponent(city);
-  url += "&isTwin=" + encodeURIComponent(params.get("isTwin") || "false");
-  url += "&isTwin3=" + encodeURIComponent(params.get("isTwin3") || "false");
+  url += "&isTwin=" + encodeURIComponent(params.get("isTwin") || (fallback&&fallback.isTwin ? "true" : "false"));
+  url += "&isTwin3=" + encodeURIComponent(params.get("isTwin3") || (fallback&&fallback.isTwin3 ? "true" : "false"));
 
   window.location.href = url;
 }
 
 function openTransit(){
-  const date = readInputDate();
-  const time = readInputTime();
-  const city = document.getElementById("cityInput").value;
+  const fallback = window.AppSharedState ? AppSharedState.lastAstroInput() : null;
+  const date = readInputDate() || (fallback && fallback.date) || "";
+  const time = readInputTime() || (fallback && fallback.time) || "";
+  const city = document.getElementById("cityInput").value || (fallback && fallback.city) || "";
   const params = new URLSearchParams(window.location.search);
 
   saveAstroReturnState(date, time, city);
@@ -1538,16 +1619,13 @@ function saveAstroReturnState(date, time, city){
   const isTwin = params.get("isTwin") || "false";
   const isTwin3 = params.get("isTwin3") || "false";
   sessionStorage.setItem("returningFromChart", "true");
-  sessionStorage.setItem("astroReturnState", JSON.stringify({
-    date: date,
-    time: time,
-    city: city,
-    isTwin: isTwin === "true",
-    isTwin3: isTwin3 === "true"
-  }));
+  const astroTransferState = {date: date, time: time, city: city, isTwin: isTwin === "true", isTwin3: isTwin3 === "true", updatedAt:new Date().toISOString()};
+  sessionStorage.setItem("astroReturnState", JSON.stringify(astroTransferState));
+  localStorage.setItem("astroReturnState", JSON.stringify(astroTransferState));
+  localStorage.setItem("lastAstroInput", JSON.stringify(astroTransferState));
 }
 
-// ===== SAVED DATES FUNCTIONS =====
+// ===== SAVED PROFILES FUNCTIONS =====
 function getSavedDates(){
   let saved = localStorage.getItem('numerology_dates');
   let dates = saved ? JSON.parse(saved) : [];
@@ -1563,7 +1641,7 @@ function getSavedDates(){
         name:name,
         date:profile.birthDate || '',
         time:profile.birthTime || '',
-        city:profile.birthCity || '',
+        city:profile.birthCity || profile.currentCity || '',
         isTwin:!!profile.isTwin,
         isTwin3:!!profile.isTwin3
       });
@@ -1703,18 +1781,56 @@ function editSavedDate(id){
   renderSavedList();
 }
 
-function loadSavedDate(dateStr, timeStr, city){
-  document.getElementById('input').value = dateStr;
+function closeSavedPanel(){
+  let panel = document.getElementById('savedPanel');
+  if(panel) panel.style.display = 'none';
+}
+
+function loadSavedDate(dateStr, timeStr, city, isTwin, isTwin3){
+  const next = {
+    date: dateStr || "",
+    time: timeStr || "",
+    city: city || "",
+    isTwin: !!isTwin,
+    isTwin3: !!isTwin3
+  };
+  document.getElementById('input').value = next.date;
 
   let timeInput = document.getElementById('timeInput');
-  if(timeInput && timeStr) timeInput.value = timeStr;
+  if(timeInput) timeInput.value = next.time;
 
   let cityInput = document.getElementById('cityInput');
-  if(cityInput && city) cityInput.value = city;
+  if(cityInput) cityInput.value = next.city;
 
-  if(window.AppSharedState) AppSharedState.saveLastAstroInput({date:dateStr, time:timeStr || "", city:city || ""});
+  if(window.AppSharedState) AppSharedState.saveLastAstroInput(next);
+  try{
+    sessionStorage.setItem("astroReturnState", JSON.stringify({...next, updatedAt:new Date().toISOString()}));
+    localStorage.setItem("astroReturnState", JSON.stringify({...next, updatedAt:new Date().toISOString()}));
+    localStorage.setItem("lastAstroInput", JSON.stringify({...next, updatedAt:new Date().toISOString()}));
+  }catch(e){}
   skipSavePrompt = true;
-  toggleSavedPanel();
+  closeSavedPanel();
+  if(typeof analyze === "function" && next.date){
+    analyze();
+  }
+}
+
+function loadOwnerSavedProfile(){
+  let profile = null;
+  try{ profile = JSON.parse(localStorage.getItem('numerology_owner_profile') || 'null'); }catch(e){}
+  const name = [profile && profile.firstName, profile && profile.lastName].filter(Boolean).join(' ').trim();
+  if(!profile || !name || !profile.birthDate){
+    closeSavedPanel();
+    alert('Owner profile needs birth data first.');
+    return;
+  }
+  loadSavedDate(
+    profile.birthDate || "",
+    profile.birthTime || "",
+    profile.birthCity || profile.currentCity || "",
+    !!profile.isTwin,
+    !!profile.isTwin3
+  );
 }
 
 function toggleSavedPanel(){
@@ -1736,7 +1852,7 @@ function renderSavedList(){
   let saved = getSavedDates();
 
   if(saved.length === 0){
-    container.innerHTML = '<div style="color:#64748b; text-align:center; padding:20px; font-size:12px;">No saved dates</div>';
+    container.innerHTML = '<div style="color:#64748b; text-align:center; padding:20px; font-size:12px;">No saved profiles</div>';
     return;
   }
 
@@ -1744,9 +1860,9 @@ function renderSavedList(){
   saved.forEach(function(item) {
     const isOwner = item.id === 'owner-profile' || item.ownerProfile || item.locked;
     if(isOwner){
-      html += `<div style="background:#FFD700;color:#0f172a;border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:0.3s;border:1px solid rgba(255,215,0,0.75);text-align:center;" onclick="loadSavedDate(${JSON.stringify(item.date)},${JSON.stringify(item.time || '')},${JSON.stringify(item.city || '')},${item.isTwin ? 'true' : 'false'},${item.isTwin3 ? 'true' : 'false'})">
-        <div style="color:#0f172a;font-weight:bold;font-size:13px;">${item.name}</div>
-      </div>`;
+      html += `<button type="button" style="width:100%;background:#FFD700;color:#0f172a;border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:0.3s;border:1px solid rgba(255,215,0,0.75);text-align:center;font:inherit;" onclick="loadOwnerSavedProfile()">
+        <div style="color:#0f172a;font-weight:bold;font-size:13px;">${String(item.name || 'Owner').replace(/[&<>"']/g, function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch] || ch;})}</div>
+      </button>`;
       return;
     }
     let twinBadge = item.isTwin ? '<span style="background:#38bdf8;color:#0f172a;font-size:9px;padding:2px 6px;border-radius:4px;margin-left:6px;font-weight:bold;">TWIN</span>' : '';
@@ -2021,6 +2137,147 @@ function renderWheel(data, cusps, asc, mc, aspects){
   });
 }
 
+
+
+const planetMeanings = {
+  Sun:"Sun shows identity, vitality, confidence and the central life direction. It describes what the person is learning to become.",
+  Moon:"Moon shows emotions, instincts, memory, safety needs and the private inner rhythm. It describes what the person needs to feel secure.",
+  Mercury:"Mercury shows thinking, speech, learning, decision style and how the person processes information.",
+  Venus:"Venus shows love style, attraction, taste, pleasure, money values and what feels harmonious.",
+  Mars:"Mars shows drive, courage, anger, desire, sexuality and how the person acts when pursuing something.",
+  Jupiter:"Jupiter shows growth, faith, opportunity, teaching, wisdom and where life tends to expand.",
+  Saturn:"Saturn shows discipline, fear, responsibility, limits, maturity and where effort becomes mastery.",
+  Uranus:"Uranus shows freedom, originality, shocks, rebellion and where the person needs independence.",
+  Neptune:"Neptune shows dreams, spirituality, imagination, compassion, confusion and idealization.",
+  Pluto:"Pluto shows deep transformation, power, obsession, survival instincts and where life asks for renewal."
+};
+
+const signMeanings = {
+  Aries:"Aries is direct, fast, brave and instinctive. It wants action, beginnings and self-trust.",
+  Taurus:"Taurus is steady, sensual, practical and persistent. It wants security, value and peace.",
+  Gemini:"Gemini is curious, verbal, adaptable and mentally active. It wants information, movement and exchange.",
+  Cancer:"Cancer is protective, emotional, intuitive and memory-based. It wants belonging, care and safety.",
+  Leo:"Leo is expressive, proud, creative and warm. It wants recognition, heart and personal radiance.",
+  Virgo:"Virgo is analytical, useful, precise and improvement-focused. It wants order, skill and practical service.",
+  Libra:"Libra is social, diplomatic, aesthetic and relational. It wants balance, fairness and cooperation.",
+  Scorpio:"Scorpio is intense, private, perceptive and transformative. It wants truth, depth and emotional honesty.",
+  Sagittarius:"Sagittarius is broad, optimistic, philosophical and adventurous. It wants meaning, freedom and growth.",
+  Capricorn:"Capricorn is disciplined, ambitious, realistic and strategic. It wants structure, achievement and respect.",
+  Aquarius:"Aquarius is independent, intellectual, unusual and future-oriented. It wants freedom, systems and community.",
+  Pisces:"Pisces is sensitive, imaginative, spiritual and empathic. It wants compassion, flow and connection."
+};
+
+const houseMeanings = {
+  1:"House 1: identity, body, appearance and how the person starts things.",
+  2:"House 2: money, values, possessions, stability and self-worth.",
+  3:"House 3: communication, learning, siblings, local environment and daily thinking.",
+  4:"House 4: home, family, roots, privacy and emotional foundation.",
+  5:"House 5: creativity, romance, children, play and personal expression.",
+  6:"House 6: work habits, health, service, routine and practical improvement.",
+  7:"House 7: partnership, marriage, agreements, clients and one-to-one mirrors.",
+  8:"House 8: intimacy, shared money, crisis, psychology and transformation.",
+  9:"House 9: travel, belief, study, law, publishing and the search for meaning.",
+  10:"House 10: career, reputation, authority, public role and long-term direction.",
+  11:"House 11: friends, groups, networks, hopes and collective contribution.",
+  12:"House 12: solitude, dreams, hidden patterns, healing, spirituality and release."
+};
+
+function positionHelpText(planet, sign, house){
+  const planetText = planetMeanings[planet] || "This planet describes a specific life function.";
+  const signText = signMeanings[sign] || "This sign describes the style and tone of expression.";
+  const houseText = houseMeanings[house] || "This house describes the life area where it shows up.";
+  return {
+    title: planet+" in "+sign+" - House "+house,
+    body:
+      "<p><strong>Planet:</strong> "+planetText+"</p>"+
+      "<p><strong>Sign:</strong> "+signText+"</p>"+
+      "<p><strong>House:</strong> "+houseText+"</p>"+
+      "<p><strong>Simple reading:</strong> "+planet+" works through "+sign+" style, and it is most visible in House "+house+" topics.</p>"
+  };
+}
+
+function ensurePositionHelpModal(){
+  let modal = document.getElementById("positionHelpModal");
+  if(modal)return modal;
+  modal = document.createElement("div");
+  modal.id = "positionHelpModal";
+  modal.className = "position-help-modal";
+  modal.innerHTML =
+    '<div class="position-help-panel">'+
+      '<button class="position-help-close" type="button" onclick="closePositionHelp()" aria-label="Close">x</button>'+
+      '<div id="positionHelpTitle" class="position-help-title"></div>'+
+      '<div id="positionHelpBody" class="position-help-body"></div>'+
+    '</div>';
+  modal.addEventListener("click", function(event){
+    if(event.target === modal)closePositionHelp();
+  });
+  document.body.appendChild(modal);
+  return modal;
+}
+
+function openPositionHelp(planet, longitude, house){
+  const sign = signOf(Number(longitude) || 0);
+  const info = positionHelpText(planet, sign.name, house);
+  const modal = ensurePositionHelpModal();
+  document.getElementById("positionHelpTitle").textContent = info.title;
+  document.getElementById("positionHelpBody").innerHTML = info.body;
+  modal.style.display = "flex";
+}
+
+
+
+const angleMeanings = {
+  ASC:"ASC or Ascendant shows the first impression, body, instinctive style and how the person enters life. It is the doorway of the chart.",
+  MC:"MC shows public direction, career, reputation and what the person is trying to build or become visible for.",
+  DSC:"DSC shows partnership style, what the person seeks in others and how close one-to-one relationships mirror them.",
+  IC:"IC shows roots, home, family memory and the private emotional foundation underneath the public life."
+};
+
+const aspectMeanings = {
+  Conjunction:"Conjunction blends two planets together. Their themes act strongly and directly, sometimes as one combined force.",
+  Sextile:"Sextile is supportive and useful. It shows talents or opportunities that grow when the person actively uses them.",
+  Square:"Square creates tension and pressure. It can feel difficult, but it pushes growth, action and maturity.",
+  Trine:"Trine flows easily. It shows natural ability, comfort and support, though it can be taken for granted.",
+  Opposition:"Opposition creates polarity. The person learns balance between two needs, often through relationships or outside events."
+};
+
+function openAngleHelp(name, longitude){
+  const sign = signOf(Number(longitude) || 0);
+  const title = name+" in "+sign.name;
+  const body =
+    "<p><strong>Angle:</strong> "+(angleMeanings[name] || "This angle is a major doorway in the chart.")+"</p>"+
+    "<p><strong>Sign:</strong> "+(signMeanings[sign.name] || "The sign shows the style of this angle.")+"</p>"+
+    "<p><strong>Simple reading:</strong> "+name+" works through "+sign.name+" style.</p>";
+  const modal = ensurePositionHelpModal();
+  document.getElementById("positionHelpTitle").textContent = title;
+  document.getElementById("positionHelpBody").innerHTML = body;
+  modal.style.display = "flex";
+}
+
+function openAspectHelp(p1, p2, aspect, orb){
+  const title = p1+" "+aspect+" "+p2;
+  const body =
+    "<p><strong>Aspect:</strong> "+(aspectMeanings[aspect] || "This aspect describes how two planets communicate.")+"</p>"+
+    "<p><strong>Planets:</strong> "+p1+" and "+p2+" are connected, so their life themes influence each other.</p>"+
+    "<p><strong>Orb:</strong> "+orb+" degrees. Smaller orb means the aspect is stronger and easier to notice.</p>"+
+    "<p><strong>Simple reading:</strong> Read "+p1+" first, then "+p2+", then use the aspect word to understand whether they blend, flow, challenge or balance each other.</p>";
+  const modal = ensurePositionHelpModal();
+  document.getElementById("positionHelpTitle").textContent = title;
+  document.getElementById("positionHelpBody").innerHTML = body;
+  modal.style.display = "flex";
+}
+
+window.openAngleHelp = openAngleHelp;
+window.openAspectHelp = openAspectHelp;
+
+function closePositionHelp(){
+  const modal = document.getElementById("positionHelpModal");
+  if(modal)modal.style.display = "none";
+}
+
+window.openPositionHelp = openPositionHelp;
+window.closePositionHelp = closePositionHelp;
+
 function renderTables(data, cusps, asc, mc, aspects, details){
   const planetTable = document.getElementById("planetTable");
   const angleTable = document.getElementById("angleTable");
@@ -2029,6 +2286,7 @@ function renderTables(data, cusps, asc, mc, aspects, details){
 
   if(planetTable) planetTable.innerHTML = data.map(p => `
     <div class="row">
+      <button class="position-help-btn" type="button" onclick="openPositionHelp('${p.name}', ${p.longitude}, ${p.house})" aria-label="Explain ${p.name} in this sign">?</button>
       <div class="name" style="color:${p.color}">${p.symbol} ${p.name}</div>
       <div class="pos">${formatPos(p.longitude)}</div>
       <div class="house">House ${p.house}</div>
@@ -2038,10 +2296,10 @@ function renderTables(data, cusps, asc, mc, aspects, details){
     ["ASC", asc], ["MC", mc], ["DSC", normalize(asc + 180)], ["IC", normalize(mc + 180)]
   ];
   if(angleTable) angleTable.innerHTML = angleData.map(([name, lon]) => `
-    <div class="angle-box"><div class="angle-label">${name}</div><div class="angle-value">${formatPos(lon)}</div></div>`).join("");
+    <div class="angle-box"><button class="position-help-btn" type="button" onclick="openAngleHelp('${name}', ${lon})" aria-label="Explain ${name}">?</button><span class="angle-label">${name}</span><span class="angle-value">${formatPos(lon)}</span></div>`).join("");
 
   if(aspectTable) aspectTable.innerHTML = aspects.length
-    ? aspects.slice(0, 12).map(a => `<div class="aspect-row"><span style="color:${a.color}">${a.p1.name} - ${a.p2.name}</span><span>${a.name}</span><span>${a.orb.toFixed(1)}&deg;</span></div>`).join("")
+    ? aspects.slice(0, 12).map(a => `<div class="aspect-row"><button class="position-help-btn" type="button" onclick="openAspectHelp('${a.p1.name}', '${a.p2.name}', '${a.name}', '${a.orb.toFixed(1)}')" aria-label="Explain aspect">?</button><span style="color:${a.color}">${a.p1.name} - ${a.p2.name}</span><span>${a.name}</span><span>${a.orb.toFixed(1)}&deg;</span></div>`).join("")
     : `<div class="muted">No major aspects inside the selected orbs.</div>`;
 
   if(calcDetails) calcDetails.innerHTML = `
@@ -2185,3 +2443,9 @@ window.onload = function(){
 
 </body>
 </html>
+
+
+
+
+
+

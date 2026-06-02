@@ -1,9 +1,16 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tarot Cards</title>
+<link rel="icon" type="image/png" href="images/ikon.png">
+<link rel="apple-touch-icon" href="images/ikon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f172a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Pyramid App">
 <script src="app-shared-state.js"></script>
 <script src="app-notification-open.js"></script>
 <style>
@@ -486,9 +493,14 @@ function deleteSavedDate(id){if(id==="owner-profile"){alert("Owner profile canno
 function editSavedDate(id){if(id==="owner-profile"){openOwnerProfile();return}const list=getStoredContacts();const item=list.find(x=>String(x.id)===String(id));if(!item)return;const nextName=prompt("Edit contact name",item.name||"");if(nextName===null)return;const nextDate=prompt("Edit date (DD.MM.YYYY)",item.date||"");if(nextDate===null)return;const nextTime=prompt("Edit time (HH:MM)",item.time||"");if(nextTime===null)return;const nextCity=prompt("Edit city",item.city||"");if(nextCity===null)return;item.name=nextName.trim()||item.name||"Saved contact";item.date=nextDate.trim();item.time=nextTime.trim();item.city=nextCity.trim();item.updatedAt=new Date().toISOString();saveStoredContacts(list);renderSavedList()}
 function loadInitial(){const params=new URLSearchParams(location.search);const state=window.AppSharedState?AppSharedState.preferredAstroInput(params):{date:params.get("date")||"",time:params.get("time")||"",city:params.get("city")||""};birthDate.value=state.date||"";birthTime.value=state.time||"";birthCity.value=state.city||"";if(window.AppSharedState)AppSharedState.bindLastAstroInput({dateId:"birthDate",timeId:"birthTime",cityId:"birthCity"});renderSavedList();renderDeck("Major");loadLoveInputs();setInitialDeckViews();["birthDate","birthTime","birthCity","loveDateB","loveTimeB","loveCityB"].forEach(id=>{const el=document.getElementById(id);if(el){el.addEventListener("input",updateLovePairLabel);el.addEventListener("change",()=>{saveLoveInputs();updateLovePairLabel()})}});updateLovePairLabel();if(params.get("notificationTopic")==="tarotDailyCard"){showTab("daily");setTimeout(drawDaily,120)}}
 function goBack(){if(window.AppSharedState)AppSharedState.saveLastAstroInput({date:birthDate.value,time:birthTime.value,city:birthCity.value});const params=new URLSearchParams(location.search);const savedReturn=params.get("returnUrl");if(savedReturn){window.location.href=savedReturn;return}const from=params.get("from");let url=from==="chart"?"chart.html":"index.html?astroReturn=1";const sep=url.includes("?")?"&":"?";if(birthDate.value){url+=sep+"date="+encodeURIComponent(birthDate.value)+"&time="+encodeURIComponent(birthTime.value)+"&city="+encodeURIComponent(birthCity.value)}if(from!=="chart")url+="#astroEntry";window.location.href=url}
-function exitApp(){window.location.href="index.html"}
+function exitApp(){if(window.closeNativeApp){window.closeNativeApp("index.html");return}window.location.href="index.html"}
 async function sharePage(){const text="Tarot reading: "+(lastReading.length?lastReading.map(c=>c.name).join(", "):selectedCard.name);if(navigator.share){try{await navigator.share({title:"Tarot Cards",text,url:location.href});return}catch(e){}}try{await navigator.clipboard.writeText(location.href);alert("Link copied.")}catch(e){alert(text)}}
 window.addEventListener("DOMContentLoaded",loadInitial);
 </script>
 </body>
 </html>
+
+
+
+
+

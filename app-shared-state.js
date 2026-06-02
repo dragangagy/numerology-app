@@ -1,4 +1,4 @@
-(function(){
+﻿(function(){
   const CONTACTS_KEY = "numerology_dates";
   const OWNER_KEY = "numerology_owner_profile";
   const LAST_ASTRO_KEY = "numerology_last_astro_input";
@@ -79,8 +79,14 @@
   }
 
   function lastAstroInput(){
-    const last = readJson(LAST_ASTRO_KEY, null);
-    if(last && (last.date || last.time || last.city))return last;
+    const primary = readJson(LAST_ASTRO_KEY, null);
+    const alias = readJson("lastAstroInput", null);
+    const sessionLike = readJson("astroReturnState", null);
+    const candidates = [primary, alias, sessionLike].filter(item => item && (item.date || item.time || item.city));
+    if(candidates.length){
+      candidates.sort((a,b) => (Date.parse(b.updatedAt || "") || 0) - (Date.parse(a.updatedAt || "") || 0));
+      return candidates[0];
+    }
     const owner = ownerContact();
     return owner ? {date:owner.date, time:owner.time, city:owner.city, isTwin:owner.isTwin, isTwin3:owner.isTwin3} : null;
   }
@@ -95,6 +101,13 @@
       updatedAt: new Date().toISOString()
     };
     writeJson(LAST_ASTRO_KEY, next);
+    writeJson("lastAstroInput", next);
+    writeJson("astroReturnState", next);
+    try{
+      if(window.sessionStorage){
+        window.sessionStorage.setItem("astroReturnState", JSON.stringify(next));
+      }
+    }catch(e){}
     return next;
   }
 
@@ -140,7 +153,34 @@
       }
     });
   }
-
+  function closeNativeApp(fallbackUrl){
+    const fallback = fallbackUrl || "index.html";
+    const attempts = [
+      {ok:() => window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App && typeof window.Capacitor.Plugins.App.exitApp === "function", run:() => window.Capacitor.Plugins.App.exitApp()},
+      {ok:() => window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App && typeof window.Capacitor.Plugins.App.minimizeApp === "function", run:() => window.Capacitor.Plugins.App.minimizeApp()},
+      {ok:() => navigator.app && typeof navigator.app.exitApp === "function", run:() => navigator.app.exitApp()},
+      {ok:() => window.Android && typeof window.Android.exitApp === "function", run:() => window.Android.exitApp()},
+      {ok:() => window.Android && typeof window.Android.closeApp === "function", run:() => window.Android.closeApp()},
+      {ok:() => window.Android && typeof window.Android.finish === "function", run:() => window.Android.finish()},
+      {ok:() => window.AndroidInterface && typeof window.AndroidInterface.exitApp === "function", run:() => window.AndroidInterface.exitApp()},
+      {ok:() => window.ReactNativeWebView && typeof window.ReactNativeWebView.postMessage === "function", run:() => window.ReactNativeWebView.postMessage(JSON.stringify({type:"exitApp"}))},
+      {ok:() => window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.appExit, run:() => window.webkit.messageHandlers.appExit.postMessage({type:"exitApp"})}
+    ];
+    for(const attempt of attempts){
+      try{
+        if(attempt.ok()){
+          attempt.run();
+          return true;
+        }
+      }catch(e){}
+    }
+    try{window.close()}catch(e){}
+    setTimeout(function(){
+      if(fallback === "about:blank")window.location.href = "about:blank";
+      else if(fallback)window.location.href = fallback;
+    }, 160);
+    return false;
+  }
   window.AppSharedState = {
     contactsWithOwner,
     saveContacts,
@@ -149,6 +189,10 @@
     lastAstroInput,
     saveLastAstroInput,
     preferredAstroInput,
-    bindLastAstroInput
+    bindLastAstroInput,
+    closeNativeApp
   };
+  window.closeNativeApp = closeNativeApp;
 })();
+
+

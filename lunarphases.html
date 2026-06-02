@@ -1,9 +1,16 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lunar Phases</title>
+<link rel="icon" type="image/png" href="images/ikon.png">
+<link rel="apple-touch-icon" href="images/ikon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f172a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Pyramid App">
 <script src="app-shared-state.js"></script>
 <script src="app-notification-open.js"></script>
 
@@ -1002,28 +1009,28 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 
         <div class="phase-selector natal-phase-selector">
             <div class="phase-btn active" onclick="showPhase('new')">
-                <span class="emoji">🌑</span> New
+                <span class="emoji">ðŸŒ‘</span> New
             </div>
             <div class="phase-btn" onclick="showPhase('waxing-crescent')">
-                <span class="emoji">🌒</span> Waxing
+                <span class="emoji">ðŸŒ’</span> Waxing
             </div>
             <div class="phase-btn active" onclick="showPhase('first-quarter')">
-                <span class="emoji">🌓</span> First Q
+                <span class="emoji">ðŸŒ“</span> First Q
             </div>
             <div class="phase-btn" onclick="showPhase('waxing-gibbous')">
-                <span class="emoji">🌔</span> Gibbous
+                <span class="emoji">ðŸŒ”</span> Gibbous
             </div>
             <div class="phase-btn" onclick="showPhase('full')">
-                <span class="emoji">🌕</span> Full
+                <span class="emoji">ðŸŒ•</span> Full
             </div>
             <div class="phase-btn" onclick="showPhase('waning-gibbous')">
-                <span class="emoji">🌖</span> Waning
+                <span class="emoji">ðŸŒ–</span> Waning
             </div>
             <div class="phase-btn" onclick="showPhase('last-quarter')">
-                <span class="emoji">🌗</span> Last Q
+                <span class="emoji">ðŸŒ—</span> Last Q
             </div>
             <div class="phase-btn" onclick="showPhase('waning-crescent')">
-                <span class="emoji">🌘</span> Crescent
+                <span class="emoji">ðŸŒ˜</span> Crescent
             </div>
         </div>
 
@@ -1036,7 +1043,7 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
             </div>
             <div class="natal-moon-text">
             <div class="phase-name" id="phaseName">FIRST QUARTER</div>
-            <div class="illumination" id="illumination">52% Illuminated • Waxing</div>
+            <div class="illumination" id="illumination">52% Illuminated â€¢ Waxing</div>
 
             <div class="moon-data-row">
                 <div class="moon-data-item">
@@ -1065,26 +1072,26 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
         <div class="section-title">PHASE MEANING</div>
         <div class="info-grid" id="phaseInfo">
             <div class="info-card active-phase">
-                <div class="info-title">⚡ Energy</div>
+                <div class="info-title">âš¡ Energy</div>
                 <div class="info-text">Action, movement, motivation and overcoming obstacles. Time to push forward with projects and assert yourself.</div>
             </div>
             <div class="info-card active-phase">
-                <div class="info-title">💭 Emotions</div>
+                <div class="info-title">ðŸ’­ Emotions</div>
                 <div class="info-text">Increased emotional activity and inner tension. Feelings surface for conscious processing and release.</div>
             </div>
             <div class="info-card active-phase">
-                <div class="info-title">🎯 Focus</div>
+                <div class="info-title">ðŸŽ¯ Focus</div>
                 <div class="info-text">Decision making, progress and development. Build momentum and commit to your chosen direction.</div>
             </div>
             <div class="info-card active-phase">
-                <div class="info-title">✨ Spiritual</div>
+                <div class="info-title">âœ¨ Spiritual</div>
                 <div class="info-text">Internal growth and balancing logic with intuition. The light reveals what was hidden in the dark.</div>
             </div>
         </div>
 
         <!-- Lunar Day Info -->
         <div class="lunar-day-info">
-            <div class="lunar-day-title">🌙 Lunar Day 8 — First Quarter</div>
+            <div class="lunar-day-title">ðŸŒ™ Lunar Day 8 â€” First Quarter</div>
             <div class="lunar-day-text">The 8th lunar day is a time of active energy and decision-making. It's favorable for starting new ventures, physical activity, and overcoming challenges. Emotions may be heightened but this energy can be channeled productively.</div>
         </div>
         <div class="personal-lunar-card">
@@ -1121,22 +1128,22 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
         <div class="section-title">MOON IN SIGNS THIS MONTH</div>
         <div class="moon-signs-grid" id="moonSigns">
             <div class="moon-sign-card active">
-                <div class="moon-sign-icon">♌</div>
+                <div class="moon-sign-icon">â™Œ</div>
                 <div class="moon-sign-name">Leo</div>
                 <div class="moon-sign-time">May 15-17</div>
             </div>
             <div class="moon-sign-card">
-                <div class="moon-sign-icon">♍</div>
+                <div class="moon-sign-icon">â™</div>
                 <div class="moon-sign-name">Virgo</div>
                 <div class="moon-sign-time">May 17-19</div>
             </div>
             <div class="moon-sign-card">
-                <div class="moon-sign-icon">♎</div>
+                <div class="moon-sign-icon">â™Ž</div>
                 <div class="moon-sign-name">Libra</div>
                 <div class="moon-sign-time">May 19-21</div>
             </div>
             <div class="moon-sign-card">
-                <div class="moon-sign-icon">♏</div>
+                <div class="moon-sign-icon">â™</div>
                 <div class="moon-sign-name">Scorpio</div>
                 <div class="moon-sign-time">May 21-23</div>
             </div>
@@ -1147,23 +1154,23 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
     <div class="card">
         <div class="section-title">VOID OF COURSE MOON</div>
         <div class="void-card">
-            <div class="void-title">⚠️ Upcoming Void Periods</div>
+            <div class="void-title">âš ï¸ Upcoming Void Periods</div>
             <div class="void-list">
                 <div class="void-item">
                     <span class="void-date">May 17, 2026</span>
-                    <span class="void-time">14:30 — 22:15</span>
+                    <span class="void-time">14:30 â€” 22:15</span>
                 </div>
                 <div class="void-item">
                     <span class="void-date">May 19, 2026</span>
-                    <span class="void-time">08:45 — 16:20</span>
+                    <span class="void-time">08:45 â€” 16:20</span>
                 </div>
                 <div class="void-item">
                     <span class="void-date">May 21, 2026</span>
-                    <span class="void-time">03:10 — 11:55</span>
+                    <span class="void-time">03:10 â€” 11:55</span>
                 </div>
                 <div class="void-item">
                     <span class="void-date">May 23, 2026</span>
-                    <span class="void-time">19:30 — May 24 04:15</span>
+                    <span class="void-time">19:30 â€” May 24 04:15</span>
                 </div>
             </div>
         </div>
@@ -1177,42 +1184,42 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
         <div class="section-title">MOON CYCLE</div>
         <div class="timeline">
             <div class="phase" onclick="showPhase('new')">
-                <div class="phase-icon">🌑</div>
+                <div class="phase-icon">ðŸŒ‘</div>
                 New
                 <div class="phase-date">May 10</div>
             </div>
             <div class="phase" onclick="showPhase('waxing-crescent')">
-                <div class="phase-icon">🌒</div>
+                <div class="phase-icon">ðŸŒ’</div>
                 Waxing
                 <div class="phase-date">May 13</div>
             </div>
             <div class="phase active" onclick="showPhase('first-quarter')">
-                <div class="phase-icon">🌓</div>
+                <div class="phase-icon">ðŸŒ“</div>
                 Quarter
                 <div class="phase-date">May 17</div>
             </div>
             <div class="phase" onclick="showPhase('waxing-gibbous')">
-                <div class="phase-icon">🌔</div>
+                <div class="phase-icon">ðŸŒ”</div>
                 Gibbous
                 <div class="phase-date">May 20</div>
             </div>
             <div class="phase" onclick="showPhase('full')">
-                <div class="phase-icon">🌕</div>
+                <div class="phase-icon">ðŸŒ•</div>
                 Full
                 <div class="phase-date">May 24</div>
             </div>
             <div class="phase" onclick="showPhase('waning-gibbous')">
-                <div class="phase-icon">🌖</div>
+                <div class="phase-icon">ðŸŒ–</div>
                 Waning
                 <div class="phase-date">May 27</div>
             </div>
             <div class="phase" onclick="showPhase('last-quarter')">
-                <div class="phase-icon">🌗</div>
+                <div class="phase-icon">ðŸŒ—</div>
                 Last Q
                 <div class="phase-date">May 31</div>
             </div>
             <div class="phase" onclick="showPhase('waning-crescent')">
-                <div class="phase-icon">🌘</div>
+                <div class="phase-icon">ðŸŒ˜</div>
                 Crescent
                 <div class="phase-date">Jun 3</div>
             </div>
@@ -1224,7 +1231,7 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 
     <!-- LUNAR CALENDAR -->
     <div class="card">
-        <div class="section-title calendar-title">LUNAR CALENDAR — May 2026</div>
+        <div class="section-title calendar-title">LUNAR CALENDAR â€” May 2026</div>
         <div class="calendar-header">
             <div class="calendar-header-day">Mon</div>
             <div class="calendar-header-day">Tue</div>
@@ -1242,29 +1249,29 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
         <div class="section-title">ECLIPSES & LUNAR NODES</div>
         <div class="eclipse-grid">
             <div class="eclipse-card">
-                <div class="eclipse-type">🌑 Solar Eclipse</div>
-                <div class="eclipse-date">March 29, 2026 • ♈ Aries 8°</div>
+                <div class="eclipse-type">ðŸŒ‘ Solar Eclipse</div>
+                <div class="eclipse-date">March 29, 2026 â€¢ â™ˆ Aries 8Â°</div>
                 <div class="eclipse-desc">New beginnings, bold initiatives, assertive energy. Time to start fresh with courage and independence.</div>
             </div>
             <div class="eclipse-card">
-                <div class="eclipse-type">🌕 Lunar Eclipse</div>
-                <div class="eclipse-date">April 13, 2026 • ♎ Libra 23°</div>
+                <div class="eclipse-type">ðŸŒ• Lunar Eclipse</div>
+                <div class="eclipse-date">April 13, 2026 â€¢ â™Ž Libra 23Â°</div>
                 <div class="eclipse-desc">Relationships climax, partnerships transform. Balance between self and others comes into focus.</div>
             </div>
             <div class="eclipse-card">
-                <div class="eclipse-type">🌑 Solar Eclipse</div>
-                <div class="eclipse-date">September 21, 2026 • ♍ Virgo 28°</div>
+                <div class="eclipse-type">ðŸŒ‘ Solar Eclipse</div>
+                <div class="eclipse-date">September 21, 2026 â€¢ â™ Virgo 28Â°</div>
                 <div class="eclipse-desc">Health, service, and daily routines transform. Practical improvements and healing energy.</div>
             </div>
             <div class="eclipse-card">
-                <div class="eclipse-type">🌕 Lunar Eclipse</div>
-                <div class="eclipse-date">October 6, 2026 • ♓ Pisces 12°</div>
+                <div class="eclipse-type">ðŸŒ• Lunar Eclipse</div>
+                <div class="eclipse-date">October 6, 2026 â€¢ â™“ Pisces 12Â°</div>
                 <div class="eclipse-desc">Spiritual awakening, intuition peaks, boundaries dissolve. Deep emotional and mystical experiences.</div>
             </div>
         </div>
 
         <div style="margin-top:14px;padding:12px;background:rgba(30,41,59,0.5);border-radius:10px;text-align:left;">
-            <div style="font-size:12px;color:#FFD700;font-weight:bold;margin-bottom:6px;">☊ North Node in ♓ Pisces / ☋ South Node in ♍ Virgo</div>
+            <div style="font-size:12px;color:#FFD700;font-weight:bold;margin-bottom:6px;">â˜Š North Node in â™“ Pisces / â˜‹ South Node in â™ Virgo</div>
             <div style="font-size:11px;color:#94a3b8;line-height:1.5;">Karmic theme for 2026: Moving toward spiritual growth, compassion, and surrender (Pisces) while releasing perfectionism, over-analysis, and excessive criticism (Virgo).</div>
         </div>
     </div>
@@ -1274,7 +1281,7 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 </div>
 
 <div class="footer">
-    Local Swiss Ephemeris • Lunar Illumination • Void of Course • Eclipse Tracking
+    Local Swiss Ephemeris â€¢ Lunar Illumination â€¢ Void of Course â€¢ Eclipse Tracking
 </div>
 
 <div class="savedPanel" id="savedPanel">
@@ -1290,97 +1297,97 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 const phases = {
     'new': {
         name: 'NEW MOON',
-        illumination: '0% Illuminated • Dark',
+        illumination: '0% Illuminated â€¢ Dark',
         moonStyle: 'linear-gradient(90deg, #020817 50%, #020817 50%)',
         energy: 'Rest, intention setting, new beginnings, planting seeds',
         emotions: 'Introspective, inward focus, emotional reset, subconscious surfacing',
         focus: 'Goal setting, visualization, starting fresh, inner work',
         spiritual: 'Darkness before light, potential energy, womb of creation, deep intuition',
-        lunarDay: 'Lunar Day 1 — New Moon',
+        lunarDay: 'Lunar Day 1 â€” New Moon',
         lunarText: "The 1st lunar day is the most mystical. It's a time of new beginnings, setting intentions, and planting seeds for the future. Energy is low but potential is infinite. Perfect for meditation and vision work.",
         nextPhase: 'May 10'
     },
     'waxing-crescent': {
         name: 'WAXING CRESCENT',
-        illumination: '15% Illuminated • Growing',
+        illumination: '15% Illuminated â€¢ Growing',
         moonStyle: 'linear-gradient(90deg, #020817 40%, #dbeafe 45%)',
         energy: 'Building momentum, taking first steps, faith and hope',
         emotions: 'Growing optimism, emerging confidence, excitement about possibilities',
         focus: 'Action on intentions, small steps, gathering resources, planning',
         spiritual: 'Faith in the unseen, trust in process, nurturing new growth, patience',
-        lunarDay: 'Lunar Day 3-4 — Waxing Crescent',
+        lunarDay: 'Lunar Day 3-4 â€” Waxing Crescent',
         lunarText: "Days 3-4 bring growing energy. It's time to take action on your intentions. Small steps create momentum. Good for learning, research, and building foundations.",
         nextPhase: 'May 13'
     },
     'first-quarter': {
         name: 'FIRST QUARTER',
-        illumination: '52% Illuminated • Waxing',
+        illumination: '52% Illuminated â€¢ Waxing',
         moonStyle: 'linear-gradient(90deg, #020817 48%, #dbeafe 52%)',
         energy: 'Action, movement, motivation and overcoming obstacles',
         emotions: 'Increased emotional activity and inner tension, feelings surface',
         focus: 'Decision making, progress and development, building momentum',
         spiritual: 'Internal growth and balancing logic with intuition, light reveals',
-        lunarDay: 'Lunar Day 8 — First Quarter',
+        lunarDay: 'Lunar Day 8 â€” First Quarter',
         lunarText: "The 8th lunar day is a time of active energy and decision-making. It's favorable for starting new ventures, physical activity, and overcoming challenges. Emotions may be heightened but this energy can be channeled productively.",
         nextPhase: 'May 17'
     },
     'waxing-gibbous': {
         name: 'WAXING GIBBOUS',
-        illumination: '78% Illuminated • Almost Full',
+        illumination: '78% Illuminated â€¢ Almost Full',
         moonStyle: 'linear-gradient(90deg, #020817 20%, #dbeafe 25%)',
         energy: 'Refinement, adjustment, preparation for culmination',
         emotions: 'Anticipation, excitement, possible anxiety as climax approaches',
         focus: 'Fine-tuning, editing, adjusting plans, gathering final details',
         spiritual: 'Almost there energy, patience required, trust in timing, gratitude',
-        lunarDay: 'Lunar Day 11-12 — Waxing Gibbous',
+        lunarDay: 'Lunar Day 11-12 â€” Waxing Gibbous',
         lunarText: 'Days 11-12 are about refinement and preparation. Review your progress, make adjustments, and prepare for the full moon culmination. Good for editing, organizing, and fine-tuning projects.',
         nextPhase: 'May 20'
     },
     'full': {
         name: 'FULL MOON',
-        illumination: '100% Illuminated • Peak',
+        illumination: '100% Illuminated â€¢ Peak',
         moonStyle: 'radial-gradient(circle, #dbeafe 30%, #94a3b8 70%, #64748b 100%)',
         energy: 'Culmination, completion, celebration, maximum manifestation',
         emotions: 'Heightened emotions, clarity, revelations, possible overwhelm',
         focus: 'Releasing what no longer serves, celebrating achievements, culmination',
         spiritual: 'Illumination, clarity, psychic peak, energy release, gratitude ritual',
-        lunarDay: 'Lunar Day 15 — Full Moon',
+        lunarDay: 'Lunar Day 15 â€” Full Moon',
         lunarText: "The 15th lunar day is the peak of the cycle. Emotions and energy are at maximum. It's a time of culmination, celebration, and release. Perfect for gratitude practices, charging crystals, and manifestation rituals.",
         nextPhase: 'May 24'
     },
     'waning-gibbous': {
         name: 'WANING GIBBOUS',
-        illumination: '78% Illuminated • Decreasing',
+        illumination: '78% Illuminated â€¢ Decreasing',
         moonStyle: 'linear-gradient(90deg, #dbeafe 75%, #020817 80%)',
         energy: 'Gratitude, sharing, teaching, disseminating what you learned',
         emotions: 'Reflective, generous, wanting to give back, sharing wisdom',
         focus: 'Sharing results, teaching others, gratitude practices, giving thanks',
         spiritual: 'Harvest energy, sharing abundance, wisdom transmission, service',
-        lunarDay: 'Lunar Day 17-18 — Waning Gibbous',
+        lunarDay: 'Lunar Day 17-18 â€” Waning Gibbous',
         lunarText: "Days 17-18 are for sharing and gratitude. Teach what you've learned, help others, and express thanks. The energy is generous and reflective. Good for community work and mentoring.",
         nextPhase: 'May 27'
     },
     'last-quarter': {
         name: 'LAST QUARTER',
-        illumination: '52% Illuminated • Waning',
+        illumination: '52% Illuminated â€¢ Waning',
         moonStyle: 'linear-gradient(90deg, #dbeafe 48%, #020817 52%)',
         energy: 'Release, let go, forgiveness, clearing space',
         emotions: 'Nostalgia, release, possible sadness as cycle ends, acceptance',
         focus: 'Letting go, forgiveness, clearing clutter, ending projects, rest',
         spiritual: 'Surrender, forgiveness, clearing karma, preparing for renewal',
-        lunarDay: 'Lunar Day 22 — Last Quarter',
+        lunarDay: 'Lunar Day 22 â€” Last Quarter',
         lunarText: 'The 22nd lunar day is for release and forgiveness. Let go of what no longer serves you. Clear physical and emotional clutter. Good for ending relationships, quitting habits, and deep cleaning.',
         nextPhase: 'May 31'
     },
     'waning-crescent': {
         name: 'WANING CRESCENT',
-        illumination: '15% Illuminated • Fading',
+        illumination: '15% Illuminated â€¢ Fading',
         moonStyle: 'linear-gradient(90deg, #dbeafe 15%, #020817 20%)',
         energy: 'Rest, restore, retreat, surrender, deep healing',
         emotions: 'Exhaustion, need for solitude, deep processing, spiritual connection',
         focus: 'Rest, self-care, meditation, spiritual practice, preparing for new cycle',
         spiritual: 'Dark moon energy, deep rest, communion with spirit, surrender',
-        lunarDay: 'Lunar Day 26-29 — Waning Crescent',
+        lunarDay: 'Lunar Day 26-29 â€” Waning Crescent',
         lunarText: 'Days 26-29 are the darkest days. Rest deeply, meditate, and connect with your inner self. Avoid starting new things. This is a time of spiritual communion and preparation for rebirth.',
         nextPhase: 'Jun 3'
     }
@@ -1447,26 +1454,26 @@ function showPhase(phaseKey, sourceEl){
     const infoGrid = document.getElementById('phaseInfo');
     infoGrid.innerHTML = `
         <div class="info-card active-phase">
-            <div class="info-title">⚡ Energy</div>
+            <div class="info-title">âš¡ Energy</div>
             <div class="info-text">${p.energy}</div>
         </div>
         <div class="info-card active-phase">
-            <div class="info-title">💭 Emotions</div>
+            <div class="info-title">ðŸ’­ Emotions</div>
             <div class="info-text">${p.emotions}</div>
         </div>
         <div class="info-card active-phase">
-            <div class="info-title">🎯 Focus</div>
+            <div class="info-title">ðŸŽ¯ Focus</div>
             <div class="info-text">${p.focus}</div>
         </div>
         <div class="info-card active-phase">
-            <div class="info-title">✨ Spiritual</div>
+            <div class="info-title">âœ¨ Spiritual</div>
             <div class="info-text">${p.spiritual}</div>
         </div>
     `;
 
     // Update lunar day info
     const lunarInfo = document.querySelector('.lunar-day-info');
-    lunarInfo.querySelector('.lunar-day-title').textContent = '🌙 ' + p.lunarDay;
+    lunarInfo.querySelector('.lunar-day-title').textContent = 'ðŸŒ™ ' + p.lunarDay;
     lunarInfo.querySelector('.lunar-day-text').textContent = p.lunarText;
 
     // Update active buttons
@@ -1492,13 +1499,13 @@ function renderCalendar(){
 
     // Moon phases for May 2026 (simulated)
     const moonPhases = {
-        10: { icon: '🌑', type: 'new-moon', label: 'New' },
-        13: { icon: '🌒', type: 'quarter', label: 'Wax' },
-        17: { icon: '🌓', type: 'quarter', label: '1st Q' },
-        20: { icon: '🌔', type: 'quarter', label: 'Gibb' },
-        24: { icon: '🌕', type: 'full-moon', label: 'Full' },
-        27: { icon: '🌖', type: 'quarter', label: 'Wan' },
-        31: { icon: '🌗', type: 'quarter', label: 'Last' }
+        10: { icon: 'ðŸŒ‘', type: 'new-moon', label: 'New' },
+        13: { icon: 'ðŸŒ’', type: 'quarter', label: 'Wax' },
+        17: { icon: 'ðŸŒ“', type: 'quarter', label: '1st Q' },
+        20: { icon: 'ðŸŒ”', type: 'quarter', label: 'Gibb' },
+        24: { icon: 'ðŸŒ•', type: 'full-moon', label: 'Full' },
+        27: { icon: 'ðŸŒ–', type: 'quarter', label: 'Wan' },
+        31: { icon: 'ðŸŒ—', type: 'quarter', label: 'Last' }
     };
 
     // Empty cells
@@ -1615,7 +1622,7 @@ function appCopyText(text,message){if(navigator.clipboard&&window.isSecureContex
 function appCopyTextFallback(text,message){const input=document.createElement("textarea");input.value=text;input.setAttribute("readonly","");input.style.position="fixed";input.style.left="-9999px";document.body.appendChild(input);input.select();try{document.execCommand("copy");if(message)alert(message)}catch(e){alert(text)}document.body.removeChild(input);return Promise.resolve()}
 async function appShare(shareData){try{if(window.Android&&typeof window.Android.share==="function"){window.Android.share(shareData.title||document.title,shareData.text||"",shareData.url||location.href);return}if(window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.Share){await window.Capacitor.Plugins.Share.share(shareData);return}if(navigator.share){await navigator.share(shareData);return}}catch(error){console.warn("Native share failed",error)}await appCopyText(shareData.url||location.href,"Link copied to clipboard.")}
 function appPrintPage(){try{if(window.Android&&typeof window.Android.printPage==="function"){window.Android.printPage();return}window.print()}catch(e){alert("Print is not available in this app view.")}}
-function appExit(fallbackUrl){try{if(window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.App&&window.Capacitor.Plugins.App.exitApp){window.Capacitor.Plugins.App.exitApp();return}if(navigator.app&&typeof navigator.app.exitApp==="function"){navigator.app.exitApp();return}if(window.Android&&typeof window.Android.exitApp==="function"){window.Android.exitApp();return}window.close()}catch(e){}setTimeout(()=>{window.location.href=fallbackUrl||"index.html"},120)}
+function appExit(fallbackUrl){if(window.closeNativeApp){window.closeNativeApp(fallbackUrl);return}try{window.close()}catch(e){}setTimeout(function(){window.location.href=fallbackUrl||"index.html"},160)}
 window.appCopyText=appCopyText;window.appShare=appShare;window.appPrintPage=appPrintPage;window.appExit=appExit;
 document.getElementById("printBtn").addEventListener("click",()=>appPrintPage());
 document.getElementById("shareBtn").addEventListener("click",async()=>{await appShare({title:"Lunar phases",text:"Lunar phase report",url:window.location.href})});
@@ -1625,3 +1632,9 @@ window.addEventListener("load",function(){setupCityAutocomplete();updateSavedCou
 
 </body>
 </html>
+
+
+
+
+
+

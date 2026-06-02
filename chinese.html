@@ -1,9 +1,16 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chinese Zodiac</title>
+<link rel="icon" type="image/png" href="images/ikon.png">
+<link rel="apple-touch-icon" href="images/ikon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f172a">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Pyramid App">
 <script src="app-shared-state.js"></script>
 <script src="app-notification-open.js"></script>
 <style>
@@ -44,6 +51,16 @@ body.compat-mode .container>.input-card{display:none}
 .savedPanelTitle{color:#ff3b3b;margin-bottom:15px;font-size:14px;text-shadow:0 0 10px rgba(239,68,68,.36)}
 .savedItem{background:#0f172a;border:1px solid rgba(248,113,113,.24);border-radius:8px;padding:10px;margin-bottom:8px;text-align:left;cursor:pointer}
 .savedItem:hover{border-color:#ef4444;box-shadow:0 0 10px rgba(239,68,68,.25)}
+.saved-edit-contact{color:#ff3b3b!important;font-size:11px!important;cursor:pointer!important;padding:5px 6px!important;border:1px solid rgba(239,68,68,.55)!important;border-radius:7px!important;font-weight:900!important;line-height:1!important;margin-right:3px!important;box-shadow:0 0 7px rgba(239,68,68,.18)!important}
+.profile-modal{display:none;position:fixed;inset:0;background:rgba(2,6,23,.86);z-index:100004;align-items:center;justify-content:center;padding:14px}
+.profile-modal-panel{width:min(94vw,390px);max-height:88vh;overflow:auto;background:#0f172a;border:1px solid rgba(248,113,113,.42);border-radius:12px;box-shadow:0 0 28px rgba(239,68,68,.24);padding:14px;text-align:left}
+.profile-modal-title{color:#ff3b3b;font-size:16px;font-weight:900;text-align:center;margin-bottom:10px;text-shadow:0 0 10px rgba(239,68,68,.35)}
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.profile-field.full{grid-column:1/-1}.profile-field label{display:block;color:#fca5a5;font-size:10px;text-transform:uppercase;letter-spacing:.7px;margin-bottom:4px}
+.profile-field input{width:100%;height:34px;border-radius:8px;border:1px solid rgba(248,113,113,.42);background:#1e293b;color:#fff;padding:0 8px;outline:none}
+.profile-check-row{display:flex;align-items:center;gap:8px;color:#fee2e2;font-size:12px;margin-top:8px}
+.profile-check-row input{accent-color:#ef4444}
+.profile-modal-actions{display:flex;gap:8px;margin-top:12px}.profile-modal-actions button{flex:1;min-height:34px;border-radius:10px;border:1px solid rgba(248,113,113,.36);background:#1e293b;color:#fff;font-weight:900}.profile-modal-actions .save{background:#ef4444;color:#fff}
 .tabs{display:flex;justify-content:center;gap:6px;margin:10px auto 6px;max-width:650px;padding:0 8px;flex-wrap:wrap}
 .tab{min-height:34px;border-radius:8px;background:#1e293b;border:1px solid rgba(248,113,113,.22);color:#fca5a5;font-size:11px;font-weight:800;letter-spacing:.4px;cursor:pointer;transition:.25s;padding:0 12px}
 .tab:hover,.tab.active{color:white;border-color:#ef4444;box-shadow:0 0 12px rgba(239,68,68,.3);background:#334155}
@@ -279,20 +296,40 @@ body.compat-mode .container>.input-card{display:none}
   <div id="savedList"></div>
 </div>
 
+<div id="ownerProfileModal" class="profile-modal">
+  <div class="profile-modal-panel">
+    <div class="profile-modal-title">OWNER PROFILE</div>
+    <div class="profile-grid">
+      <div class="profile-field"><label for="ownerFirstName">First name</label><input id="ownerFirstName" type="text"></div>
+      <div class="profile-field"><label for="ownerLastName">Last name</label><input id="ownerLastName" type="text"></div>
+      <div class="profile-field"><label for="ownerBirthDate">Birth date</label><input id="ownerBirthDate" type="text" placeholder="DD.MM.YYYY" maxlength="10"></div>
+      <div class="profile-field"><label for="ownerBirthTime">Birth time</label><input id="ownerBirthTime" type="text" placeholder="HH:MM" maxlength="5"></div>
+      <div class="profile-field full"><label for="ownerBirthCity">Birth place</label><input id="ownerBirthCity" type="text" placeholder="City of birth"></div>
+      <div class="profile-field full"><label for="ownerCurrentCity">City of residence</label><input id="ownerCurrentCity" type="text" placeholder="Current city"></div>
+    </div>
+    <label class="profile-check-row"><input type="checkbox" id="ownerTwin"> Second Twin</label>
+    <label class="profile-check-row"><input type="checkbox" id="ownerTwin3"> 3rd Twin</label>
+    <div class="profile-modal-actions">
+      <button type="button" onclick="closeOwnerProfile()">CANCEL</button>
+      <button class="save" type="button" onclick="saveOwnerProfile()">SAVE</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const animals = [
-  {key:"Rat",icon:"R",han:"鼠",traits:"quick, observant, strategic, socially alert",best:["Dragon","Monkey","Ox"],hard:["Horse","Goat"]},
-  {key:"Ox",icon:"O",han:"牛",traits:"steady, loyal, patient, practical",best:["Rat","Snake","Rooster"],hard:["Goat","Horse"]},
-  {key:"Tiger",icon:"T",han:"虎",traits:"brave, magnetic, intense, independent",best:["Horse","Dog","Pig"],hard:["Monkey","Snake"]},
-  {key:"Rabbit",icon:"Rb",han:"兔",traits:"gentle, diplomatic, artistic, sensitive",best:["Goat","Pig","Dog"],hard:["Rooster","Dragon"]},
-  {key:"Dragon",icon:"D",han:"龙",traits:"powerful, visionary, proud, charismatic",best:["Rat","Monkey","Rooster"],hard:["Dog","Rabbit"]},
-  {key:"Snake",icon:"S",han:"蛇",traits:"wise, private, intuitive, elegant",best:["Ox","Rooster","Monkey"],hard:["Pig","Tiger"]},
-  {key:"Horse",icon:"H",han:"马",traits:"free, expressive, fast, passionate",best:["Tiger","Dog","Goat"],hard:["Rat","Ox"]},
-  {key:"Goat",icon:"G",han:"羊",traits:"creative, soft, empathic, refined",best:["Rabbit","Pig","Horse"],hard:["Ox","Rat"]},
-  {key:"Monkey",icon:"M",han:"猴",traits:"clever, playful, inventive, restless",best:["Rat","Dragon","Snake"],hard:["Tiger","Pig"]},
-  {key:"Rooster",icon:"Ro",han:"鸡",traits:"precise, stylish, honest, disciplined",best:["Ox","Snake","Dragon"],hard:["Rabbit","Dog"]},
-  {key:"Dog",icon:"Do",han:"狗",traits:"loyal, protective, sincere, fair",best:["Tiger","Horse","Rabbit"],hard:["Dragon","Rooster"]},
-  {key:"Pig",icon:"P",han:"猪",traits:"warm, generous, sensual, sincere",best:["Rabbit","Goat","Tiger"],hard:["Snake","Monkey"]}
+  {key:"Rat",icon:"R",han:"é¼ ",traits:"quick, observant, strategic, socially alert",best:["Dragon","Monkey","Ox"],hard:["Horse","Goat"]},
+  {key:"Ox",icon:"O",han:"ç‰›",traits:"steady, loyal, patient, practical",best:["Rat","Snake","Rooster"],hard:["Goat","Horse"]},
+  {key:"Tiger",icon:"T",han:"è™Ž",traits:"brave, magnetic, intense, independent",best:["Horse","Dog","Pig"],hard:["Monkey","Snake"]},
+  {key:"Rabbit",icon:"Rb",han:"å…”",traits:"gentle, diplomatic, artistic, sensitive",best:["Goat","Pig","Dog"],hard:["Rooster","Dragon"]},
+  {key:"Dragon",icon:"D",han:"é¾™",traits:"powerful, visionary, proud, charismatic",best:["Rat","Monkey","Rooster"],hard:["Dog","Rabbit"]},
+  {key:"Snake",icon:"S",han:"è›‡",traits:"wise, private, intuitive, elegant",best:["Ox","Rooster","Monkey"],hard:["Pig","Tiger"]},
+  {key:"Horse",icon:"H",han:"é©¬",traits:"free, expressive, fast, passionate",best:["Tiger","Dog","Goat"],hard:["Rat","Ox"]},
+  {key:"Goat",icon:"G",han:"ç¾Š",traits:"creative, soft, empathic, refined",best:["Rabbit","Pig","Horse"],hard:["Ox","Rat"]},
+  {key:"Monkey",icon:"M",han:"çŒ´",traits:"clever, playful, inventive, restless",best:["Rat","Dragon","Snake"],hard:["Tiger","Pig"]},
+  {key:"Rooster",icon:"Ro",han:"é¸¡",traits:"precise, stylish, honest, disciplined",best:["Ox","Snake","Dragon"],hard:["Rabbit","Dog"]},
+  {key:"Dog",icon:"Do",han:"ç‹—",traits:"loyal, protective, sincere, fair",best:["Tiger","Horse","Rabbit"],hard:["Dragon","Rooster"]},
+  {key:"Pig",icon:"P",han:"çŒª",traits:"warm, generous, sensual, sincere",best:["Rabbit","Goat","Tiger"],hard:["Snake","Monkey"]}
 ];
 const elements = {
   Wood:"growth, kindness, imagination and long-term vision",
@@ -309,30 +346,30 @@ const luckyElementData={
   Water:{colors:"black, blue",numbers:"1, 6",directions:"North",advice:"rest, intuition, flexibility and emotional flow"}
 };
 const heavenlyStems=[
-  {key:"Jia",han:"甲",element:"Wood",polarity:"Yang"},
-  {key:"Yi",han:"乙",element:"Wood",polarity:"Yin"},
-  {key:"Bing",han:"丙",element:"Fire",polarity:"Yang"},
-  {key:"Ding",han:"丁",element:"Fire",polarity:"Yin"},
-  {key:"Wu",han:"戊",element:"Earth",polarity:"Yang"},
-  {key:"Ji",han:"己",element:"Earth",polarity:"Yin"},
-  {key:"Geng",han:"庚",element:"Metal",polarity:"Yang"},
-  {key:"Xin",han:"辛",element:"Metal",polarity:"Yin"},
-  {key:"Ren",han:"壬",element:"Water",polarity:"Yang"},
-  {key:"Gui",han:"癸",element:"Water",polarity:"Yin"}
+  {key:"Jia",han:"ç”²",element:"Wood",polarity:"Yang"},
+  {key:"Yi",han:"ä¹™",element:"Wood",polarity:"Yin"},
+  {key:"Bing",han:"ä¸™",element:"Fire",polarity:"Yang"},
+  {key:"Ding",han:"ä¸",element:"Fire",polarity:"Yin"},
+  {key:"Wu",han:"æˆŠ",element:"Earth",polarity:"Yang"},
+  {key:"Ji",han:"å·±",element:"Earth",polarity:"Yin"},
+  {key:"Geng",han:"åºš",element:"Metal",polarity:"Yang"},
+  {key:"Xin",han:"è¾›",element:"Metal",polarity:"Yin"},
+  {key:"Ren",han:"å£¬",element:"Water",polarity:"Yang"},
+  {key:"Gui",han:"ç™¸",element:"Water",polarity:"Yin"}
 ];
 const earthlyBranches=[
-  {key:"Zi",han:"子",animal:"Rat",element:"Water",polarity:"Yang",hour:"23:00-00:59"},
-  {key:"Chou",han:"丑",animal:"Ox",element:"Earth",polarity:"Yin",hour:"01:00-02:59"},
-  {key:"Yin",han:"寅",animal:"Tiger",element:"Wood",polarity:"Yang",hour:"03:00-04:59"},
-  {key:"Mao",han:"卯",animal:"Rabbit",element:"Wood",polarity:"Yin",hour:"05:00-06:59"},
-  {key:"Chen",han:"辰",animal:"Dragon",element:"Earth",polarity:"Yang",hour:"07:00-08:59"},
-  {key:"Si",han:"巳",animal:"Snake",element:"Fire",polarity:"Yin",hour:"09:00-10:59"},
-  {key:"Wu",han:"午",animal:"Horse",element:"Fire",polarity:"Yang",hour:"11:00-12:59"},
-  {key:"Wei",han:"未",animal:"Goat",element:"Earth",polarity:"Yin",hour:"13:00-14:59"},
-  {key:"Shen",han:"申",animal:"Monkey",element:"Metal",polarity:"Yang",hour:"15:00-16:59"},
-  {key:"You",han:"酉",animal:"Rooster",element:"Metal",polarity:"Yin",hour:"17:00-18:59"},
-  {key:"Xu",han:"戌",animal:"Dog",element:"Earth",polarity:"Yang",hour:"19:00-20:59"},
-  {key:"Hai",han:"亥",animal:"Pig",element:"Water",polarity:"Yin",hour:"21:00-22:59"}
+  {key:"Zi",han:"å­",animal:"Rat",element:"Water",polarity:"Yang",hour:"23:00-00:59"},
+  {key:"Chou",han:"ä¸‘",animal:"Ox",element:"Earth",polarity:"Yin",hour:"01:00-02:59"},
+  {key:"Yin",han:"å¯…",animal:"Tiger",element:"Wood",polarity:"Yang",hour:"03:00-04:59"},
+  {key:"Mao",han:"å¯",animal:"Rabbit",element:"Wood",polarity:"Yin",hour:"05:00-06:59"},
+  {key:"Chen",han:"è¾°",animal:"Dragon",element:"Earth",polarity:"Yang",hour:"07:00-08:59"},
+  {key:"Si",han:"å·³",animal:"Snake",element:"Fire",polarity:"Yin",hour:"09:00-10:59"},
+  {key:"Wu",han:"åˆ",animal:"Horse",element:"Fire",polarity:"Yang",hour:"11:00-12:59"},
+  {key:"Wei",han:"æœª",animal:"Goat",element:"Earth",polarity:"Yin",hour:"13:00-14:59"},
+  {key:"Shen",han:"ç”³",animal:"Monkey",element:"Metal",polarity:"Yang",hour:"15:00-16:59"},
+  {key:"You",han:"é…‰",animal:"Rooster",element:"Metal",polarity:"Yin",hour:"17:00-18:59"},
+  {key:"Xu",han:"æˆŒ",animal:"Dog",element:"Earth",polarity:"Yang",hour:"19:00-20:59"},
+  {key:"Hai",han:"äº¥",animal:"Pig",element:"Water",polarity:"Yin",hour:"21:00-22:59"}
 ];
 const solarMonthStarts=[
   {m:1,d:6,branch:1},{m:2,d:4,branch:2},{m:3,d:6,branch:3},{m:4,d:5,branch:4},{m:5,d:6,branch:5},
@@ -578,14 +615,14 @@ function renderBaZi(){
   document.getElementById("baziText").textContent="Four Pillars reads the birth moment through Year, Month, Day and Hour pillars. Your Day Master is "+b.dayMaster.key+" "+b.dayMaster.element+" ("+b.dayMaster.polarity+"), the central self-tone in BaZi.";
   renderBaZiCalendar();
   document.getElementById("pillarGrid").innerHTML=b.pillars.map(p=>'<div class="pillar-card"><div class="pillar-label">'+p.label+' Pillar</div><div class="pillar-han">'+safe(p.stem.han+p.branch.han)+'</div><div class="pillar-main">'+safe(p.display)+'</div><div class="pillar-sub">'+safe(p.stem.element)+' '+safe(p.stem.polarity)+' stem<br>'+safe(p.branch.element)+' '+safe(p.branch.polarity)+' branch</div></div>').join("");
-  const elementHan={Wood:"木",Fire:"火",Earth:"土",Metal:"金",Water:"水"};
+  const elementHan={Wood:"æœ¨",Fire:"ç«",Earth:"åœŸ",Metal:"é‡‘",Water:"æ°´"};
   const elementColors={Wood:"#65a30d",Fire:"#dc2626",Earth:"#d97706",Metal:"#a3a3a3",Water:"#0284c7"};
   const angles={Wood:-90,Fire:-18,Earth:54,Metal:126,Water:198};
   const total=["Wood","Fire","Earth","Metal","Water"].reduce((sum,k)=>sum+b.balance[k],0)||1;
   const max=Math.max(1,...["Wood","Fire","Earth","Metal","Water"].map(k=>b.balance[k]));
   const nodes=["Wood","Fire","Earth","Metal","Water"].map(k=>{const pct=Math.round(b.balance[k]/total*100);const power=b.balance[k];const scale=(.76+(power/max)*.28).toFixed(2);return'<div class="element-node" style="--angle:'+angles[k]+'deg;--radius:min(29vw,101px);--scale:'+scale+';--power:'+power+';--glow:'+elementColors[k]+'66;--node-bg:'+elementColors[k]+';border-color:'+elementColors[k]+'cc"><div class="element-han">'+elementHan[k]+'</div><div class="element-name">'+k+'</div><div class="element-percent">'+pct+'% / '+power+'</div></div>'}).join("");
   const orbit='<svg class="element-orbit-svg" viewBox="0 0 260 260" aria-hidden="true"><defs><marker id="redArrow" markerWidth="8" markerHeight="8" refX="6.4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#ef4444"/></marker></defs><circle cx="130" cy="130" r="86" fill="none" stroke="#ef4444" stroke-width="4" stroke-dasharray="64 14" marker-end="url(#redArrow)" opacity=".82"/><path d="M130 43 L181 197 L51 102 L209 102 L79 197 Z" fill="none" stroke="#fb7185" stroke-width="3" stroke-linejoin="round" marker-end="url(#redArrow)" opacity=".82"/><circle cx="130" cy="130" r="49" fill="none" stroke="#fecaca" stroke-width="1.4" opacity=".32"/></svg>';
-  document.getElementById("baziBalance").innerHTML='<div class="element-wheel">'+orbit+nodes+'<div class="wu-xing-mark">五行</div><div class="yin-yang"></div><div class="yin-yang-text">Yang '+b.balance.Yang+' / Yin '+b.balance.Yin+'</div></div><div class="balance-row"><div class="label">Yin-Yang Balance</div><div class="value">Yang '+b.balance.Yang+' / Yin '+b.balance.Yin+'</div><div class="balance-track"><div class="balance-fill" style="width:'+Math.round(b.balance.Yang/(b.balance.Yang+b.balance.Yin)*100)+'%"></div></div></div>';
+  document.getElementById("baziBalance").innerHTML='<div class="element-wheel">'+orbit+nodes+'<div class="wu-xing-mark">äº”è¡Œ</div><div class="yin-yang"></div><div class="yin-yang-text">Yang '+b.balance.Yang+' / Yin '+b.balance.Yin+'</div></div><div class="balance-row"><div class="label">Yin-Yang Balance</div><div class="value">Yang '+b.balance.Yang+' / Yin '+b.balance.Yin+'</div><div class="balance-track"><div class="balance-fill" style="width:'+Math.round(b.balance.Yang/(b.balance.Yang+b.balance.Yin)*100)+'%"></div></div></div>';
   renderLuckyGrid();
   document.getElementById("baziNote").textContent="BaZi month pillar uses approximate solar-term boundaries, with Li Chun around February 4. Day pillar is calculated from a local sexagenary-day epoch; this is suitable for app guidance and can later be upgraded with exact solar-term tables.";
 }
@@ -631,19 +668,47 @@ function loadInitial(){
   syncCompatPersonA();
   if(state.date)calculateChinese();
 }
-function contacts(){return window.AppSharedState?AppSharedState.contactsWithOwner():JSON.parse(localStorage.getItem("numerology_dates")||"[]")}
+function jsString(value){return JSON.stringify(String(value||""))}
+function getStoredContacts(){try{const v=JSON.parse(localStorage.getItem("numerology_dates")||"[]");return Array.isArray(v)?v.filter(x=>x&&x.id!=="owner-profile"&&!x.ownerProfile):[]}catch(e){return []}}
+function saveStoredContacts(list){if(window.AppSharedState)return AppSharedState.saveContacts(list);localStorage.setItem("numerology_dates",JSON.stringify(list))}
+function getOwnerProfile(){try{return JSON.parse(localStorage.getItem("numerology_owner_profile")||"null")}catch(e){return null}}
+function ownerContact(){if(window.AppSharedState&&AppSharedState.ownerContact)return AppSharedState.ownerContact();const p=getOwnerProfile();if(!p)return null;const name=[p.firstName,p.lastName].filter(Boolean).join(" ").trim();if(!name)return null;return{id:"owner-profile",ownerProfile:true,locked:true,name,date:p.birthDate||"",time:p.birthTime||"",city:p.birthCity||"",isTwin:!!p.isTwin,isTwin3:!!p.isTwin3}}
+function contacts(){return window.AppSharedState?AppSharedState.contactsWithOwner():[ownerContact(),...getStoredContacts()].filter(Boolean)}
+function contactDetails(item){return [item.date||"",item.time||"",item.city||""].filter(Boolean).join(" ")}
+function updateSavedCount(){const box=document.getElementById("savedCountBox");if(!box)return;const list=contacts();box.textContent=list.length;box.style.display=list.length?"flex":"none"}
 function renderSavedList(){
   const list=contacts();
-  const box=document.getElementById("savedCountBox");
-  box.textContent=list.length;box.style.display=list.length?"flex":"none";
-  document.getElementById("savedList").innerHTML=list.length?list.map(item=>`<div class="savedItem" onclick="loadSaved('${safe(item.id)}')"><b>${safe(item.name)}</b><br><span style="color:#fca5a5;font-size:11px">${safe(item.date||"")} ${safe(item.time||"")} ${safe(item.city||"")}</span></div>`).join(""):'<div class="coming-note">No saved profiles yet.</div>';
+  updateSavedCount();
+  const target=document.getElementById("savedList");
+  if(!list.length){target.innerHTML='<div class="coming-note">No saved profiles</div>';return}
+  target.innerHTML=list.map(item=>{
+    const isOwner=item.id==="owner-profile"||item.ownerProfile||item.locked;
+    const details=contactDetails(item);
+    const click='loadSaved('+jsString(item.id)+')';
+    const editClick='event.stopPropagation();editSavedDate('+jsString(item.id)+')';
+    const deleteClick='event.stopPropagation();deleteSavedDate('+jsString(item.id)+')';
+    if(isOwner)return '<div class="savedItem" style="background:linear-gradient(135deg,#ef4444,#991b1b);color:#fff;border-color:rgba(248,113,113,.85);box-shadow:0 0 10px rgba(239,68,68,.28);text-align:center" onclick="'+safe(click)+'"><div style="font-weight:900;font-size:13px">'+safe(item.name||"Owner")+'</div></div>';
+    const twin=item.isTwin?'<span style="background:#ef4444;color:#fff;font-size:9px;padding:2px 6px;border-radius:4px;margin-left:6px;font-weight:bold">TWIN</span>':"";
+    const twin3=item.isTwin3?'<span style="background:#facc15;color:#0f172a;font-size:9px;padding:2px 6px;border-radius:4px;margin-left:6px;font-weight:bold">3rd TWIN</span>':"";
+    return '<div class="savedItem" onclick="'+safe(click)+'"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div><div style="color:#fee2e2;font-weight:bold;font-size:13px">'+safe(item.name||"Saved contact")+twin+twin3+'</div>'+(details?'<div style="color:#fca5a5;font-size:11px;margin-top:2px">'+safe(details)+'</div>':'')+'</div><div style="display:flex;align-items:center;gap:2px"><span class="saved-edit-contact" onclick="'+safe(editClick)+'">EDIT</span><span onclick="'+safe(deleteClick)+'" style="color:#ef4444;font-size:16px;cursor:pointer;padding:5px" title="Delete saved contact">&#128465;&#65039;</span></div></div></div>';
+  }).join("");
 }
 function loadSaved(id){const item=contacts().find(x=>String(x.id)===String(id));if(!item)return;const targets={main:["birthDate","birthTime","birthCity"],compat1:["compatDate1","compatTime1","compatCity1"],compat2:["compatDate2","compatTime2","compatCity2"]};const ids=targets[savedTarget]||targets.main;document.getElementById(ids[0]).value=item.date||"";document.getElementById(ids[1]).value=item.time||"";document.getElementById(ids[2]).value=item.city||"";toggleSavedPanel(false);if(savedTarget==="main"){syncCompatPersonA();calculateChinese()}else if(savedTarget==="compat1"||savedTarget==="compat2"){calculateChineseCompatibility()}}
 function toggleSavedPanel(force,target){if(target)savedTarget=target;else if(force!==false)savedTarget="main";const p=document.getElementById("savedPanel");p.style.display=force===false?"none":(p.style.display==="block"?"none":"block");if(p.style.display==="block")renderSavedList()}
-function goBack(){if(window.AppSharedState)AppSharedState.saveLastAstroInput({date:birthDate.value,time:birthTime.value,city:birthCity.value});window.location.href="index.html?astroReturn=1&date="+encodeURIComponent(birthDate.value)+"&time="+encodeURIComponent(birthTime.value)+"&city="+encodeURIComponent(birthCity.value)+"#astroEntry"}
-function exitApp(){window.location.href="index.html"}
+function openOwnerProfile(){const p=getOwnerProfile()||{};ownerFirstName.value=p.firstName||"";ownerLastName.value=p.lastName||"";ownerBirthDate.value=p.birthDate||"";ownerBirthTime.value=p.birthTime||"";ownerBirthCity.value=p.birthCity||"";ownerCurrentCity.value=p.currentCity||p.birthCity||"";ownerTwin.checked=!!p.isTwin;ownerTwin3.checked=!!p.isTwin3;ownerProfileModal.style.display="flex"}
+function closeOwnerProfile(){ownerProfileModal.style.display="none"}
+function saveOwnerProfile(){const p={firstName:ownerFirstName.value.trim(),lastName:ownerLastName.value.trim(),birthDate:ownerBirthDate.value.trim(),birthTime:ownerBirthTime.value.trim(),birthCity:ownerBirthCity.value.trim(),currentCity:ownerCurrentCity.value.trim(),isTwin:ownerTwin.checked,isTwin3:ownerTwin3.checked,updatedAt:new Date().toISOString()};localStorage.setItem("numerology_owner_profile",JSON.stringify(p));if(p.birthDate||p.birthTime||p.birthCity){birthDate.value=p.birthDate;birthTime.value=p.birthTime;birthCity.value=p.birthCity;if(window.AppSharedState)AppSharedState.saveLastAstroInput({date:p.birthDate,time:p.birthTime,city:p.birthCity,isTwin:p.isTwin,isTwin3:p.isTwin3});syncCompatPersonA();calculateChinese()}closeOwnerProfile();renderSavedList()}
+function deleteSavedDate(id){if(id==="owner-profile"){alert("Owner profile cannot be deleted from contacts.");return}if(!confirm("Delete this saved profile?"))return;const next=getStoredContacts().filter(item=>String(item.id)!==String(id));saveStoredContacts(next);renderSavedList()}
+function editSavedDate(id){if(id==="owner-profile"){openOwnerProfile();return}const list=getStoredContacts();const item=list.find(x=>String(x.id)===String(id));if(!item)return;const nextName=prompt("Edit contact name",item.name||"");if(nextName===null)return;const nextDate=prompt("Edit date (DD.MM.YYYY)",item.date||"");if(nextDate===null)return;const nextTime=prompt("Edit time (HH:MM)",item.time||"");if(nextTime===null)return;const nextCity=prompt("Edit city",item.city||"");if(nextCity===null)return;item.name=nextName.trim()||item.name||"Saved contact";item.date=nextDate.trim();item.time=nextTime.trim();item.city=nextCity.trim();item.updatedAt=new Date().toISOString();saveStoredContacts(list);renderSavedList()}
+function goBack(){if(window.AppSharedState)AppSharedState.saveLastAstroInput({date:birthDate.value,time:birthTime.value,city:birthCity.value});const params=new URLSearchParams(location.search);const savedReturn=params.get("returnUrl");if(savedReturn){window.location.href=savedReturn;return}const from=params.get("from");let url=from==="chart"?"chart.html":"index.html?astroReturn=1";const sep=url.includes("?")?"&":"?";if(birthDate.value){url+=sep+"date="+encodeURIComponent(birthDate.value)+"&time="+encodeURIComponent(birthTime.value)+"&city="+encodeURIComponent(birthCity.value)}if(from!=="chart")url+="#astroEntry";window.location.href=url}
+function exitApp(){if(window.closeNativeApp){window.closeNativeApp("index.html");return}window.location.href="index.html"}
 async function sharePage(){const text="Chinese Zodiac: "+(currentResult?currentResult.stemBranch:"");if(navigator.share){try{await navigator.share({title:"Chinese Zodiac",text,url:location.href});return}catch(e){}}try{await navigator.clipboard.writeText(location.href);alert("Link copied.")}catch(e){alert(text || "Chinese Zodiac")}}
 window.addEventListener("DOMContentLoaded",loadInitial);
 </script>
 </body>
 </html>
+
+
+
+
+
