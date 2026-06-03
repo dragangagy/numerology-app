@@ -355,6 +355,101 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 .buttons button{min-height:34px!important;padding:8px 10px!important;line-height:1.05!important;width:100%!important;flex:0 0 100%!important}
 .buttons + .card{margin-top:7px!important}
 
+
+
+/* ===== SYNASTRY HELP ===== */
+.syn-help-btn{
+  width:22px;
+  height:22px;
+  min-width:22px;
+  border-radius:50%;
+  border:1px solid rgba(255,215,0,.65);
+  background:rgba(15,23,42,.88);
+  color:#FFD700;
+  font-size:12px;
+  font-weight:800;
+  line-height:1;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 7px rgba(255,215,0,.18);
+  z-index:2;
+  flex:0 0 22px!important;
+  padding:0!important;
+}
+.syn-help-btn:hover{border-color:#FFD700;box-shadow:0 0 12px rgba(255,215,0,.34);transform:none}
+.section-title{
+  position:relative;
+  padding-left:30px;
+  text-align:center;
+}
+.section-title > .syn-help-btn{
+  position:absolute;
+  left:0;
+  top:50%;
+  transform:translateY(-50%);
+}
+.score-detail-item,.planet-row,.house-card,.aspect-item,.composite-info-item,.rel-type{
+  position:relative;
+}
+.score-detail-item,.planet-row,.house-card,.aspect-item,.composite-info-item{
+  padding-left:34px!important;
+}
+.rel-type{padding-left:38px!important}
+.score-detail-item > .syn-help-btn,
+.planet-row > .syn-help-btn,
+.house-card > .syn-help-btn,
+.aspect-item > .syn-help-btn,
+.composite-info-item > .syn-help-btn,
+.rel-type > .syn-help-btn{
+  position:absolute;
+  left:7px;
+  top:50%;
+  transform:translateY(-50%);
+}
+.house-card > .syn-help-btn,.aspect-item > .syn-help-btn,.rel-type > .syn-help-btn{
+  top:8px;
+  transform:none;
+}
+.syn-help-modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  background:rgba(2,6,23,.82);
+  align-items:center;
+  justify-content:center;
+  padding:14px;
+}
+.syn-help-panel{
+  width:min(460px,94vw);
+  max-height:82vh;
+  overflow:auto;
+  background:#0f172a;
+  border:1px solid rgba(255,215,0,.48);
+  border-radius:14px;
+  padding:18px;
+  position:relative;
+  box-shadow:0 0 28px rgba(255,215,0,.18);
+  text-align:left;
+}
+.syn-help-close{
+  position:absolute;
+  right:12px;
+  top:10px;
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  border:1px solid rgba(255,215,0,.6);
+  background:#1e293b;
+  color:#FFD700;
+  padding:0;
+}
+.syn-help-panel h3{color:#FFD700;margin:0 34px 10px 0;font-size:17px}
+.syn-help-panel p{color:#cbd5e1;font-size:13px;line-height:1.45;margin:8px 0}
+.syn-help-panel strong{color:#FFD700}
+
 </style>
 </head>
 <body>
@@ -431,7 +526,7 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 
 <!-- ===== COMPATIBILITY SCORE ===== -->
 <div class="card" id="compatibilityCard">
-<div class="section-title">COMPATIBILITY SCORE</div>
+<div class="section-title">COMPATIBILITY SCORE <button class="syn-help-btn" type="button" onclick="openSynGeneralHelp(event, 'score')" aria-label="Explain COMPATIBILITY SCORE">?</button></div>
 <div class="score-ring-wrapper">
 <div class="score-ring">
 <svg viewBox="0 0 120 120">
@@ -451,16 +546,16 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 </div>
 </div>
 <div class="score-detail">
-<div class="score-detail-item"><span class="score-detail-label">Emotional</span><span class="score-detail-value good" id="scoreEmo">+8</span></div>
-<div class="score-detail-item"><span class="score-detail-label">Communication</span><span class="score-detail-value neutral" id="scoreCom">+4</span></div>
-<div class="score-detail-item"><span class="score-detail-label">Physical</span><span class="score-detail-value good" id="scorePhy">+7</span></div>
-<div class="score-detail-item"><span class="score-detail-label">Spiritual</span><span class="score-detail-value good" id="scoreSpi">+6</span></div>
-<div class="score-detail-item"><span class="score-detail-label">Challenges</span><span class="score-detail-value bad" id="scoreCha">-3</span></div>
+<div class="score-detail-item"><button class="syn-help-btn" type="button" onclick="openSynScoreHelp(event, 'Emotional')" aria-label="Explain Emotional score">?</button><span class="score-detail-label">Emotional</span><span class="score-detail-value good" id="scoreEmo">+8</span></div>
+<div class="score-detail-item"><button class="syn-help-btn" type="button" onclick="openSynScoreHelp(event, 'Communication')" aria-label="Explain Communication score">?</button><span class="score-detail-label">Communication</span><span class="score-detail-value neutral" id="scoreCom">+4</span></div>
+<div class="score-detail-item"><button class="syn-help-btn" type="button" onclick="openSynScoreHelp(event, 'Physical')" aria-label="Explain Physical score">?</button><span class="score-detail-label">Physical</span><span class="score-detail-value good" id="scorePhy">+7</span></div>
+<div class="score-detail-item"><button class="syn-help-btn" type="button" onclick="openSynScoreHelp(event, 'Spiritual')" aria-label="Explain Spiritual score">?</button><span class="score-detail-label">Spiritual</span><span class="score-detail-value good" id="scoreSpi">+6</span></div>
+<div class="score-detail-item"><button class="syn-help-btn" type="button" onclick="openSynScoreHelp(event, 'Challenges')" aria-label="Explain Challenges score">?</button><span class="score-detail-label">Challenges</span><span class="score-detail-value bad" id="scoreCha">-3</span></div>
 </div>
 </div>
-<div class="rel-type">
+<div class="rel-type"><button class="syn-help-btn" type="button" onclick="openSynRelationshipHelp(event)" aria-label="Explain relationship type">?</button>
 <div class="rel-type-title">&#10022; Soul Growth Partnership</div>
-<div class="rel-type-desc">This connection offers deep emotional learning. Person A provides stability while Person B brings inspiration. Together you create a balanced dynamic of growth and security.</div>
+<div class="rel-type-desc">This connection offers deep emotional learning. The two profiles create a balanced dynamic of growth and security.</div>
 </div>
 <div class="elements-row">
 <div class="element-bar"><div class="element-icon">&#128293;</div><div class="element-label">Fire</div><div class="element-track"><div class="element-fill fire" style="width:60%"></div></div></div>
@@ -472,45 +567,45 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 
 <!-- ===== PLANET POSITIONS ===== -->
 <div class="card">
-<div class="section-title">PLANET POSITIONS</div>
+<div class="section-title">PLANET POSITIONS <button class="syn-help-btn" type="button" onclick="openSynGeneralHelp(event, 'positions')" aria-label="Explain PLANET POSITIONS">?</button></div>
 <div class="planet-grid">
 <div class="planet-compare">
-<div class="planet-compare-title">&#9729; Person A</div>
-<div class="planet-row"><span class="planet-name">Sun</span><span class="planet-sign">&#9804; Leo 15&#176;</span></div>
-<div class="planet-row"><span class="planet-name">Moon</span><span class="planet-sign">&#9811; Pisces 8&#176;</span></div>
-<div class="planet-row"><span class="planet-name">Mercury</span><span class="planet-sign">&#9804; Leo 22&#176;</span></div>
-<div class="planet-row"><span class="planet-name">Venus</span><span class="planet-sign">&#9805; Virgo 5&#176;</span></div>
-<div class="planet-row"><span class="planet-name">Mars</span><span class="planet-sign">&#9807; Scorpio 18&#176;</span></div>
-<div class="planet-row"><span class="planet-name">Asc</span><span class="planet-sign">&#9806; Libra 3&#176;</span></div>
+<div class="planet-compare-title">☉ Person A</div>
+<div class="planet-row"><button class="syn-help-btn" type="button" onclick="openSynPlanetRowHelp(event, this)" aria-label="Explain planet position">?</button><span class="planet-name">Sun</span><span class="planet-sign">&#9804; Leo 15&#176;</span></div>
+<div class="planet-row"><button class="syn-help-btn" type="button" onclick="openSynPlanetRowHelp(event, this)" aria-label="Explain planet position">?</button><span class="planet-name">Moon</span><span class="planet-sign">&#9811; Pisces 8&#176;</span></div>
+<div class="planet-row"><button class="syn-help-btn" type="button" onclick="openSynPlanetRowHelp(event, this)" aria-label="Explain planet position">?</button><span class="planet-name">Mercury</span><span class="planet-sign">&#9804; Leo 22&#176;</span></div>
+<div class="planet-row"><button class="syn-help-btn" type="button" onclick="openSynPlanetRowHelp(event, this)" aria-label="Explain planet position">?</button><span class="planet-name">Venus</span><span class="planet-sign">&#9805; Virgo 5&#176;</span></div>
+<div class="planet-row"><button class="syn-help-btn" type="button" onclick="openSynPlanetRowHelp(event, this)" aria-label="Explain planet position">?</button><span class="planet-name">Mars</span><span class="planet-sign">&#9807; Scorpio 18&#176;</span></div>
+<div class="planet-row"><button class="syn-help-btn" type="button" onclick="openSynPlanetRowHelp(event, this)" aria-label="Explain planet position">?</button><span class="planet-name">Asc</span><span class="planet-sign">&#9806; Libra 3&#176;</span></div>
 </div>
 <div class="planet-compare">
-<div class="planet-compare-title">&#9729; Person B</div>
-<div class="planet-row"><span class="planet-name">Sun</span><span class="planet-sign">&#9806; Libra 12&#176;</span></div>
-<div class="planet-row"><span class="planet-name">Moon</span><span class="planet-sign">&#9803; Cancer 20&#176;</span></div>
-<div class="planet-row"><span class="planet-name">Mercury</span><span class="planet-sign">&#9806; Libra 28&#176;</span></div>
-<div class="planet-row"><span class="planet-name">Venus</span><span class="planet-sign">&#9805; Virgo 15&#176;</span></div>
-<div class="planet-row"><span class="planet-name">Mars</span><span class="planet-sign">&#9809; Capricorn 5&#176;</span></div>
-<div class="planet-row"><span class="planet-name">Asc</span><span class="planet-sign">&#9809; Capricorn 10&#176;</span></div>
+<div class="planet-compare-title">☉ Person B</div>
+<div class="planet-row"><button class="syn-help-btn" type="button" onclick="openSynPlanetRowHelp(event, this)" aria-label="Explain planet position">?</button><span class="planet-name">Sun</span><span class="planet-sign">&#9806; Libra 12&#176;</span></div>
+<div class="planet-row"><button class="syn-help-btn" type="button" onclick="openSynPlanetRowHelp(event, this)" aria-label="Explain planet position">?</button><span class="planet-name">Moon</span><span class="planet-sign">&#9803; Cancer 20&#176;</span></div>
+<div class="planet-row"><button class="syn-help-btn" type="button" onclick="openSynPlanetRowHelp(event, this)" aria-label="Explain planet position">?</button><span class="planet-name">Mercury</span><span class="planet-sign">&#9806; Libra 28&#176;</span></div>
+<div class="planet-row"><button class="syn-help-btn" type="button" onclick="openSynPlanetRowHelp(event, this)" aria-label="Explain planet position">?</button><span class="planet-name">Venus</span><span class="planet-sign">&#9805; Virgo 15&#176;</span></div>
+<div class="planet-row"><button class="syn-help-btn" type="button" onclick="openSynPlanetRowHelp(event, this)" aria-label="Explain planet position">?</button><span class="planet-name">Mars</span><span class="planet-sign">&#9809; Capricorn 5&#176;</span></div>
+<div class="planet-row"><button class="syn-help-btn" type="button" onclick="openSynPlanetRowHelp(event, this)" aria-label="Explain planet position">?</button><span class="planet-name">Asc</span><span class="planet-sign">&#9809; Capricorn 10&#176;</span></div>
 </div>
 </div>
 </div>
 
 <!-- ===== HOUSE OVERLAYS ===== -->
 <div class="card">
-<div class="section-title">HOUSE OVERLAYS</div>
+<div class="section-title">HOUSE OVERLAYS <button class="syn-help-btn" type="button" onclick="openSynGeneralHelp(event, 'houses')" aria-label="Explain HOUSE OVERLAYS">?</button></div>
 <div class="house-grid">
-<div class="house-card"><div class="house-num">1st House</div><div class="house-planet">Person B Sun</div><div class="house-desc">Partner energizes your identity and self-expression</div></div>
-<div class="house-card"><div class="house-num">4th House</div><div class="house-planet">Person B Moon</div><div class="house-desc">Emotional security and home life connection</div></div>
-<div class="house-card"><div class="house-num">7th House</div><div class="house-planet">Person B Venus</div><div class="house-desc">Love and partnership harmony</div></div>
-<div class="house-card"><div class="house-num">10th House</div><div class="house-planet">Person A Jupiter</div><div class="house-desc">Career support and public success together</div></div>
-<div class="house-card"><div class="house-num">5th House</div><div class="house-planet">Person B Mars</div><div class="house-desc">Passion, creativity, and romantic chemistry</div></div>
-<div class="house-card"><div class="house-num">8th House</div><div class="house-planet">Person A Pluto</div><div class="house-desc">Deep transformation and intimacy</div></div>
+<div class="house-card"><button class="syn-help-btn" type="button" onclick="openSynHouseHelp(event, this)" aria-label="Explain house overlay">?</button><div class="house-num">1st House</div><div class="house-planet">Person B Sun</div><div class="house-desc">Partner energizes your identity and self-expression</div></div>
+<div class="house-card"><button class="syn-help-btn" type="button" onclick="openSynHouseHelp(event, this)" aria-label="Explain house overlay">?</button><div class="house-num">4th House</div><div class="house-planet">Person B Moon</div><div class="house-desc">Emotional security and home life connection</div></div>
+<div class="house-card"><button class="syn-help-btn" type="button" onclick="openSynHouseHelp(event, this)" aria-label="Explain house overlay">?</button><div class="house-num">7th House</div><div class="house-planet">Person B Venus</div><div class="house-desc">Love and partnership harmony</div></div>
+<div class="house-card"><button class="syn-help-btn" type="button" onclick="openSynHouseHelp(event, this)" aria-label="Explain house overlay">?</button><div class="house-num">10th House</div><div class="house-planet">Person A Jupiter</div><div class="house-desc">Career support and public success together</div></div>
+<div class="house-card"><button class="syn-help-btn" type="button" onclick="openSynHouseHelp(event, this)" aria-label="Explain house overlay">?</button><div class="house-num">5th House</div><div class="house-planet">Person B Mars</div><div class="house-desc">Passion, creativity, and romantic chemistry</div></div>
+<div class="house-card"><button class="syn-help-btn" type="button" onclick="openSynHouseHelp(event, this)" aria-label="Explain house overlay">?</button><div class="house-num">8th House</div><div class="house-planet">Person A Pluto</div><div class="house-desc">Deep transformation and intimacy</div></div>
 </div>
 </div>
 
 <!-- ===== KEY ASPECTS ===== -->
 <div class="card">
-<div class="section-title">KEY ASPECTS</div>
+<div class="section-title">KEY ASPECTS <button class="syn-help-btn" type="button" onclick="openSynGeneralHelp(event, 'aspects')" aria-label="Explain KEY ASPECTS">?</button></div>
 <div class="aspect-tabs">
 <div class="aspect-tab active" onclick="filterAspects('all', this)">All</div>
 <div class="aspect-tab" onclick="filterAspects('good', this)">Harmonious</div>
@@ -519,36 +614,36 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 <div class="aspect-tab" onclick="filterAspects('major', this)">Major Only</div>
 </div>
 <div id="aspectsList">
-<div class="aspect-item good" data-type="good" data-major="true"><div class="left"><div class="aspect">&#9729; Sun Trine &#9729; Sun</div><div class="description">Core identity harmony. Natural understanding of each other's essence and life purpose.</div></div><div class="score">+9</div></div>
-<div class="aspect-item good" data-type="good" data-major="true"><div class="left"><div class="aspect">&#9792; Venus Trine &#9789; Moon</div><div class="description">Emotional harmony and deep affection. Natural flow of love and nurturing.</div></div><div class="score">+9</div></div>
-<div class="aspect-item good" data-type="good" data-major="true"><div class="left"><div class="aspect">&#9729; Sun Sextile &#9794; Mars</div><div class="description">Strong chemistry and mutual motivation. Energizing and passionate dynamic.</div></div><div class="score">+7</div></div>
-<div class="aspect-item good" data-type="good" data-major="false"><div class="left"><div class="aspect">&#9795; Jupiter Conjunct &#9738; North Node</div><div class="description">Karmic growth and expansion together. Lucky breaks through partnership.</div></div><div class="score">+8</div></div>
-<div class="aspect-item bad" data-type="bad" data-major="true"><div class="left"><div class="aspect">&#9796; Saturn Square &#9791; Mercury</div><div class="description">Communication tension and mental blocks. Different thinking patterns create friction.</div></div><div class="score">-5</div></div>
-<div class="aspect-item bad" data-type="bad" data-major="true"><div class="left"><div class="aspect">&#9797; Pluto Opposite &#9789; Moon</div><div class="description">Intense emotional power struggles. Deep transformation through crisis.</div></div><div class="score">-6</div></div>
-<div class="aspect-item challenging" data-type="bad" data-major="false"><div class="left"><div class="aspect">&#9794; Mars Square &#9954; Uranus</div><div class="description">Sudden conflicts and unpredictable energy. Exciting but unstable.</div></div><div class="score">-4</div></div>
-<div class="aspect-item neutral" data-type="neutral" data-major="true"><div class="left"><div class="aspect">&#9791; Mercury Conjunct &#9791; Mercury</div><div class="description">Mental connection and shared ideas. Similar communication styles.</div></div><div class="score">+5</div></div>
-<div class="aspect-item good" data-type="good" data-major="false"><div class="left"><div class="aspect">&#9798; Neptune Trine &#9792; Venus</div><div class="description">Romantic idealism and spiritual love. Dreamy, artistic connection.</div></div><div class="score">+6</div></div>
-<div class="aspect-item bad" data-type="bad" data-major="false"><div class="left"><div class="aspect">&#9796; Saturn Conjunct &#9795; Jupiter</div><div class="description">Expansion vs restriction tension. Different approaches to growth.</div></div><div class="score">-3</div></div>
-<div class="aspect-item good" data-type="good" data-major="true"><div class="left"><div class="aspect">&#9789; Moon Sextile &#9792; Venus</div><div class="description">Gentle affection and emotional support. Comfortable intimacy.</div></div><div class="score">+6</div></div>
-<div class="aspect-item neutral" data-type="neutral" data-major="false"><div class="left"><div class="aspect">&#9937; Chiron Trine &#9729; Sun</div><div class="description">Healing through relationship. Old wounds find comfort in each other.</div></div><div class="score">+5</div></div>
+<div class="aspect-item good" data-type="good" data-major="true"><button class="syn-help-btn" type="button" onclick="openSynAspectHelp(event, this)" aria-label="Explain aspect">?</button><div class="left"><div class="aspect">☉ Sun Trine ☉ Sun</div><div class="description">Core identity harmony. Natural understanding of each other's essence and life purpose.</div></div><div class="score">+9</div></div>
+<div class="aspect-item good" data-type="good" data-major="true"><button class="syn-help-btn" type="button" onclick="openSynAspectHelp(event, this)" aria-label="Explain aspect">?</button><div class="left"><div class="aspect">♀ Venus Trine ☽ Moon</div><div class="description">Emotional harmony and deep affection. Natural flow of love and nurturing.</div></div><div class="score">+9</div></div>
+<div class="aspect-item good" data-type="good" data-major="true"><button class="syn-help-btn" type="button" onclick="openSynAspectHelp(event, this)" aria-label="Explain aspect">?</button><div class="left"><div class="aspect">☉ Sun Sextile ♂ Mars</div><div class="description">Strong chemistry and mutual motivation. Energizing and passionate dynamic.</div></div><div class="score">+7</div></div>
+<div class="aspect-item good" data-type="good" data-major="false"><button class="syn-help-btn" type="button" onclick="openSynAspectHelp(event, this)" aria-label="Explain aspect">?</button><div class="left"><div class="aspect">♃ Jupiter Conjunct ☊ North Node</div><div class="description">Karmic growth and expansion together. Lucky breaks through partnership.</div></div><div class="score">+8</div></div>
+<div class="aspect-item bad" data-type="bad" data-major="true"><button class="syn-help-btn" type="button" onclick="openSynAspectHelp(event, this)" aria-label="Explain aspect">?</button><div class="left"><div class="aspect">♄ Saturn Square ☿ Mercury</div><div class="description">Communication tension and mental blocks. Different thinking patterns create friction.</div></div><div class="score">-5</div></div>
+<div class="aspect-item bad" data-type="bad" data-major="true"><button class="syn-help-btn" type="button" onclick="openSynAspectHelp(event, this)" aria-label="Explain aspect">?</button><div class="left"><div class="aspect">♇ Pluto Opposite ☽ Moon</div><div class="description">Intense emotional power struggles. Deep transformation through crisis.</div></div><div class="score">-6</div></div>
+<div class="aspect-item challenging" data-type="bad" data-major="false"><button class="syn-help-btn" type="button" onclick="openSynAspectHelp(event, this)" aria-label="Explain aspect">?</button><div class="left"><div class="aspect">♂ Mars Square ♅ Uranus</div><div class="description">Sudden conflicts and unpredictable energy. Exciting but unstable.</div></div><div class="score">-4</div></div>
+<div class="aspect-item neutral" data-type="neutral" data-major="true"><button class="syn-help-btn" type="button" onclick="openSynAspectHelp(event, this)" aria-label="Explain aspect">?</button><div class="left"><div class="aspect">☿ Mercury Conjunct ☿ Mercury</div><div class="description">Mental connection and shared ideas. Similar communication styles.</div></div><div class="score">+5</div></div>
+<div class="aspect-item good" data-type="good" data-major="false"><button class="syn-help-btn" type="button" onclick="openSynAspectHelp(event, this)" aria-label="Explain aspect">?</button><div class="left"><div class="aspect">♆ Neptune Trine ♀ Venus</div><div class="description">Romantic idealism and spiritual love. Dreamy, artistic connection.</div></div><div class="score">+6</div></div>
+<div class="aspect-item bad" data-type="bad" data-major="false"><button class="syn-help-btn" type="button" onclick="openSynAspectHelp(event, this)" aria-label="Explain aspect">?</button><div class="left"><div class="aspect">♄ Saturn Conjunct ♃ Jupiter</div><div class="description">Expansion vs restriction tension. Different approaches to growth.</div></div><div class="score">-3</div></div>
+<div class="aspect-item good" data-type="good" data-major="true"><button class="syn-help-btn" type="button" onclick="openSynAspectHelp(event, this)" aria-label="Explain aspect">?</button><div class="left"><div class="aspect">☽ Moon Sextile ♀ Venus</div><div class="description">Gentle affection and emotional support. Comfortable intimacy.</div></div><div class="score">+6</div></div>
+<div class="aspect-item neutral" data-type="neutral" data-major="false"><button class="syn-help-btn" type="button" onclick="openSynAspectHelp(event, this)" aria-label="Explain aspect">?</button><div class="left"><div class="aspect">⚷ Chiron Trine ☉ Sun</div><div class="description">Healing through relationship. Old wounds find comfort in each other.</div></div><div class="score">+5</div></div>
 </div>
 </div>
 
 <!-- ===== COMPOSITE CHART ===== -->
 <div class="card">
-<div class="section-title">COMPOSITE CHART</div>
+<div class="section-title">COMPOSITE CHART <button class="syn-help-btn" type="button" onclick="openSynGeneralHelp(event, 'composite')" aria-label="Explain COMPOSITE CHART">?</button></div>
 <div class="composite-mini">
 <div class="composite-info">
-<div class="composite-info-item"><span class="composite-info-label">Composite Sun</span><span class="composite-info-value">&#9805; Virgo 13&#176;</span></div>
-<div class="composite-info-item"><span class="composite-info-label">Composite Moon</span><span class="composite-info-value">&#9806; Libra 14&#176;</span></div>
-<div class="composite-info-item"><span class="composite-info-label">Composite Asc</span><span class="composite-info-value">&#9809; Capricorn 6&#176;</span></div>
-<div class="composite-info-item"><span class="composite-info-label">Composite MC</span><span class="composite-info-value">&#9806; Libra 28&#176;</span></div>
+<div class="composite-info-item"><button class="syn-help-btn" type="button" onclick="openSynCompositeHelp(event, this)" aria-label="Explain composite item">?</button><span class="composite-info-label">Composite Sun</span><span class="composite-info-value">&#9805; Virgo 13&#176;</span></div>
+<div class="composite-info-item"><button class="syn-help-btn" type="button" onclick="openSynCompositeHelp(event, this)" aria-label="Explain composite item">?</button><span class="composite-info-label">Composite Moon</span><span class="composite-info-value">&#9806; Libra 14&#176;</span></div>
+<div class="composite-info-item"><button class="syn-help-btn" type="button" onclick="openSynCompositeHelp(event, this)" aria-label="Explain composite item">?</button><span class="composite-info-label">Composite Asc</span><span class="composite-info-value">&#9809; Capricorn 6&#176;</span></div>
+<div class="composite-info-item"><button class="syn-help-btn" type="button" onclick="openSynCompositeHelp(event, this)" aria-label="Explain composite item">?</button><span class="composite-info-label">Composite MC</span><span class="composite-info-value">&#9806; Libra 28&#176;</span></div>
 </div>
 <div class="composite-info">
-<div class="composite-info-item"><span class="composite-info-label">Relationship</span><span class="composite-info-value">Service & Harmony</span></div>
-<div class="composite-info-item"><span class="composite-info-label">Emotional Tone</span><span class="composite-info-value">Diplomatic & Fair</span></div>
-<div class="composite-info-item"><span class="composite-info-label">Public Face</span><span class="composite-info-value">Ambitious & Practical</span></div>
-<div class="composite-info-item"><span class="composite-info-label">Life Direction</span><span class="composite-info-value">Partnership Focused</span></div>
+<div class="composite-info-item"><button class="syn-help-btn" type="button" onclick="openSynCompositeHelp(event, this)" aria-label="Explain composite item">?</button><span class="composite-info-label">Relationship</span><span class="composite-info-value">Service & Harmony</span></div>
+<div class="composite-info-item"><button class="syn-help-btn" type="button" onclick="openSynCompositeHelp(event, this)" aria-label="Explain composite item">?</button><span class="composite-info-label">Emotional Tone</span><span class="composite-info-value">Diplomatic & Fair</span></div>
+<div class="composite-info-item"><button class="syn-help-btn" type="button" onclick="openSynCompositeHelp(event, this)" aria-label="Explain composite item">?</button><span class="composite-info-label">Public Face</span><span class="composite-info-value">Ambitious & Practical</span></div>
+<div class="composite-info-item"><button class="syn-help-btn" type="button" onclick="openSynCompositeHelp(event, this)" aria-label="Explain composite item">?</button><span class="composite-info-label">Life Direction</span><span class="composite-info-value">Partnership Focused</span></div>
 </div>
 </div>
 </div>
@@ -602,9 +697,9 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 let skipSavePrompt=false;
 
 // ===== CITY DATA =====
-const worldCities=["Belgrade","Zagreb","London","Paris","Berlin","Moscow","New York","Los Angeles","Chicago","Toronto","Sydney","Tokyo","Dubai","Istanbul","Rome","Madrid","Vienna","Budapest","Athens","Bucharest","Sofia","Ljubljana","Prague","Warsaw","Amsterdam","Zurich","Stockholm","Oslo","Dublin","Lisbon","Cairo","Johannesburg","Singapore","Hong Kong","Seoul","Beijing","Mumbai","New Delhi","Mexico City","Buenos Aires","Sao Paulo","SÃ£o Paulo"];
+const worldCities=["Belgrade","Zagreb","London","Paris","Berlin","Moscow","New York","Los Angeles","Chicago","Toronto","Sydney","Tokyo","Dubai","Istanbul","Rome","Madrid","Vienna","Budapest","Athens","Bucharest","Sofia","Ljubljana","Prague","Warsaw","Amsterdam","Zurich","Stockholm","Oslo","Dublin","Lisbon","Cairo","Johannesburg","Singapore","Hong Kong","Seoul","Beijing","Mumbai","New Delhi","Mexico City","Buenos Aires","Sao Paulo"];
 
-const cityCoords={"Belgrade":{lat:44.7866,lon:20.4489,tz:"Europe/Belgrade"},"Zagreb":{lat:45.815,lon:15.9819,tz:"Europe/Zagreb"},"London":{lat:51.5074,lon:-0.1278,tz:"Europe/London"},"Paris":{lat:48.8566,lon:2.3522,tz:"Europe/Paris"},"Berlin":{lat:52.52,lon:13.405,tz:"Europe/Berlin"},"Moscow":{lat:55.7558,lon:37.6173,tz:"Europe/Moscow"},"New York":{lat:40.7128,lon:-74.006,tz:"America/New_York"},"Los Angeles":{lat:34.0522,lon:-118.2437,tz:"America/Los_Angeles"},"Chicago":{lat:41.8781,lon:-87.6298,tz:"America/Chicago"},"Toronto":{lat:43.6532,lon:-79.3832,tz:"America/Toronto"},"Sydney":{lat:-33.8688,lon:151.2093,tz:"Australia/Sydney"},"Tokyo":{lat:35.6762,lon:139.6503,tz:"Asia/Tokyo"},"Dubai":{lat:25.2048,lon:55.2708,tz:"Asia/Dubai"},"Istanbul":{lat:41.0082,lon:28.9784,tz:"Europe/Istanbul"},"Rome":{lat:41.9028,lon:12.4964,tz:"Europe/Rome"},"Madrid":{lat:40.4168,lon:-3.7038,tz:"Europe/Madrid"},"Vienna":{lat:48.2082,lon:16.3738,tz:"Europe/Vienna"},"Budapest":{lat:47.4979,lon:19.0402,tz:"Europe/Budapest"},"Athens":{lat:37.9838,lon:23.7275,tz:"Europe/Athens"},"Bucharest":{lat:44.4268,lon:26.1025,tz:"Europe/Bucharest"},"Sofia":{lat:42.6977,lon:23.3219,tz:"Europe/Sofia"},"Ljubljana":{lat:46.0569,lon:14.5058,tz:"Europe/Ljubljana"},"Prague":{lat:50.0755,lon:14.4378,tz:"Europe/Prague"},"Warsaw":{lat:52.2297,lon:21.0122,tz:"Europe/Warsaw"},"Amsterdam":{lat:52.3676,lon:4.9041,tz:"Europe/Amsterdam"},"Zurich":{lat:47.3769,lon:8.5417,tz:"Europe/Zurich"},"Stockholm":{lat:59.3293,lon:18.0686,tz:"Europe/Stockholm"},"Oslo":{lat:59.9139,lon:10.7522,tz:"Europe/Oslo"},"Dublin":{lat:53.3498,lon:-6.2603,tz:"Europe/Dublin"},"Lisbon":{lat:38.7223,lon:-9.1393,tz:"Europe/Lisbon"},"Cairo":{lat:30.0444,lon:31.2357,tz:"Africa/Cairo"},"Johannesburg":{lat:-26.2041,lon:28.0473,tz:"Africa/Johannesburg"},"Singapore":{lat:1.3521,lon:103.8198,tz:"Asia/Singapore"},"Hong Kong":{lat:22.3193,lon:114.1694,tz:"Asia/Hong_Kong"},"Seoul":{lat:37.5665,lon:126.978,tz:"Asia/Seoul"},"Beijing":{lat:39.9042,lon:116.4074,tz:"Asia/Shanghai"},"Mumbai":{lat:19.076,lon:72.8777,tz:"Asia/Kolkata"},"New Delhi":{lat:28.6139,lon:77.209,tz:"Asia/Kolkata"},"Mexico City":{lat:19.4326,lon:-99.1332,tz:"America/Mexico_City"},"Buenos Aires":{lat:-34.6037,lon:-58.3816,tz:"America/Argentina/Buenos_Aires"},"Sao Paulo":{lat:-23.5505,lon:-46.6333,tz:"America/Sao_Paulo"},"SÃ£o Paulo":{lat:-23.5505,lon:-46.6333,tz:"America/Sao_Paulo"}};
+const cityCoords={"Belgrade":{lat:44.7866,lon:20.4489,tz:"Europe/Belgrade"},"Zagreb":{lat:45.815,lon:15.9819,tz:"Europe/Zagreb"},"London":{lat:51.5074,lon:-0.1278,tz:"Europe/London"},"Paris":{lat:48.8566,lon:2.3522,tz:"Europe/Paris"},"Berlin":{lat:52.52,lon:13.405,tz:"Europe/Berlin"},"Moscow":{lat:55.7558,lon:37.6173,tz:"Europe/Moscow"},"New York":{lat:40.7128,lon:-74.006,tz:"America/New_York"},"Los Angeles":{lat:34.0522,lon:-118.2437,tz:"America/Los_Angeles"},"Chicago":{lat:41.8781,lon:-87.6298,tz:"America/Chicago"},"Toronto":{lat:43.6532,lon:-79.3832,tz:"America/Toronto"},"Sydney":{lat:-33.8688,lon:151.2093,tz:"Australia/Sydney"},"Tokyo":{lat:35.6762,lon:139.6503,tz:"Asia/Tokyo"},"Dubai":{lat:25.2048,lon:55.2708,tz:"Asia/Dubai"},"Istanbul":{lat:41.0082,lon:28.9784,tz:"Europe/Istanbul"},"Rome":{lat:41.9028,lon:12.4964,tz:"Europe/Rome"},"Madrid":{lat:40.4168,lon:-3.7038,tz:"Europe/Madrid"},"Vienna":{lat:48.2082,lon:16.3738,tz:"Europe/Vienna"},"Budapest":{lat:47.4979,lon:19.0402,tz:"Europe/Budapest"},"Athens":{lat:37.9838,lon:23.7275,tz:"Europe/Athens"},"Bucharest":{lat:44.4268,lon:26.1025,tz:"Europe/Bucharest"},"Sofia":{lat:42.6977,lon:23.3219,tz:"Europe/Sofia"},"Ljubljana":{lat:46.0569,lon:14.5058,tz:"Europe/Ljubljana"},"Prague":{lat:50.0755,lon:14.4378,tz:"Europe/Prague"},"Warsaw":{lat:52.2297,lon:21.0122,tz:"Europe/Warsaw"},"Amsterdam":{lat:52.3676,lon:4.9041,tz:"Europe/Amsterdam"},"Zurich":{lat:47.3769,lon:8.5417,tz:"Europe/Zurich"},"Stockholm":{lat:59.3293,lon:18.0686,tz:"Europe/Stockholm"},"Oslo":{lat:59.9139,lon:10.7522,tz:"Europe/Oslo"},"Dublin":{lat:53.3498,lon:-6.2603,tz:"Europe/Dublin"},"Lisbon":{lat:38.7223,lon:-9.1393,tz:"Europe/Lisbon"},"Cairo":{lat:30.0444,lon:31.2357,tz:"Africa/Cairo"},"Johannesburg":{lat:-26.2041,lon:28.0473,tz:"Africa/Johannesburg"},"Singapore":{lat:1.3521,lon:103.8198,tz:"Asia/Singapore"},"Hong Kong":{lat:22.3193,lon:114.1694,tz:"Asia/Hong_Kong"},"Seoul":{lat:37.5665,lon:126.978,tz:"Asia/Seoul"},"Beijing":{lat:39.9042,lon:116.4074,tz:"Asia/Shanghai"},"Mumbai":{lat:19.076,lon:72.8777,tz:"Asia/Kolkata"},"New Delhi":{lat:28.6139,lon:77.209,tz:"Asia/Kolkata"},"Mexico City":{lat:19.4326,lon:-99.1332,tz:"America/Mexico_City"},"Buenos Aires":{lat:-34.6037,lon:-58.3816,tz:"America/Argentina/Buenos_Aires"},"Sao Paulo":{lat:-23.5505,lon:-46.6333,tz:"America/Sao_Paulo"}};
 ["Novi Sad","Nis","Kragujevac","Subotica","Split","Banja Luka","Podgorica","Budva","Skopje","Munich","Barcelona","Milan","Brussels","Copenhagen","Helsinki","Miami","Vancouver","Rio de Janeiro","Doha","Riyadh","Tel Aviv","Shanghai","Melbourne","Auckland","Cape Town"].forEach(function(city){if(!worldCities.includes(city))worldCities.push(city)});
 Object.assign(cityCoords,{"Novi Sad":{lat:45.2671,lon:19.8335,tz:"Europe/Belgrade"},"Nis":{lat:43.3209,lon:21.8958,tz:"Europe/Belgrade"},"Kragujevac":{lat:44.0128,lon:20.9114,tz:"Europe/Belgrade"},"Subotica":{lat:46.1005,lon:19.6651,tz:"Europe/Belgrade"},"Split":{lat:43.5081,lon:16.4402,tz:"Europe/Zagreb"},"Banja Luka":{lat:44.7722,lon:17.191,tz:"Europe/Sarajevo"},"Podgorica":{lat:42.4304,lon:19.2594,tz:"Europe/Podgorica"},"Budva":{lat:42.2911,lon:18.84,tz:"Europe/Podgorica"},"Skopje":{lat:41.9981,lon:21.4254,tz:"Europe/Skopje"},"Munich":{lat:48.1351,lon:11.582,tz:"Europe/Berlin"},"Barcelona":{lat:41.3851,lon:2.1734,tz:"Europe/Madrid"},"Milan":{lat:45.4642,lon:9.19,tz:"Europe/Rome"},"Brussels":{lat:50.8476,lon:4.3572,tz:"Europe/Brussels"},"Copenhagen":{lat:55.6761,lon:12.5683,tz:"Europe/Copenhagen"},"Helsinki":{lat:60.1699,lon:24.9384,tz:"Europe/Helsinki"},"Miami":{lat:25.7617,lon:-80.1918,tz:"America/New_York"},"Vancouver":{lat:49.2827,lon:-123.1207,tz:"America/Vancouver"},"Rio de Janeiro":{lat:-22.9068,lon:-43.1729,tz:"America/Sao_Paulo"},"Doha":{lat:25.2854,lon:51.531,tz:"Asia/Qatar"},"Riyadh":{lat:24.7136,lon:46.6753,tz:"Asia/Riyadh"},"Tel Aviv":{lat:32.0853,lon:34.7818,tz:"Asia/Jerusalem"},"Shanghai":{lat:31.2304,lon:121.4737,tz:"Asia/Shanghai"},"Melbourne":{lat:-37.8136,lon:144.9631,tz:"Australia/Melbourne"},"Auckland":{lat:-36.8485,lon:174.7633,tz:"Pacific/Auckland"},"Cape Town":{lat:-33.9249,lon:18.4241,tz:"Africa/Johannesburg"}});
 
@@ -632,6 +727,47 @@ function sharedSynastryContacts(){const merged=[];['numerology_dates','sinastrij
 function ownerUnits(){try{return(JSON.parse(localStorage.getItem('numerology_owner_profile')||'{}').units)||'EU'}catch(e){return'EU'}}
 function displayDateByUnits(date){const m=/^(\d{2})\.(\d{2})\.(\d{4})$/.exec(date||'');return ownerUnits()==='US'&&m?m[2]+'.'+m[1]+'.'+m[3]:(date||'')}
 function displayTimeByUnits(time){const m=/^(\d{2}):(\d{2})$/.exec(time||'');if(ownerUnits()==='US'&&m){let h=+m[1];const ap=h>=12?'PM':'AM';h=h%12||12;return String(h).padStart(2,'0')+':'+m[2]+' '+ap}return time||''}
+
+function synEscapeHtml(value){return String(value||"").replace(/[&<>"']/g,function(ch){return({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch])})}
+window.synPersonNames=window.synPersonNames||{1:"",2:""};
+function normalizeSynName(name){const clean=String(name||"").trim();return clean?clean.split(/\s+/)[0]:""}
+function synInputSignature(prefix){return{
+  date:(document.getElementById("input"+prefix)||{}).value||"",
+  time:(document.getElementById("timeInput"+prefix)||{}).value||"",
+  city:(document.getElementById("cityInput"+prefix)||{}).value||""
+}}
+function synContactMatchesInput(item,sig){
+  if(!item||!sig)return false;
+  const sameDate=String(item.date||"")===String(sig.date||"");
+  const sameTime=String(item.time||"")===String(sig.time||"")||(!item.time&&!sig.time);
+  const sameCity=String(item.city||"").trim().toLowerCase()===String(sig.city||"").trim().toLowerCase()||(!item.city&&!sig.city);
+  return sameDate&&sameTime&&sameCity;
+}
+function findSynProfileName(prefix){
+  const sig=synInputSignature(prefix);
+  const list=typeof sharedSynastryContacts==="function"?withOwnerFirst(sharedSynastryContacts()):[];
+  const match=list.find(function(item){return synContactMatchesInput(item,sig)});
+  return normalizeSynName(match&&match.name);
+}
+function getSynPersonName(prefix){
+  return normalizeSynName(window.synPersonNames&&window.synPersonNames[prefix])||findSynProfileName(prefix)||("Person "+(String(prefix)==="1"?"A":"B"));
+}
+function getSynPersonRole(prefix){return String(prefix)==="1"?"A":"B"}
+function setSynPersonName(prefix,name){
+  window.synPersonNames=window.synPersonNames||{1:"",2:""};
+  window.synPersonNames[prefix]=normalizeSynName(name)||findSynProfileName(prefix)||"";
+  updateSynPersonLabels();
+}
+function updateSynPersonLabels(){
+  const a=getSynPersonName("1"),b=getSynPersonName("2");
+  const labels=document.querySelectorAll(".person-label");
+  if(labels[0])labels[0].textContent=(a==="Person A"?"PERSON A":a)+" (You)";
+  if(labels[1])labels[1].textContent=(b==="Person B"?"PERSON B":b)+" (Partner)";
+  document.querySelectorAll("[data-syn-person='1']").forEach(function(el){el.textContent=a});
+  document.querySelectorAll("[data-syn-person='2']").forEach(function(el){el.textContent=b});
+}
+function synPersonLabel(prefix){return '<span data-syn-person="'+prefix+'">'+synEscapeHtml(getSynPersonName(prefix))+'</span>'}
+
 function formatSavedContactDetails(item){let details=displayDateByUnits(item.date);if(item.time)details+=' '+displayTimeByUnits(item.time);if(item.city)details+=' '+item.city;return details}
 function getSavedDates1(){return withOwnerFirst(sharedSynastryContacts())}
 function saveDatesList1(dates){localStorage.setItem('numerology_dates',JSON.stringify(dates.filter(function(item){return item.id!=='owner-profile'&&!item.ownerProfile})));updateSavedCount1();updateSavedCount2()}
@@ -640,9 +776,33 @@ function offerSaveDate1(dateStr){if(skipSavePrompt){skipSavePrompt=false;return}
 function closeSaveModal1(){let modal=document.getElementById('saveModal1');if(modal)modal.style.display='none'}
 function confirmSaveDate1(){let name=document.getElementById('saveNameInput1').value.trim();if(!name){alert('Please enter a name');return}let dateStr=document.getElementById("input1").value;let timeStr=document.getElementById("timeInput1")?document.getElementById("timeInput1").value:"";let city=document.getElementById("cityInput1")?document.getElementById("cityInput1").value:"";let saved=getSavedDates1();saved.push({id:Date.now(),name:name,date:dateStr,time:timeStr,city:city,timestamp:new Date().toISOString()});saveDatesList1(saved);closeSaveModal1();renderSavedList1()}
 function deleteSavedDate1(id){if(id==='owner-profile'){alert('Owner profile cannot be deleted from contacts.');return}if(!confirm('Delete this saved contact?'))return;let saved=getSavedDates1().filter(function(d){return String(d.id)!==String(id)});saveDatesList1(saved);renderSavedList1()}function editSavedDate1(id){if(id==="owner-profile")return;let saved=getSavedDates1().filter(x=>x.id!=="owner-profile"&&!x.ownerProfile);let item=saved.find(d=>String(d.id)===String(id));if(!item)return;const n=prompt("Edit contact name",item.name||"");if(n===null)return;const d=prompt("Edit date (DD.MM.YYYY)",item.date||"");if(d===null)return;const t=prompt("Edit time (HH:MM)",item.time||"");if(t===null)return;const c=prompt("Edit city",item.city||"");if(c===null)return;item.name=n.trim()||item.name||"Saved contact";item.date=d.trim();item.time=t.trim();item.city=c.trim();item.updatedAt=new Date().toISOString();saveDatesList1(saved);renderSavedList1()}
-function loadSavedDate1(dateStr,timeStr,city){document.getElementById('input1').value=dateStr;let timeInput=document.getElementById('timeInput1');if(timeInput&&timeStr)timeInput.value=timeStr;let cityInput=document.getElementById('cityInput1');if(cityInput&&city)cityInput.value=city;if(window.AppSharedState)AppSharedState.saveLastAstroInput({date:dateStr,time:timeStr||'',city:city||''});skipSavePrompt=true;toggleSavedPanel1()}
+function loadSavedDate1(dateStr,timeStr,city,name){document.getElementById('input1').value=dateStr;let timeInput=document.getElementById('timeInput1');if(timeInput)timeInput.value=timeStr||"";let cityInput=document.getElementById('cityInput1');if(cityInput)cityInput.value=city||"";setSynPersonName("1",name);if(window.AppSharedState)AppSharedState.saveLastAstroInput({date:dateStr,time:timeStr||'',city:city||''});skipSavePrompt=true;toggleSavedPanel1()}
 function toggleSavedPanel1(){let panel=document.getElementById('savedPanel1');if(!panel)return;if(panel.style.display==='block'){panel.style.display='none'}else{panel.style.display='block';renderSavedList1()}}
-function renderSavedList1(){let container=document.getElementById('savedList1');if(!container)return;let saved=getSavedDates1();if(saved.length===0){container.innerHTML='<div style="color:#64748b;text-align:center;padding:20px;font-size:12px">No saved contacts</div>';return}let html='';saved.forEach(function(item){let isOwner=item.id==='owner-profile'||item.ownerProfile||item.locked;let details=formatSavedContactDetails(item);if(isOwner){html+='<div style="background:#FFD700;color:#0f172a;border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:0.3s;border:1px solid rgba(255,215,0,.75);text-align:center;" onclick="loadSavedDate1(\''+item.date+'\',\''+(item.time||'')+'\',\''+(item.city||'')+'\')"><div style="color:#0f172a;font-weight:bold;font-size:13px">'+item.name+'</div></div>';return}let edit='<span class="saved-edit-contact" onclick="event.stopPropagation();editSavedDate1('+JSON.stringify(item.id)+')" title="Edit saved contact">EDIT</span>';let lock='<span onclick="event.stopPropagation();deleteSavedDate1('+JSON.stringify(item.id)+')" style="color:#ef4444;font-size:16px;cursor:pointer;padding:5px" title="Delete saved contact">&#128465;&#65039;</span>';html+='<div style="background:#0f172a;border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:0.3s;border:1px solid #334155;" onmouseover="this.style.borderColor=\'#FFD700\'" onmouseout="this.style.borderColor=\'#334155\'" onclick="loadSavedDate1(\''+item.date+'\',\''+(item.time||'')+'\',\''+(item.city||'')+'\')">'+'<div style="display:flex;justify-content:space-between;align-items:center;">'+'<div>'+'<div style="color:#f6cb71;font-weight:bold;font-size:13px">'+item.name+'</div><div style="color:#94a3b8;font-size:11px;margin-top:2px">'+details+'</div></div>'+'<div style="display:flex;align-items:center;gap:2px">'+edit+lock+'</div>'+'</div>'+'</div>'});container.innerHTML=html}
+function synSavedLoadData(item){return encodeURIComponent(JSON.stringify([item.date||"",item.time||"",item.city||"",item.name||""]))}
+function loadSynSavedFromDataset(event,el,prefix){if(event)event.stopPropagation();let data=[];try{data=JSON.parse(decodeURIComponent(el.getAttribute("data-load")||"[]"))}catch(e){}if(String(prefix)==="1")loadSavedDate1(data[0]||"",data[1]||"",data[2]||"",data[3]||"");else loadSavedDate2(data[0]||"",data[1]||"",data[2]||"",data[3]||"")}
+function renderSavedList1(){
+  let container=document.getElementById('savedList1');
+  if(!container)return;
+  let saved=getSavedDates1();
+  if(saved.length===0){container.innerHTML='<div style="color:#64748b;text-align:center;padding:20px;font-size:12px">No saved contacts</div>';return}
+  let html='';
+  saved.forEach(function(item){
+    let isOwner=item.id==='owner-profile'||item.ownerProfile||item.locked;
+    let details=formatSavedContactDetails(item);
+    let load=synSavedLoadData(item);
+    if(isOwner){
+      html+='<div style="background:#FFD700;color:#0f172a;border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:0.3s;border:1px solid rgba(255,215,0,.75);text-align:center;" data-load="'+load+'" onclick="loadSynSavedFromDataset(event,this,1)"><div style="color:#0f172a;font-weight:bold;font-size:13px">'+synEscapeHtml(item.name)+'</div></div>';
+      return;
+    }
+    let edit='<span class="saved-edit-contact" onclick="event.stopPropagation();editSavedDate1('+JSON.stringify(item.id)+')" title="Edit saved contact">EDIT</span>';
+    let lock='<span onclick="event.stopPropagation();deleteSavedDate1('+JSON.stringify(item.id)+')" style="color:#ef4444;font-size:16px;cursor:pointer;padding:5px" title="Delete saved contact">&#128465;&#65039;</span>';
+    html+='<div style="background:#0f172a;border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:0.3s;border:1px solid #334155;" onmouseover="this.style.borderColor=\'#FFD700\'" onmouseout="this.style.borderColor=\'#334155\'" data-load="'+load+'" onclick="loadSynSavedFromDataset(event,this,1)">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;">'+
+      '<div><div style="color:#f6cb71;font-weight:bold;font-size:13px">'+synEscapeHtml(item.name)+'</div><div style="color:#94a3b8;font-size:11px;margin-top:2px">'+synEscapeHtml(details)+'</div></div>'+
+      '<div style="display:flex;align-items:center;gap:2px">'+edit+lock+'</div></div></div>';
+  });
+  container.innerHTML=html;
+}
 
 // ===== SAVED DATES - PERSON B =====
 function getSavedDates2(){return withOwnerFirst(sharedSynastryContacts())}
@@ -652,9 +812,31 @@ function offerSaveDate2(dateStr){if(skipSavePrompt){skipSavePrompt=false;return}
 function closeSaveModal2(){let modal=document.getElementById('saveModal2');if(modal)modal.style.display='none'}
 function confirmSaveDate2(){let name=document.getElementById('saveNameInput2').value.trim();if(!name){alert('Please enter a name');return}let dateStr=document.getElementById("input2").value;let timeStr=document.getElementById("timeInput2")?document.getElementById("timeInput2").value:"";let city=document.getElementById("cityInput2")?document.getElementById("cityInput2").value:"";let saved=getSavedDates2();saved.push({id:Date.now(),name:name,date:dateStr,time:timeStr,city:city,timestamp:new Date().toISOString()});saveDatesList2(saved);closeSaveModal2();renderSavedList2()}
 function deleteSavedDate2(id){if(id==='owner-profile'){alert('Owner profile cannot be deleted from contacts.');return}if(!confirm('Delete this saved contact?'))return;let saved=getSavedDates2().filter(function(d){return String(d.id)!==String(id)});saveDatesList2(saved);renderSavedList2()}function editSavedDate2(id){if(id==="owner-profile")return;let saved=getSavedDates2().filter(x=>x.id!=="owner-profile"&&!x.ownerProfile);let item=saved.find(d=>String(d.id)===String(id));if(!item)return;const n=prompt("Edit contact name",item.name||"");if(n===null)return;const d=prompt("Edit date (DD.MM.YYYY)",item.date||"");if(d===null)return;const t=prompt("Edit time (HH:MM)",item.time||"");if(t===null)return;const c=prompt("Edit city",item.city||"");if(c===null)return;item.name=n.trim()||item.name||"Saved contact";item.date=d.trim();item.time=t.trim();item.city=c.trim();item.updatedAt=new Date().toISOString();saveDatesList2(saved);renderSavedList2()}
-function loadSavedDate2(dateStr,timeStr,city){document.getElementById('input2').value=dateStr;let timeInput=document.getElementById('timeInput2');if(timeInput&&timeStr)timeInput.value=timeStr;let cityInput=document.getElementById('cityInput2');if(cityInput&&city)cityInput.value=city;skipSavePrompt=true;toggleSavedPanel2()}
+function loadSavedDate2(dateStr,timeStr,city,name){document.getElementById('input2').value=dateStr;let timeInput=document.getElementById('timeInput2');if(timeInput)timeInput.value=timeStr||"";let cityInput=document.getElementById('cityInput2');if(cityInput)cityInput.value=city||"";setSynPersonName("2",name);skipSavePrompt=true;toggleSavedPanel2()}
 function toggleSavedPanel2(){let panel=document.getElementById('savedPanel2');if(!panel)return;if(panel.style.display==='block'){panel.style.display='none'}else{panel.style.display='block';renderSavedList2()}}
-function renderSavedList2(){let container=document.getElementById('savedList2');if(!container)return;let saved=getSavedDates2();if(saved.length===0){container.innerHTML='<div style="color:#64748b;text-align:center;padding:20px;font-size:12px">No saved contacts</div>';return}let html='';saved.forEach(function(item){let isOwner=item.id==='owner-profile'||item.ownerProfile||item.locked;let details=formatSavedContactDetails(item);if(isOwner){html+='<div style="background:#FFD700;color:#0f172a;border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:0.3s;border:1px solid rgba(255,215,0,.75);text-align:center;" onclick="loadSavedDate2(\''+item.date+'\',\''+(item.time||'')+'\',\''+(item.city||'')+'\')"><div style="color:#0f172a;font-weight:bold;font-size:13px">'+item.name+'</div></div>';return}let edit='<span class="saved-edit-contact" onclick="event.stopPropagation();editSavedDate2('+JSON.stringify(item.id)+')" title="Edit saved contact">EDIT</span>';let lock='<span onclick="event.stopPropagation();deleteSavedDate2('+JSON.stringify(item.id)+')" style="color:#ef4444;font-size:16px;cursor:pointer;padding:5px" title="Delete saved contact">&#128465;&#65039;</span>';html+='<div style="background:#0f172a;border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:0.3s;border:1px solid #334155;" onmouseover="this.style.borderColor=\'#FFD700\'" onmouseout="this.style.borderColor=\'#334155\'" onclick="loadSavedDate2(\''+item.date+'\',\''+(item.time||'')+'\',\''+(item.city||'')+'\')">'+'<div style="display:flex;justify-content:space-between;align-items:center;">'+'<div>'+'<div style="color:#f6cb71;font-weight:bold;font-size:13px">'+item.name+'</div><div style="color:#94a3b8;font-size:11px;margin-top:2px">'+details+'</div></div>'+'<div style="display:flex;align-items:center;gap:2px">'+edit+lock+'</div>'+'</div>'+'</div>'});container.innerHTML=html}
+function renderSavedList2(){
+  let container=document.getElementById('savedList2');
+  if(!container)return;
+  let saved=getSavedDates2();
+  if(saved.length===0){container.innerHTML='<div style="color:#64748b;text-align:center;padding:20px;font-size:12px">No saved contacts</div>';return}
+  let html='';
+  saved.forEach(function(item){
+    let isOwner=item.id==='owner-profile'||item.ownerProfile||item.locked;
+    let details=formatSavedContactDetails(item);
+    let load=synSavedLoadData(item);
+    if(isOwner){
+      html+='<div style="background:#FFD700;color:#0f172a;border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:0.3s;border:1px solid rgba(255,215,0,.75);text-align:center;" data-load="'+load+'" onclick="loadSynSavedFromDataset(event,this,2)"><div style="color:#0f172a;font-weight:bold;font-size:13px">'+synEscapeHtml(item.name)+'</div></div>';
+      return;
+    }
+    let edit='<span class="saved-edit-contact" onclick="event.stopPropagation();editSavedDate2('+JSON.stringify(item.id)+')" title="Edit saved contact">EDIT</span>';
+    let lock='<span onclick="event.stopPropagation();deleteSavedDate2('+JSON.stringify(item.id)+')" style="color:#ef4444;font-size:16px;cursor:pointer;padding:5px" title="Delete saved contact">&#128465;&#65039;</span>';
+    html+='<div style="background:#0f172a;border-radius:8px;padding:12px;margin-bottom:8px;cursor:pointer;transition:0.3s;border:1px solid #334155;" onmouseover="this.style.borderColor=\'#FFD700\'" onmouseout="this.style.borderColor=\'#334155\'" data-load="'+load+'" onclick="loadSynSavedFromDataset(event,this,2)">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;">'+
+      '<div><div style="color:#f6cb71;font-weight:bold;font-size:13px">'+synEscapeHtml(item.name)+'</div><div style="color:#94a3b8;font-size:11px;margin-top:2px">'+synEscapeHtml(details)+'</div></div>'+
+      '<div style="display:flex;align-items:center;gap:2px">'+edit+lock+'</div></div></div>';
+  });
+  container.innerHTML=html;
+}
 
 // ===== NAVIGATION =====
 function goBack(){const date=document.getElementById("input1").value;const time=document.getElementById("timeInput1").value;const city=document.getElementById("cityInput1").value;if(window.AppSharedState)AppSharedState.saveLastAstroInput({date,time,city});let backUrl="chart.html";if(date){backUrl+="?date="+encodeURIComponent(date);if(time)backUrl+="&time="+encodeURIComponent(time);if(city)backUrl+="&city="+encodeURIComponent(city)}window.location.href=backUrl}
@@ -718,17 +900,17 @@ function angleDiff(a,b){let d=Math.abs(normalize(a)-normalize(b));return d>180?3
 function findSynastryAspects(a,b){const found=[];a.positions.forEach(pa=>{b.positions.forEach(pb=>{const diff=angleDiff(pa.longitude,pb.longitude);aspectDefs.forEach(def=>{const orb=Math.abs(diff-def.angle);if(orb<=def.orb){const personal=(["sun","moon","venus","mars","mercury"].includes(pa.key)||["sun","moon","venus","mars","mercury"].includes(pb.key));const score=Math.round(def.score*(1-orb/(def.orb+1))+(personal?(def.score>0?2:-1):0));found.push({a:pa,b:pb,name:def.name,orb,score,type:score>1?"good":score<-1?"bad":"neutral",major:personal})}})})});return found.sort((x,y)=>Math.abs(y.score)-Math.abs(x.score)).slice(0,14)}
 function setScoreValue(id,value){const el=document.getElementById(id);if(!el)return;el.textContent=(value>0?"+":"")+value;el.className="score-detail-value "+(value>2?"good":value<-2?"bad":"neutral")}
 function renderScore(score,cats){document.getElementById("scoreNum").textContent=score+"%";const c=2*Math.PI*54;document.getElementById("scoreRing").style.strokeDashoffset=c-(score/100)*c;setScoreValue("scoreEmo",cats.emotional);setScoreValue("scoreCom",cats.communication);setScoreValue("scorePhy",cats.physical);setScoreValue("scoreSpi",cats.spiritual);setScoreValue("scoreCha",cats.challenges)}
-function renderPlanetPositions(a,b){const grid=document.querySelector(".planet-grid");if(!grid)return;function block(person,label){return'<div class="planet-compare"><div class="planet-compare-title">'+label+'</div>'+person.positions.slice(0,6).map(p=>'<div class="planet-row"><span class="planet-name">'+p.symbol+' '+p.name+'</span><span class="planet-sign">'+formatPos(p.longitude)+'</span></div>').join("")+'<div class="planet-row"><span class="planet-name">Asc</span><span class="planet-sign">'+formatPos(person.angles.asc)+'</span></div></div>'}grid.innerHTML=block(a,"Person A")+" "+block(b,"Person B")}
+function renderPlanetPositions(a,b){const grid=document.querySelector(".planet-grid");if(!grid)return;function block(person,label){return'<div class="planet-compare"><div class="planet-compare-title">'+label+'</div>'+person.positions.slice(0,6).map(p=>'<div class="planet-row"><button class="syn-help-btn" type="button" onclick="openSynPlanetRowHelp(event, this)" aria-label="Explain planet position">?</button><span class="planet-name">'+p.symbol+' '+p.name+'</span><span class="planet-sign">'+formatPos(p.longitude)+'</span></div>').join("")+'<div class="planet-row"><button class="syn-help-btn" type="button" onclick="openSynPlanetRowHelp(event, this)" aria-label="Explain planet position">?</button><span class="planet-name">Asc</span><span class="planet-sign">'+formatPos(person.angles.asc)+'</span></div></div>'}grid.innerHTML=block(a,synPersonLabel("1"))+" "+block(b,synPersonLabel("2"));updateSynPersonLabels()}
 function aspectDescription(x){return x.a.name+" and "+x.b.name+" activate "+aspectMeaning[x.a.key]+" with "+aspectMeaning[x.b.key]+"."}
-function renderAspects(aspects){const list=document.getElementById("aspectsList");if(!list)return;list.innerHTML=aspects.map(x=>'<div class="aspect-item '+(x.type==="bad"?"bad":x.type)+'" data-type="'+x.type+'" data-major="'+(x.major?"true":"false")+'"><div class="left"><div class="aspect">'+x.a.symbol+' '+x.a.name+' '+x.name+' '+x.b.symbol+' '+x.b.name+'</div><div class="description">'+aspectDescription(x)+' Orb '+x.orb.toFixed(1)+'\u00B0.</div></div><div class="score">'+(x.score>0?"+":"")+x.score+'</div></div>').join("");bindAspectTooltips()}
-function renderHouseOverlays(a,b){const grid=document.querySelector(".house-grid");if(!grid)return;const items=b.positions.map(p=>({p,house:houseOf(p.longitude,a.cusps)})).sort((x,y)=>["sun","moon","venus","mars","jupiter","saturn"].indexOf(x.p.key)-["sun","moon","venus","mars","jupiter","saturn"].indexOf(y.p.key)).slice(0,6);grid.innerHTML=items.map(x=>'<div class="house-card"><div class="house-num">'+x.house+'th House</div><div class="house-planet">Person B '+x.p.name+'</div><div class="house-desc">'+houseOverlayText(x.p,x.house)+'</div></div>').join("")}
+function renderAspects(aspects){const list=document.getElementById("aspectsList");if(!list)return;list.innerHTML=aspects.map(x=>'<div class="aspect-item '+(x.type==="bad"?"bad":x.type)+'" data-type="'+x.type+'" data-major="'+(x.major?"true":"false")+'"><button class="syn-help-btn" type="button" onclick="openSynAspectHelp(event, this)" aria-label="Explain aspect">?</button><div class="left"><div class="aspect">'+x.a.symbol+' '+x.a.name+' '+x.name+' '+x.b.symbol+' '+x.b.name+'</div><div class="description">'+aspectDescription(x)+' Orb '+x.orb.toFixed(1)+'\u00B0.</div></div><div class="score">'+(x.score>0?"+":"")+x.score+'</div></div>').join("");bindAspectTooltips()}
+function renderHouseOverlays(a,b){const grid=document.querySelector(".house-grid");if(!grid)return;const items=b.positions.map(p=>({p,house:houseOf(p.longitude,a.cusps)})).sort((x,y)=>["sun","moon","venus","mars","jupiter","saturn"].indexOf(x.p.key)-["sun","moon","venus","mars","jupiter","saturn"].indexOf(y.p.key)).slice(0,6);grid.innerHTML=items.map(x=>'<div class="house-card"><button class="syn-help-btn" type="button" onclick="openSynHouseHelp(event, this)" aria-label="Explain house overlay">?</button><div class="house-num">'+x.house+'th House</div><div class="house-planet">'+synPersonLabel("2")+' '+x.p.name+'</div><div class="house-desc">'+houseOverlayText(x.p,x.house)+'</div></div>').join("");updateSynPersonLabels()}
 function houseOverlayText(p,h){const areas=["identity","values","communication","home","romance","daily life","partnership","intimacy","beliefs","career","friends","subconscious"];return p.name+" activates your "+areas[(h-1)%12]+" zone."}
-function renderComposite(a,b){const box=document.querySelector(".composite-mini");if(!box)return;function mid(pa,pb){let a1=pa.longitude,b1=pb.longitude;if(Math.abs(a1-b1)>180){if(a1<b1)a1+=360;else b1+=360}return normalize((a1+b1)/2)}const byA=Object.fromEntries(a.positions.map(p=>[p.key,p]));const byB=Object.fromEntries(b.positions.map(p=>[p.key,p]));const sun=mid(byA.sun,byB.sun),moon=mid(byA.moon,byB.moon),venus=mid(byA.venus,byB.venus),mars=mid(byA.mars,byB.mars);box.innerHTML='<div class="composite-info"><div class="composite-info-item"><span class="composite-info-label">Composite Sun</span><span class="composite-info-value">'+formatPos(sun)+'</span></div><div class="composite-info-item"><span class="composite-info-label">Composite Moon</span><span class="composite-info-value">'+formatPos(moon)+'</span></div><div class="composite-info-item"><span class="composite-info-label">Composite Venus</span><span class="composite-info-value">'+formatPos(venus)+'</span></div><div class="composite-info-item"><span class="composite-info-label">Composite Mars</span><span class="composite-info-value">'+formatPos(mars)+'</span></div></div><div class="composite-info"><div class="composite-info-item"><span class="composite-info-label">Relationship</span><span class="composite-info-value">'+relationshipTitle(sun,moon)+'</span></div><div class="composite-info-item"><span class="composite-info-label">Emotional Tone</span><span class="composite-info-value">'+signOf(moon).name+'</span></div><div class="composite-info-item"><span class="composite-info-label">Attraction</span><span class="composite-info-value">'+signOf(venus).name+'</span></div><div class="composite-info-item"><span class="composite-info-label">Drive</span><span class="composite-info-value">'+signOf(mars).name+'</span></div></div>'}
+function renderComposite(a,b){const box=document.querySelector(".composite-mini");if(!box)return;function mid(pa,pb){let a1=pa.longitude,b1=pb.longitude;if(Math.abs(a1-b1)>180){if(a1<b1)a1+=360;else b1+=360}return normalize((a1+b1)/2)}const byA=Object.fromEntries(a.positions.map(p=>[p.key,p]));const byB=Object.fromEntries(b.positions.map(p=>[p.key,p]));const sun=mid(byA.sun,byB.sun),moon=mid(byA.moon,byB.moon),venus=mid(byA.venus,byB.venus),mars=mid(byA.mars,byB.mars);box.innerHTML='<div class="composite-info"><div class="composite-info-item"><button class="syn-help-btn" type="button" onclick="openSynCompositeHelp(event, this)" aria-label="Explain composite item">?</button><span class="composite-info-label">Composite Sun</span><span class="composite-info-value">'+formatPos(sun)+'</span></div><div class="composite-info-item"><button class="syn-help-btn" type="button" onclick="openSynCompositeHelp(event, this)" aria-label="Explain composite item">?</button><span class="composite-info-label">Composite Moon</span><span class="composite-info-value">'+formatPos(moon)+'</span></div><div class="composite-info-item"><button class="syn-help-btn" type="button" onclick="openSynCompositeHelp(event, this)" aria-label="Explain composite item">?</button><span class="composite-info-label">Composite Venus</span><span class="composite-info-value">'+formatPos(venus)+'</span></div><div class="composite-info-item"><button class="syn-help-btn" type="button" onclick="openSynCompositeHelp(event, this)" aria-label="Explain composite item">?</button><span class="composite-info-label">Composite Mars</span><span class="composite-info-value">'+formatPos(mars)+'</span></div></div><div class="composite-info"><div class="composite-info-item"><button class="syn-help-btn" type="button" onclick="openSynCompositeHelp(event, this)" aria-label="Explain composite item">?</button><span class="composite-info-label">Relationship</span><span class="composite-info-value">'+relationshipTitle(sun,moon)+'</span></div><div class="composite-info-item"><button class="syn-help-btn" type="button" onclick="openSynCompositeHelp(event, this)" aria-label="Explain composite item">?</button><span class="composite-info-label">Emotional Tone</span><span class="composite-info-value">'+signOf(moon).name+'</span></div><div class="composite-info-item"><button class="syn-help-btn" type="button" onclick="openSynCompositeHelp(event, this)" aria-label="Explain composite item">?</button><span class="composite-info-label">Attraction</span><span class="composite-info-value">'+signOf(venus).name+'</span></div><div class="composite-info-item"><button class="syn-help-btn" type="button" onclick="openSynCompositeHelp(event, this)" aria-label="Explain composite item">?</button><span class="composite-info-label">Drive</span><span class="composite-info-value">'+signOf(mars).name+'</span></div></div>'}
 function relationshipTitle(sun,moon){const s=signOf(sun).idx,m=signOf(moon).idx;if([0,4,8].includes(s))return"Dynamic Growth";if([1,5,9].includes(s))return"Stable Building";if([2,6,10].includes(s))return"Mental Bond";return"Emotional Bond"}
 function renderElements(a,b){const counts={fire:0,earth:0,air:0,water:0};[...a.positions,...b.positions].forEach(p=>{const idx=signOf(p.longitude).idx;if([0,4,8].includes(idx))counts.fire++;else if([1,5,9].includes(idx))counts.earth++;else if([2,6,10].includes(idx))counts.air++;else counts.water++});Object.entries(counts).forEach(([k,v])=>{const el=document.querySelector(".element-fill."+k);if(el)el.style.width=Math.round(v/20*100)+"%"})}
-function renderRelationshipType(score,cats){const title=document.querySelector(".rel-type-title");const desc=document.querySelector(".rel-type-desc");if(!title||!desc)return;if(score>=82){title.textContent="Strong Compatibility";desc.textContent="The connection has many supportive links and can feel natural, energizing and stabilizing."}else if(score>=68){title.textContent="Growth Partnership";desc.textContent="There is real attraction and learning here, with enough harmony to work through differences."}else if(score>=52){title.textContent="Complex Bond";desc.textContent="The relationship can be meaningful, but communication and emotional pacing need care."}else{title.textContent="Challenging Mirror";desc.textContent="This connection may trigger growth through friction, boundaries and honest self-awareness."}}
+function renderRelationshipType(score,cats){const title=document.querySelector(".rel-type-title");const desc=document.querySelector(".rel-type-desc");if(!title||!desc)return;const a=getSynPersonName("1"),b=getSynPersonName("2");if(score>=82){title.textContent="Strong Compatibility";desc.textContent=a+" and "+b+" have many supportive links, so the connection can feel natural, energizing and stabilizing."}else if(score>=68){title.textContent="Growth Partnership";desc.textContent="There is real attraction and learning between "+a+" and "+b+", with enough harmony to work through differences."}else if(score>=52){title.textContent="Complex Bond";desc.textContent=a+" and "+b+" can have a meaningful bond, but communication and emotional pacing need care."}else{title.textContent="Challenging Mirror";desc.textContent="This connection between "+a+" and "+b+" may trigger growth through friction, boundaries and honest self-awareness."}}
 function calculateCategoryScores(aspects){const cats={emotional:0,communication:0,physical:0,spiritual:0,challenges:0};aspects.forEach(x=>{const keys=[x.a.key,x.b.key];if(keys.includes("moon")||keys.includes("venus"))cats.emotional+=x.score;if(keys.includes("mercury"))cats.communication+=x.score;if(keys.includes("mars")||keys.includes("venus"))cats.physical+=x.score;if(keys.includes("jupiter")||keys.includes("neptune")||keys.includes("pluto"))cats.spiritual+=x.score;if(x.score<0)cats.challenges+=x.score});Object.keys(cats).forEach(k=>cats[k]=Math.max(-9,Math.min(9,Math.round(cats[k]/2))));return cats}
-function resetSynastryOutputs(){renderScore(0,{emotional:0,communication:0,physical:0,spiritual:0,challenges:0});const pg=document.querySelector(".planet-grid");if(pg)pg.innerHTML='<div class="planet-compare"><div class="planet-compare-title">Person A</div><div class="planet-row"><span class="planet-name">Press Calculate</span><span class="planet-sign">--</span></div></div><div class="planet-compare"><div class="planet-compare-title">Person B</div><div class="planet-row"><span class="planet-name">Press Calculate</span><span class="planet-sign">--</span></div></div>';const hg=document.querySelector(".house-grid");if(hg)hg.innerHTML='<div class="house-card"><div class="house-num">Waiting</div><div class="house-planet">House overlays</div><div class="house-desc">Enter both people and press Calculate.</div></div>';const al=document.getElementById("aspectsList");if(al)al.innerHTML='<div class="aspect-item neutral" data-type="neutral" data-major="true"><div class="left"><div class="aspect">No calculation yet</div><div class="description">Key aspects will appear here after Calculate.</div></div><div class="score">--</div></div>';const comp=document.querySelector(".composite-mini");if(comp)comp.innerHTML='<div class="composite-info"><div class="composite-info-item"><span class="composite-info-label">Composite</span><span class="composite-info-value">Waiting for calculation</span></div></div>';bindAspectTooltips()}
+function resetSynastryOutputs(){renderScore(0,{emotional:0,communication:0,physical:0,spiritual:0,challenges:0});const pg=document.querySelector(".planet-grid");if(pg)pg.innerHTML='<div class="planet-compare"><div class="planet-compare-title">'+synPersonLabel("1")+'</div><div class="planet-row"><button class="syn-help-btn" type="button" onclick="openSynPlanetRowHelp(event, this)" aria-label="Explain planet position">?</button><span class="planet-name">Press Calculate</span><span class="planet-sign">--</span></div></div><div class="planet-compare"><div class="planet-compare-title">'+synPersonLabel("2")+'</div><div class="planet-row"><button class="syn-help-btn" type="button" onclick="openSynPlanetRowHelp(event, this)" aria-label="Explain planet position">?</button><span class="planet-name">Press Calculate</span><span class="planet-sign">--</span></div></div>';const hg=document.querySelector(".house-grid");if(hg)hg.innerHTML='<div class="house-card"><button class="syn-help-btn" type="button" onclick="openSynHouseHelp(event, this)" aria-label="Explain house overlay">?</button><div class="house-num">Waiting</div><div class="house-planet">House overlays</div><div class="house-desc">Enter both people and press Calculate.</div></div>';const al=document.getElementById("aspectsList");if(al)al.innerHTML='<div class="aspect-item neutral" data-type="neutral" data-major="true"><button class="syn-help-btn" type="button" onclick="openSynAspectHelp(event, this)" aria-label="Explain aspect">?</button><div class="left"><div class="aspect">No calculation yet</div><div class="description">Key aspects will appear here after Calculate.</div></div><div class="score">--</div></div>';const comp=document.querySelector(".composite-mini");if(comp)comp.innerHTML='<div class="composite-info"><div class="composite-info-item"><button class="syn-help-btn" type="button" onclick="openSynCompositeHelp(event, this)" aria-label="Explain composite item">?</button><span class="composite-info-label">Composite</span><span class="composite-info-value">Waiting for calculation</span></div></div>';bindAspectTooltips()}
 function setCalcSourceStatus(source){const el=document.getElementById("calcSourceStatus");if(!el)return;const precise=source==="Local Swiss Ephemeris";el.classList.toggle("fallback",!precise);el.textContent=precise?"Swiss Ephemeris loaded - precise synastry calculation.":"Fallback calculation used - approximate synastry formulas."}
 async function analyzeSynastry(evt){const btn=evt&&evt.target&&evt.target.id==="analyzeBtn"?evt.target:document.getElementById("analyzeBtn");try{if(btn){btn.textContent="Calculating...";btn.disabled=true}if(!validateDate(document.getElementById("input1").value)||!validateDate(document.getElementById("input2").value)){alert("Please enter both dates in DD.MM.YYYY format.");return}const a=await calculatePerson("1");const b=await calculatePerson("2");setCalcSourceStatus(a.source==="Local Swiss Ephemeris"&&b.source==="Local Swiss Ephemeris"?"Local Swiss Ephemeris":"browser formulas");const aspects=findSynastryAspects(a,b);const cats=calculateCategoryScores(aspects);const raw=55+aspects.reduce((sum,x)=>sum+x.score,0)*1.0;const score=Math.max(20,Math.min(98,Math.round(raw)));renderScore(score,cats);renderPlanetPositions(a,b);renderAspects(aspects);renderHouseOverlays(a,b);renderComposite(a,b);renderElements(a,b);renderRelationshipType(score,cats);offerSaveDate1(document.getElementById("input1").value);offerSaveDate2(document.getElementById("input2").value);if(btn){btn.textContent="Done";btn.style.background="linear-gradient(135deg,#22c55e,#16a34a)";setTimeout(()=>{btn.textContent="Calculate Compatibility";btn.style.background="linear-gradient(135deg,#FFD700,#f59e0b)";btn.disabled=false},1400)}}catch(err){alert(err.message||"Synastry could not be calculated.")}finally{if(btn&&btn.textContent==="Calculating..."){btn.textContent="Calculate Compatibility";btn.disabled=false}}}
 
@@ -760,8 +942,94 @@ if(time)document.getElementById('timeInput1').value=time;
 if(city)document.getElementById('cityInput1').value=city;
 if(window.AppSharedState){AppSharedState.saveLastAstroInput({date,time,city});AppSharedState.bindLastAstroInput({dateId:"input1",timeId:"timeInput1",cityId:"cityInput1"})}
 
+setSynPersonName("1",findSynProfileName("1"));
+setSynPersonName("2",findSynProfileName("2"));
 resetSynastryOutputs();
+updateSynPersonLabels();
 });
+
+
+
+const synGeneralHelp = {
+  score:{title:'Compatibility score',text:'The score is a quick overview, not a verdict. It combines supportive and challenging aspects, then separates the relationship into emotional, communication, physical, spiritual and challenge areas. A lower challenge value does not mean failure; it shows where the relationship asks for more maturity and patience.'},
+  positions:{title:'Planet positions',text:'Planet positions show each person separately. In synastry they are the raw material: Sun shows identity, Moon emotional needs, Mercury communication, Venus affection, Mars desire, and Ascendant first impression. The real relationship reading comes from comparing these placements between the two charts.'},
+  houses:{title:'House overlays',text:'House overlays show where one person lands inside the other person\'s life. For example, someone\'s Moon in your 4th house can feel emotionally familiar, while Venus in your 7th house can feel strongly partner-like. This explains why a person affects a specific life area.'},
+  aspects:{title:'Key aspects',text:'Aspects are the main relationship contacts between the two charts. Trines and sextiles usually flow more easily. Squares and oppositions create friction but can also create attraction and growth. Conjunctions are powerful and depend on which planets are involved.'},
+  composite:{title:'Composite chart',text:'The composite chart blends both charts into one symbolic relationship chart. It describes the relationship as its own entity: its purpose, emotional tone, attraction style and shared drive. It is different from synastry, which compares person to person.'}
+};
+
+const synScoreHelp = {
+  Emotional:'Emotional score reads Moon and Venus contacts. It shows comfort, affection, nurturing, emotional timing and whether the two people naturally understand each other\'s needs.',
+  Communication:'Communication score reads Mercury contacts. It shows how easily the two people talk, explain, listen, debate and solve misunderstandings.',
+  Physical:'Physical score reads Venus and Mars contacts. It shows attraction, passion, chemistry, desire and the body-level rhythm between two people.',
+  Spiritual:'Spiritual score reads Jupiter, Neptune and Pluto contacts. It shows shared beliefs, inspiration, deep transformation, trust and meaning.',
+  Challenges:'Challenges collect the difficult contacts. They are not automatically bad; they show pressure points where boundaries, timing, honesty or patience are needed.'
+};
+
+function ensureSynHelpModal(){
+  let modal=document.getElementById('synHelpModal');
+  if(modal)return modal;
+  modal=document.createElement('div');
+  modal.id='synHelpModal';
+  modal.className='syn-help-modal';
+  modal.innerHTML='<div class="syn-help-panel"><button class="syn-help-close" type="button" onclick="closeSynHelp()" aria-label="Close">×</button><h3 id="synHelpTitle"></h3><div id="synHelpBody"></div></div>';
+  modal.addEventListener('click',function(e){if(e.target===modal)closeSynHelp()});
+  document.body.appendChild(modal);
+  return modal;
+}
+function showSynHelp(title,html){
+  const modal=ensureSynHelpModal();
+  document.getElementById('synHelpTitle').textContent=title;
+  document.getElementById('synHelpBody').innerHTML=html;
+  modal.style.display='flex';
+}
+function closeSynHelp(){const modal=document.getElementById('synHelpModal');if(modal)modal.style.display='none'}
+function openSynGeneralHelp(event,key){if(event)event.stopPropagation();const data=synGeneralHelp[key]||synGeneralHelp.score;showSynHelp(data.title,'<p>'+data.text+'</p>')}
+function openSynScoreHelp(event,label){if(event)event.stopPropagation();showSynHelp(label+' score','<p>'+(synScoreHelp[label]||synGeneralHelp.score.text)+'</p>')}
+function openSynPlanetRowHelp(event,button){
+  if(event)event.stopPropagation();
+  const row=button&&button.closest('.planet-row');
+  const name=row&&row.querySelector('.planet-name')?row.querySelector('.planet-name').textContent.trim():'Planet';
+  const sign=row&&row.querySelector('.planet-sign')?row.querySelector('.planet-sign').textContent.trim():'';
+  showSynHelp(name,'<p><strong>'+name+'</strong> in <strong>'+sign+'</strong> describes this person\'s natal relationship style before comparison with the partner. In synastry, this placement becomes important when the other person\'s planets make aspects to it or fall into a sensitive house.</p>');
+}
+function openSynHouseHelp(event,button){
+  if(event)event.stopPropagation();
+  const card=button&&button.closest('.house-card');
+  const house=card&&card.querySelector('.house-num')?card.querySelector('.house-num').textContent.trim():'House overlay';
+  const planet=card&&card.querySelector('.house-planet')?card.querySelector('.house-planet').textContent.trim():'Partner planet';
+  const desc=card&&card.querySelector('.house-desc')?card.querySelector('.house-desc').textContent.trim():'';
+  showSynHelp(house,'<p><strong>'+planet+'</strong></p><p>'+desc+'</p><p>This means the partner activates that life area in the other person. House overlays often explain why someone feels romantic, familiar, challenging, inspiring or intense even before looking at aspects.</p>');
+}
+function openSynAspectHelp(event,button){
+  if(event)event.stopPropagation();
+  const item=button&&button.closest('.aspect-item');
+  const aspect=item&&item.querySelector('.aspect')?item.querySelector('.aspect').textContent.trim():'Aspect';
+  const desc=item&&item.querySelector('.description')?item.querySelector('.description').textContent.trim():'';
+  const score=item&&item.querySelector('.score')?item.querySelector('.score').textContent.trim():'';
+  showSynHelp(aspect,'<p>'+desc+'</p><p><strong>Score:</strong> '+score+'</p><p>Positive scores show easier flow. Negative scores show pressure, attraction through tension, or lessons that need patience. Major personal-planet aspects usually feel stronger in daily life.</p>');
+}
+function openSynRelationshipHelp(event){
+  if(event)event.stopPropagation();
+  const title=document.querySelector('.rel-type-title')?document.querySelector('.rel-type-title').textContent.trim():'Relationship type';
+  const desc=document.querySelector('.rel-type-desc')?document.querySelector('.rel-type-desc').textContent.trim():'';
+  showSynHelp(title,'<p>'+desc+'</p><p>This is a summary of the whole synastry pattern. It should be read together with the strongest aspects and the challenge score, not as a single final judgment.</p>');
+}
+function openSynCompositeHelp(event,button){
+  if(event)event.stopPropagation();
+  const item=button&&button.closest('.composite-info-item');
+  const label=item&&item.querySelector('.composite-info-label')?item.querySelector('.composite-info-label').textContent.trim():'Composite';
+  const value=item&&item.querySelector('.composite-info-value')?item.querySelector('.composite-info-value').textContent.trim():'';
+  showSynHelp(label,'<p><strong>'+value+'</strong></p><p>This describes the relationship as a shared chart. Composite Sun shows the relationship purpose, Composite Moon the emotional climate, Composite Venus affection and pleasure, and Composite Mars desire, conflict style and shared action.</p>');
+}
+window.closeSynHelp=closeSynHelp;
+window.openSynGeneralHelp=openSynGeneralHelp;
+window.openSynScoreHelp=openSynScoreHelp;
+window.openSynPlanetRowHelp=openSynPlanetRowHelp;
+window.openSynHouseHelp=openSynHouseHelp;
+window.openSynAspectHelp=openSynAspectHelp;
+window.openSynRelationshipHelp=openSynRelationshipHelp;
+window.openSynCompositeHelp=openSynCompositeHelp;
 </script>
 </body>
 </html>

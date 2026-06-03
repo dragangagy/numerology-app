@@ -956,6 +956,295 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 #savedIcon svg,.savedIconBox svg,#savedIcon svg *,.savedIconBox svg *{stroke:var(--astro-gold)!important;filter:drop-shadow(0 0 5px rgba(255,215,0,.65))!important}
 #savedCount,.savedCountBox{background:var(--astro-gold)!important;color:#0f172a!important;border:1px solid rgba(255,215,0,.9)!important;box-shadow:0 0 7px rgba(255,215,0,.38)!important}
 
+
+
+/* ===== LUNAR HELP ===== */
+.lunar-help-btn{
+  width:22px;
+  height:22px;
+  min-width:22px;
+  border-radius:50%;
+  border:1px solid rgba(255,215,0,.65);
+  background:rgba(15,23,42,.88);
+  color:#FFD700;
+  font-size:12px;
+  font-weight:800;
+  line-height:1;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 7px rgba(255,215,0,.18);
+  z-index:2;
+  flex:0 0 22px!important;
+  padding:0!important;
+}
+.lunar-help-btn:hover{border-color:#FFD700;box-shadow:0 0 12px rgba(255,215,0,.34);transform:none}
+.section-title{position:relative;padding-left:30px;text-align:center}
+.section-title > .lunar-help-btn{position:absolute;left:0;top:50%;transform:translateY(-50%)}
+.info-card,.phase,.moon-sign-card,.void-card,.void-item,.eclipse-card,.lunar-day-info,.personal-lunar-card,.cycle-moon-card{
+  position:relative;
+}
+.info-card,.phase,.moon-sign-card,.void-card,.eclipse-card,.lunar-day-info,.personal-lunar-card{
+  padding-left:36px!important;
+}
+.void-item{padding-left:34px!important}
+.cycle-moon-card{padding-left:36px!important}
+.info-card > .lunar-help-btn,
+.phase > .lunar-help-btn,
+.moon-sign-card > .lunar-help-btn,
+.void-card > .lunar-help-btn,
+.void-item > .lunar-help-btn,
+.eclipse-card > .lunar-help-btn,
+.lunar-day-info > .lunar-help-btn,
+.personal-lunar-card > .lunar-help-btn,
+.cycle-moon-card > .lunar-help-btn{
+  position:absolute;
+  left:7px;
+  top:8px;
+}
+.lunar-help-modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  background:rgba(2,6,23,.82);
+  align-items:center;
+  justify-content:center;
+  padding:14px;
+}
+.lunar-help-panel{
+  width:min(460px,94vw);
+  max-height:82vh;
+  overflow:auto;
+  background:#0f172a;
+  border:1px solid rgba(255,215,0,.48);
+  border-radius:14px;
+  padding:18px;
+  position:relative;
+  box-shadow:0 0 28px rgba(255,215,0,.18);
+  text-align:left;
+}
+.lunar-help-close{
+  position:absolute;
+  right:12px;
+  top:10px;
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  border:1px solid rgba(255,215,0,.6);
+  background:#1e293b;
+  color:#FFD700;
+  padding:0;
+}
+.lunar-help-panel h3{color:#FFD700;margin:0 34px 10px 0;font-size:17px}
+.lunar-help-panel p{color:#cbd5e1;font-size:13px;line-height:1.45;margin:8px 0}
+.lunar-help-panel strong{color:#FFD700}
+
+
+
+/* ===== LUNAR HELP SPACING FIX ===== */
+.info-card:has(> .lunar-help-btn),
+.phase:has(> .lunar-help-btn),
+.moon-sign-card:has(> .lunar-help-btn),
+.void-card:has(> .lunar-help-btn),
+.eclipse-card:has(> .lunar-help-btn),
+.lunar-day-info:has(> .lunar-help-btn),
+.personal-lunar-card:has(> .lunar-help-btn),
+.cycle-moon-card:has(> .lunar-help-btn){
+  padding-left:42px!important;
+}
+.info-card:has(> .lunar-help-btn) .info-title,
+.info-card:has(> .lunar-help-btn) .info-text{
+  text-align:left;
+}
+.info-card:has(> .lunar-help-btn) > .lunar-help-btn,
+.phase:has(> .lunar-help-btn) > .lunar-help-btn,
+.moon-sign-card:has(> .lunar-help-btn) > .lunar-help-btn,
+.void-card:has(> .lunar-help-btn) > .lunar-help-btn,
+.eclipse-card:has(> .lunar-help-btn) > .lunar-help-btn,
+.lunar-day-info:has(> .lunar-help-btn) > .lunar-help-btn,
+.personal-lunar-card:has(> .lunar-help-btn) > .lunar-help-btn,
+.cycle-moon-card:has(> .lunar-help-btn) > .lunar-help-btn{
+  left:10px;
+  top:10px;
+}
+@media(max-width:520px){
+  .info-card:has(> .lunar-help-btn),
+  .phase:has(> .lunar-help-btn),
+  .moon-sign-card:has(> .lunar-help-btn),
+  .void-card:has(> .lunar-help-btn),
+  .eclipse-card:has(> .lunar-help-btn),
+  .lunar-day-info:has(> .lunar-help-btn),
+  .personal-lunar-card:has(> .lunar-help-btn),
+  .cycle-moon-card:has(> .lunar-help-btn){
+    padding-left:40px!important;
+  }
+}
+
+
+
+/* ===== PHASE MEANING CARD HELP ALIGNMENT ===== */
+#phaseInfo .info-card{
+  padding:12px 12px 12px 46px!important;
+  min-height:104px;
+}
+#phaseInfo .info-card > .lunar-help-btn{
+  left:12px!important;
+  top:13px!important;
+}
+#phaseInfo .info-title{
+  min-height:24px;
+  line-height:1.2;
+  margin:0 0 8px 0!important;
+  align-items:center;
+  white-space:normal;
+}
+#phaseInfo .info-text{
+  line-height:1.35;
+}
+@media(max-width:520px){
+  #phaseInfo .info-card{
+    padding-left:44px!important;
+    min-height:auto;
+  }
+}
+
+
+
+/* ===== LUNAR LOWER CARD HELP ALIGNMENT ===== */
+.lunar-day-info:has(> .lunar-help-btn),
+.personal-lunar-card:has(> .lunar-help-btn){
+  padding:13px 13px 13px 46px!important;
+}
+.lunar-day-info:has(> .lunar-help-btn) > .lunar-help-btn,
+.personal-lunar-card:has(> .lunar-help-btn) > .lunar-help-btn{
+  left:12px!important;
+  top:13px!important;
+}
+.lunar-day-info:has(> .lunar-help-btn) .lunar-day-title,
+.personal-lunar-card:has(> .lunar-help-btn) .personal-lunar-title{
+  line-height:1.2;
+  margin-top:0!important;
+  margin-bottom:7px!important;
+  text-align:left;
+}
+.lunar-day-info:has(> .lunar-help-btn) .lunar-day-text,
+.personal-lunar-card:has(> .lunar-help-btn) .personal-lunar-text{
+  text-align:left;
+  line-height:1.35!important;
+}
+@media(max-width:520px){
+  .lunar-day-info:has(> .lunar-help-btn),
+  .personal-lunar-card:has(> .lunar-help-btn){
+    padding-left:44px!important;
+  }
+}
+
+
+
+/* ===== ANDROID SAFE LUNAR HELP SPACING ===== */
+#phaseInfo .info-card,
+.lunar-day-info,
+.personal-lunar-card{
+  padding-left:48px!important;
+  padding-right:13px!important;
+}
+#phaseInfo .info-card > .lunar-help-btn,
+.lunar-day-info > .lunar-help-btn,
+.personal-lunar-card > .lunar-help-btn{
+  left:12px!important;
+  top:12px!important;
+}
+.lunar-day-title,
+.personal-lunar-title{
+  display:block;
+  padding-left:0!important;
+  margin-left:0!important;
+  line-height:1.22!important;
+  text-align:left!important;
+}
+.lunar-day-text,
+.personal-lunar-text{
+  display:block;
+  padding-left:0!important;
+  margin-left:0!important;
+  line-height:1.35!important;
+  text-align:left!important;
+}
+@media(max-width:420px){
+  #phaseInfo .info-card,
+  .lunar-day-info,
+  .personal-lunar-card{
+    padding-left:50px!important;
+  }
+}
+
+
+
+/* ===== LUNAR LOWER CARDS NO OVERLAP GRID ===== */
+.lunar-day-info,
+.personal-lunar-card{
+  display:grid!important;
+  grid-template-columns:24px minmax(0,1fr)!important;
+  column-gap:10px!important;
+  align-items:start!important;
+  padding:13px!important;
+}
+.lunar-day-info > .lunar-help-btn,
+.personal-lunar-card > .lunar-help-btn{
+  position:static!important;
+  grid-column:1!important;
+  grid-row:1 / span 2!important;
+  margin:0!important;
+  align-self:start!important;
+}
+.lunar-day-info > .lunar-day-title,
+.lunar-day-info > .lunar-day-text,
+.personal-lunar-card > .personal-lunar-title,
+.personal-lunar-card > .personal-lunar-text{
+  grid-column:2!important;
+  min-width:0!important;
+  margin-left:0!important;
+  padding-left:0!important;
+}
+.lunar-day-info > .lunar-day-title,
+.personal-lunar-card > .personal-lunar-title{
+  margin-top:0!important;
+  margin-bottom:7px!important;
+}
+
+
+
+/* ===== PHASE MEANING NO OVERLAP GRID ===== */
+#phaseInfo .info-card{
+  display:grid!important;
+  grid-template-columns:24px minmax(0,1fr)!important;
+  column-gap:10px!important;
+  align-items:start!important;
+  padding:12px!important;
+  min-height:auto!important;
+}
+#phaseInfo .info-card > .lunar-help-btn{
+  position:static!important;
+  grid-column:1!important;
+  grid-row:1 / span 2!important;
+  margin:0!important;
+  align-self:start!important;
+}
+#phaseInfo .info-card > .info-title,
+#phaseInfo .info-card > .info-text{
+  grid-column:2!important;
+  min-width:0!important;
+  margin-left:0!important;
+  padding-left:0!important;
+}
+#phaseInfo .info-card > .info-title{
+  margin-top:0!important;
+  margin-bottom:7px!important;
+  min-height:0!important;
+}
+
 </style>
 </head>
 <body>
@@ -1005,32 +1294,32 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 
     <!-- CURRENT PHASE -->
     <div class="card moon-visual-card">
-        <div class="section-title">NATAL MOON PHASE</div>
+        <div class="section-title">NATAL MOON PHASE <button class="lunar-help-btn" type="button" onclick="openLunarHelp(event, 'natalPhase')" aria-label="Explain NATAL MOON PHASE">?</button></div>
 
         <div class="phase-selector natal-phase-selector">
             <div class="phase-btn active" onclick="showPhase('new')">
-                <span class="emoji">ðŸŒ‘</span> New
+                <span class="emoji">🌑</span> New
             </div>
             <div class="phase-btn" onclick="showPhase('waxing-crescent')">
-                <span class="emoji">ðŸŒ’</span> Waxing
+                <span class="emoji">🌒</span> Waxing
             </div>
             <div class="phase-btn active" onclick="showPhase('first-quarter')">
-                <span class="emoji">ðŸŒ“</span> First Q
+                <span class="emoji">🌓</span> First Q
             </div>
             <div class="phase-btn" onclick="showPhase('waxing-gibbous')">
-                <span class="emoji">ðŸŒ”</span> Gibbous
+                <span class="emoji">🌔</span> Gibbous
             </div>
             <div class="phase-btn" onclick="showPhase('full')">
-                <span class="emoji">ðŸŒ•</span> Full
+                <span class="emoji">🌕</span> Full
             </div>
             <div class="phase-btn" onclick="showPhase('waning-gibbous')">
-                <span class="emoji">ðŸŒ–</span> Waning
+                <span class="emoji">🌖</span> Waning
             </div>
             <div class="phase-btn" onclick="showPhase('last-quarter')">
-                <span class="emoji">ðŸŒ—</span> Last Q
+                <span class="emoji">🌗</span> Last Q
             </div>
             <div class="phase-btn" onclick="showPhase('waning-crescent')">
-                <span class="emoji">ðŸŒ˜</span> Crescent
+                <span class="emoji">🌘</span> Crescent
             </div>
         </div>
 
@@ -1043,7 +1332,7 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
             </div>
             <div class="natal-moon-text">
             <div class="phase-name" id="phaseName">FIRST QUARTER</div>
-            <div class="illumination" id="illumination">52% Illuminated â€¢ Waxing</div>
+            <div class="illumination" id="illumination">52% Illuminated • Waxing</div>
 
             <div class="moon-data-row">
                 <div class="moon-data-item">
@@ -1069,32 +1358,20 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 
     <!-- PHASE MEANING -->
     <div class="card">
-        <div class="section-title">PHASE MEANING</div>
+        <div class="section-title">PHASE MEANING <button class="lunar-help-btn" type="button" onclick="openLunarHelp(event, 'phaseMeaning')" aria-label="Explain PHASE MEANING">?</button></div>
         <div class="info-grid" id="phaseInfo">
-            <div class="info-card active-phase">
-                <div class="info-title">âš¡ Energy</div>
-                <div class="info-text">Action, movement, motivation and overcoming obstacles. Time to push forward with projects and assert yourself.</div>
-            </div>
-            <div class="info-card active-phase">
-                <div class="info-title">ðŸ’­ Emotions</div>
-                <div class="info-text">Increased emotional activity and inner tension. Feelings surface for conscious processing and release.</div>
-            </div>
-            <div class="info-card active-phase">
-                <div class="info-title">ðŸŽ¯ Focus</div>
-                <div class="info-text">Decision making, progress and development. Build momentum and commit to your chosen direction.</div>
-            </div>
-            <div class="info-card active-phase">
-                <div class="info-title">âœ¨ Spiritual</div>
-                <div class="info-text">Internal growth and balancing logic with intuition. The light reveals what was hidden in the dark.</div>
-            </div>
+            <div class="info-card active-phase"><button class="lunar-help-btn" type="button" onclick="openLunarCardHelp(event, this)" aria-label="Explain lunar meaning">?</button><div class="info-title">⚡ Energy</div><div class="info-text">Action, movement, motivation and overcoming obstacles. Time to push forward with projects and assert yourself.</div></div>
+            <div class="info-card active-phase"><button class="lunar-help-btn" type="button" onclick="openLunarCardHelp(event, this)" aria-label="Explain lunar meaning">?</button><div class="info-title">💭 Emotions</div><div class="info-text">Increased emotional activity and inner tension. Feelings surface for conscious processing and release.</div></div>
+            <div class="info-card active-phase"><button class="lunar-help-btn" type="button" onclick="openLunarCardHelp(event, this)" aria-label="Explain lunar meaning">?</button><div class="info-title">🎯 Focus</div><div class="info-text">Decision making, progress and development. Build momentum and commit to your chosen direction.</div></div>
+            <div class="info-card active-phase"><button class="lunar-help-btn" type="button" onclick="openLunarCardHelp(event, this)" aria-label="Explain lunar meaning">?</button><div class="info-title">✨ Spiritual</div><div class="info-text">Internal growth and balancing logic with intuition. The light reveals what was hidden in the dark.</div></div>
         </div>
 
         <!-- Lunar Day Info -->
-        <div class="lunar-day-info">
-            <div class="lunar-day-title">ðŸŒ™ Lunar Day 8 â€” First Quarter</div>
+        <div class="lunar-day-info"><button class="lunar-help-btn" type="button" onclick="openLunarHelp(event, 'lunarDay')" aria-label="Explain lunar day">?</button>
+            <div class="lunar-day-title">🌙 Lunar Day 8 - First Quarter</div>
             <div class="lunar-day-text">The 8th lunar day is a time of active energy and decision-making. It's favorable for starting new ventures, physical activity, and overcoming challenges. Emotions may be heightened but this energy can be channeled productively.</div>
         </div>
-        <div class="personal-lunar-card">
+        <div class="personal-lunar-card"><button class="lunar-help-btn" type="button" onclick="openLunarHelp(event, 'signature')" aria-label="Explain lunar signature">?</button>
             <div class="personal-lunar-title" id="lunarSignatureTitle">YOUR LUNAR SIGNATURE</div>
             <div class="personal-lunar-text" id="lunarSignatureText">Your natal lunar signature will appear here after calculation.</div>
         </div>
@@ -1104,7 +1381,7 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
     <div class="lunar-tab-panel active" id="lunarTabCycle">
 
     <div class="card cycle-moon-card">
-        <div class="section-title">CURRENT MOON PHASE</div>
+        <div class="section-title">CURRENT MOON PHASE <button class="lunar-help-btn" type="button" onclick="openLunarHelp(event, 'currentPhase')" aria-label="Explain CURRENT MOON PHASE">?</button></div>
         <div class="cycle-moon-section">
             <div class="cycle-moon first-quarter" id="cycleMoonVisual"></div>
             <div class="cycle-moon-info">
@@ -1116,8 +1393,8 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
     </div>
 
     <div class="card">
-        <div class="section-title">CURRENT VS NATAL MOON</div>
-        <div class="personal-lunar-card" style="margin-top:0">
+        <div class="section-title">CURRENT VS NATAL MOON <button class="lunar-help-btn" type="button" onclick="openLunarHelp(event, 'currentNatal')" aria-label="Explain CURRENT VS NATAL MOON">?</button></div>
+        <div class="personal-lunar-card" style="margin-top:0"><button class="lunar-help-btn" type="button" onclick="openLunarHelp(event, 'currentNatal')" aria-label="Explain current vs natal Moon">?</button>
             <div class="personal-lunar-title" id="currentNatalTitle">Today and your natal Moon</div>
             <div class="personal-lunar-text" id="currentNatalText">Current Moon influence will appear here.</div>
         </div>
@@ -1125,52 +1402,36 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 
     <!-- MOON IN SIGNS -->
     <div class="card">
-        <div class="section-title">MOON IN SIGNS THIS MONTH</div>
+        <div class="section-title">MOON IN SIGNS THIS MONTH <button class="lunar-help-btn" type="button" onclick="openLunarHelp(event, 'moonSigns')" aria-label="Explain MOON IN SIGNS THIS MONTH">?</button></div>
         <div class="moon-signs-grid" id="moonSigns">
-            <div class="moon-sign-card active">
-                <div class="moon-sign-icon">â™Œ</div>
-                <div class="moon-sign-name">Leo</div>
-                <div class="moon-sign-time">May 15-17</div>
-            </div>
-            <div class="moon-sign-card">
-                <div class="moon-sign-icon">â™</div>
-                <div class="moon-sign-name">Virgo</div>
-                <div class="moon-sign-time">May 17-19</div>
-            </div>
-            <div class="moon-sign-card">
-                <div class="moon-sign-icon">â™Ž</div>
-                <div class="moon-sign-name">Libra</div>
-                <div class="moon-sign-time">May 19-21</div>
-            </div>
-            <div class="moon-sign-card">
-                <div class="moon-sign-icon">â™</div>
-                <div class="moon-sign-name">Scorpio</div>
-                <div class="moon-sign-time">May 21-23</div>
-            </div>
+            <div class="moon-sign-card active"><button class="lunar-help-btn" type="button" onclick="openMoonSignHelp(event, this)" aria-label="Explain Moon sign">?</button><div class="moon-sign-icon">♌</div><div class="moon-sign-name">Leo</div><div class="moon-sign-time">May 15-17</div></div>
+            <div class="moon-sign-card"><button class="lunar-help-btn" type="button" onclick="openMoonSignHelp(event, this)" aria-label="Explain Moon sign">?</button><div class="moon-sign-icon">♍</div><div class="moon-sign-name">Virgo</div><div class="moon-sign-time">May 17-19</div></div>
+            <div class="moon-sign-card"><button class="lunar-help-btn" type="button" onclick="openMoonSignHelp(event, this)" aria-label="Explain Moon sign">?</button><div class="moon-sign-icon">♎</div><div class="moon-sign-name">Libra</div><div class="moon-sign-time">May 19-21</div></div>
+            <div class="moon-sign-card"><button class="lunar-help-btn" type="button" onclick="openMoonSignHelp(event, this)" aria-label="Explain Moon sign">?</button><div class="moon-sign-icon">♏</div><div class="moon-sign-name">Scorpio</div><div class="moon-sign-time">May 21-23</div></div>
         </div>
     </div>
 
     <!-- VOID OF COURSE MOON -->
     <div class="card">
-        <div class="section-title">VOID OF COURSE MOON</div>
-        <div class="void-card">
-            <div class="void-title">âš ï¸ Upcoming Void Periods</div>
+        <div class="section-title">VOID OF COURSE MOON <button class="lunar-help-btn" type="button" onclick="openLunarHelp(event, 'void')" aria-label="Explain VOID OF COURSE MOON">?</button></div>
+        <div class="void-card"><button class="lunar-help-btn" type="button" onclick="openLunarHelp(event, 'void')" aria-label="Explain void Moon">?</button>
+            <div class="void-title">⚠️ Upcoming Void Periods</div>
             <div class="void-list">
                 <div class="void-item">
                     <span class="void-date">May 17, 2026</span>
-                    <span class="void-time">14:30 â€” 22:15</span>
+                    <span class="void-time">14:30 - 22:15</span>
                 </div>
                 <div class="void-item">
                     <span class="void-date">May 19, 2026</span>
-                    <span class="void-time">08:45 â€” 16:20</span>
+                    <span class="void-time">08:45 - 16:20</span>
                 </div>
                 <div class="void-item">
                     <span class="void-date">May 21, 2026</span>
-                    <span class="void-time">03:10 â€” 11:55</span>
+                    <span class="void-time">03:10 - 11:55</span>
                 </div>
                 <div class="void-item">
                     <span class="void-date">May 23, 2026</span>
-                    <span class="void-time">19:30 â€” May 24 04:15</span>
+                    <span class="void-time">19:30 - May 24 04:15</span>
                 </div>
             </div>
         </div>
@@ -1181,48 +1442,24 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 
     <!-- MOON CYCLE TIMELINE -->
     <div class="card">
-        <div class="section-title">MOON CYCLE</div>
+        <div class="section-title">MOON CYCLE <button class="lunar-help-btn" type="button" onclick="openLunarHelp(event, 'cycle')" aria-label="Explain MOON CYCLE">?</button></div>
         <div class="timeline">
-            <div class="phase" onclick="showPhase('new')">
-                <div class="phase-icon">ðŸŒ‘</div>
-                New
-                <div class="phase-date">May 10</div>
-            </div>
-            <div class="phase" onclick="showPhase('waxing-crescent')">
-                <div class="phase-icon">ðŸŒ’</div>
-                Waxing
-                <div class="phase-date">May 13</div>
-            </div>
-            <div class="phase active" onclick="showPhase('first-quarter')">
-                <div class="phase-icon">ðŸŒ“</div>
-                Quarter
-                <div class="phase-date">May 17</div>
-            </div>
-            <div class="phase" onclick="showPhase('waxing-gibbous')">
-                <div class="phase-icon">ðŸŒ”</div>
-                Gibbous
-                <div class="phase-date">May 20</div>
-            </div>
-            <div class="phase" onclick="showPhase('full')">
-                <div class="phase-icon">ðŸŒ•</div>
-                Full
-                <div class="phase-date">May 24</div>
-            </div>
-            <div class="phase" onclick="showPhase('waning-gibbous')">
-                <div class="phase-icon">ðŸŒ–</div>
-                Waning
-                <div class="phase-date">May 27</div>
-            </div>
-            <div class="phase" onclick="showPhase('last-quarter')">
-                <div class="phase-icon">ðŸŒ—</div>
-                Last Q
-                <div class="phase-date">May 31</div>
-            </div>
-            <div class="phase" onclick="showPhase('waning-crescent')">
-                <div class="phase-icon">ðŸŒ˜</div>
-                Crescent
-                <div class="phase-date">Jun 3</div>
-            </div>
+            <div class="phase" onclick="showPhase('new')"><button class="lunar-help-btn" type="button" onclick="openPhaseHelp(event, 'new')" aria-label="Explain phase">?</button><div class="phase-icon">🌑</div>New
+                <div class="phase-date">May 10</div></div>
+            <div class="phase" onclick="showPhase('waxing-crescent')"><button class="lunar-help-btn" type="button" onclick="openPhaseHelp(event, 'waxing-crescent')" aria-label="Explain phase">?</button><div class="phase-icon">🌒</div>Waxing
+                <div class="phase-date">May 13</div></div>
+            <div class="phase active" onclick="showPhase('first-quarter')"><button class="lunar-help-btn" type="button" onclick="openPhaseHelp(event, 'first-quarter')" aria-label="Explain phase">?</button><div class="phase-icon">🌓</div>Quarter
+                <div class="phase-date">May 17</div></div>
+            <div class="phase" onclick="showPhase('waxing-gibbous')"><button class="lunar-help-btn" type="button" onclick="openPhaseHelp(event, 'waxing-gibbous')" aria-label="Explain phase">?</button><div class="phase-icon">🌔</div>Gibbous
+                <div class="phase-date">May 20</div></div>
+            <div class="phase" onclick="showPhase('full')"><button class="lunar-help-btn" type="button" onclick="openPhaseHelp(event, 'full')" aria-label="Explain phase">?</button><div class="phase-icon">🌕</div>Full
+                <div class="phase-date">May 24</div></div>
+            <div class="phase" onclick="showPhase('waning-gibbous')"><button class="lunar-help-btn" type="button" onclick="openPhaseHelp(event, 'waning-gibbous')" aria-label="Explain phase">?</button><div class="phase-icon">🌖</div>Waning
+                <div class="phase-date">May 27</div></div>
+            <div class="phase" onclick="showPhase('last-quarter')"><button class="lunar-help-btn" type="button" onclick="openPhaseHelp(event, 'last-quarter')" aria-label="Explain phase">?</button><div class="phase-icon">🌗</div>Last Q
+                <div class="phase-date">May 31</div></div>
+            <div class="phase" onclick="showPhase('waning-crescent')"><button class="lunar-help-btn" type="button" onclick="openPhaseHelp(event, 'waning-crescent')" aria-label="Explain phase">?</button><div class="phase-icon">🌘</div>Crescent
+                <div class="phase-date">Jun 3</div></div>
         </div>
     </div>
 
@@ -1231,7 +1468,7 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 
     <!-- LUNAR CALENDAR -->
     <div class="card">
-        <div class="section-title calendar-title">LUNAR CALENDAR â€” May 2026</div>
+        <div class="section-title calendar-title">LUNAR CALENDAR - May 2026 <button class="lunar-help-btn" type="button" onclick="openLunarHelp(event, 'calendar')" aria-label="Explain lunar calendar">?</button></div>
         <div class="calendar-header">
             <div class="calendar-header-day">Mon</div>
             <div class="calendar-header-day">Tue</div>
@@ -1246,32 +1483,16 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 
     <!-- ECLIPSES & NODES -->
     <div class="card">
-        <div class="section-title">ECLIPSES & LUNAR NODES</div>
+        <div class="section-title">ECLIPSES & LUNAR NODES <button class="lunar-help-btn" type="button" onclick="openLunarHelp(event, 'eclipses')" aria-label="Explain ECLIPSES & LUNAR NODES">?</button></div>
         <div class="eclipse-grid">
-            <div class="eclipse-card">
-                <div class="eclipse-type">ðŸŒ‘ Solar Eclipse</div>
-                <div class="eclipse-date">March 29, 2026 â€¢ â™ˆ Aries 8Â°</div>
-                <div class="eclipse-desc">New beginnings, bold initiatives, assertive energy. Time to start fresh with courage and independence.</div>
-            </div>
-            <div class="eclipse-card">
-                <div class="eclipse-type">ðŸŒ• Lunar Eclipse</div>
-                <div class="eclipse-date">April 13, 2026 â€¢ â™Ž Libra 23Â°</div>
-                <div class="eclipse-desc">Relationships climax, partnerships transform. Balance between self and others comes into focus.</div>
-            </div>
-            <div class="eclipse-card">
-                <div class="eclipse-type">ðŸŒ‘ Solar Eclipse</div>
-                <div class="eclipse-date">September 21, 2026 â€¢ â™ Virgo 28Â°</div>
-                <div class="eclipse-desc">Health, service, and daily routines transform. Practical improvements and healing energy.</div>
-            </div>
-            <div class="eclipse-card">
-                <div class="eclipse-type">ðŸŒ• Lunar Eclipse</div>
-                <div class="eclipse-date">October 6, 2026 â€¢ â™“ Pisces 12Â°</div>
-                <div class="eclipse-desc">Spiritual awakening, intuition peaks, boundaries dissolve. Deep emotional and mystical experiences.</div>
-            </div>
+            <div class="eclipse-card"><button class="lunar-help-btn" type="button" onclick="openEclipseHelp(event, this)" aria-label="Explain eclipse">?</button><div class="eclipse-type">🌑 Solar Eclipse</div><div class="eclipse-date">March 29, 2026 • ♈ Aries 8°</div><div class="eclipse-desc">New beginnings, bold initiatives, assertive energy. Time to start fresh with courage and independence.</div></div>
+            <div class="eclipse-card"><button class="lunar-help-btn" type="button" onclick="openEclipseHelp(event, this)" aria-label="Explain eclipse">?</button><div class="eclipse-type">🌕 Lunar Eclipse</div><div class="eclipse-date">April 13, 2026 • ♎ Libra 23°</div><div class="eclipse-desc">Relationships climax, partnerships transform. Balance between self and others comes into focus.</div></div>
+            <div class="eclipse-card"><button class="lunar-help-btn" type="button" onclick="openEclipseHelp(event, this)" aria-label="Explain eclipse">?</button><div class="eclipse-type">🌑 Solar Eclipse</div><div class="eclipse-date">September 21, 2026 • ♍ Virgo 28°</div><div class="eclipse-desc">Health, service, and daily routines transform. Practical improvements and healing energy.</div></div>
+            <div class="eclipse-card"><button class="lunar-help-btn" type="button" onclick="openEclipseHelp(event, this)" aria-label="Explain eclipse">?</button><div class="eclipse-type">🌕 Lunar Eclipse</div><div class="eclipse-date">October 6, 2026 • ♓ Pisces 12°</div><div class="eclipse-desc">Spiritual awakening, intuition peaks, boundaries dissolve. Deep emotional and mystical experiences.</div></div>
         </div>
 
         <div style="margin-top:14px;padding:12px;background:rgba(30,41,59,0.5);border-radius:10px;text-align:left;">
-            <div style="font-size:12px;color:#FFD700;font-weight:bold;margin-bottom:6px;">â˜Š North Node in â™“ Pisces / â˜‹ South Node in â™ Virgo</div>
+            <div style="font-size:12px;color:#FFD700;font-weight:bold;margin-bottom:6px;">☊ North Node in ♓ Pisces / ☋ South Node in ♍ Virgo</div>
             <div style="font-size:11px;color:#94a3b8;line-height:1.5;">Karmic theme for 2026: Moving toward spiritual growth, compassion, and surrender (Pisces) while releasing perfectionism, over-analysis, and excessive criticism (Virgo).</div>
         </div>
     </div>
@@ -1281,7 +1502,7 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 </div>
 
 <div class="footer">
-    Local Swiss Ephemeris â€¢ Lunar Illumination â€¢ Void of Course â€¢ Eclipse Tracking
+    Local Swiss Ephemeris • Lunar Illumination • Void of Course • Eclipse Tracking
 </div>
 
 <div class="savedPanel" id="savedPanel">
@@ -1297,97 +1518,97 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 const phases = {
     'new': {
         name: 'NEW MOON',
-        illumination: '0% Illuminated â€¢ Dark',
+        illumination: '0% Illuminated • Dark',
         moonStyle: 'linear-gradient(90deg, #020817 50%, #020817 50%)',
         energy: 'Rest, intention setting, new beginnings, planting seeds',
         emotions: 'Introspective, inward focus, emotional reset, subconscious surfacing',
         focus: 'Goal setting, visualization, starting fresh, inner work',
         spiritual: 'Darkness before light, potential energy, womb of creation, deep intuition',
-        lunarDay: 'Lunar Day 1 â€” New Moon',
+        lunarDay: 'Lunar Day 1 - New Moon',
         lunarText: "The 1st lunar day is the most mystical. It's a time of new beginnings, setting intentions, and planting seeds for the future. Energy is low but potential is infinite. Perfect for meditation and vision work.",
         nextPhase: 'May 10'
     },
     'waxing-crescent': {
         name: 'WAXING CRESCENT',
-        illumination: '15% Illuminated â€¢ Growing',
+        illumination: '15% Illuminated • Growing',
         moonStyle: 'linear-gradient(90deg, #020817 40%, #dbeafe 45%)',
         energy: 'Building momentum, taking first steps, faith and hope',
         emotions: 'Growing optimism, emerging confidence, excitement about possibilities',
         focus: 'Action on intentions, small steps, gathering resources, planning',
         spiritual: 'Faith in the unseen, trust in process, nurturing new growth, patience',
-        lunarDay: 'Lunar Day 3-4 â€” Waxing Crescent',
+        lunarDay: 'Lunar Day 3-4 - Waxing Crescent',
         lunarText: "Days 3-4 bring growing energy. It's time to take action on your intentions. Small steps create momentum. Good for learning, research, and building foundations.",
         nextPhase: 'May 13'
     },
     'first-quarter': {
         name: 'FIRST QUARTER',
-        illumination: '52% Illuminated â€¢ Waxing',
+        illumination: '52% Illuminated • Waxing',
         moonStyle: 'linear-gradient(90deg, #020817 48%, #dbeafe 52%)',
         energy: 'Action, movement, motivation and overcoming obstacles',
         emotions: 'Increased emotional activity and inner tension, feelings surface',
         focus: 'Decision making, progress and development, building momentum',
         spiritual: 'Internal growth and balancing logic with intuition, light reveals',
-        lunarDay: 'Lunar Day 8 â€” First Quarter',
+        lunarDay: 'Lunar Day 8 - First Quarter',
         lunarText: "The 8th lunar day is a time of active energy and decision-making. It's favorable for starting new ventures, physical activity, and overcoming challenges. Emotions may be heightened but this energy can be channeled productively.",
         nextPhase: 'May 17'
     },
     'waxing-gibbous': {
         name: 'WAXING GIBBOUS',
-        illumination: '78% Illuminated â€¢ Almost Full',
+        illumination: '78% Illuminated • Almost Full',
         moonStyle: 'linear-gradient(90deg, #020817 20%, #dbeafe 25%)',
         energy: 'Refinement, adjustment, preparation for culmination',
         emotions: 'Anticipation, excitement, possible anxiety as climax approaches',
         focus: 'Fine-tuning, editing, adjusting plans, gathering final details',
         spiritual: 'Almost there energy, patience required, trust in timing, gratitude',
-        lunarDay: 'Lunar Day 11-12 â€” Waxing Gibbous',
+        lunarDay: 'Lunar Day 11-12 - Waxing Gibbous',
         lunarText: 'Days 11-12 are about refinement and preparation. Review your progress, make adjustments, and prepare for the full moon culmination. Good for editing, organizing, and fine-tuning projects.',
         nextPhase: 'May 20'
     },
     'full': {
         name: 'FULL MOON',
-        illumination: '100% Illuminated â€¢ Peak',
+        illumination: '100% Illuminated • Peak',
         moonStyle: 'radial-gradient(circle, #dbeafe 30%, #94a3b8 70%, #64748b 100%)',
         energy: 'Culmination, completion, celebration, maximum manifestation',
         emotions: 'Heightened emotions, clarity, revelations, possible overwhelm',
         focus: 'Releasing what no longer serves, celebrating achievements, culmination',
         spiritual: 'Illumination, clarity, psychic peak, energy release, gratitude ritual',
-        lunarDay: 'Lunar Day 15 â€” Full Moon',
+        lunarDay: 'Lunar Day 15 - Full Moon',
         lunarText: "The 15th lunar day is the peak of the cycle. Emotions and energy are at maximum. It's a time of culmination, celebration, and release. Perfect for gratitude practices, charging crystals, and manifestation rituals.",
         nextPhase: 'May 24'
     },
     'waning-gibbous': {
         name: 'WANING GIBBOUS',
-        illumination: '78% Illuminated â€¢ Decreasing',
+        illumination: '78% Illuminated • Decreasing',
         moonStyle: 'linear-gradient(90deg, #dbeafe 75%, #020817 80%)',
         energy: 'Gratitude, sharing, teaching, disseminating what you learned',
         emotions: 'Reflective, generous, wanting to give back, sharing wisdom',
         focus: 'Sharing results, teaching others, gratitude practices, giving thanks',
         spiritual: 'Harvest energy, sharing abundance, wisdom transmission, service',
-        lunarDay: 'Lunar Day 17-18 â€” Waning Gibbous',
+        lunarDay: 'Lunar Day 17-18 - Waning Gibbous',
         lunarText: "Days 17-18 are for sharing and gratitude. Teach what you've learned, help others, and express thanks. The energy is generous and reflective. Good for community work and mentoring.",
         nextPhase: 'May 27'
     },
     'last-quarter': {
         name: 'LAST QUARTER',
-        illumination: '52% Illuminated â€¢ Waning',
+        illumination: '52% Illuminated • Waning',
         moonStyle: 'linear-gradient(90deg, #dbeafe 48%, #020817 52%)',
         energy: 'Release, let go, forgiveness, clearing space',
         emotions: 'Nostalgia, release, possible sadness as cycle ends, acceptance',
         focus: 'Letting go, forgiveness, clearing clutter, ending projects, rest',
         spiritual: 'Surrender, forgiveness, clearing karma, preparing for renewal',
-        lunarDay: 'Lunar Day 22 â€” Last Quarter',
+        lunarDay: 'Lunar Day 22 - Last Quarter',
         lunarText: 'The 22nd lunar day is for release and forgiveness. Let go of what no longer serves you. Clear physical and emotional clutter. Good for ending relationships, quitting habits, and deep cleaning.',
         nextPhase: 'May 31'
     },
     'waning-crescent': {
         name: 'WANING CRESCENT',
-        illumination: '15% Illuminated â€¢ Fading',
+        illumination: '15% Illuminated • Fading',
         moonStyle: 'linear-gradient(90deg, #dbeafe 15%, #020817 20%)',
         energy: 'Rest, restore, retreat, surrender, deep healing',
         emotions: 'Exhaustion, need for solitude, deep processing, spiritual connection',
         focus: 'Rest, self-care, meditation, spiritual practice, preparing for new cycle',
         spiritual: 'Dark moon energy, deep rest, communion with spirit, surrender',
-        lunarDay: 'Lunar Day 26-29 â€” Waning Crescent',
+        lunarDay: 'Lunar Day 26-29 - Waning Crescent',
         lunarText: 'Days 26-29 are the darkest days. Rest deeply, meditate, and connect with your inner self. Avoid starting new things. This is a time of spiritual communion and preparation for rebirth.',
         nextPhase: 'Jun 3'
     }
@@ -1453,27 +1674,15 @@ function showPhase(phaseKey, sourceEl){
     // Update info cards
     const infoGrid = document.getElementById('phaseInfo');
     infoGrid.innerHTML = `
-        <div class="info-card active-phase">
-            <div class="info-title">âš¡ Energy</div>
-            <div class="info-text">${p.energy}</div>
-        </div>
-        <div class="info-card active-phase">
-            <div class="info-title">ðŸ’­ Emotions</div>
-            <div class="info-text">${p.emotions}</div>
-        </div>
-        <div class="info-card active-phase">
-            <div class="info-title">ðŸŽ¯ Focus</div>
-            <div class="info-text">${p.focus}</div>
-        </div>
-        <div class="info-card active-phase">
-            <div class="info-title">âœ¨ Spiritual</div>
-            <div class="info-text">${p.spiritual}</div>
-        </div>
+        <div class="info-card active-phase"><button class="lunar-help-btn" type="button" onclick="openLunarCardHelp(event, this)" aria-label="Explain lunar meaning">?</button><div class="info-title">⚡ Energy</div><div class="info-text">${p.energy}</div></div>
+        <div class="info-card active-phase"><button class="lunar-help-btn" type="button" onclick="openLunarCardHelp(event, this)" aria-label="Explain lunar meaning">?</button><div class="info-title">💭 Emotions</div><div class="info-text">${p.emotions}</div></div>
+        <div class="info-card active-phase"><button class="lunar-help-btn" type="button" onclick="openLunarCardHelp(event, this)" aria-label="Explain lunar meaning">?</button><div class="info-title">🎯 Focus</div><div class="info-text">${p.focus}</div></div>
+        <div class="info-card active-phase"><button class="lunar-help-btn" type="button" onclick="openLunarCardHelp(event, this)" aria-label="Explain lunar meaning">?</button><div class="info-title">✨ Spiritual</div><div class="info-text">${p.spiritual}</div></div>
     `;
 
     // Update lunar day info
     const lunarInfo = document.querySelector('.lunar-day-info');
-    lunarInfo.querySelector('.lunar-day-title').textContent = 'ðŸŒ™ ' + p.lunarDay;
+    lunarInfo.querySelector('.lunar-day-title').textContent = '🌙 ' + p.lunarDay;
     lunarInfo.querySelector('.lunar-day-text').textContent = p.lunarText;
 
     // Update active buttons
@@ -1499,13 +1708,13 @@ function renderCalendar(){
 
     // Moon phases for May 2026 (simulated)
     const moonPhases = {
-        10: { icon: 'ðŸŒ‘', type: 'new-moon', label: 'New' },
-        13: { icon: 'ðŸŒ’', type: 'quarter', label: 'Wax' },
-        17: { icon: 'ðŸŒ“', type: 'quarter', label: '1st Q' },
-        20: { icon: 'ðŸŒ”', type: 'quarter', label: 'Gibb' },
-        24: { icon: 'ðŸŒ•', type: 'full-moon', label: 'Full' },
-        27: { icon: 'ðŸŒ–', type: 'quarter', label: 'Wan' },
-        31: { icon: 'ðŸŒ—', type: 'quarter', label: 'Last' }
+        10: { icon: '🌑', type: 'new-moon', label: 'New' },
+        13: { icon: '🌒', type: 'quarter', label: 'Wax' },
+        17: { icon: '🌓', type: 'quarter', label: '1st Q' },
+        20: { icon: '🌔', type: 'quarter', label: 'Gibb' },
+        24: { icon: '🌕', type: 'full-moon', label: 'Full' },
+        27: { icon: '🌖', type: 'quarter', label: 'Wan' },
+        31: { icon: '🌗', type: 'quarter', label: 'Last' }
     };
 
     // Empty cells
@@ -1611,10 +1820,10 @@ function aspectName(diff){const aspects=[{n:"conjunction",a:0},{n:"sextile",a:60
 async function renderCurrentVsNatal(currentData){const title=document.getElementById("currentNatalTitle"),text=document.getElementById("currentNatalText");if(!title||!text||!natalInputState.date)return;try{const natal=await calculateLunarData(parseDateString(natalInputState.date),parseTimeString(natalInputState.time));const diff=Math.abs(normalize(currentData.moon-natal.moon));const angle=diff>180?360-diff:diff;const asp=aspectName(angle);const currentSign=signOf(currentData.moon),natalSign=signOf(natal.moon);title.textContent="Current "+currentSign.symbol+" "+currentSign.name+" Moon vs natal "+natalSign.symbol+" "+natalSign.name+" Moon";if(asp){text.textContent="Today the Moon forms a "+asp.n+" to your natal Moon, about "+angle.toFixed(1)+"deg apart. This can make emotional patterns more noticeable and useful for timing rest, contact, decisions or release."}else{text.textContent="Today the Moon is "+angle.toFixed(1)+"deg from your natal Moon. It is a softer background influence: notice mood, sleep, appetite and instinctive reactions rather than forcing big moves."}}catch(e){text.textContent="Natal Moon comparison needs a valid birth date and time."}}
 async function calculateLunar(){try{const date=parseDateValue(),time=parseTimeValue();const data=await calculateLunarData(date,time);setCalcSourceStatus(data.source);showPhase(data.key);const illumText=data.illum+"% Illuminated | "+(data.waxing?"Waxing":"Waning");document.getElementById("illumination").textContent=illumText;const natalMoon=document.getElementById("moonVisual");setMoonShadow(natalMoon,data.key,data.illum);const cycleMoon=document.getElementById("cycleMoonVisual");setMoonShadow(cycleMoon,data.key,data.illum);const cycleIllumination=document.getElementById("cycleIllumination");if(cycleIllumination)cycleIllumination.textContent=illumText;const moonSignText=formatPos(data.moon);const cycleMoonSign=document.getElementById("cycleMoonSign");if(cycleMoonSign)cycleMoonSign.textContent="Moon in "+moonSignText;document.getElementById("moonSignValue").textContent=moonSignText;document.getElementById("moonAgeValue").textContent=data.age.toFixed(1)+" days";document.getElementById("moonDistanceValue").textContent=data.distance.toLocaleString("en-US")+" km";document.getElementById("nextPhaseValue").textContent=nextPhaseDate(data.utc,data.age);renderLiveCalendar(date.year,date.month-1,date.day);renderTimeline(data.utc,data.age);renderMoonSigns(date.year,date.month-1,date.day);renderVoidPeriods(date.year,date.month-1,date.day);renderEclipses(date.year);if(activeLunarTab==="natal"){const el=document.getElementById("lunarSignatureText");if(el)el.textContent=lunarSignatureText(data)}if(activeLunarTab==="cycle")await renderCurrentVsNatal(data)}catch(err){alert(err.message||"Lunar phase could not be calculated.")}}
 function renderLiveCalendar(year,month,selectedDay){const grid=document.getElementById('calendarGrid');grid.innerHTML="";const title=grid.closest(".card").querySelector(".section-title");title.textContent="LUNAR CALENDAR - "+new Date(year,month,1).toLocaleDateString("en-US",{month:"long",year:"numeric"});const firstDay=new Date(year,month,1).getDay();const daysInMonth=new Date(year,month+1,0).getDate();for(let i=0;i<(firstDay===0?6:firstDay-1);i++){const empty=document.createElement('div');empty.className='calendar-day';empty.style.visibility='hidden';grid.appendChild(empty)}for(let day=1;day<=daysInMonth;day++){const age=approxAge(new Date(Date.UTC(year,month,day,12)));const key=phaseKeyFromAge(age);const cell=document.createElement('div');let classes='calendar-day';if(day===selectedDay)classes+=' today';if(key==="new")classes+=' new-moon';if(key==="full")classes+=' full-moon';if(key.includes("quarter"))classes+=' quarter';cell.className=classes;cell.onclick=()=>{document.getElementById("dateInput").value=String(day).padStart(2,'0')+"."+String(month+1).padStart(2,'0')+"."+year;activeLunarTab="calendar";calculateLunar()};cell.innerHTML='<span class="day-num">'+day+'</span><span class="day-moon">'+phaseIcons[key]+'</span><span class="day-phase">'+phases[key].name.split(" ")[0]+'</span>';grid.appendChild(cell)}}
-function renderTimeline(baseDate,age){const timeline=document.querySelector(".timeline");const currentCycleStart=new Date(baseDate.getTime()-age*86400000);const ages=[0,3.7,7.38,11.1,14.77,18.5,22.15,25.8];timeline.innerHTML=phaseOrder.map((key,i)=>{const d=new Date(currentCycleStart.getTime()+ages[i]*86400000);return"<div class=\"phase "+(key===phaseKeyFromAge(age)?"active":"")+"\" onclick=\"showPhase('"+key+"',this)\"><div class=\"phase-icon\">"+phaseIcons[key]+"</div>"+phases[key].name.replace(" MOON","").replace(" QUARTER"," Q")+"<div class=\"phase-date\">"+d.toLocaleDateString("en-US",{month:"short",day:"numeric"})+"<br>"+d.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:false})+"</div></div>"}).join("")}
-function renderMoonSigns(year,month,selectedDay){const grid=document.getElementById("moonSigns");let html="";for(let i=0;i<4;i++){const d=new Date(Date.UTC(year,month,selectedDay+i*2,12));const sign=signOf(fallbackLongitude(julianDay(d),"moon"));html+='<div class="moon-sign-card '+(i===0?'active':'')+'"><div class="moon-sign-icon">'+sign.symbol+'</div><div class="moon-sign-name">'+sign.name+'</div><div class="moon-sign-time">'+d.toLocaleDateString("en-US",{month:"short",day:"numeric"})+'</div></div>'}grid.innerHTML=html}
-function renderVoidPeriods(year,month,selectedDay){const list=document.querySelector(".void-list");if(!list)return;let html="";for(let i=0;i<4;i++){const start=new Date(year,month,selectedDay+i*2,8+i*3,15);const end=new Date(start.getTime()+(5+i%3)*3600000);html+='<div class="void-item"><span class="void-date">'+start.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})+'</span><span class="void-time">'+start.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:false})+' - '+end.toLocaleDateString("en-US",{month:"short",day:"numeric"})+' '+end.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:false})+'</span></div>'}list.innerHTML=html}
-function renderEclipses(year){const grid=document.querySelector(".eclipse-grid");if(!grid)return;const items=[{type:"Solar Eclipse",icon:"\uD83C\uDF11",date:new Date(year,2,29),sign:"Aries",desc:"New beginnings, bold initiatives and reset of personal direction."},{type:"Lunar Eclipse",icon:"\uD83C\uDF15",date:new Date(year,3,13),sign:"Libra",desc:"Relationship themes reach a turning point and ask for balance."},{type:"Solar Eclipse",icon:"\uD83C\uDF11",date:new Date(year,8,21),sign:"Virgo",desc:"Health, routine and practical improvements come into focus."},{type:"Lunar Eclipse",icon:"\uD83C\uDF15",date:new Date(year,9,6),sign:"Pisces",desc:"Emotional release, intuition and spiritual sensitivity are heightened."}];grid.innerHTML=items.map(item=>'<div class="eclipse-card"><div class="eclipse-type">'+item.icon+' '+item.type+'</div><div class="eclipse-date">'+item.date.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"})+' | '+item.sign+'</div><div class="eclipse-desc">'+item.desc+'</div></div>').join("")}
+function renderTimeline(baseDate,age){const timeline=document.querySelector(".timeline");const currentCycleStart=new Date(baseDate.getTime()-age*86400000);const ages=[0,3.7,7.38,11.1,14.77,18.5,22.15,25.8];timeline.innerHTML=phaseOrder.map((key,i)=>{const d=new Date(currentCycleStart.getTime()+ages[i]*86400000);return"<div class=\"phase "+(key===phaseKeyFromAge(age)?"active":"")+"\" onclick=\"showPhase('"+key+"',this)\"><button class=\"lunar-help-btn\" type=\"button\" onclick=\"openPhaseHelp(event, '"+key+"')\" aria-label=\"Explain phase\">?</button><div class=\"phase-icon\">"+phaseIcons[key]+"</div>"+phases[key].name.replace(" MOON","").replace(" QUARTER"," Q")+"<div class=\"phase-date\">"+d.toLocaleDateString("en-US",{month:"short",day:"numeric"})+"<br>"+d.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:false})+"</div></div>"}).join("")}
+function renderMoonSigns(year,month,selectedDay){const grid=document.getElementById("moonSigns");let html="";for(let i=0;i<4;i++){const d=new Date(Date.UTC(year,month,selectedDay+i*2,12));const sign=signOf(fallbackLongitude(julianDay(d),"moon"));html+='<div class="moon-sign-card '+(i===0?'active':'')+'"><button class="lunar-help-btn" type="button" onclick="openMoonSignHelp(event, this)" aria-label="Explain Moon sign">?</button><div class="moon-sign-icon">'+sign.symbol+'</div><div class="moon-sign-name">'+sign.name+'</div><div class="moon-sign-time">'+d.toLocaleDateString("en-US",{month:"short",day:"numeric"})+'</div></div>'}grid.innerHTML=html}
+function renderVoidPeriods(year,month,selectedDay){const list=document.querySelector(".void-list");if(!list)return;let html="";for(let i=0;i<4;i++){const start=new Date(year,month,selectedDay+i*2,8+i*3,15);const end=new Date(start.getTime()+(5+i%3)*3600000);html+='<div class="void-item"><button class="lunar-help-btn" type="button" onclick="openLunarHelp(event, \'void\')" aria-label="Explain void period">?</button><span class="void-date">'+start.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"})+'</span><span class="void-time">'+start.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:false})+' - '+end.toLocaleDateString("en-US",{month:"short",day:"numeric"})+' '+end.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:false})+'</span></div>'}list.innerHTML=html}
+function renderEclipses(year){const grid=document.querySelector(".eclipse-grid");if(!grid)return;const items=[{type:"Solar Eclipse",icon:"\uD83C\uDF11",date:new Date(year,2,29),sign:"Aries",desc:"New beginnings, bold initiatives and reset of personal direction."},{type:"Lunar Eclipse",icon:"\uD83C\uDF15",date:new Date(year,3,13),sign:"Libra",desc:"Relationship themes reach a turning point and ask for balance."},{type:"Solar Eclipse",icon:"\uD83C\uDF11",date:new Date(year,8,21),sign:"Virgo",desc:"Health, routine and practical improvements come into focus."},{type:"Lunar Eclipse",icon:"\uD83C\uDF15",date:new Date(year,9,6),sign:"Pisces",desc:"Emotional release, intuition and spiritual sensitivity are heightened."}];grid.innerHTML=items.map(item=>'<div class="eclipse-card"><button class="lunar-help-btn" type="button" onclick="openEclipseHelp(event, this)" aria-label="Explain eclipse">?</button><div class="eclipse-type">'+item.icon+' '+item.type+'</div><div class="eclipse-date">'+item.date.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"})+' | '+item.sign+'</div><div class="eclipse-desc">'+item.desc+'</div></div>').join("")}
 function setToday(){setInputState(getTodayState());calculateLunar()}
 function goBack(){const date=document.getElementById("dateInput").value;const time=document.getElementById("timeInput").value;const city=document.getElementById("cityInput").value;if(window.AppSharedState)AppSharedState.saveLastAstroInput({date,time,city});let url="chart.html";if(date){url+="?date="+encodeURIComponent(date);if(time)url+="&time="+encodeURIComponent(time);if(city)url+="&city="+encodeURIComponent(city)}window.location.href=url}
 function exitApp(){appExit("index.html")}
@@ -1627,6 +1836,46 @@ window.appCopyText=appCopyText;window.appShare=appShare;window.appPrintPage=appP
 document.getElementById("printBtn").addEventListener("click",()=>appPrintPage());
 document.getElementById("shareBtn").addEventListener("click",async()=>{await appShare({title:"Lunar phases",text:"Lunar phase report",url:window.location.href})});
 window.addEventListener("load",function(){setupCityAutocomplete();updateSavedCount();const params=new URLSearchParams(window.location.search);const now=new Date();const sharedState=window.AppSharedState?AppSharedState.preferredAstroInput(params):null;natalInputState=sharedState||{date:params.get("date")||String(now.getDate()).padStart(2,'0')+"."+String(now.getMonth()+1).padStart(2,'0')+"."+now.getFullYear(),time:params.get("time")||"12:00",city:params.get("city")||"Belgrade"};if(window.AppSharedState){AppSharedState.saveLastAstroInput(natalInputState);AppSharedState.bindLastAstroInput({dateId:"dateInput",timeId:"timeInput",cityId:"cityInput"})}activeLunarTab="cycle";document.getElementById("lunarInputCard").style.display="none";const savedIcon=document.getElementById("savedIcon");if(savedIcon)savedIcon.style.display="none";setInputState(getTodayState());calculateLunar()});
+
+
+
+const lunarHelpText = {
+  natalPhase:{title:'Natal Moon phase',text:'Your natal Moon phase is the Moon phase at birth. It describes your instinctive emotional rhythm: how you begin, grow, react, release and reset. It is not only a mood; it is a lifelong timing pattern.'},
+  phaseMeaning:{title:'Phase meaning',text:'Phase meaning separates the Moon phase into practical layers: energy, emotions, focus and spiritual tone. This makes it easier to understand what the phase is asking for instead of reading one flat paragraph.'},
+  currentPhase:{title:'Current Moon phase',text:'The current Moon phase describes today\'s collective lunar rhythm. It is useful for timing rest, decisions, launches, release, emotional conversations and reflection.'},
+  currentNatal:{title:'Current vs natal Moon',text:'This compares today\'s Moon with your natal Moon. When the current Moon touches your natal Moon by aspect, moods, body rhythm, memories and emotional habits become easier to notice.'},
+  moonSigns:{title:'Moon in signs',text:'The Moon changes zodiac signs roughly every two to three days. The sign shows the emotional tone of that short period: what people need, how they react and what kind of activities feel natural.'},
+  void:{title:'Void of Course Moon',text:'Void of Course means the Moon makes no major aspect before leaving its current sign. Traditional astrology treats it as a low-traction window: better for finishing, resting and routine tasks than forcing launches or big commitments.'},
+  cycle:{title:'Moon cycle',text:'The Moon cycle follows a full emotional arc: New Moon begins, waxing phases build, Full Moon reveals, waning phases release. Reading the whole cycle helps with timing instead of reacting to one day only.'},
+  calendar:{title:'Lunar calendar',text:'The lunar calendar shows how the phase changes through the month. Use it as a planning map: choose waxing phases for building, Full Moon for visibility, and waning phases for clearing and completion.'},
+  eclipses:{title:'Eclipses and nodes',text:'Eclipses are intensified New or Full Moons near the lunar nodes. They often mark turning points, releases and new directions. Nodes describe the karmic axis: what is being developed and what is being outgrown.'},
+  lunarDay:{title:'Lunar day',text:'A lunar day counts the Moon\'s age inside the cycle. It gives a more specific daily tone inside the broader Moon phase.'},
+  signature:{title:'Lunar signature',text:'Your lunar signature combines natal Moon phase and Moon sign. It describes your natural emotional timing, instinctive needs and how your body and memory respond to life.'}
+};
+function ensureLunarHelpModal(){
+  let modal=document.getElementById('lunarHelpModal');
+  if(modal)return modal;
+  modal=document.createElement('div');
+  modal.id='lunarHelpModal';
+  modal.className='lunar-help-modal';
+  modal.innerHTML='<div class="lunar-help-panel"><button class="lunar-help-close" type="button" onclick="closeLunarHelp()" aria-label="Close">×</button><h3 id="lunarHelpTitle"></h3><div id="lunarHelpBody"></div></div>';
+  modal.addEventListener('click',function(e){if(e.target===modal)closeLunarHelp()});
+  document.body.appendChild(modal);
+  return modal;
+}
+function showLunarHelp(title,body){const modal=ensureLunarHelpModal();document.getElementById('lunarHelpTitle').textContent=title;document.getElementById('lunarHelpBody').innerHTML=body;modal.style.display='flex'}
+function closeLunarHelp(){const modal=document.getElementById('lunarHelpModal');if(modal)modal.style.display='none'}
+function openLunarHelp(event,key){if(event)event.stopPropagation();const data=lunarHelpText[key]||lunarHelpText.currentPhase;showLunarHelp(data.title,'<p>'+data.text+'</p>')}
+function openLunarCardHelp(event,button){if(event)event.stopPropagation();const card=button&&button.closest('.info-card');const title=card&&card.querySelector('.info-title')?card.querySelector('.info-title').textContent.trim():'Lunar meaning';const text=card&&card.querySelector('.info-text')?card.querySelector('.info-text').textContent.trim():'';showLunarHelp(title,'<p>'+text+'</p><p>This is one layer of the Moon phase. Read it together with the phase name and lunar day for a fuller interpretation.</p>')}
+function openPhaseHelp(event,key){if(event)event.stopPropagation();const p=phases[key];if(!p)return;showLunarHelp(p.name,'<p><strong>'+p.illumination+'</strong></p><p>'+p.energy+'.</p><p>'+p.lunarText+'</p>')}
+function openMoonSignHelp(event,button){if(event)event.stopPropagation();const card=button&&button.closest('.moon-sign-card');const sign=card&&card.querySelector('.moon-sign-name')?card.querySelector('.moon-sign-name').textContent.trim():'Moon sign';const time=card&&card.querySelector('.moon-sign-time')?card.querySelector('.moon-sign-time').textContent.trim():'';showLunarHelp('Moon in '+sign,'<p><strong>'+time+'</strong></p><p>The Moon in '+sign+' colors mood, instinct and daily needs. It shows the emotional weather for that short window.</p>')}
+function openEclipseHelp(event,button){if(event)event.stopPropagation();const card=button&&button.closest('.eclipse-card');const type=card&&card.querySelector('.eclipse-type')?card.querySelector('.eclipse-type').textContent.trim():'Eclipse';const date=card&&card.querySelector('.eclipse-date')?card.querySelector('.eclipse-date').textContent.trim():'';const desc=card&&card.querySelector('.eclipse-desc')?card.querySelector('.eclipse-desc').textContent.trim():'';showLunarHelp(type,'<p><strong>'+date+'</strong></p><p>'+desc+'</p><p>Eclipses are stronger lunar events. They often show a turning point rather than an ordinary mood shift.</p>')}
+window.closeLunarHelp=closeLunarHelp;
+window.openLunarHelp=openLunarHelp;
+window.openLunarCardHelp=openLunarCardHelp;
+window.openPhaseHelp=openPhaseHelp;
+window.openMoonSignHelp=openMoonSignHelp;
+window.openEclipseHelp=openEclipseHelp;
 
 </script>
 

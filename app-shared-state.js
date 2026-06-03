@@ -196,3 +196,36 @@
 })();
 
 
+
+
+(function(){
+  const STORE_KEY = "numerology_app_settings";
+  const helpCss = "html.hide-help-buttons .position-help-btn,html.hide-help-buttons .transit-help-btn,html.hide-help-buttons .retro-help-btn,html.hide-help-buttons .carto-help-btn,html.hide-help-buttons .syn-help-btn,html.hide-help-buttons .lunar-help-btn{display:none!important}html.hide-help-buttons .section-title{padding-left:0!important}html.hide-help-buttons #phaseInfo .info-card{display:block!important;padding:12px!important}html.hide-help-buttons .lunar-day-info,html.hide-help-buttons .personal-lunar-card{display:block!important;padding:13px!important}";
+  function settings(){
+    try { return JSON.parse(localStorage.getItem(STORE_KEY) || "{}") || {}; }
+    catch(e){ return {}; }
+  }
+  function showHelpButtons(){
+    return settings().showHelpButtons !== false;
+  }
+  function ensureStyle(){
+    if(document.getElementById("appHelpToggleStyle")) return;
+    const style = document.createElement("style");
+    style.id = "appHelpToggleStyle";
+    style.textContent = helpCss;
+    document.head.appendChild(style);
+  }
+  function apply(){
+    ensureStyle();
+    document.documentElement.classList.toggle("hide-help-buttons", !showHelpButtons());
+  }
+  window.AppHelpSettings = { apply, showHelpButtons };
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", apply);
+  } else {
+    apply();
+  }
+  window.addEventListener("storage", function(event){
+    if(event.key === STORE_KEY) apply();
+  });
+})();

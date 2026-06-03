@@ -2139,6 +2139,8 @@ function renderWheel(data, cusps, asc, mc, aspects){
 
 
 
+let currentChartPositions = [];
+
 const planetMeanings = {
   Sun:"Sun shows identity, vitality, confidence and the central life direction. It describes what the person is learning to become.",
   Moon:"Moon shows emotions, instincts, memory, safety needs and the private inner rhythm. It describes what the person needs to feel secure.",
@@ -2182,17 +2184,96 @@ const houseMeanings = {
   12:"House 12: solitude, dreams, hidden patterns, healing, spirituality and release."
 };
 
+const astroInterpretationData = {
+  planets:{
+    Sun:{keywords:["identity","confidence","life purpose","self expression"]},
+    Moon:{keywords:["emotions","instincts","inner world","security"]},
+    Mercury:{keywords:["thinking","communication","learning style","decision making"]},
+    Venus:{keywords:["love","values","attraction","harmony"]},
+    Mars:{keywords:["drive","courage","desire","action"]},
+    Jupiter:{keywords:["growth","faith","opportunity","wisdom"]},
+    Saturn:{keywords:["discipline","responsibility","maturity","mastery"]},
+    Uranus:{keywords:["freedom","originality","awakening","independence"]},
+    Neptune:{keywords:["imagination","spirituality","sensitivity","idealism"]},
+    Pluto:{keywords:["transformation","power","depth","renewal"]}
+  },
+  signs:{
+    Aries:{traits:["direct","brave","active","independent","instinctive"]},
+    Taurus:{traits:["steady","sensual","loyal","practical","persistent"]},
+    Gemini:{traits:["curious","verbal","adaptable","quick","mentally active"]},
+    Cancer:{traits:["protective","emotional","intuitive","caring","memory-based"]},
+    Leo:{traits:["expressive","warm","creative","proud","radiant"]},
+    Virgo:{traits:["precise","analytical","useful","observant","improvement-focused"]},
+    Libra:{traits:["diplomatic","social","balanced","aesthetic","cooperative"]},
+    Scorpio:{traits:["intense","magnetic","private","transformative","powerful"]},
+    Sagittarius:{traits:["optimistic","philosophical","adventurous","honest","expansive"]},
+    Capricorn:{traits:["disciplined","strategic","ambitious","realistic","responsible"]},
+    Aquarius:{traits:["independent","intellectual","unusual","future-oriented","inventive"]},
+    Pisces:{traits:["sensitive","imaginative","spiritual","empathic","fluid"]}
+  },
+  houses:{
+    1:{areas:["identity","appearance","first impressions","personal direction"]},
+    2:{areas:["money","values","self-worth","stability"]},
+    3:{areas:["communication","learning","daily thinking","local environment"]},
+    4:{areas:["home","family","roots","emotional foundation"]},
+    5:{areas:["creativity","romance","children","personal joy"]},
+    6:{areas:["work habits","health","routine","service"]},
+    7:{areas:["partnership","marriage","agreements","one-to-one relationships"]},
+    8:{areas:["intimacy","shared resources","psychology","transformation"]},
+    9:{areas:["travel","beliefs","higher learning","meaning"]},
+    10:{areas:["career","reputation","authority","public direction"]},
+    11:{areas:["friends","groups","networks","future goals"]},
+    12:{areas:["solitude","dreams","hidden patterns","spiritual healing"]}
+  }
+};
+
+function pickList(list, index){
+  return list && list[index] ? list[index] : "";
+}
+
+function chartSignCounts(){
+  const counts = {};
+  currentChartPositions.forEach(function(p){
+    const s = signOf(Number(p.longitude) || 0).name;
+    counts[s] = (counts[s] || 0) + 1;
+  });
+  return counts;
+}
+
+function dominantSignParagraph(sign){
+  const counts = chartSignCounts();
+  const count = counts[sign] || 0;
+  if(count < 4)return "";
+  const traits = (astroInterpretationData.signs[sign] || {}).traits || [];
+  return "<p><strong>Chart pattern:</strong> "+sign+" strongly dominates this natal chart. The personality is often experienced as "+pickList(traits,0)+", "+pickList(traits,1)+" and "+pickList(traits,2)+". Life may repeatedly return to "+pickList(traits,3)+" growth, "+pickList(traits,4)+" choices and stronger self-awareness through this sign's style.</p>";
+}
+
 function positionHelpText(planet, sign, house){
   const planetText = planetMeanings[planet] || "This planet describes a specific life function.";
   const signText = signMeanings[sign] || "This sign describes the style and tone of expression.";
   const houseText = houseMeanings[house] || "This house describes the life area where it shows up.";
+  const planetData = astroInterpretationData.planets[planet] || {keywords:["life energy","personal growth","expression","awareness"]};
+  const signData = astroInterpretationData.signs[sign] || {traits:["distinctive","expressive","personal","developing","noticeable"]};
+  const houseData = astroInterpretationData.houses[house] || {areas:["life experience","personal choices","growth","self-understanding"]};
+  const trait1 = pickList(signData.traits,0);
+  const trait2 = pickList(signData.traits,1);
+  const trait3 = pickList(signData.traits,2);
+  const trait4 = pickList(signData.traits,3);
+  const area1 = pickList(houseData.areas,0);
+  const area2 = pickList(houseData.areas,1);
+  const area3 = pickList(houseData.areas,2);
+  const keyword = pickList(planetData.keywords,0);
+  const keyword2 = pickList(planetData.keywords,1);
   return {
     title: planet+" in "+sign+" - House "+house,
     body:
+      "<p><strong>Quick reading:</strong> "+planet+" in "+sign+" in House "+house+" creates a personality pattern that expresses itself through "+trait1+" and "+trait2+" qualities. The person's "+keyword+" is filtered through the emotional tone and instincts of "+sign+".</p>"+
+      "<p>This placement brings strong focus to "+area1+", "+area2+" and "+area3+". These life areas become places where the person learns to use "+keyword2+" with more awareness.</p>"+
+      "<p>Others may perceive this person as "+trait3+", "+trait4+" and highly connected to their "+keyword+". Over time, this position becomes a path of self-development rather than only a fixed personality trait.</p>"+
+      dominantSignParagraph(sign)+
       "<p><strong>Planet:</strong> "+planetText+"</p>"+
       "<p><strong>Sign:</strong> "+signText+"</p>"+
-      "<p><strong>House:</strong> "+houseText+"</p>"+
-      "<p><strong>Simple reading:</strong> "+planet+" works through "+sign+" style, and it is most visible in House "+house+" topics.</p>"
+      "<p><strong>House:</strong> "+houseText+"</p>"
   };
 }
 
@@ -2233,6 +2314,13 @@ const angleMeanings = {
   IC:"IC shows roots, home, family memory and the private emotional foundation underneath the public life."
 };
 
+const angleReadingData = {
+  ASC:{domain:"first impression and personal style", gift:"natural presence", lesson:"acting with more self-awareness", question:"How do I enter new situations, and what energy do people meet first?"},
+  MC:{domain:"career direction and public role", gift:"visible purpose", lesson:"building a reputation with patience", question:"What am I trying to become known for?"},
+  DSC:{domain:"partnership and close mirrors", gift:"relationship awareness", lesson:"choosing balanced agreements", question:"What do I seek in others, and what do they teach me about myself?"},
+  IC:{domain:"home, roots and private emotional life", gift:"inner grounding", lesson:"healing old patterns", question:"What makes me feel safe when nobody is watching?"}
+};
+
 const aspectMeanings = {
   Conjunction:"Conjunction blends two planets together. Their themes act strongly and directly, sometimes as one combined force.",
   Sextile:"Sextile is supportive and useful. It shows talents or opportunities that grow when the person actively uses them.",
@@ -2241,13 +2329,38 @@ const aspectMeanings = {
   Opposition:"Opposition creates polarity. The person learns balance between two needs, often through relationships or outside events."
 };
 
+const aspectReadingData = {
+  Conjunction:{tone:"concentrated and powerful", feel:"the two needs act almost as one instinct", develop:"conscious direction, so the combined energy does not run automatically", verb:"fuses"},
+  Sextile:{tone:"useful and cooperative", feel:"the two planets can help each other when the person takes initiative", develop:"practice and deliberate use of the talent", verb:"supports"},
+  Square:{tone:"dynamic and pressurized", feel:"the two needs push against each other until action is taken", develop:"courage, maturity and better timing", verb:"challenges"},
+  Trine:{tone:"natural and flowing", feel:"the two planets understand each other with little effort", develop:"intentional use, so the gift is not wasted", verb:"harmonizes"},
+  Opposition:{tone:"polarized and relational", feel:"the two needs pull the person between two sides of life", develop:"balance, projection awareness and cooperation", verb:"balances"}
+};
+
+function planetKeyword(planet, index){
+  const data = astroInterpretationData.planets[planet];
+  return data && data.keywords[index] ? data.keywords[index] : (planetMeanings[planet] || planet);
+}
+
+function orbStrengthText(orb){
+  const value = parseFloat(orb);
+  if(!isFinite(value))return "This aspect is active in the chart.";
+  if(value <= 1.5)return "The orb is very tight, so this aspect is one of the stronger psychological signatures in the chart.";
+  if(value <= 4)return "The orb is moderate, so this aspect is noticeable and often shows up in real life patterns.";
+  return "The orb is wider, so this aspect may work more subtly or become clearer in specific life situations.";
+}
+
 function openAngleHelp(name, longitude){
   const sign = signOf(Number(longitude) || 0);
   const title = name+" in "+sign.name;
+  const angleData = angleReadingData[name] || {domain:"an important life doorway", gift:"personal awareness", lesson:"using this angle consciously", question:"Where does this point show itself in daily life?"};
+  const signData = astroInterpretationData.signs[sign.name] || {traits:["distinctive","personal","visible","developing","expressive"]};
   const body =
-    "<p><strong>Angle:</strong> "+(angleMeanings[name] || "This angle is a major doorway in the chart.")+"</p>"+
-    "<p><strong>Sign:</strong> "+(signMeanings[sign.name] || "The sign shows the style of this angle.")+"</p>"+
-    "<p><strong>Simple reading:</strong> "+name+" works through "+sign.name+" style.</p>";
+    "<p><strong>Quick reading:</strong> "+name+" in "+sign.name+" makes "+angleData.domain+" express through "+pickList(signData.traits,0)+" and "+pickList(signData.traits,1)+" qualities.</p>"+
+    "<p><strong>How it feels:</strong> This angle becomes a doorway where the person is often seen as "+pickList(signData.traits,2)+" and "+pickList(signData.traits,3)+". It can shape first reactions, life choices and the way important people respond to them.</p>"+
+    "<p><strong>What to develop:</strong> The gift is "+angleData.gift+". The lesson is "+angleData.lesson+".</p>"+
+    "<p><strong>Reflection:</strong> "+angleData.question+"</p>"+
+    "<p><strong>Angle:</strong> "+(angleMeanings[name] || "This angle is a major doorway in the chart.")+"</p>";
   const modal = ensurePositionHelpModal();
   document.getElementById("positionHelpTitle").textContent = title;
   document.getElementById("positionHelpBody").innerHTML = body;
@@ -2256,11 +2369,13 @@ function openAngleHelp(name, longitude){
 
 function openAspectHelp(p1, p2, aspect, orb){
   const title = p1+" "+aspect+" "+p2;
+  const aspectData = aspectReadingData[aspect] || {tone:"interactive", feel:"the two planets influence each other", develop:"awareness", verb:"connects"};
   const body =
-    "<p><strong>Aspect:</strong> "+(aspectMeanings[aspect] || "This aspect describes how two planets communicate.")+"</p>"+
-    "<p><strong>Planets:</strong> "+p1+" and "+p2+" are connected, so their life themes influence each other.</p>"+
-    "<p><strong>Orb:</strong> "+orb+" degrees. Smaller orb means the aspect is stronger and easier to notice.</p>"+
-    "<p><strong>Simple reading:</strong> Read "+p1+" first, then "+p2+", then use the aspect word to understand whether they blend, flow, challenge or balance each other.</p>";
+    "<p><strong>Quick reading:</strong> "+p1+" "+aspectData.verb+" with "+p2+", creating a "+aspectData.tone+" pattern between "+planetKeyword(p1,0)+" and "+planetKeyword(p2,0)+".</p>"+
+    "<p><strong>How it feels:</strong> In daily life, "+aspectData.feel+". This can affect choices, reactions, relationships and the way the person handles pressure or opportunity.</p>"+
+    "<p><strong>What to develop:</strong> The main growth key is "+aspectData.develop+". When handled well, "+p1+" brings "+planetKeyword(p1,1)+" while "+p2+" adds "+planetKeyword(p2,1)+".</p>"+
+    "<p><strong>Strength:</strong> "+orbStrengthText(orb)+"</p>"+
+    "<p><strong>Aspect:</strong> "+(aspectMeanings[aspect] || "This aspect describes how two planets communicate.")+"</p>";
   const modal = ensurePositionHelpModal();
   document.getElementById("positionHelpTitle").textContent = title;
   document.getElementById("positionHelpBody").innerHTML = body;
@@ -2279,6 +2394,7 @@ window.openPositionHelp = openPositionHelp;
 window.closePositionHelp = closePositionHelp;
 
 function renderTables(data, cusps, asc, mc, aspects, details){
+  currentChartPositions = Array.isArray(data) ? data.slice() : [];
   const planetTable = document.getElementById("planetTable");
   const angleTable = document.getElementById("angleTable");
   const aspectTable = document.getElementById("aspectTable");

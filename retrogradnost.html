@@ -766,6 +766,121 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 .natal-check #natalDate,.natal-check #natalTime{border-color:rgba(255,215,0,.85)!important;box-shadow:none!important;background:#1e293b!important}
 .natal-check #natalDate:focus,.natal-check #natalTime:focus{border-color:var(--astro-gold)!important;box-shadow:0 0 6px rgba(255,215,0,.22)!important}
 
+
+.retro-help-btn{
+  width:22px;
+  height:22px;
+  min-width:22px;
+  border-radius:50%;
+  border:1px solid rgba(255,215,0,.65);
+  background:rgba(15,23,42,.85);
+  color:#FFD700;
+  font-size:12px;
+  font-weight:800;
+  line-height:1;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 7px rgba(255,215,0,.18);
+}
+.retro-help-btn:hover{border-color:#FFD700;box-shadow:0 0 12px rgba(255,215,0,.34)}
+.retro-help-modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  background:rgba(2,6,23,.82);
+  align-items:center;
+  justify-content:center;
+  padding:14px;
+}
+.retro-help-panel{
+  width:min(430px,94vw);
+  max-height:82vh;
+  overflow:auto;
+  background:#0f172a;
+  border:1px solid rgba(255,215,0,.48);
+  border-radius:14px;
+  padding:18px;
+  position:relative;
+  box-shadow:0 0 28px rgba(255,215,0,.18);
+  text-align:left;
+}
+.retro-help-close{
+  position:absolute;
+  top:10px;
+  right:10px;
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  border:1px solid rgba(255,215,0,.6);
+  background:#1e293b;
+  color:#FFD700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  line-height:1;
+  cursor:pointer;
+}
+.retro-help-title{
+  color:#FFD700;
+  font-size:18px;
+  font-weight:800;
+  padding-right:36px;
+  margin-bottom:10px;
+}
+.retro-help-body{font-size:14px;line-height:1.45;color:#dbeafe}
+.retro-help-body p{margin:8px 0}
+.retro-help-body strong{color:#f6cb71}
+.retro-summary-tools{display:flex;align-items:flex-start;justify-content:flex-end;gap:5px}
+
+
+/* Keep retrograde help buttons anchored on the left side of each section/item. */
+.section-title{
+  position:relative;
+  padding-left:30px;
+  text-align:center;
+}
+.section-title > .retro-help-btn{
+  position:absolute;
+  left:0;
+  top:50%;
+  transform:translateY(-50%);
+}
+.retro-item{
+  padding-left:34px!important;
+}
+.retro-summary-tools .retro-help-btn{
+  position:absolute;
+  left:7px;
+  top:8px;
+}
+.retro-summary-tools{
+  min-height:22px;
+}
+.planet-cell .retro-help-btn,
+.natal-retro-chip .retro-help-btn{
+  margin-right:5px;
+  vertical-align:middle;
+}
+
+
+/* Anchor Retrograde Meanings table help buttons to the far left. */
+.meanings-table .planet-cell{
+  position:relative;
+  padding-left:34px!important;
+  min-width:112px;
+}
+.meanings-table .planet-cell .retro-help-btn{
+  position:absolute;
+  left:6px;
+  top:50%;
+  transform:translateY(-50%);
+  margin:0!important;
+}
+
 </style>
 </head>
 <body>
@@ -790,7 +905,7 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 
     <!-- ACTIVE RETROGRADES -->
     <div class="card">
-        <div class="section-title">ACTIVE RETROGRADES</div>
+        <div class="section-title">ACTIVE RETROGRADES <button class="retro-help-btn" type="button" onclick="openRetroGeneralHelp(event, 'active')" aria-label="Explain active retrogrades">?</button></div>
 
         <div class="filter-tabs">
             <div class="filter-tab active" onclick="filterRetro('retro', this)">Retrograde</div>
@@ -802,7 +917,7 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 
     <!-- RETROGRADE FOCUS -->
     <div class="card retro-tab-extra">
-        <div class="section-title">RETROGRADE FOCUS</div>
+        <div class="section-title">RETROGRADE FOCUS <button class="retro-help-btn" type="button" onclick="openRetroGeneralHelp(event, 'focus')" aria-label="Explain retrograde focus">?</button></div>
         <div class="natal-check">
             <div class="natal-check-title" id="retroFocusTitle">Current focus</div>
             <div class="retro-meaning" id="retroFocusText">Retrograde focus will appear here.</div>
@@ -812,14 +927,14 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 
     <!-- STATION DATES -->
     <div class="card station-tab-card">
-        <div class="section-title">UPCOMING STATIONS</div>
+        <div class="section-title">UPCOMING STATIONS <button class="retro-help-btn" type="button" onclick="openRetroGeneralHelp(event, 'station')" aria-label="Explain upcoming stations">?</button></div>
         <div class="station-list" id="stationList"></div>
         <div class="station-planet-list" id="stationPlanetList"></div>
     </div>
 
     <!-- NATAL RETROGRADE CHECK -->
     <div class="card retro-tab-extra">
-        <div class="section-title">NATAL RETROGRADE CHECK</div>
+        <div class="section-title">NATAL RETROGRADE CHECK <button class="retro-help-btn" type="button" onclick="openRetroGeneralHelp(event, 'natal')" aria-label="Explain natal retrogrades">?</button></div>
         <div class="natal-check natal-check-inline">
             <div class="natal-check-title">Check your birth chart for retrograde planets</div>
             <div class="natal-input-line">
@@ -837,20 +952,20 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 
     <!-- RETROGRADE MEANINGS -->
     <div class="card retro-tab-extra">
-        <div class="section-title">RETROGRADE MEANINGS BY PLANET</div>
+        <div class="section-title">RETROGRADE MEANINGS BY PLANET <button class="retro-help-btn" type="button" onclick="openRetroGeneralHelp(event, 'meanings')" aria-label="Explain retrograde meanings">?</button></div>
         <table class="meanings-table">
             <thead>
                 <tr><th>Planet</th><th>Retrograde Meaning</th><th>Shadow Period</th><th>Frequency</th></tr>
             </thead>
             <tbody>
-                <tr><td class="planet-cell">â˜¿ Mercury</td><td>Review, rethink, reconnect. Miscommunication, tech issues, travel delays.</td><td>~2 weeks before/after</td><td>3-4x / year (3 weeks)</td></tr>
-                <tr><td class="planet-cell">â™€ Venus</td><td>Reevaluate love, values, money. Old flames return. Financial review.</td><td>~2 weeks before/after</td><td>~1x / 18 months (6 weeks)</td></tr>
-                <tr><td class="planet-cell">â™‚ Mars</td><td>Redirect anger, review actions. Slower initiative, internalized drive.</td><td>~2 weeks before/after</td><td>~1x / 2 years (2-3 months)</td></tr>
-                <tr><td class="planet-cell">â™ƒ Jupiter</td><td>Reassess beliefs, growth, opportunities. Internal expansion.</td><td>~1 month before/after</td><td>~1x / year (4 months)</td></tr>
-                <tr><td class="planet-cell">â™„ Saturn</td><td>Karmic restructuring, discipline review. Hard lessons internalized.</td><td>~1 month before/after</td><td>~1x / year (4-5 months)</td></tr>
-                <tr><td class="planet-cell">â™… Uranus</td><td>Sudden insights, rebellion review. Breakthroughs from within.</td><td>~1 month before/after</td><td>~1x / year (5 months)</td></tr>
-                <tr><td class="planet-cell">â™† Neptune</td><td>Dreams, illusions, spirituality revisited. Creative blocks or bursts.</td><td>~1 month before/after</td><td>~1x / year (5-6 months)</td></tr>
-                <tr><td class="planet-cell">â™‡ Pluto</td><td>Deep transformation, power review. Shadow work and regeneration.</td><td>~1 month before/after</td><td>~1x / year (5-6 months)</td></tr>
+                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Mercury')" aria-label="Explain Mercury retrograde">?</button> ☿ Mercury</td><td>Review, rethink, reconnect. Miscommunication, tech issues, travel delays.</td><td>~2 weeks before/after</td><td>3-4x / year (3 weeks)</td></tr>
+                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Venus')" aria-label="Explain Venus retrograde">?</button> ♀ Venus</td><td>Reevaluate love, values, money. Old flames return. Financial review.</td><td>~2 weeks before/after</td><td>~1x / 18 months (6 weeks)</td></tr>
+                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Mars')" aria-label="Explain Mars retrograde">?</button> ♂ Mars</td><td>Redirect anger, review actions. Slower initiative, internalized drive.</td><td>~2 weeks before/after</td><td>~1x / 2 years (2-3 months)</td></tr>
+                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Jupiter')" aria-label="Explain Jupiter retrograde">?</button> ♃ Jupiter</td><td>Reassess beliefs, growth, opportunities. Internal expansion.</td><td>~1 month before/after</td><td>~1x / year (4 months)</td></tr>
+                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Saturn')" aria-label="Explain Saturn retrograde">?</button> ♄ Saturn</td><td>Karmic restructuring, discipline review. Hard lessons internalized.</td><td>~1 month before/after</td><td>~1x / year (4-5 months)</td></tr>
+                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Uranus')" aria-label="Explain Uranus retrograde">?</button> ♅ Uranus</td><td>Sudden insights, rebellion review. Breakthroughs from within.</td><td>~1 month before/after</td><td>~1x / year (5 months)</td></tr>
+                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Neptune')" aria-label="Explain Neptune retrograde">?</button> ♆ Neptune</td><td>Dreams, illusions, spirituality revisited. Creative blocks or bursts.</td><td>~1 month before/after</td><td>~1x / year (5-6 months)</td></tr>
+                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Pluto')" aria-label="Explain Pluto retrograde">?</button> ♇ Pluto</td><td>Deep transformation, power review. Shadow work and regeneration.</td><td>~1 month before/after</td><td>~1x / year (5-6 months)</td></tr>
             </tbody>
         </table>
     </div>
@@ -858,17 +973,110 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 </div>
 
 <div class="footer">
-    Local Swiss Ephemeris â€¢ Retrograde Detection â€¢ Station & Shadow Tracking
+    Local Swiss Ephemeris • Retrograde Detection • Station & Shadow Tracking
 </div>
 
 <script src="app-notifications.js"></script>
 <script>
 
+
+const retroFullMeanings = {
+  Mercury:{keywords:["thinking","speech","messages","contracts","travel"], retro:"Mercury retrograde turns the mind inward. It is useful for editing, reviewing, reconnecting and noticing where communication has become automatic.", direct:"Mercury direct supports clearer decisions, conversations, travel and practical planning.", natal:"Natal Mercury retrograde often describes a private thinker. The person may process slowly at first, but can develop unusual depth, memory and independent logic."},
+  Venus:{keywords:["love","values","money","beauty","desire"], retro:"Venus retrograde reviews love, attraction, self-worth and money. Old relationship themes can return so the person can choose from value rather than habit.", direct:"Venus direct supports social ease, affection, beauty, money choices and relationship movement.", natal:"Natal Venus retrograde can make love and value deeply private. The person often learns affection, trust and self-worth through reflection."},
+  Mars:{keywords:["action","anger","drive","sexuality","initiative"], retro:"Mars retrograde internalizes drive. It asks for strategic action, anger awareness and patience before forcing a result.", direct:"Mars direct supports movement, courage, initiative and visible effort.", natal:"Natal Mars retrograde may hold anger or desire inward. With maturity it becomes controlled strength and precise action."},
+  Jupiter:{keywords:["growth","faith","belief","education","opportunity"], retro:"Jupiter retrograde turns growth inward. It asks the person to review beliefs, promises, ethics and where expansion has gone too far.", direct:"Jupiter direct supports outward growth, opportunity, teaching and confidence.", natal:"Natal Jupiter retrograde often shows inner faith. Growth comes through personal philosophy rather than only outside approval."},
+  Saturn:{keywords:["discipline","limits","karma","structure","responsibility"], retro:"Saturn retrograde brings a review of responsibility, fear and structure. It is not punishment; it is a period for rebuilding maturity from the inside.", direct:"Saturn direct supports commitment, boundaries, long-term building and visible results.", natal:"Natal Saturn retrograde can feel like an inner authority test. Over time it creates serious discipline and self-respect."},
+  Uranus:{keywords:["freedom","change","awakening","rebellion","innovation"], retro:"Uranus retrograde makes freedom internal first. Breakthroughs may happen quietly before external change appears.", direct:"Uranus direct supports visible change, liberation and sudden shifts.", natal:"Natal Uranus retrograde often shows a private rebel. The person may seem calm while carrying a highly original inner world."},
+  Neptune:{keywords:["dreams","intuition","illusion","spirituality","sensitivity"], retro:"Neptune retrograde dissolves illusions from within. It can clarify dreams, spiritual longing and places where fantasy replaced truth.", direct:"Neptune direct supports imagination, compassion, creativity and inspiration.", natal:"Natal Neptune retrograde can make intuition private and intense. The lesson is to trust sensitivity without escaping reality."},
+  Pluto:{keywords:["power","shadow","control","trauma","transformation"], retro:"Pluto retrograde turns transformation inward. Shadow material, power patterns and old survival strategies ask to be seen honestly.", direct:"Pluto direct supports visible transformation and external power shifts.", natal:"Natal Pluto retrograde often shows deep internal transformation. The person may carry strong instincts and a lifelong need for psychological truth."}
+};
+function retroPlanetName(value){
+  return String(value||"").replace(/[☿♀♂♃♄♅♆♇]/g,"").trim();
+}
+function retroSignText(sign){
+  const clean=String(sign||"").replace(/[♈♉♊♋♌♍♎♏♐♑♒♓]/g,"").trim();
+  const styles={Aries:"direct, urgent and instinctive",Taurus:"slow, stable and value-focused",Gemini:"mental, verbal and changeable",Cancer:"emotional, protective and memory-based",Leo:"expressive, proud and creative",Virgo:"analytical, practical and corrective",Libra:"relational, diplomatic and balance-seeking",Scorpio:"intense, private and transformative",Sagittarius:"philosophical, restless and truth-seeking",Capricorn:"serious, structured and goal-oriented",Aquarius:"independent, experimental and future-minded",Pisces:"sensitive, spiritual and dissolving"};
+  return styles[clean]||"colored by this sign's style";
+}
+function retroStatusMeaning(r){
+  const data=retroFullMeanings[retroPlanetName(r.planet)]||{};
+  if(r.type==="retro")return data.retro||r.meaning;
+  if(r.type==="station")return "Station periods are louder than ordinary retrograde or direct motion. The planet is changing direction, so its themes can feel concentrated and unstable for a short time.";
+  return data.direct||r.meaning;
+}
+function ensureRetroHelpModal(){
+  let modal=document.getElementById("retroHelpModal");
+  if(modal)return modal;
+  modal=document.createElement("div");
+  modal.id="retroHelpModal";
+  modal.className="retro-help-modal";
+  modal.innerHTML='<div class="retro-help-panel"><button class="retro-help-close" type="button" onclick="closeRetroHelp()" aria-label="Close">x</button><div id="retroHelpTitle" class="retro-help-title"></div><div id="retroHelpBody" class="retro-help-body"></div></div>';
+  modal.addEventListener("click",function(event){if(event.target===modal)closeRetroHelp()});
+  document.body.appendChild(modal);
+  return modal;
+}
+function showRetroHelp(title,body){
+  const modal=ensureRetroHelpModal();
+  document.getElementById("retroHelpTitle").textContent=title;
+  document.getElementById("retroHelpBody").innerHTML=body;
+  modal.style.display="flex";
+}
+function closeRetroHelp(){const modal=document.getElementById("retroHelpModal");if(modal)modal.style.display="none"}
+function openRetroItemHelp(event,index){
+  if(event)event.stopPropagation();
+  const r=retrogrades[index];
+  if(!r)return;
+  const name=retroPlanetName(r.planet);
+  const data=retroFullMeanings[name]||{keywords:["review","inner work","timing","awareness"]};
+  showRetroHelp(name+" "+r.status,
+    "<p><strong>Quick reading:</strong> "+name+" is "+r.status.toLowerCase()+" in "+r.sign+" at "+r.degree+". This makes its themes work through "+retroSignText(r.sign)+" energy.</p>"+
+    "<p><strong>What it activates:</strong> "+data.keywords.slice(0,3).join(", ")+".</p>"+
+    "<p><strong>How it feels:</strong> "+retroStatusMeaning(r)+"</p>"+
+    "<p><strong>Timing:</strong> Station retrograde "+formatDate(r.stationRx)+", station direct "+formatDate(r.stationDirect)+". Around station dates the effect is usually stronger.</p>"+
+    "<p><strong>What to do:</strong> Review, simplify, observe repeating patterns and avoid forcing a clean answer before the planet has turned direct.</p>"
+  );
+}
+function openRetroPlanetHelp(event,planet){
+  if(event)event.stopPropagation();
+  const data=retroFullMeanings[planet];
+  if(!data)return;
+  showRetroHelp(planet+" Retrograde",
+    "<p><strong>Core theme:</strong> "+data.keywords.join(", ")+".</p>"+
+    "<p><strong>Transit retrograde:</strong> "+data.retro+"</p>"+
+    "<p><strong>Natal retrograde:</strong> "+data.natal+"</p>"+
+    "<p><strong>Direct motion:</strong> "+data.direct+"</p>"
+  );
+}
+function openRetroGeneralHelp(event,type){
+  if(event)event.stopPropagation();
+  if(type==="active"){
+    showRetroHelp("Active Retrogrades","<p><strong>What this section shows:</strong> These are the planets currently moving retrograde or direct in the sky.</p><p><strong>How to read it:</strong> A retrograde planet turns its topic inward. A direct planet expresses more outwardly. A station is the strongest turning point because the planet is changing direction.</p><p><strong>What to do:</strong> Use retrograde periods for review, repair, patience and finishing old patterns instead of rushing a new result.</p>");
+    return;
+  }
+  if(type==="focus"){
+    showRetroHelp("Retrograde Focus","<p><strong>What this section means:</strong> It summarizes which planetary themes are currently turned inward or changing direction.</p><p><strong>How to use it:</strong> Retrograde periods are best for review, repair, reflection and finishing old business. Station periods are more sensitive because the planet is changing direction.</p>");
+    return;
+  }
+  if(type==="station"){
+    showRetroHelp("Upcoming Stations","<p><strong>What station means:</strong> A station is the moment a planet appears to stop before changing direction.</p><p><strong>Why it matters:</strong> Station days are often stronger than the middle of the retrograde. The planet's theme becomes loud, concentrated and hard to ignore.</p><p><strong>How to use it:</strong> Move slower around station dates. Watch what repeats, what changes direction, and what asks for a decision after review.</p>");
+    return;
+  }
+  if(type==="meanings"){
+    showRetroHelp("Retrograde Meanings By Planet","<p><strong>What this table does:</strong> Each planet rules a different life function. Retrograde motion turns that function inward for review.</p><p><strong>How to read it:</strong> Mercury retrograde is not the same as Venus or Saturn retrograde. Read the planet first, then the current sign and timing.</p><p><strong>Shadow period:</strong> The shadow is the before/after zone where the retrograde story starts building or finishes integrating.</p>");
+    return;
+  }
+  showRetroHelp("Natal Retrogrades","<p><strong>What natal retrograde means:</strong> A natal retrograde planet is not bad. It shows a planetary function that works inward first.</p><p><strong>How to read it:</strong> The person may need more time, privacy or repeated life experience before that planet expresses confidently outward.</p><p><strong>In practice:</strong> Natal retrogrades often create depth, self-questioning and unusual wisdom in that planet's area.</p>");
+}
+window.closeRetroHelp=closeRetroHelp;
+window.openRetroItemHelp=openRetroItemHelp;
+window.openRetroPlanetHelp=openRetroPlanetHelp;
+window.openRetroGeneralHelp=openRetroGeneralHelp;
+
 /* ===== RETROGRADE DATA ===== */
 const retrogrades = [
     {
-        planet: "Mercury â˜¿",
-        icon: "â˜¿",
+        planet: "Mercury ☿",
+        icon: "☿",
         status: "Retrograde",
         type: "retro",
         description: "Communication, technology and travel delays",
@@ -876,14 +1084,14 @@ const retrogrades = [
         end: "2026-06-03",
         stationRx: "2026-05-10",
         stationDirect: "2026-06-03",
-        sign: "â™Š Gemini",
-        degree: "18Â°",
+        sign: "♊ Gemini",
+        degree: "18°",
         meaning: "Revisit how you communicate and process information. Old conversations resurface. Perfect for editing, reviewing, and reconnecting. Avoid signing contracts if possible.",
         progress: 65
     },
     {
-        planet: "Venus â™€",
-        icon: "â™€",
+        planet: "Venus ♀",
+        icon: "♀",
         status: "Direct",
         type: "direct",
         description: "Love, beauty, and values flowing forward",
@@ -891,14 +1099,14 @@ const retrogrades = [
         end: "2026-04-07",
         stationRx: "2026-07-20",
         stationDirect: "2026-09-05",
-        sign: "â™Œ Leo",
-        degree: "5Â°",
+        sign: "♌ Leo",
+        degree: "5°",
         meaning: "Venus is direct now. Express love freely, make financial decisions, start new relationships. The retrograde review period is over.",
         progress: 100
     },
     {
-        planet: "Mars â™‚",
-        icon: "â™‚",
+        planet: "Mars ♂",
+        icon: "♂",
         status: "Direct",
         type: "direct",
         description: "Action, drive, and passion moving forward",
@@ -906,14 +1114,14 @@ const retrogrades = [
         end: "2026-02-23",
         stationRx: "2026-12-10",
         stationDirect: "2027-02-15",
-        sign: "â™‹ Cancer",
-        degree: "22Â°",
+        sign: "♋ Cancer",
+        degree: "22°",
         meaning: "Mars is direct. Take action, initiate projects, assert yourself. Energy is externalized and productive.",
         progress: 100
     },
     {
-        planet: "Jupiter â™ƒ",
-        icon: "â™ƒ",
+        planet: "Jupiter ♃",
+        icon: "♃",
         status: "Direct",
         type: "direct",
         description: "Expansion, luck, and growth flowing outward",
@@ -921,14 +1129,14 @@ const retrogrades = [
         end: "2026-02-04",
         stationRx: "2026-10-12",
         stationDirect: "2027-02-08",
-        sign: "â™‹ Cancer",
-        degree: "10Â°",
+        sign: "♋ Cancer",
+        degree: "10°",
         meaning: "Jupiter is direct. Expand your horizons, take risks, grow. Opportunities are external and visible.",
         progress: 100
     },
     {
-        planet: "Saturn â™„",
-        icon: "â™„",
+        planet: "Saturn ♄",
+        icon: "♄",
         status: "Retrograde",
         type: "retro",
         description: "Karmic lessons and internal restructuring",
@@ -936,14 +1144,14 @@ const retrogrades = [
         end: "2026-08-23",
         stationRx: "2026-03-15",
         stationDirect: "2026-08-23",
-        sign: "â™“ Pisces",
-        degree: "3Â°",
+        sign: "♓ Pisces",
+        degree: "3°",
         meaning: "Internal restructuring of boundaries and responsibilities. Karmic debts surface for review. Perfect for deep discipline work and letting go of old structures.",
         progress: 40
     },
     {
-        planet: "Uranus â™…",
-        icon: "â™…",
+        planet: "Uranus ♅",
+        icon: "♅",
         status: "Direct",
         type: "direct",
         description: "Innovation, freedom, and change moving forward",
@@ -951,14 +1159,14 @@ const retrogrades = [
         end: "2026-01-10",
         stationRx: "2026-09-05",
         stationDirect: "2027-01-15",
-        sign: "â™Š Gemini",
-        degree: "28Â°",
+        sign: "♊ Gemini",
+        degree: "28°",
         meaning: "Uranus is direct. Embrace change, innovate, break free. Sudden insights manifest externally.",
         progress: 100
     },
     {
-        planet: "Neptune â™†",
-        icon: "â™†",
+        planet: "Neptune ♆",
+        icon: "♆",
         status: "Retrograde",
         type: "retro",
         description: "Illusions, intuition and subconscious processes",
@@ -966,14 +1174,14 @@ const retrogrades = [
         end: "2026-10-06",
         stationRx: "2026-03-30",
         stationDirect: "2026-10-06",
-        sign: "â™ˆ Aries",
-        degree: "2Â°",
+        sign: "♈ Aries",
+        degree: "2°",
         meaning: "Dreams and intuition turn inward. Spiritual illusions dissolve. Creative blocks may surface for healing. Perfect for meditation, dream work, and artistic revision.",
         progress: 35
     },
     {
-        planet: "Pluto â™‡",
-        icon: "â™‡",
+        planet: "Pluto ♇",
+        icon: "♇",
         status: "Retrograde",
         type: "retro",
         description: "Deep transformation, power, and regeneration",
@@ -981,8 +1189,8 @@ const retrogrades = [
         end: "2026-10-12",
         stationRx: "2026-05-04",
         stationDirect: "2026-10-12",
-        sign: "â™’ Aquarius",
-        degree: "3Â°",
+        sign: "♒ Aquarius",
+        degree: "3°",
         meaning: "Shadow work intensifies. Power dynamics internalize. Deep psychological transformation. Old traumas resurface for healing and integration.",
         progress: 20
     }
@@ -1009,7 +1217,10 @@ function renderRetro(containerId='retroList', filterFn=null, detailPrefix='detai
                     <div class="description">${r.description}</div>
                 </div>
                 <div class="retro-meta">
-                    <span class="status ${r.type}">${r.status}</span>
+                    <div class="retro-summary-tools">
+                        <button class="retro-help-btn" type="button" onclick="openRetroItemHelp(event, ${index})" aria-label="Explain ${r.planet}">?</button>
+                        <span class="status ${r.type}">${r.status}</span>
+                    </div>
                     <div class="retro-sign-degree">${r.sign} ${r.degree}</div>
                 </div>
             </div>
@@ -1187,14 +1398,14 @@ function checkNatalRetro(){
 
     // Simulate natal retrograde check
     const simulatedRetro = [
-        { planet: 'â˜¿ Mercury', meaning: 'Deep thinker, revises before speaking, may struggle with expression but has profound inner wisdom.' },
-        { planet: 'â™€ Venus', meaning: 'Reevaluates love constantly, may attract karmic relationships, learns love through reflection.' },
-        { planet: 'â™‚ Mars', meaning: 'Internalized anger, strategic action, may hesitate but acts with precision when ready.' },
-        { planet: 'â™ƒ Jupiter', meaning: 'Inner faith, philosophical depth, growth comes through introspection rather than external expansion.' },
-        { planet: 'â™„ Saturn', meaning: 'Heavy karmic lessons, deep discipline, may feel restricted but builds lasting inner strength.' },
-        { planet: 'â™… Uranus', meaning: 'Unique internal insights, rebels quietly, innovation comes in bursts of inspiration.' },
-        { planet: 'â™† Neptune', meaning: 'Deep dreamer, spiritual confusion possible, artistic genius through inner vision.' },
-        { planet: 'â™‡ Pluto', meaning: 'Intense inner transformation, power struggles internalized, profound healing potential.' }
+        { planet: '☿ Mercury', meaning: 'Deep thinker, revises before speaking, may struggle with expression but has profound inner wisdom.' },
+        { planet: '♀ Venus', meaning: 'Reevaluates love constantly, may attract karmic relationships, learns love through reflection.' },
+        { planet: '♂ Mars', meaning: 'Internalized anger, strategic action, may hesitate but acts with precision when ready.' },
+        { planet: '♃ Jupiter', meaning: 'Inner faith, philosophical depth, growth comes through introspection rather than external expansion.' },
+        { planet: '♄ Saturn', meaning: 'Heavy karmic lessons, deep discipline, may feel restricted but builds lasting inner strength.' },
+        { planet: '♅ Uranus', meaning: 'Unique internal insights, rebels quietly, innovation comes in bursts of inspiration.' },
+        { planet: '♆ Neptune', meaning: 'Deep dreamer, spiritual confusion possible, artistic genius through inner vision.' },
+        { planet: '♇ Pluto', meaning: 'Intense inner transformation, power struggles internalized, profound healing potential.' }
     ];
 
     // Random selection for demo
@@ -1267,7 +1478,7 @@ async function findNearestStation(baseDate,key,direction){let prev=null;let prev
 async function buildRetroData(baseDate){const jd=retroJulian(baseDate);const rows=[];for(const def of retroPlanetDefs){const data=await retroSpeedAt(jd,def.key);const sign=retroSign(data.longitude);const isStation=Math.abs(data.speed)<0.002;const isRetro=data.speed<0;const prev=await findNearestStation(baseDate,def.key,-1);const next=await findNearestStation(baseDate,def.key,1);rows.push({planet:def.key+" "+def.symbol,icon:def.symbol,status:isStation?"Station":isRetro?"Retrograde":"Direct",type:isStation?"station":isRetro?"retro":"direct",description:isRetro?def.meaning:"Moving direct: "+def.meaning.replace("turn inward for review","flows outward again"),start:isRetro?prev:prev,end:isRetro?next:next,stationRx:isRetro?prev:next,stationDirect:isRetro?next:prev,sign:sign.symbol+" "+sign.name,degree:sign.degree+"\u00B0",meaning:def.meaning,progress:isRetro?55:isStation?50:100,speed:data.speed})}return rows}
 function renderRetroFocus(){const retro=retrogrades.filter(r=>r.type==="retro");const station=retrogrades.filter(r=>r.type==="station");const title=document.getElementById("retroFocusTitle");const text=document.getElementById("retroFocusText");const chips=document.getElementById("retroFocusChips");if(!title||!text||!chips)return;title.textContent=retro.length?retro.length+" planets retrograde now":station.length?"Station focus":"No major retrogrades now";const focusItems=retro.length?retro:station.slice(0,2);chips.innerHTML=focusItems.length?focusItems.map(r=>'<span class="natal-retro-chip">'+r.icon+' '+r.planet.replace(r.icon,"").trim()+'</span>').join(""):'<span class="natal-retro-chip" style="color:#4ade80;border-color:rgba(74,222,128,.35);background:rgba(74,222,128,.12)">Direct flow</span>';if(retro.length){const names=retro.map(r=>r.planet.replace(r.icon,"").trim()).join(", ");text.innerHTML="<strong>Focus:</strong> "+names+" are asking for review, patience and inner adjustment. Use this period for editing choices, cleaning old patterns and noticing where life slows down on purpose."}else if(station.length){text.innerHTML="<strong>Focus:</strong> Station energy is louder than usual. Move slowly around decisions and watch what starts changing direction."}else{text.innerHTML="<strong>Focus:</strong> The sky is mostly direct. Use this period for outward movement, decisions and visible progress."}}
 async function renderLiveRetro(){const now=new Date();try{const data=await buildRetroData(now);setCalcSourceStatus("Local Swiss Ephemeris");retrogrades.splice(0,retrogrades.length,...data);document.getElementById('retroList').innerHTML='';document.getElementById('stationList').innerHTML='';document.getElementById('stationPlanetList').innerHTML='';document.querySelector('.section-title').textContent='ACTIVE RETROGRADES';renderRetro('stationPlanetList',null,'station-details');filterRetro('retro',document.querySelector('.filter-tab'));renderRetroFocus();renderStations()}catch(e){if(e&&e.code!=="SWISSEPH_UNAVAILABLE")console.warn("Live retrograde calculation failed, using bundled fallback.",e);setCalcSourceStatus("browser formulas");document.getElementById('retroList').innerHTML='';renderRetro('stationPlanetList',null,'station-details');filterRetro('retro',document.querySelector('.filter-tab'));renderRetroFocus();renderStations()}}
-async function calculateNatalRetro(dateValue,timeValue){const resultDiv=document.getElementById('natalResult');const listDiv=document.getElementById('natalRetroList');const meaningDiv=document.getElementById('natalMeaning');try{const date=parseRetroDate(dateValue);const time=parseRetroTime(timeValue);const jd=retroJulian(retroDateFromInput(date,time));const selected=[];for(const def of retroPlanetDefs){const data=await retroSpeedAt(jd,def.key);if(data.speed<0)selected.push(def)}if(selected.length===0){listDiv.innerHTML='<span class="natal-retro-chip" style="color:#4ade80;border-color:rgba(74,222,128,.35);background:rgba(74,222,128,.12)">No natal retrogrades</span>';meaningDiv.innerHTML='<strong style="color:#FFD700">Natal Retrograde Theme:</strong> Your chart has no major natal retrograde planets in this set. Retrograde lessons may arrive more through transits than as a constant natal signature.'}else{listDiv.innerHTML=selected.map(s=>`<span class="natal-retro-chip">${s.symbol} ${s.key}</span>`).join('');meaningDiv.innerHTML='<strong style="color:#FFD700">Natal Retrograde Theme:</strong> '+(selected.length>2?'Multiple natal retrogrades show a strongly reflective chart. Growth tends to come from inner timing, review and private integration.':'A focused natal retrograde signature shows where energy works inward first: '+selected.map(s=>s.key).join(', ')+'.')}resultDiv.classList.add('show')}catch(e){if(e&&e.code==="SWISSEPH_UNAVAILABLE"){listDiv.innerHTML='<span class="natal-retro-chip">â˜¿ Mercury</span>';meaningDiv.innerHTML='<strong style="color:#FFD700">Natal Retrograde Theme:</strong> Detailed natal retrograde calculation is available in the app/server view. This view is using fallback retrograde guidance.';resultDiv.classList.add('show');return}alert('Natal retrograde could not be calculated.')}}
+async function calculateNatalRetro(dateValue,timeValue){const resultDiv=document.getElementById('natalResult');const listDiv=document.getElementById('natalRetroList');const meaningDiv=document.getElementById('natalMeaning');try{const date=parseRetroDate(dateValue);const time=parseRetroTime(timeValue);const jd=retroJulian(retroDateFromInput(date,time));const selected=[];for(const def of retroPlanetDefs){const data=await retroSpeedAt(jd,def.key);if(data.speed<0)selected.push(def)}if(selected.length===0){listDiv.innerHTML='<span class="natal-retro-chip" style="color:#4ade80;border-color:rgba(74,222,128,.35);background:rgba(74,222,128,.12)">No natal retrogrades</span>';meaningDiv.innerHTML='<strong style="color:#FFD700">Natal Retrograde Theme:</strong> Your chart has no major natal retrograde planets in this set. Retrograde lessons may arrive more through transits than as a constant natal signature.'}else{listDiv.innerHTML=selected.map(s=>`<span class="natal-retro-chip"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, '${s.key}')" aria-label="Explain ${s.key} natal retrograde">?</button> ${s.symbol} ${s.key}</span>`).join('');meaningDiv.innerHTML='<strong style="color:#FFD700">Natal Retrograde Theme:</strong> '+(selected.length>2?'Multiple natal retrogrades show a strongly reflective chart. Growth tends to come from inner timing, review and private integration.':'A focused natal retrograde signature shows where energy works inward first: '+selected.map(s=>s.key).join(', ')+'.')}resultDiv.classList.add('show')}catch(e){if(e&&e.code==="SWISSEPH_UNAVAILABLE"){listDiv.innerHTML='<span class="natal-retro-chip">☿ Mercury</span>';meaningDiv.innerHTML='<strong style="color:#FFD700">Natal Retrograde Theme:</strong> Detailed natal retrograde calculation is available in the app/server view. This view is using fallback retrograde guidance.';resultDiv.classList.add('show');return}alert('Natal retrograde could not be calculated.')}}
 function checkNatalRetro(){const date=document.getElementById('natalDate').value;const time=document.getElementById('natalTime').value;if(!date){alert('Please enter your birth date');return}calculateNatalRetro(date,time)}
 function refreshRetro(){renderLiveRetro()}
 function goBack(){const date=document.getElementById('natalDate').value;const time=document.getElementById('natalTime').value;const last=window.AppSharedState?AppSharedState.lastAstroInput():null;const city=last&&last.city?last.city:"";if(window.AppSharedState)AppSharedState.saveLastAstroInput({date,time,city});let url='chart.html';if(date){url+='?date='+encodeURIComponent(date);if(time)url+='&time='+encodeURIComponent(time);if(city)url+='&city='+encodeURIComponent(city)}window.location.href=url}

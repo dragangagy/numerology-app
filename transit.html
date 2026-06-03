@@ -1405,7 +1405,12 @@ const transitPlanetMeanings = {
   Saturn:"Saturn transits test, slow down, mature and ask for responsibility, boundaries and structure.",
   Uranus:"Uranus transits disrupt routines and awaken freedom, change, originality and independence.",
   Neptune:"Neptune transits dissolve certainty and increase dreams, sensitivity, spirituality or confusion.",
-  Pluto:"Pluto transits intensify, expose hidden material and push deep transformation."
+  Pluto:"Pluto transits intensify, expose hidden material and push deep transformation.",
+  ASC:"The Ascendant describes identity, body, first impression and instinctive self-presentation.",
+  MC:"The MC describes career, reputation, public direction and long-term achievement.",
+  DSC:"The Descendant describes partnership, attraction patterns and one-to-one mirrors.",
+  IC:"The IC describes home, family roots, privacy and emotional foundation.",
+  "North Node":"The North Node points toward growth, destiny, unfamiliar development and future direction."
 };
 const transitSignMeanings = {
   Aries:"Aries acts directly and quickly.",
@@ -1423,14 +1428,72 @@ const transitSignMeanings = {
 };
 const transitAspectMeanings = {
   Conjunction:"Conjunction strongly blends two planetary themes. It is direct, noticeable and often starts a new cycle.",
+  Conjunct:"Conjunction strongly blends two planetary themes. It is direct, noticeable and often starts a new cycle.",
   Sextile:"Sextile is supportive, useful and cooperative. It works best when the person chooses to use it.",
   Square:"Square creates pressure and friction. It can feel tense, but it pushes action and growth.",
   Trine:"Trine flows naturally. It feels easier, supportive and familiar.",
   Opposition:"Opposition creates polarity. The person learns balance between two needs, often through other people."
 };
+const transitReadingData = {
+  Sun:{keywords:["confidence","visibility","identity","personal direction"], action:"show up honestly and choose from self-respect"},
+  Moon:{keywords:["mood","instinct","body rhythm","emotional response"], action:"notice emotional triggers before reacting"},
+  Mercury:{keywords:["thinking","messages","decisions","conversation"], action:"write things down and clarify the facts"},
+  Venus:{keywords:["love","pleasure","values","social ease"], action:"choose what feels harmonious without avoiding truth"},
+  Mars:{keywords:["drive","conflict","courage","desire"], action:"move energy through action instead of irritation"},
+  Jupiter:{keywords:["growth","faith","opportunity","excess"], action:"say yes wisely and keep promises realistic"},
+  Saturn:{keywords:["responsibility","limits","maturity","structure"], action:"simplify, commit and do the work step by step"},
+  Uranus:{keywords:["change","freedom","awakening","surprise"], action:"stay flexible and leave room for a new option"},
+  Neptune:{keywords:["sensitivity","dreams","confusion","spirituality"], action:"protect boundaries and listen to intuition without losing facts"},
+  Pluto:{keywords:["power","depth","shadow","transformation"], action:"release control patterns and choose honest renewal"},
+  ASC:{keywords:["identity","body","appearance","first impression"], action:"observe how you present yourself and what identity is changing"},
+  MC:{keywords:["career","reputation","authority","public direction"], action:"make choices that support long-term credibility"},
+  DSC:{keywords:["partnership","mirroring","attraction","agreement"], action:"notice what relationships are reflecting back"},
+  IC:{keywords:["home","roots","privacy","inner safety"], action:"care for the private foundation before pushing outward"},
+  "North Node":{keywords:["growth","destiny","future direction","new path"], action:"follow the unfamiliar signal that keeps repeating"}
+};
+const transitAspectReadingData = {
+  Conjunction:{tone:"direct and concentrated", feel:"the transit planet presses strongly into the natal point", advice:"begin a new cycle consciously"},
+  Conjunct:{tone:"direct and concentrated", feel:"the transit planet presses strongly into the natal point", advice:"begin a new cycle consciously"},
+  Sextile:{tone:"supportive and useful", feel:"an opportunity opens if the person participates", advice:"take the small practical step"},
+  Square:{tone:"tense and activating", feel:"pressure builds until something changes", advice:"act with maturity instead of forcing the outcome"},
+  Trine:{tone:"flowing and natural", feel:"support is available with less resistance", advice:"use the ease intentionally"},
+  Opposition:{tone:"polarized and relational", feel:"outside events or other people reveal the tension", advice:"look for balance instead of choosing only one side"}
+};
 
 function cleanTransitLabel(value){
   return String(value || "").replace(/[☉☽☿♀♂♃♄♅♆♇☌☍△□⚹]/g,"").replace(/\bNatal\b/g,"").trim();
+}
+function normalizeTransitAspectName(value){
+  const clean = cleanTransitLabel(value);
+  if(/^Conj/i.test(clean))return "Conjunction";
+  if(/^Sext/i.test(clean))return "Sextile";
+  if(/^Squ/i.test(clean))return "Square";
+  if(/^Tri/i.test(clean))return "Trine";
+  if(/^Opp/i.test(clean))return "Opposition";
+  return clean || "Aspect";
+}
+function transitKeyword(name, index){
+  const data = transitReadingData[name];
+  return data && data.keywords[index] ? data.keywords[index] : name;
+}
+function transitAction(name){
+  const data = transitReadingData[name];
+  return data && data.action ? data.action : "respond with awareness instead of automatic reaction";
+}
+function transitOrbStrength(orb){
+  const text = String(orb || "");
+  const match = /([0-9]+(?:\.[0-9]+)?)/.exec(text);
+  const value = match ? parseFloat(match[1]) : NaN;
+  if(!isFinite(value))return "This transit is active in the current chart.";
+  if(value <= 1)return "This is very close to exact, so it should feel strong and hard to ignore.";
+  if(value <= 3)return "This is within a strong working orb, so the theme is active and noticeable.";
+  return "This is a wider orb, so the theme may be softer, building or fading rather than exact.";
+}
+function transitTimingText(t){
+  if(!t)return "";
+  const exact = t.exact ? " Exact date: "+formatDate(t.exact)+"." : "";
+  const timing = t.timing ? " Timing: "+t.timing+"." : "";
+  return exact || timing ? "<p><strong>Timing:</strong>"+exact+timing+"</p>" : "";
 }
 function ensureTransitHelpModal(){
   let modal = document.getElementById("transitHelpModal");
@@ -1460,11 +1523,26 @@ function closeTransitHelp(){
 }
 function openNatalTransitHelp(name, longitude, house){
   const sign = signOf(Number(longitude) || 0);
+  const houseAreas = {
+    1:"identity, appearance and personal direction",
+    2:"values, money and self-worth",
+    3:"thinking, communication and learning",
+    4:"home, family and emotional roots",
+    5:"creativity, romance and joy",
+    6:"work habits, health and routine",
+    7:"partnership and one-to-one relationships",
+    8:"intimacy, shared resources and transformation",
+    9:"beliefs, travel and higher learning",
+    10:"career, reputation and public direction",
+    11:"friends, networks and future goals",
+    12:"solitude, dreams and hidden patterns"
+  };
   showTransitHelp(name+" in "+sign.name, 
+    "<p><strong>Quick reading:</strong> Natal "+name+" in "+sign.name+" shows how "+transitKeyword(name,0)+" and "+transitKeyword(name,1)+" naturally express through "+sign.name+" style.</p>"+
+    "<p><strong>Life area:</strong> House "+house+" brings this placement into "+(houseAreas[house] || "an important area of life")+". This is where transits to "+name+" will be felt most personally.</p>"+
+    "<p><strong>How to read it:</strong> When a transit activates this point, watch changes in "+transitKeyword(name,2)+" and "+transitKeyword(name,3)+".</p>"+
     "<p><strong>Planet:</strong> "+(transitPlanetMeanings[name] || "This planet describes one life function.")+"</p>"+
-    "<p><strong>Sign:</strong> "+(transitSignMeanings[sign.name] || "The sign shows the style of expression.")+"</p>"+
-    "<p><strong>House:</strong> This natal placement works most visibly through House "+house+" topics.</p>"+
-    "<p><strong>Simple reading:</strong> "+name+" expresses through "+sign.name+" style in House "+house+".</p>"
+    "<p><strong>Sign:</strong> "+(transitSignMeanings[sign.name] || "The sign shows the style of expression.")+"</p>"
   );
 }
 function openTransitAspectHelpByIndex(index){
@@ -1472,14 +1550,16 @@ function openTransitAspectHelpByIndex(index){
   if(!t)return;
   const transitName = cleanTransitLabel(t.transit);
   const natalName = cleanTransitLabel(t.natal);
-  const aspectName = cleanTransitLabel(t.aspect);
+  const aspectName = normalizeTransitAspectName(t.aspect);
+  const aspectData = transitAspectReadingData[aspectName] || {tone:"interactive", feel:"two chart themes influence each other", advice:"respond with awareness"};
   showTransitHelp(t.description || (transitName+" "+aspectName+" "+natalName),
-    "<p><strong>Transit planet:</strong> "+(transitPlanetMeanings[transitName] || "The moving planet brings current pressure or opportunity.")+"</p>"+
-    "<p><strong>Natal planet:</strong> "+(transitPlanetMeanings[natalName] || "The natal planet shows the part of the birth chart being activated.")+"</p>"+
-    "<p><strong>Aspect:</strong> "+(transitAspectMeanings[aspectName] || "The aspect shows how the two planetary themes interact.")+"</p>"+
-    "<p><strong>Orb:</strong> "+t.orb+". Smaller orb means stronger timing.</p>"+
-    "<p><strong>House:</strong> "+t.house+". This is where the transit is most likely to show up.</p>"+
-    "<p><strong>Meaning:</strong> "+t.meaning+"</p>"
+    "<p><strong>Quick reading:</strong> Transiting "+transitName+" "+aspectData.feel+" around natal "+natalName+". This creates a "+aspectData.tone+" period involving "+transitKeyword(transitName,0)+" and "+transitKeyword(natalName,0)+".</p>"+
+    "<p><strong>How it feels:</strong> The moving planet brings current events, moods or pressure. The natal point shows the part of the birth chart being activated. Here, "+transitName+" stimulates "+transitKeyword(natalName,1)+" through the theme of "+aspectName+".</p>"+
+    "<p><strong>What to do:</strong> "+transitAction(transitName)+". The aspect asks you to "+aspectData.advice+".</p>"+
+    "<p><strong>Strength:</strong> "+transitOrbStrength(t.orb)+"</p>"+
+    (t.house ? "<p><strong>Where it shows up:</strong> "+t.house+" themes are likely to carry the transit into daily life.</p>" : "")+
+    transitTimingText(t)+
+    "<p><strong>Meaning:</strong> "+(t.meaning || transitAspectMeanings[aspectName] || "This transit describes a temporary activation of the natal chart.")+"</p>"
   );
 }
 function openUpcomingTransitHelpByIndex(index){

@@ -7842,6 +7842,7 @@ function loadAppSettings(){
   const primaryAstrology = document.getElementById('appPrimaryAstrology');
   const tarotReversed = document.getElementById('appTarotReversedEnabled');
   const tarotRotate = document.getElementById('appTarotRotateReversed');
+  const helpButtons = document.getElementById('appHelpButtonsEnabled');
   if(lang) lang.value = 'en';
   if(sound) sound.checked = !!settings.soundEnabled;
   if(volume) volume.value = settings.volume ?? 35;
@@ -7849,7 +7850,8 @@ function loadAppSettings(){
   if(primaryAstrology) primaryAstrology.checked = settings.primaryPage === 'astrology';
   if(tarotReversed) tarotReversed.checked = settings.tarotReversedEnabled !== false;
   if(tarotRotate) tarotRotate.checked = settings.tarotRotateReversed !== false;
-  [lang, sound, volume, primaryNumerology, primaryAstrology, tarotReversed, tarotRotate].forEach(control => {
+  if(helpButtons) helpButtons.checked = settings.showHelpButtons !== false;
+  [lang, sound, volume, primaryNumerology, primaryAstrology, tarotReversed, tarotRotate, helpButtons].forEach(control => {
     if(control && !control.dataset.settingsBound){
       control.dataset.settingsBound = '1';
       control.addEventListener(control.type === 'range' ? 'input' : 'change', saveAppSettings);
@@ -7857,6 +7859,7 @@ function loadAppSettings(){
   });
   document.documentElement.lang = 'en';
   applyPrimaryPageSettings();
+  if(window.AppHelpSettings) AppHelpSettings.apply();
 }
 
 function saveAppSettings(){
@@ -7866,11 +7869,13 @@ function saveAppSettings(){
     volume: Number(document.getElementById('appVolume')?.value || 35),
     primaryPage: document.getElementById('appPrimaryAstrology')?.checked ? 'astrology' : 'numerology',
     tarotReversedEnabled: !!document.getElementById('appTarotReversedEnabled')?.checked,
-    tarotRotateReversed: !!document.getElementById('appTarotRotateReversed')?.checked
+    tarotRotateReversed: !!document.getElementById('appTarotRotateReversed')?.checked,
+    showHelpButtons: document.getElementById('appHelpButtonsEnabled') ? !!document.getElementById('appHelpButtonsEnabled').checked : getAppSettings().showHelpButtons !== false
   };
   window.localStorage.setItem('numerology_app_settings', JSON.stringify(settings));
   document.documentElement.lang = 'en';
   applyPrimaryPageSettings();
+  if(window.AppHelpSettings) AppHelpSettings.apply();
   syncAmbientAudio();
 }
 
@@ -9009,6 +9014,10 @@ function openAstro(){
       <div class="profile-setting-row">
         <span class="profile-options-title">Sound</span>
         <label class="profile-check-row" style="padding:0;"><input type="checkbox" id="appSoundEnabled"> On / Off</label>
+      </div>
+      <div class="profile-setting-row">
+        <span class="profile-options-title">Help ?</span>
+        <label class="profile-check-row" style="padding:0;"><input type="checkbox" id="appHelpButtonsEnabled"> Show / Hide</label>
       </div>
       <div class="profile-setting-row">
         <span class="profile-options-title">Volume</span>
