@@ -12,6 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pyramid App">
 <script src="app-shared-state.js"></script>
+<script src="world-cities.js"></script>
 <script src="app-notification-open.js"></script>
 
 <style>
@@ -1245,6 +1246,15 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
   min-height:0!important;
 }
 
+
+
+/* ===== LUNAR HELP TWO SECTION CONTENT ===== */
+.lunar-help-section{border-top:1px solid rgba(255,215,0,.16);padding-top:10px;margin-top:10px}
+.lunar-help-section:first-child{border-top:0;padding-top:0;margin-top:0}
+.lunar-help-section-title{color:#f6cb71;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.lunar-help-description{color:#94a3b8!important}
+.lunar-help-meaning{color:#fff!important}
+.lunar-help-description p,.lunar-help-meaning p{margin:8px 0}
 </style>
 </head>
 <body>
@@ -1789,7 +1799,7 @@ function setInputState(state){document.getElementById("dateInput").value=state.d
 function currentInputState(){return{date:document.getElementById("dateInput").value,time:document.getElementById("timeInput").value,city:document.getElementById("cityInput").value}}
 function parseDateValue(){const m=/^(\d{2})\.(\d{2})\.(\d{4})$/.exec(normalizeDateForCalc(document.getElementById("dateInput").value));if(!m)throw new Error("Use date format DD.MM.YYYY");return{day:+m[1],month:+m[2],year:+m[3]}}
 function parseTimeValue(){const m=/^(\d{2}):(\d{2})$/.exec(normalizeTimeForCalc(document.getElementById("timeInput").value||"12:00"));return m?{hours:+m[1],minutes:+m[2]}:{hours:12,minutes:0}}
-function setupCityAutocomplete(){const input=document.getElementById("cityInput"),dropdown=document.getElementById("cityDropdown");input.addEventListener("input",function(){const val=this.value.toLowerCase();if(!val){dropdown.style.display="none";return}const matches=worldCities.filter(c=>c.toLowerCase().includes(val)).slice(0,10);dropdown.innerHTML=matches.map(c=>'<div onclick="selectCity(\''+c.replace(/'/g,"\\'")+'\')" style="padding:8px 12px;cursor:pointer;color:white;font-size:12px;border-bottom:1px solid #334155">'+c+'</div>').join("");dropdown.style.display=matches.length?"block":"none"});document.addEventListener("click",e=>{if(!input.contains(e.target)&&!dropdown.contains(e.target))dropdown.style.display="none"})}
+function setupCityAutocomplete(){const input=document.getElementById("cityInput"),dropdown=document.getElementById("cityDropdown");input.addEventListener("input",function(){const val=this.value.toLowerCase();if(!val){dropdown.style.display="none";return}const matches=window.WorldCities?WorldCities.search(this.value,10):worldCities.filter(c=>c.toLowerCase().includes(val)).slice(0,10);dropdown.innerHTML=matches.map(c=>'<div onclick="selectCity(\''+c.replace(/'/g,"\\'")+'\')" style="padding:8px 12px;cursor:pointer;color:white;font-size:12px;border-bottom:1px solid #334155">'+c+'</div>').join("");dropdown.style.display=matches.length?"block":"none"});document.addEventListener("click",e=>{if(!input.contains(e.target)&&!dropdown.contains(e.target))dropdown.style.display="none"})}
 function selectCity(city){document.getElementById("cityInput").value=city;document.getElementById("cityDropdown").style.display="none"}
 function getSavedDates(){let saved=localStorage.getItem("numerology_dates");let dates=saved?JSON.parse(saved):[];try{const profile=JSON.parse(localStorage.getItem("numerology_owner_profile")||"null");const name=[profile&&profile.firstName,profile&&profile.lastName].filter(Boolean).join(" ").trim();if(name){dates=dates.filter(item=>item.id!=="owner-profile"&&!item.ownerProfile);dates.unshift({id:"owner-profile",ownerProfile:true,locked:true,name:name,date:profile.birthDate||"",time:profile.birthTime||"",city:profile.birthCity||"",isTwin:!!profile.isTwin,isTwin3:!!profile.isTwin3})}}catch(e){}return dates}
 function updateSavedCount(){const badge=document.getElementById("savedCount");if(!badge)return;const count=getSavedDates().length;badge.textContent=count;badge.style.display=count>0?"flex":"none"}
@@ -1863,12 +1873,12 @@ function ensureLunarHelpModal(){
   document.body.appendChild(modal);
   return modal;
 }
-function showLunarHelp(title,body){const modal=ensureLunarHelpModal();document.getElementById('lunarHelpTitle').textContent=title;document.getElementById('lunarHelpBody').innerHTML=body;modal.style.display='flex'}
+function showLunarHelp(title,description,meaning){const modal=ensureLunarHelpModal();if(meaning===undefined){meaning=description;description='This help item explains one layer of the lunar reading system and how it should be read with the phase, sign, day or cycle.'}function block(value){return /<\w+/i.test(String(value||''))?String(value||''):'<p>'+String(value||'')+'</p>'}document.getElementById('lunarHelpTitle').textContent=title;document.getElementById('lunarHelpBody').innerHTML='<div class="lunar-help-section"><div class="lunar-help-section-title">Description</div><div class="lunar-help-description">'+block(description)+'</div></div><div class="lunar-help-section"><div class="lunar-help-section-title">Meaning / Interpretation</div><div class="lunar-help-meaning">'+block(meaning)+'</div></div>';modal.style.display='flex'}
 function closeLunarHelp(){const modal=document.getElementById('lunarHelpModal');if(modal)modal.style.display='none'}
-function openLunarHelp(event,key){if(event)event.stopPropagation();const data=lunarHelpText[key]||lunarHelpText.currentPhase;showLunarHelp(data.title,'<p>'+data.text+'</p>')}
-function openLunarCardHelp(event,button){if(event)event.stopPropagation();const card=button&&button.closest('.info-card');const title=card&&card.querySelector('.info-title')?card.querySelector('.info-title').textContent.trim():'Lunar meaning';const text=card&&card.querySelector('.info-text')?card.querySelector('.info-text').textContent.trim():'';showLunarHelp(title,'<p>'+text+'</p><p>This is one layer of the Moon phase. Read it together with the phase name and lunar day for a fuller interpretation.</p>')}
-function openPhaseHelp(event,key){if(event)event.stopPropagation();const p=phases[key];if(!p)return;showLunarHelp(p.name,'<p><strong>'+p.illumination+'</strong></p><p>'+p.energy+'.</p><p>'+p.lunarText+'</p>')}
-function openMoonSignHelp(event,button){if(event)event.stopPropagation();const card=button&&button.closest('.moon-sign-card');const sign=card&&card.querySelector('.moon-sign-name')?card.querySelector('.moon-sign-name').textContent.trim():'Moon sign';const time=card&&card.querySelector('.moon-sign-time')?card.querySelector('.moon-sign-time').textContent.trim():'';showLunarHelp('Moon in '+sign,'<p><strong>'+time+'</strong></p><p>The Moon in '+sign+' colors mood, instinct and daily needs. It shows the emotional weather for that short window.</p>')}
+function openLunarHelp(event,key){if(event)event.stopPropagation();const data=lunarHelpText[key]||lunarHelpText.currentPhase;showLunarHelp(data.title,'This section explains what this lunar area represents in the reading: phase, timing, instinct, emotional weather or monthly cycle.','<p>'+data.text+'</p>')}
+function openLunarCardHelp(event,button){if(event)event.stopPropagation();const card=button&&button.closest('.info-card');const title=card&&card.querySelector('.info-title')?card.querySelector('.info-title').textContent.trim():'Lunar meaning';const text=card&&card.querySelector('.info-text')?card.querySelector('.info-text').textContent.trim():'';showLunarHelp(title,'This card isolates one practical layer of the Moon phase, such as energy, emotions, focus or spiritual tone.','<p>'+text+'</p><p>This is one layer of the Moon phase. Read it together with the phase name and lunar day for a fuller interpretation.</p>')}
+function openPhaseHelp(event,key){if(event)event.stopPropagation();const p=phases[key];if(!p)return;showLunarHelp(p.name,'A Moon phase describes where the lunar cycle is between beginning, growth, fullness, release and rest.','<p><strong>'+p.illumination+'</strong></p><p>'+p.energy+'.</p><p>'+p.lunarText+'</p>')}
+function openMoonSignHelp(event,button){if(event)event.stopPropagation();const card=button&&button.closest('.moon-sign-card');const sign=card&&card.querySelector('.moon-sign-name')?card.querySelector('.moon-sign-name').textContent.trim():'Moon sign';const time=card&&card.querySelector('.moon-sign-time')?card.querySelector('.moon-sign-time').textContent.trim():'';showLunarHelp('Moon in '+sign,'Moon signs show the short-term emotional weather as the Moon moves through the zodiac.','<p><strong>'+time+'</strong></p><p>The Moon in '+sign+' colors mood, instinct and daily needs. It shows the emotional weather for that short window.</p>')}
 function openEclipseHelp(event,button){if(event)event.stopPropagation();const card=button&&button.closest('.eclipse-card');const type=card&&card.querySelector('.eclipse-type')?card.querySelector('.eclipse-type').textContent.trim():'Eclipse';const date=card&&card.querySelector('.eclipse-date')?card.querySelector('.eclipse-date').textContent.trim():'';const desc=card&&card.querySelector('.eclipse-desc')?card.querySelector('.eclipse-desc').textContent.trim():'';showLunarHelp(type,'<p><strong>'+date+'</strong></p><p>'+desc+'</p><p>Eclipses are stronger lunar events. They often show a turning point rather than an ordinary mood shift.</p>')}
 window.closeLunarHelp=closeLunarHelp;
 window.openLunarHelp=openLunarHelp;

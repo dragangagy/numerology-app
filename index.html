@@ -12,6 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pyramid App">
 <script src="app-shared-state.js"></script>
+<script src="world-cities.js"></script>
 <script src="app-notification-open.js"></script>
 <script>
 try{
@@ -3169,7 +3170,7 @@ function generateNatalChart() {
   let jd = getJulianDay(year, month, day, hours, minutes);
 
   // Calculate Ascendant
-  let coords = cityCoords[city];
+  let coords = getCityCoords(city);
   let ascendantDeg;
   if(coords) {
     ascendantDeg = calculateAscendant(year, month, day, hours, minutes, coords.lat, coords.lon);
@@ -3861,9 +3862,7 @@ function setupCityAutocomplete(inputId = "cityInput", dropdownId = "cityDropdown
       return;
     }
 
-    let matches = worldCities.filter(city => 
-      city.toLowerCase().includes(val)
-    ).slice(0, 10); // max 10 results
+    let matches = window.WorldCities ? WorldCities.search(this.value, 10) : worldCities.filter(city => city.toLowerCase().includes(val)).slice(0, 10); // max 10 results
 
     if(dropdown){
       if(matches.length > 0){
@@ -3914,6 +3913,12 @@ function selectCityFor(inputId, dropdownId, city){
 // ðŸ”¥ SUB-ZODIAC CALCULATION (Ascendant/Rising Sign) - TAÄŒNA ASTRONOMSKA VERZIJA
 
 // TaÄne geografske koordinate gradova
+
+function getCityCoords(city){
+  const raw = String(city || "").trim();
+  const base = raw.split(",")[0].trim();
+  return (window.WorldCities && (WorldCities.find(raw) || WorldCities.find(base))) || cityCoords[raw] || cityCoords[base] || cityCoords.Belgrade || cityCoords["Belgrade"];
+}
 const cityCoords = {
   "Belgrade": { lat: 44.7866, lon: 20.4489 },
   "New York": { lat: 40.7128, lon: -74.0060 },
@@ -4436,7 +4441,7 @@ function getSubZodiac(day, month, timeStr, city, year) {
   }
 
   // Uzmi koordinate grada
-  let coords = cityCoords[city];
+  let coords = getCityCoords(city);
   if (!coords) {
     return getSubZodiacFallback(day, month, timeStr, city);
   }

@@ -247,12 +247,16 @@
 
 
   function notificationTabForTopic(topic){
-    const numerology = ["pythagoreanDay","pyramidDay","personalDay","personalMonth","personalYear","dailyNumerologyAdvice","challengingNumerologyDay","favorableNumerologyDay","master11Day","master22Day","repeatingCodeDay","importantDay","avoidBigDecisions","goodForAction","goodForRest"];
+    const pythagorean = ["pythagoreanDay","repeatingCodeDay","master11Day","master22Day"];
+    const analysis = ["personalDay","personalMonth","personalYear","dailyNumerologyAdvice","challengingNumerologyDay","favorableNumerologyDay","importantDay","avoidBigDecisions","goodForAction","goodForRest"];
     const books = ["newBook","freePdfReminder","freePdf","bookRecommendation","seasonBookRelease"];
-    const settings = ["ownerProfileReminder","saveProfileReminder","dailySummary","morningGuidance","eveningReflection","weeklySummary","monthlySummary"];
+    const settings = ["saveProfileReminder","dailySummary","morningGuidance","eveningReflection","weeklySummary","monthlySummary"];
     if(topic==="tarotDailyCard")return "daily";
-    if(numerology.includes(topic))return topic==="pyramidDay" ? "analysis" : "pitagora";
+    if(topic==="pyramidDay")return "pyramid";
+    if(pythagorean.includes(topic))return "pitagora";
+    if(analysis.includes(topic))return "analysis";
     if(books.includes(topic))return "store";
+    if(topic==="ownerProfileReminder")return "ownerProfile";
     if(settings.includes(topic))return "home";
     return "home";
   }
@@ -293,6 +297,7 @@
     if(event.image)params.set("notificationImage", event.image);
     params.set("notificationTab", notificationTabForTopic(event.topic || ""));
     const page = notificationPageForTopic(event.topic || "");
+    params.set("notificationPage", page);
     const base = location.href.split("#")[0].split("?")[0].replace(/[^\/\\]*$/, page);
     return base+"?"+params.toString();
   }
@@ -300,16 +305,24 @@
   function withNotificationOpenData(events, owner){
     return events.map(event => {
       const imageUrl = event.image ? new URL(event.image, location.href).href : "";
+      const ownerInput = {
+        date: owner && owner.birthDate || "",
+        time: owner && owner.birthTime || "",
+        city: owner && (owner.currentCity || owner.birthCity) || "",
+        isTwin: !!(owner && owner.isTwin),
+        isTwin3: !!(owner && owner.isTwin3)
+      };
       const route = {
         page:notificationPageForTopic(event.topic || ""),
         tab:notificationTabForTopic(event.topic || ""),
         topic:event.topic || "",
         title:event.title || "",
         body:event.body || "",
-        image:event.image || ""
+        image:event.image || "",
+        ownerInput
       };
       const openUrl = notificationOpenUrl(event, owner);
-      return {...event,imageUrl:imageUrl || event.image || "",route,openUrl,url:openUrl};
+      return {...event,imageUrl:imageUrl || event.image || "",route,ownerInput,openUrl,url:openUrl};
     });
   }
 

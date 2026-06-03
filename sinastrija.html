@@ -12,6 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pyramid App">
 <script src="app-shared-state.js"></script>
+<script src="world-cities.js"></script>
 <script src="app-notification-open.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -41,6 +42,16 @@ body{font-family:Arial,sans-serif;background:#0f172a;color:white;text-align:cent
 .persons-card{background:transparent;border:none;border-radius:0;padding:6px 0 4px;margin-top:8px}
 .persons-card .section-title{display:none}
 .section-title{color:#FFD700;font-size:18px;margin-bottom:14px;text-shadow:0 0 8px rgba(255,215,0,0.2)}
+.syn-collapsible-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.syn-collapsible-title{display:flex;align-items:center;gap:8px;min-width:0}
+.syn-collapsible-header .section-title{margin:0!important;padding-left:0!important;text-align:left!important}
+.syn-collapse-toggle{flex:0 0 auto!important;width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,215,0,.55);background:rgba(15,23,42,.88);color:#FFD700;font-size:20px;font-weight:900;line-height:24px;padding:0;cursor:pointer;box-shadow:0 0 8px rgba(255,215,0,.18)}
+.syn-collapse-toggle:hover{border-color:#FFD700;color:#fff4b0;box-shadow:0 0 12px rgba(255,215,0,.32);transform:none}
+.syn-collapsible-card.collapsed .syn-collapsible-body{display:none}
+.syn-collapsible-card.collapsed{padding-top:7px!important;padding-bottom:7px!important;margin-top:6px!important}
+.syn-collapsible-card.collapsed + .syn-collapsible-card.collapsed{margin-top:4px!important}
+.syn-collapsible-card.collapsed .syn-collapsible-header{margin-bottom:0!important;min-height:28px}
+.syn-collapsible-card.collapsed .section-title{line-height:28px!important;margin:0!important}
 
 /* ===== PERSON INPUTS ===== */
 .persons-wrapper{display:flex;flex-direction:column;gap:18px;margin-top:10px}
@@ -450,6 +461,15 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 .syn-help-panel p{color:#cbd5e1;font-size:13px;line-height:1.45;margin:8px 0}
 .syn-help-panel strong{color:#FFD700}
 
+
+
+/* ===== SYNASTRY HELP TWO SECTION CONTENT ===== */
+.syn-help-section{border-top:1px solid rgba(255,215,0,.16);padding-top:10px;margin-top:10px}
+.syn-help-section:first-child{border-top:0;padding-top:0;margin-top:0}
+.syn-help-section-title{color:#f6cb71;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.syn-help-description{color:#94a3b8!important}
+.syn-help-meaning{color:#fff!important}
+.syn-help-description p,.syn-help-meaning p{margin:8px 0}
 </style>
 </head>
 <body>
@@ -566,8 +586,15 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 </div>
 
 <!-- ===== PLANET POSITIONS ===== -->
-<div class="card">
-<div class="section-title">PLANET POSITIONS <button class="syn-help-btn" type="button" onclick="openSynGeneralHelp(event, 'positions')" aria-label="Explain PLANET POSITIONS">?</button></div>
+<div class="card syn-collapsible-card collapsed" data-syn-collapse="positions">
+<div class="syn-collapsible-header">
+<div class="syn-collapsible-title">
+<button class="syn-help-btn" type="button" onclick="openSynGeneralHelp(event, 'positions')" aria-label="Explain Planet Positions">?</button>
+<div class="section-title">PLANET POSITIONS</div>
+</div>
+<button class="syn-collapse-toggle" type="button" onclick="toggleSynCollapse(this)" aria-expanded="false" aria-label="Show Planet Positions">+</button>
+</div>
+<div class="syn-collapsible-body">
 <div class="planet-grid">
 <div class="planet-compare">
 <div class="planet-compare-title">☉ Person A</div>
@@ -589,10 +616,18 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 </div>
 </div>
 </div>
+</div>
 
 <!-- ===== HOUSE OVERLAYS ===== -->
-<div class="card">
-<div class="section-title">HOUSE OVERLAYS <button class="syn-help-btn" type="button" onclick="openSynGeneralHelp(event, 'houses')" aria-label="Explain HOUSE OVERLAYS">?</button></div>
+<div class="card syn-collapsible-card collapsed" data-syn-collapse="houses">
+<div class="syn-collapsible-header">
+<div class="syn-collapsible-title">
+<button class="syn-help-btn" type="button" onclick="openSynGeneralHelp(event, 'houses')" aria-label="Explain House Overlays">?</button>
+<div class="section-title">HOUSE OVERLAYS</div>
+</div>
+<button class="syn-collapse-toggle" type="button" onclick="toggleSynCollapse(this)" aria-expanded="false" aria-label="Show House Overlays">+</button>
+</div>
+<div class="syn-collapsible-body">
 <div class="house-grid">
 <div class="house-card"><button class="syn-help-btn" type="button" onclick="openSynHouseHelp(event, this)" aria-label="Explain house overlay">?</button><div class="house-num">1st House</div><div class="house-planet">Person B Sun</div><div class="house-desc">Partner energizes your identity and self-expression</div></div>
 <div class="house-card"><button class="syn-help-btn" type="button" onclick="openSynHouseHelp(event, this)" aria-label="Explain house overlay">?</button><div class="house-num">4th House</div><div class="house-planet">Person B Moon</div><div class="house-desc">Emotional security and home life connection</div></div>
@@ -602,10 +637,18 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 <div class="house-card"><button class="syn-help-btn" type="button" onclick="openSynHouseHelp(event, this)" aria-label="Explain house overlay">?</button><div class="house-num">8th House</div><div class="house-planet">Person A Pluto</div><div class="house-desc">Deep transformation and intimacy</div></div>
 </div>
 </div>
+</div>
 
 <!-- ===== KEY ASPECTS ===== -->
-<div class="card">
-<div class="section-title">KEY ASPECTS <button class="syn-help-btn" type="button" onclick="openSynGeneralHelp(event, 'aspects')" aria-label="Explain KEY ASPECTS">?</button></div>
+<div class="card syn-collapsible-card collapsed" data-syn-collapse="aspects">
+<div class="syn-collapsible-header">
+<div class="syn-collapsible-title">
+<button class="syn-help-btn" type="button" onclick="openSynGeneralHelp(event, 'aspects')" aria-label="Explain Key Aspects">?</button>
+<div class="section-title">KEY ASPECTS</div>
+</div>
+<button class="syn-collapse-toggle" type="button" onclick="toggleSynCollapse(this)" aria-expanded="false" aria-label="Show Key Aspects">+</button>
+</div>
+<div class="syn-collapsible-body">
 <div class="aspect-tabs">
 <div class="aspect-tab active" onclick="filterAspects('all', this)">All</div>
 <div class="aspect-tab" onclick="filterAspects('good', this)">Harmonious</div>
@@ -628,10 +671,18 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 <div class="aspect-item neutral" data-type="neutral" data-major="false"><button class="syn-help-btn" type="button" onclick="openSynAspectHelp(event, this)" aria-label="Explain aspect">?</button><div class="left"><div class="aspect">⚷ Chiron Trine ☉ Sun</div><div class="description">Healing through relationship. Old wounds find comfort in each other.</div></div><div class="score">+5</div></div>
 </div>
 </div>
+</div>
 
 <!-- ===== COMPOSITE CHART ===== -->
-<div class="card">
-<div class="section-title">COMPOSITE CHART <button class="syn-help-btn" type="button" onclick="openSynGeneralHelp(event, 'composite')" aria-label="Explain COMPOSITE CHART">?</button></div>
+<div class="card syn-collapsible-card collapsed" data-syn-collapse="composite">
+<div class="syn-collapsible-header">
+<div class="syn-collapsible-title">
+<button class="syn-help-btn" type="button" onclick="openSynGeneralHelp(event, 'composite')" aria-label="Explain Composite Chart">?</button>
+<div class="section-title">COMPOSITE CHART</div>
+</div>
+<button class="syn-collapse-toggle" type="button" onclick="toggleSynCollapse(this)" aria-expanded="false" aria-label="Show Composite Chart">+</button>
+</div>
+<div class="syn-collapsible-body">
 <div class="composite-mini">
 <div class="composite-info">
 <div class="composite-info-item"><button class="syn-help-btn" type="button" onclick="openSynCompositeHelp(event, this)" aria-label="Explain composite item">?</button><span class="composite-info-label">Composite Sun</span><span class="composite-info-value">&#9805; Virgo 13&#176;</span></div>
@@ -644,6 +695,7 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 <div class="composite-info-item"><button class="syn-help-btn" type="button" onclick="openSynCompositeHelp(event, this)" aria-label="Explain composite item">?</button><span class="composite-info-label">Emotional Tone</span><span class="composite-info-value">Diplomatic & Fair</span></div>
 <div class="composite-info-item"><button class="syn-help-btn" type="button" onclick="openSynCompositeHelp(event, this)" aria-label="Explain composite item">?</button><span class="composite-info-label">Public Face</span><span class="composite-info-value">Ambitious & Practical</span></div>
 <div class="composite-info-item"><button class="syn-help-btn" type="button" onclick="openSynCompositeHelp(event, this)" aria-label="Explain composite item">?</button><span class="composite-info-label">Life Direction</span><span class="composite-info-value">Partnership Focused</span></div>
+</div>
 </div>
 </div>
 </div>
@@ -699,6 +751,11 @@ let skipSavePrompt=false;
 // ===== CITY DATA =====
 const worldCities=["Belgrade","Zagreb","London","Paris","Berlin","Moscow","New York","Los Angeles","Chicago","Toronto","Sydney","Tokyo","Dubai","Istanbul","Rome","Madrid","Vienna","Budapest","Athens","Bucharest","Sofia","Ljubljana","Prague","Warsaw","Amsterdam","Zurich","Stockholm","Oslo","Dublin","Lisbon","Cairo","Johannesburg","Singapore","Hong Kong","Seoul","Beijing","Mumbai","New Delhi","Mexico City","Buenos Aires","Sao Paulo"];
 
+function getCityCoords(city){
+const raw=String(city||"").trim();
+const base=raw.split(",")[0].trim();
+return (window.WorldCities&&(WorldCities.find(raw)||WorldCities.find(base)))||cityCoords[raw]||cityCoords[base]||cityCoords.Belgrade;
+}
 const cityCoords={"Belgrade":{lat:44.7866,lon:20.4489,tz:"Europe/Belgrade"},"Zagreb":{lat:45.815,lon:15.9819,tz:"Europe/Zagreb"},"London":{lat:51.5074,lon:-0.1278,tz:"Europe/London"},"Paris":{lat:48.8566,lon:2.3522,tz:"Europe/Paris"},"Berlin":{lat:52.52,lon:13.405,tz:"Europe/Berlin"},"Moscow":{lat:55.7558,lon:37.6173,tz:"Europe/Moscow"},"New York":{lat:40.7128,lon:-74.006,tz:"America/New_York"},"Los Angeles":{lat:34.0522,lon:-118.2437,tz:"America/Los_Angeles"},"Chicago":{lat:41.8781,lon:-87.6298,tz:"America/Chicago"},"Toronto":{lat:43.6532,lon:-79.3832,tz:"America/Toronto"},"Sydney":{lat:-33.8688,lon:151.2093,tz:"Australia/Sydney"},"Tokyo":{lat:35.6762,lon:139.6503,tz:"Asia/Tokyo"},"Dubai":{lat:25.2048,lon:55.2708,tz:"Asia/Dubai"},"Istanbul":{lat:41.0082,lon:28.9784,tz:"Europe/Istanbul"},"Rome":{lat:41.9028,lon:12.4964,tz:"Europe/Rome"},"Madrid":{lat:40.4168,lon:-3.7038,tz:"Europe/Madrid"},"Vienna":{lat:48.2082,lon:16.3738,tz:"Europe/Vienna"},"Budapest":{lat:47.4979,lon:19.0402,tz:"Europe/Budapest"},"Athens":{lat:37.9838,lon:23.7275,tz:"Europe/Athens"},"Bucharest":{lat:44.4268,lon:26.1025,tz:"Europe/Bucharest"},"Sofia":{lat:42.6977,lon:23.3219,tz:"Europe/Sofia"},"Ljubljana":{lat:46.0569,lon:14.5058,tz:"Europe/Ljubljana"},"Prague":{lat:50.0755,lon:14.4378,tz:"Europe/Prague"},"Warsaw":{lat:52.2297,lon:21.0122,tz:"Europe/Warsaw"},"Amsterdam":{lat:52.3676,lon:4.9041,tz:"Europe/Amsterdam"},"Zurich":{lat:47.3769,lon:8.5417,tz:"Europe/Zurich"},"Stockholm":{lat:59.3293,lon:18.0686,tz:"Europe/Stockholm"},"Oslo":{lat:59.9139,lon:10.7522,tz:"Europe/Oslo"},"Dublin":{lat:53.3498,lon:-6.2603,tz:"Europe/Dublin"},"Lisbon":{lat:38.7223,lon:-9.1393,tz:"Europe/Lisbon"},"Cairo":{lat:30.0444,lon:31.2357,tz:"Africa/Cairo"},"Johannesburg":{lat:-26.2041,lon:28.0473,tz:"Africa/Johannesburg"},"Singapore":{lat:1.3521,lon:103.8198,tz:"Asia/Singapore"},"Hong Kong":{lat:22.3193,lon:114.1694,tz:"Asia/Hong_Kong"},"Seoul":{lat:37.5665,lon:126.978,tz:"Asia/Seoul"},"Beijing":{lat:39.9042,lon:116.4074,tz:"Asia/Shanghai"},"Mumbai":{lat:19.076,lon:72.8777,tz:"Asia/Kolkata"},"New Delhi":{lat:28.6139,lon:77.209,tz:"Asia/Kolkata"},"Mexico City":{lat:19.4326,lon:-99.1332,tz:"America/Mexico_City"},"Buenos Aires":{lat:-34.6037,lon:-58.3816,tz:"America/Argentina/Buenos_Aires"},"Sao Paulo":{lat:-23.5505,lon:-46.6333,tz:"America/Sao_Paulo"}};
 ["Novi Sad","Nis","Kragujevac","Subotica","Split","Banja Luka","Podgorica","Budva","Skopje","Munich","Barcelona","Milan","Brussels","Copenhagen","Helsinki","Miami","Vancouver","Rio de Janeiro","Doha","Riyadh","Tel Aviv","Shanghai","Melbourne","Auckland","Cape Town"].forEach(function(city){if(!worldCities.includes(city))worldCities.push(city)});
 Object.assign(cityCoords,{"Novi Sad":{lat:45.2671,lon:19.8335,tz:"Europe/Belgrade"},"Nis":{lat:43.3209,lon:21.8958,tz:"Europe/Belgrade"},"Kragujevac":{lat:44.0128,lon:20.9114,tz:"Europe/Belgrade"},"Subotica":{lat:46.1005,lon:19.6651,tz:"Europe/Belgrade"},"Split":{lat:43.5081,lon:16.4402,tz:"Europe/Zagreb"},"Banja Luka":{lat:44.7722,lon:17.191,tz:"Europe/Sarajevo"},"Podgorica":{lat:42.4304,lon:19.2594,tz:"Europe/Podgorica"},"Budva":{lat:42.2911,lon:18.84,tz:"Europe/Podgorica"},"Skopje":{lat:41.9981,lon:21.4254,tz:"Europe/Skopje"},"Munich":{lat:48.1351,lon:11.582,tz:"Europe/Berlin"},"Barcelona":{lat:41.3851,lon:2.1734,tz:"Europe/Madrid"},"Milan":{lat:45.4642,lon:9.19,tz:"Europe/Rome"},"Brussels":{lat:50.8476,lon:4.3572,tz:"Europe/Brussels"},"Copenhagen":{lat:55.6761,lon:12.5683,tz:"Europe/Copenhagen"},"Helsinki":{lat:60.1699,lon:24.9384,tz:"Europe/Helsinki"},"Miami":{lat:25.7617,lon:-80.1918,tz:"America/New_York"},"Vancouver":{lat:49.2827,lon:-123.1207,tz:"America/Vancouver"},"Rio de Janeiro":{lat:-22.9068,lon:-43.1729,tz:"America/Sao_Paulo"},"Doha":{lat:25.2854,lon:51.531,tz:"Asia/Qatar"},"Riyadh":{lat:24.7136,lon:46.6753,tz:"Asia/Riyadh"},"Tel Aviv":{lat:32.0853,lon:34.7818,tz:"Asia/Jerusalem"},"Shanghai":{lat:31.2304,lon:121.4737,tz:"Asia/Shanghai"},"Melbourne":{lat:-37.8136,lon:144.9631,tz:"Australia/Melbourne"},"Auckland":{lat:-36.8485,lon:174.7633,tz:"Pacific/Auckland"},"Cape Town":{lat:-33.9249,lon:18.4241,tz:"Africa/Johannesburg"}});
@@ -717,7 +774,7 @@ function validateTimeInput(input){let val=input.value;if(!val)return;let normali
 function validateTime(timeStr){if(!timeStr)return true;if(!timeStr.match(/^\d{2}:\d{2}$/))return false;let parts=timeStr.split(':');let hh=parseInt(parts[0]);let mm=parseInt(parts[1]);if(hh<0||hh>23)return false;if(mm<0||mm>59)return false;return true}
 
 // ===== CITY AUTOCOMPLETE =====
-function setupCityAutocomplete(inputId,dropdownId){let cityInput=document.getElementById(inputId);let dropdown=document.getElementById(dropdownId);if(!cityInput)return;cityInput.addEventListener("input",function(){let val=this.value.toLowerCase();if(!val){if(dropdown)dropdown.style.display="none";return}let matches=worldCities.filter(function(city){return city.toLowerCase().includes(val)}).slice(0,10);if(dropdown){if(matches.length>0){let html='';for(let i=0;i<matches.length;i++){let city=matches[i].replace(/'/g,"\\'");html+='<div onclick="selectCity(\''+inputId+'\',\''+dropdownId+'\',\''+city+'\')" style="padding:8px 12px;cursor:pointer;color:white;font-size:12px;border-bottom:1px solid #334155;transition:0.2s;" onmouseover="this.style.background=\'#0f172a\'" onmouseout="this.style.background=\'transparent\'">'+matches[i]+'</div>'}dropdown.innerHTML=html;dropdown.style.display="block"}else{dropdown.style.display="none"}}});document.addEventListener("click",function(e){if(dropdown&&!cityInput.contains(e.target)&&!dropdown.contains(e.target)){dropdown.style.display="none"}})}
+function setupCityAutocomplete(inputId,dropdownId){let cityInput=document.getElementById(inputId);let dropdown=document.getElementById(dropdownId);if(!cityInput)return;cityInput.addEventListener("input",function(){let val=this.value.toLowerCase();if(!val){if(dropdown)dropdown.style.display="none";return}let matches=window.WorldCities?WorldCities.search(this.value,10):worldCities.filter(function(city){return city.toLowerCase().includes(val)}).slice(0,10);if(dropdown){if(matches.length>0){let html='';for(let i=0;i<matches.length;i++){let city=matches[i].replace(/'/g,"\\'");html+='<div onclick="selectCity(\''+inputId+'\',\''+dropdownId+'\',\''+city+'\')" style="padding:8px 12px;cursor:pointer;color:white;font-size:12px;border-bottom:1px solid #334155;transition:0.2s;" onmouseover="this.style.background=\'#0f172a\'" onmouseout="this.style.background=\'transparent\'">'+matches[i]+'</div>'}dropdown.innerHTML=html;dropdown.style.display="block"}else{dropdown.style.display="none"}}});document.addEventListener("click",function(e){if(dropdown&&!cityInput.contains(e.target)&&!dropdown.contains(e.target)){dropdown.style.display="none"}})}
 function selectCity(inputId,dropdownId,city){let cityInput=document.getElementById(inputId);let dropdown=document.getElementById(dropdownId);if(cityInput)cityInput.value=city;if(dropdown)dropdown.style.display="none"}
 
 // ===== SAVED DATES - PERSON A =====
@@ -839,6 +896,16 @@ function renderSavedList2(){
 }
 
 // ===== NAVIGATION =====
+function toggleSynCollapse(button){
+  const card = button && button.closest ? button.closest(".syn-collapsible-card") : null;
+  if(!card) return;
+  const collapsed = card.classList.toggle("collapsed");
+  button.textContent = collapsed ? "+" : "-";
+  button.setAttribute("aria-expanded", collapsed ? "false" : "true");
+  const title = card.querySelector(".section-title");
+  if(title) button.setAttribute("aria-label", (collapsed ? "Show " : "Hide ") + title.textContent.trim());
+}
+
 function goBack(){const date=document.getElementById("input1").value;const time=document.getElementById("timeInput1").value;const city=document.getElementById("cityInput1").value;if(window.AppSharedState)AppSharedState.saveLastAstroInput({date,time,city});let backUrl="chart.html";if(date){backUrl+="?date="+encodeURIComponent(date);if(time)backUrl+="&time="+encodeURIComponent(time);if(city)backUrl+="&city="+encodeURIComponent(city)}window.location.href=backUrl}
 function exitApp(){appExit("index.html")}
 
@@ -895,9 +962,9 @@ function signOf(lon){const idx=Math.floor(normalize(lon)/30)%12;return{idx,name:
 function formatPos(lon){const s=signOf(lon);return s.symbol+" "+s.name+" "+Math.floor(s.degree)+"\u00B0"}
 function houseOf(lon,cusps){const p=normalize(lon);for(let i=0;i<12;i++){const c1=normalize(cusps[i]);const c2=normalize(cusps[(i+1)%12]);if(c2<c1){if(p>=c1||p<c2)return i+1}else if(p>=c1&&p<c2)return i+1}return 1}
 function equalHouses(asc){return Array.from({length:12},(_,i)=>normalize(asc+i*30))}
-async function calculatePerson(prefix){const date=parseAstroDate(document.getElementById("input"+prefix).value);const time=parseAstroTime(document.getElementById("timeInput"+prefix).value);const city=(document.getElementById("cityInput"+prefix).value||"Belgrade").trim();const coords=cityCoords[city]||cityCoords.Belgrade;const utc=localBirthToUtc(date,time,coords);const jd=julianDay(utc);const angles=calculateAscMc(jd,coords.lat,coords.lon);const cusps=equalHouses(angles.asc);let source="browser formulas";let positions=[];try{const mod=await import("./vendor/swisseph/swisseph-local.js");const swe=new mod.SwissEphemeris();await swe.init();source="Local Swiss Ephemeris";const ids={sun:mod.Planet.Sun,moon:mod.Planet.Moon,mercury:mod.Planet.Mercury,venus:mod.Planet.Venus,mars:mod.Planet.Mars,jupiter:mod.Planet.Jupiter,saturn:mod.Planet.Saturn,uranus:mod.Planet.Uranus,neptune:mod.Planet.Neptune,pluto:mod.Planet.Pluto};positions=calcBodies.map(b=>{const pos=swe.calculatePosition(jd,ids[b.key],mod.CalculationFlag.SwissEphemeris|mod.CalculationFlag.Speed);return{...b,longitude:normalize(pos.longitude),house:houseOf(pos.longitude,cusps)}});if(typeof swe.close==="function")swe.close()}catch(e){positions=calcBodies.map(b=>{const longitude=fallbackLongitude(jd,b.key);return{...b,longitude,house:houseOf(longitude,cusps)}})}return{date,time,city,coords,utc,jd,angles,cusps,positions,source}}
+async function calculatePerson(prefix){const date=parseAstroDate(document.getElementById("input"+prefix).value);const time=parseAstroTime(document.getElementById("timeInput"+prefix).value);const city=(document.getElementById("cityInput"+prefix).value||"Belgrade").trim();const coords=getCityCoords(city);const utc=localBirthToUtc(date,time,coords);const jd=julianDay(utc);const angles=calculateAscMc(jd,coords.lat,coords.lon);const cusps=equalHouses(angles.asc);let source="browser formulas";let positions=[];try{const mod=await import("./vendor/swisseph/swisseph-local.js");const swe=new mod.SwissEphemeris();await swe.init();source="Local Swiss Ephemeris";const ids={sun:mod.Planet.Sun,moon:mod.Planet.Moon,mercury:mod.Planet.Mercury,venus:mod.Planet.Venus,mars:mod.Planet.Mars,jupiter:mod.Planet.Jupiter,saturn:mod.Planet.Saturn,uranus:mod.Planet.Uranus,neptune:mod.Planet.Neptune,pluto:mod.Planet.Pluto};positions=calcBodies.map(b=>{const pos=swe.calculatePosition(jd,ids[b.key],mod.CalculationFlag.SwissEphemeris|mod.CalculationFlag.Speed);return{...b,longitude:normalize(pos.longitude),house:houseOf(pos.longitude,cusps)}});if(typeof swe.close==="function")swe.close()}catch(e){positions=calcBodies.map(b=>{const longitude=fallbackLongitude(jd,b.key);return{...b,longitude,house:houseOf(longitude,cusps)}})}return{date,time,city,coords,utc,jd,angles,cusps,positions,source}}
 function angleDiff(a,b){let d=Math.abs(normalize(a)-normalize(b));return d>180?360-d:d}
-function findSynastryAspects(a,b){const found=[];a.positions.forEach(pa=>{b.positions.forEach(pb=>{const diff=angleDiff(pa.longitude,pb.longitude);aspectDefs.forEach(def=>{const orb=Math.abs(diff-def.angle);if(orb<=def.orb){const personal=(["sun","moon","venus","mars","mercury"].includes(pa.key)||["sun","moon","venus","mars","mercury"].includes(pb.key));const score=Math.round(def.score*(1-orb/(def.orb+1))+(personal?(def.score>0?2:-1):0));found.push({a:pa,b:pb,name:def.name,orb,score,type:score>1?"good":score<-1?"bad":"neutral",major:personal})}})})});return found.sort((x,y)=>Math.abs(y.score)-Math.abs(x.score)).slice(0,14)}
+function findSynastryAspects(a,b){const found=[];a.positions.forEach(pa=>{b.positions.forEach(pb=>{const diff=angleDiff(pa.longitude,pb.longitude);aspectDefs.forEach(def=>{const orb=Math.abs(diff-def.angle);if(orb<=def.orb){const personal=(["sun","moon","venus","mars","mercury"].includes(pa.key)||["sun","moon","venus","mars","mercury"].includes(pb.key));const score=Math.round(def.score*(1-orb/(def.orb+1))+(personal?(def.score>0?2:-1):0));found.push({a:pa,b:pb,name:def.name,orb,score,type:score>1?"good":score<-1?"bad":"neutral",major:personal})}})})});return found.sort((x,y)=>Math.abs(y.score)-Math.abs(x.score))}
 function setScoreValue(id,value){const el=document.getElementById(id);if(!el)return;el.textContent=(value>0?"+":"")+value;el.className="score-detail-value "+(value>2?"good":value<-2?"bad":"neutral")}
 function renderScore(score,cats){document.getElementById("scoreNum").textContent=score+"%";const c=2*Math.PI*54;document.getElementById("scoreRing").style.strokeDashoffset=c-(score/100)*c;setScoreValue("scoreEmo",cats.emotional);setScoreValue("scoreCom",cats.communication);setScoreValue("scorePhy",cats.physical);setScoreValue("scoreSpi",cats.spiritual);setScoreValue("scoreCha",cats.challenges)}
 function renderPlanetPositions(a,b){const grid=document.querySelector(".planet-grid");if(!grid)return;function block(person,label){return'<div class="planet-compare"><div class="planet-compare-title">'+label+'</div>'+person.positions.slice(0,6).map(p=>'<div class="planet-row"><button class="syn-help-btn" type="button" onclick="openSynPlanetRowHelp(event, this)" aria-label="Explain planet position">?</button><span class="planet-name">'+p.symbol+' '+p.name+'</span><span class="planet-sign">'+formatPos(p.longitude)+'</span></div>').join("")+'<div class="planet-row"><button class="syn-help-btn" type="button" onclick="openSynPlanetRowHelp(event, this)" aria-label="Explain planet position">?</button><span class="planet-name">Asc</span><span class="planet-sign">'+formatPos(person.angles.asc)+'</span></div></div>'}grid.innerHTML=block(a,synPersonLabel("1"))+" "+block(b,synPersonLabel("2"));updateSynPersonLabels()}
@@ -912,7 +979,7 @@ function renderRelationshipType(score,cats){const title=document.querySelector("
 function calculateCategoryScores(aspects){const cats={emotional:0,communication:0,physical:0,spiritual:0,challenges:0};aspects.forEach(x=>{const keys=[x.a.key,x.b.key];if(keys.includes("moon")||keys.includes("venus"))cats.emotional+=x.score;if(keys.includes("mercury"))cats.communication+=x.score;if(keys.includes("mars")||keys.includes("venus"))cats.physical+=x.score;if(keys.includes("jupiter")||keys.includes("neptune")||keys.includes("pluto"))cats.spiritual+=x.score;if(x.score<0)cats.challenges+=x.score});Object.keys(cats).forEach(k=>cats[k]=Math.max(-9,Math.min(9,Math.round(cats[k]/2))));return cats}
 function resetSynastryOutputs(){renderScore(0,{emotional:0,communication:0,physical:0,spiritual:0,challenges:0});const pg=document.querySelector(".planet-grid");if(pg)pg.innerHTML='<div class="planet-compare"><div class="planet-compare-title">'+synPersonLabel("1")+'</div><div class="planet-row"><button class="syn-help-btn" type="button" onclick="openSynPlanetRowHelp(event, this)" aria-label="Explain planet position">?</button><span class="planet-name">Press Calculate</span><span class="planet-sign">--</span></div></div><div class="planet-compare"><div class="planet-compare-title">'+synPersonLabel("2")+'</div><div class="planet-row"><button class="syn-help-btn" type="button" onclick="openSynPlanetRowHelp(event, this)" aria-label="Explain planet position">?</button><span class="planet-name">Press Calculate</span><span class="planet-sign">--</span></div></div>';const hg=document.querySelector(".house-grid");if(hg)hg.innerHTML='<div class="house-card"><button class="syn-help-btn" type="button" onclick="openSynHouseHelp(event, this)" aria-label="Explain house overlay">?</button><div class="house-num">Waiting</div><div class="house-planet">House overlays</div><div class="house-desc">Enter both people and press Calculate.</div></div>';const al=document.getElementById("aspectsList");if(al)al.innerHTML='<div class="aspect-item neutral" data-type="neutral" data-major="true"><button class="syn-help-btn" type="button" onclick="openSynAspectHelp(event, this)" aria-label="Explain aspect">?</button><div class="left"><div class="aspect">No calculation yet</div><div class="description">Key aspects will appear here after Calculate.</div></div><div class="score">--</div></div>';const comp=document.querySelector(".composite-mini");if(comp)comp.innerHTML='<div class="composite-info"><div class="composite-info-item"><button class="syn-help-btn" type="button" onclick="openSynCompositeHelp(event, this)" aria-label="Explain composite item">?</button><span class="composite-info-label">Composite</span><span class="composite-info-value">Waiting for calculation</span></div></div>';bindAspectTooltips()}
 function setCalcSourceStatus(source){const el=document.getElementById("calcSourceStatus");if(!el)return;const precise=source==="Local Swiss Ephemeris";el.classList.toggle("fallback",!precise);el.textContent=precise?"Swiss Ephemeris loaded - precise synastry calculation.":"Fallback calculation used - approximate synastry formulas."}
-async function analyzeSynastry(evt){const btn=evt&&evt.target&&evt.target.id==="analyzeBtn"?evt.target:document.getElementById("analyzeBtn");try{if(btn){btn.textContent="Calculating...";btn.disabled=true}if(!validateDate(document.getElementById("input1").value)||!validateDate(document.getElementById("input2").value)){alert("Please enter both dates in DD.MM.YYYY format.");return}const a=await calculatePerson("1");const b=await calculatePerson("2");setCalcSourceStatus(a.source==="Local Swiss Ephemeris"&&b.source==="Local Swiss Ephemeris"?"Local Swiss Ephemeris":"browser formulas");const aspects=findSynastryAspects(a,b);const cats=calculateCategoryScores(aspects);const raw=55+aspects.reduce((sum,x)=>sum+x.score,0)*1.0;const score=Math.max(20,Math.min(98,Math.round(raw)));renderScore(score,cats);renderPlanetPositions(a,b);renderAspects(aspects);renderHouseOverlays(a,b);renderComposite(a,b);renderElements(a,b);renderRelationshipType(score,cats);offerSaveDate1(document.getElementById("input1").value);offerSaveDate2(document.getElementById("input2").value);if(btn){btn.textContent="Done";btn.style.background="linear-gradient(135deg,#22c55e,#16a34a)";setTimeout(()=>{btn.textContent="Calculate Compatibility";btn.style.background="linear-gradient(135deg,#FFD700,#f59e0b)";btn.disabled=false},1400)}}catch(err){alert(err.message||"Synastry could not be calculated.")}finally{if(btn&&btn.textContent==="Calculating..."){btn.textContent="Calculate Compatibility";btn.disabled=false}}}
+async function analyzeSynastry(evt){const btn=evt&&evt.target&&evt.target.id==="analyzeBtn"?evt.target:document.getElementById("analyzeBtn");try{if(btn){btn.textContent="Calculating...";btn.disabled=true}if(!validateDate(document.getElementById("input1").value)||!validateDate(document.getElementById("input2").value)){alert("Please enter both dates in DD.MM.YYYY format.");return}const a=await calculatePerson("1");const b=await calculatePerson("2");setCalcSourceStatus(a.source==="Local Swiss Ephemeris"&&b.source==="Local Swiss Ephemeris"?"Local Swiss Ephemeris":"browser formulas");const aspects=findSynastryAspects(a,b);const cats=calculateCategoryScores(aspects);const raw=42+aspects.reduce((sum,x)=>sum+x.score*1.3,0);const score=Math.max(20,Math.min(98,Math.round(raw)));renderScore(score,cats);renderPlanetPositions(a,b);renderAspects(aspects);renderHouseOverlays(a,b);renderComposite(a,b);renderElements(a,b);renderRelationshipType(score,cats);offerSaveDate1(document.getElementById("input1").value);offerSaveDate2(document.getElementById("input2").value);if(btn){btn.textContent="Done";btn.style.background="linear-gradient(135deg,#22c55e,#16a34a)";setTimeout(()=>{btn.textContent="Calculate Compatibility";btn.style.background="linear-gradient(135deg,#FFD700,#f59e0b)";btn.disabled=false},1400)}}catch(err){alert(err.message||"Synastry could not be calculated.")}finally{if(btn&&btn.textContent==="Calculating..."){btn.textContent="Calculate Compatibility";btn.disabled=false}}}
 
 // ===== TOOLTIP =====
 const tooltip=document.getElementById('tooltip');
@@ -977,10 +1044,17 @@ function ensureSynHelpModal(){
   document.body.appendChild(modal);
   return modal;
 }
-function showSynHelp(title,html){
+function showSynHelp(title,description,meaning){
   const modal=ensureSynHelpModal();
+  if(meaning===undefined){
+    meaning=description;
+    description='This help item explains one layer of the synastry system and how it should be read inside relationship compatibility.';
+  }
+  function block(value){return /<\w+/i.test(String(value||''))?String(value||''):'<p>'+String(value||'')+'</p>'}
   document.getElementById('synHelpTitle').textContent=title;
-  document.getElementById('synHelpBody').innerHTML=html;
+  document.getElementById('synHelpBody').innerHTML=
+    '<div class="syn-help-section"><div class="syn-help-section-title">Description</div><div class="syn-help-description">'+block(description)+'</div></div>'+
+    '<div class="syn-help-section"><div class="syn-help-section-title">Meaning / Interpretation</div><div class="syn-help-meaning">'+block(meaning)+'</div></div>';
   modal.style.display='flex';
 }
 function closeSynHelp(){const modal=document.getElementById('synHelpModal');if(modal)modal.style.display='none'}

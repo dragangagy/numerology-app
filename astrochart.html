@@ -12,6 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pyramid App">
 <script src="app-shared-state.js"></script>
+<script src="world-cities.js"></script>
 <script src="app-notification-open.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -326,6 +327,71 @@ body{
   font-size: 18px;
   margin-bottom: 10px;
   text-shadow: 0 0 8px rgba(255,215,0,0.2);
+}
+
+.astro-collapsible-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.astro-collapsible-header .section-title {
+  margin: 0 !important;
+}
+
+.astro-collapsible-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.astro-collapse-toggle {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,215,0,.55);
+  background: rgba(15,23,42,.88);
+  color: #FFD700;
+  font-size: 20px;
+  font-weight: 900;
+  line-height: 24px;
+  padding: 0;
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(255,215,0,.18);
+}
+
+.astro-collapse-toggle:hover {
+  border-color: #FFD700;
+  color: #fff4b0;
+  box-shadow: 0 0 12px rgba(255,215,0,.32);
+}
+
+.astro-collapsible-card.collapsed .astro-collapsible-body {
+  display: none;
+}
+
+.astro-collapsible-card.collapsed {
+  padding-top: 7px !important;
+  padding-bottom: 7px !important;
+  margin-top: 6px !important;
+}
+
+.astro-collapsible-card.collapsed + .astro-collapsible-card.collapsed {
+  margin-top: 4px !important;
+}
+
+.astro-collapsible-card.collapsed .astro-collapsible-header {
+  margin-bottom: 0 !important;
+  min-height: 28px;
+}
+
+.astro-collapsible-card.collapsed .section-title {
+  line-height: 28px !important;
+  margin: 0 !important;
 }
 
 .data-grid {
@@ -836,6 +902,28 @@ p,.subtitle,.description,.small,.note{line-height:1.25!important;margin-top:2px!
 .position-help-body{font-size:14px;line-height:1.45;color:#dbeafe}
 .position-help-body p{margin:8px 0}
 .position-help-body strong{color:#f6cb71}
+.position-help-section{
+  border-top:1px solid rgba(255,215,0,.16);
+  padding-top:10px;
+  margin-top:10px;
+}
+.position-help-section:first-child{
+  border-top:0;
+  padding-top:0;
+  margin-top:0;
+}
+.position-help-section-title{
+  color:#f6cb71;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+.position-help-description{color:#94a3b8!important}
+.position-help-meaning{color:#fff!important}
+.position-help-description p,
+.position-help-meaning p{margin:8px 0}
 
 </style>
 <base target="_blank">
@@ -989,17 +1077,41 @@ LUNAR PHASES
       </div>
 
       <div>
-        <div class="astro-card">
-          <div class="section-title">Positions</div>
-          <div class="data-grid" id="planetTable"></div>
+        <div class="astro-card astro-collapsible-card collapsed" data-astro-collapse="positions">
+          <div class="astro-collapsible-header">
+            <div class="astro-collapsible-title">
+              <button class="position-help-btn" type="button" onclick="openAstroSectionHelp(event, 'positions')" aria-label="Explain Positions">?</button>
+              <div class="section-title">Positions</div>
+            </div>
+            <button class="astro-collapse-toggle" type="button" onclick="toggleAstroCollapse(this)" aria-expanded="false" aria-label="Show Positions">+</button>
+          </div>
+          <div class="astro-collapsible-body">
+            <div class="data-grid" id="planetTable"></div>
+          </div>
         </div>
-        <div class="astro-card">
-          <div class="section-title">Angles</div>
-          <div class="angles" id="angleTable"></div>
+        <div class="astro-card astro-collapsible-card collapsed" data-astro-collapse="angles">
+          <div class="astro-collapsible-header">
+            <div class="astro-collapsible-title">
+              <button class="position-help-btn" type="button" onclick="openAstroSectionHelp(event, 'angles')" aria-label="Explain Angles">?</button>
+              <div class="section-title">Angles</div>
+            </div>
+            <button class="astro-collapse-toggle" type="button" onclick="toggleAstroCollapse(this)" aria-expanded="false" aria-label="Show Angles">+</button>
+          </div>
+          <div class="astro-collapsible-body">
+            <div class="angles" id="angleTable"></div>
+          </div>
         </div>
-        <div class="astro-card">
-          <div class="section-title">Aspects</div>
-          <div id="aspectTable"></div>
+        <div class="astro-card astro-collapsible-card collapsed" data-astro-collapse="aspects">
+          <div class="astro-collapsible-header">
+            <div class="astro-collapsible-title">
+              <button class="position-help-btn" type="button" onclick="openAstroSectionHelp(event, 'aspects')" aria-label="Explain Aspects">?</button>
+              <div class="section-title">Aspects</div>
+            </div>
+            <button class="astro-collapse-toggle" type="button" onclick="toggleAstroCollapse(this)" aria-expanded="false" aria-label="Show Aspects">+</button>
+          </div>
+          <div class="astro-collapsible-body">
+            <div id="aspectTable"></div>
+          </div>
         </div>
         <div class="astro-card">
           <div class="section-title">Calculation</div>
@@ -1537,9 +1649,7 @@ function setupCityAutocomplete(){
       if(dropdown) dropdown.style.display = "none";
       return;
     }
-    let matches = worldCities.filter(function(city){
-      return city.toLowerCase().includes(val);
-    }).slice(0, 10);
+    let matches = window.WorldCities ? WorldCities.search(this.value, 10) : worldCities.filter(function(city){ return city.toLowerCase().includes(val); }).slice(0, 10);
 
     if(dropdown){
       if(matches.length > 0){
@@ -1568,6 +1678,12 @@ function selectCity(city){
 }
 
 // ===== CITY COORDS =====
+
+function getCityCoords(city){
+  const raw = String(city || "").trim();
+  const base = raw.split(",")[0].trim();
+  return (window.WorldCities && (WorldCities.find(raw) || WorldCities.find(base))) || cityCoords[raw] || cityCoords[base] || cityCoords.Belgrade || cityCoords["Belgrade"];
+}
 const cityCoords = {
   "Belgrade": { lat: 44.7866, lon: 20.4489, tz: "Europe/Belgrade" },
   "Zagreb": { lat: 45.8150, lon: 15.9819, tz: "Europe/Zagreb" },
@@ -1885,6 +2001,16 @@ function renderSavedList(){
   });
 
   container.innerHTML = html;
+}
+
+function toggleAstroCollapse(button){
+  const card = button && button.closest ? button.closest(".astro-collapsible-card") : null;
+  if(!card) return;
+  const collapsed = card.classList.toggle("collapsed");
+  button.textContent = collapsed ? "+" : "-";
+  button.setAttribute("aria-expanded", collapsed ? "false" : "true");
+  const title = card.querySelector(".section-title");
+  if(title) button.setAttribute("aria-label", (collapsed ? "Show " : "Hide ") + title.textContent.trim());
 }
 
 // ===== ASTRO CHART CALCULATION (from astro.html) =====
@@ -2296,13 +2422,48 @@ function ensurePositionHelpModal(){
   return modal;
 }
 
+function showAstroHelp(title, description, meaning){
+  const modal = ensurePositionHelpModal();
+  const desc = description || "This item explains the context of the selected part of the astrology reading.";
+  const result = meaning || "Enter birth data and calculate the chart to generate this interpretation.";
+  document.getElementById("positionHelpTitle").textContent = title;
+  document.getElementById("positionHelpBody").innerHTML =
+    '<div class="position-help-section"><div class="position-help-section-title">Description</div><div class="position-help-description"><p>'+desc+'</p></div></div>'+
+    '<div class="position-help-section"><div class="position-help-section-title">Meaning / Interpretation</div><div class="position-help-meaning">'+result+'</div></div>';
+  modal.style.display = "flex";
+}
+
+function openAstroSectionHelp(event, section){
+  if(event) event.stopPropagation();
+  const content = {
+    positions: {
+      title: "Positions",
+      description: "Positions show where each planet is placed by zodiac sign and house in the natal chart. This section is the basic map of the person's character, instincts and life themes.",
+      meaning: "<p>Read each planet as a personal force. The sign shows how that force behaves, while the house shows where it becomes most visible in life. Together, the positions describe identity, emotions, thinking style, love nature, drive, growth, discipline and deeper transformation patterns.</p>"
+    },
+    angles: {
+      title: "Angles",
+      description: "Angles are the four main doorways of the natal chart: ASC, MC, DSC and IC. They describe orientation, public direction, relationship patterns and private roots.",
+      meaning: "<p>The angles give the chart its structure. ASC shows first impression and personal direction, MC shows vocation and visibility, DSC shows partnership dynamics, and IC shows inner emotional foundation. They often feel immediate and strongly personal.</p>"
+    },
+    aspects: {
+      title: "Aspects",
+      description: "Aspects show how planets communicate with each other. They reveal harmony, tension, pressure, talent and repeating psychological patterns.",
+      meaning: "<p>Soft aspects usually show flow, support and natural ability. Hard aspects show friction, challenge and growth work. A strong aspect can describe a major life theme because it connects two different parts of the personality into one repeating pattern.</p>"
+    }
+  }[section];
+  if(!content) return;
+  openPositionHelpModal(content.title, content.description, content.meaning);
+}
+
 function openPositionHelp(planet, longitude, house){
   const sign = signOf(Number(longitude) || 0);
   const info = positionHelpText(planet, sign.name, house);
-  const modal = ensurePositionHelpModal();
-  document.getElementById("positionHelpTitle").textContent = info.title;
-  document.getElementById("positionHelpBody").innerHTML = info.body;
-  modal.style.display = "flex";
+  showAstroHelp(
+    info.title,
+    "This position combines one planet, one zodiac sign and one house. The planet shows the life function, the sign shows how it expresses itself, and the house shows where it becomes active in the person's life.",
+    info.body
+  );
 }
 
 
@@ -2361,10 +2522,11 @@ function openAngleHelp(name, longitude){
     "<p><strong>What to develop:</strong> The gift is "+angleData.gift+". The lesson is "+angleData.lesson+".</p>"+
     "<p><strong>Reflection:</strong> "+angleData.question+"</p>"+
     "<p><strong>Angle:</strong> "+(angleMeanings[name] || "This angle is a major doorway in the chart.")+"</p>";
-  const modal = ensurePositionHelpModal();
-  document.getElementById("positionHelpTitle").textContent = title;
-  document.getElementById("positionHelpBody").innerHTML = body;
-  modal.style.display = "flex";
+  showAstroHelp(
+    title,
+    "Angles are the main doorways of the natal chart. They describe how the person enters life, builds direction, relates to others and returns to private emotional roots.",
+    body
+  );
 }
 
 function openAspectHelp(p1, p2, aspect, orb){
@@ -2376,12 +2538,14 @@ function openAspectHelp(p1, p2, aspect, orb){
     "<p><strong>What to develop:</strong> The main growth key is "+aspectData.develop+". When handled well, "+p1+" brings "+planetKeyword(p1,1)+" while "+p2+" adds "+planetKeyword(p2,1)+".</p>"+
     "<p><strong>Strength:</strong> "+orbStrengthText(orb)+"</p>"+
     "<p><strong>Aspect:</strong> "+(aspectMeanings[aspect] || "This aspect describes how two planets communicate.")+"</p>";
-  const modal = ensurePositionHelpModal();
-  document.getElementById("positionHelpTitle").textContent = title;
-  document.getElementById("positionHelpBody").innerHTML = body;
-  modal.style.display = "flex";
+  showAstroHelp(
+    title,
+    "Aspects describe how two planets communicate with each other. They show flow, tension, cooperation, pressure and repeating psychological patterns inside the chart.",
+    body
+  );
 }
 
+window.openAstroSectionHelp = openAstroSectionHelp;
 window.openAngleHelp = openAngleHelp;
 window.openAspectHelp = openAspectHelp;
 
@@ -2435,7 +2599,7 @@ async function calculateChart(){
 
     const date = parseDate(birthDate);
     const time = parseTime(birthTime);
-    const knownCity = cityCoords[birthCity] || {};
+    const knownCity = getCityCoords(birthCity) || {};
     const coords = {
       lat: knownCity.lat,
       lon: knownCity.lon,

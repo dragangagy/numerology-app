@@ -12,6 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pyramid App">
 <script src="app-shared-state.js"></script>
+<script src="world-cities.js"></script>
 <script src="app-notification-open.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -116,6 +117,13 @@ body.compat-mode .container>.input-card{display:none}
 .balance-row .label,.balance-row .value{margin:0;white-space:nowrap}
 .balance-track{height:6px;background:#1e293b;border-radius:6px;overflow:hidden;margin-top:0;width:100%}
 .balance-fill{height:100%;background:linear-gradient(90deg,#ef4444,#f97316);border-radius:6px}
+.lucky-grid{display:grid!important;grid-template-columns:1fr!important;gap:7px!important;margin-top:7px!important;width:100%}
+.lucky-row{width:100%;background:#0f172a;border:1px solid rgba(248,113,113,.14);border-radius:8px;padding:8px 10px;text-align:left;display:grid;grid-template-columns:22px minmax(92px,auto) minmax(0,1fr);gap:10px;align-items:center}
+.lucky-row .chinese-help-btn{position:static!important;left:auto!important;top:auto!important}
+.lucky-row .label,.lucky-row .value{margin:0;white-space:normal}
+.lucky-row .label{font-size:10px;color:#fb7185;text-transform:uppercase;letter-spacing:.8px}
+.lucky-row .value{font-size:12px;color:#fee2e2;line-height:1.25}
+@media(max-width:460px){.lucky-row{grid-template-columns:22px minmax(86px,auto) minmax(0,1fr);gap:8px}}
 .element-wheel{position:relative;width:min(82vw,278px);height:min(82vw,278px);margin:8px auto 7px;border-radius:50%;background:radial-gradient(circle at center,rgba(255,245,245,.08) 0 30%,transparent 31% 100%),radial-gradient(circle at 45% 40%,rgba(239,68,68,.18),transparent 42%),#050608;border:1px solid rgba(248,113,113,.42);box-shadow:inset 0 0 30px rgba(239,68,68,.16),0 0 28px rgba(127,29,29,.32);overflow:hidden}
 .element-wheel::before{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 20% 25%,rgba(248,113,113,.55) 0 1px,transparent 1.6px),radial-gradient(circle at 78% 35%,rgba(248,113,113,.5) 0 1px,transparent 1.7px),radial-gradient(circle at 48% 82%,rgba(248,113,113,.45) 0 1px,transparent 1.6px),radial-gradient(circle at 64% 12%,rgba(248,113,113,.35) 0 1px,transparent 1.7px);opacity:.75}
 .element-wheel::after{content:"";position:absolute;inset:29px;border-radius:50%;border:1px dashed rgba(248,113,113,.22);box-shadow:0 0 0 42px rgba(127,29,29,.08) inset;pointer-events:none;z-index:1}
@@ -240,6 +248,31 @@ html.hide-help-buttons .year-cell{
   padding-left:7px!important;
 }
 
+
+
+/* ===== CHINESE HELP TWO SECTION CONTENT ===== */
+.chinese-help-section{
+  margin-top:10px;
+}
+.chinese-help-section-title{
+  color:#ff3b3b;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+  margin-bottom:5px;
+}
+.chinese-help-description{
+  color:#94a3b8!important;
+}
+.chinese-help-meaning{
+  color:#fff!important;
+}
+.chinese-help-meaning p,
+.chinese-help-description p{
+  margin:6px 0;
+}
+
 </style>
 </head>
 <body>
@@ -310,7 +343,7 @@ html.hide-help-buttons .year-cell{
       <div class="china-visual" id="baziCalendar"></div>
       <div class="pillar-grid" id="pillarGrid"></div>
       <div class="element-balance" id="baziBalance"></div>
-      <div class="grid" id="luckyGrid"></div>
+      <div class="grid lucky-grid" id="luckyGrid"></div>
       <div id="baziNote" class="coming-note"></div>
     </div>
   </div>
@@ -576,6 +609,9 @@ function strongestElements(balance){
   const max=Math.max(...names.map(k=>balance[k]));
   return names.filter(k=>balance[k]===max);
 }
+function luckyRow(item){
+  return '<div class="lucky-row"><button class="chinese-help-btn" type="button" onclick="openChineseBoxHelp(event, this)" aria-label="Explain '+safe(item[0])+'">?</button><div class="label">'+safe(item[0])+'</div><div class="value">'+safe(item[1])+'</div></div>';
+}
 function renderLuckyGrid(){
   if(!currentResult||!currentResult.bazi)return;
   const weak=weakestElements(currentResult.bazi.balance);
@@ -588,7 +624,7 @@ function renderLuckyGrid(){
     ["Lucky numbers",data.numbers],
     ["Lucky directions",data.directions],
     ["Strong element",strong.join(", ")+" is already dominant in this chart."]
-  ].map(box).join("");
+  ].map(luckyRow).join("");
 }
 function calculateChinese(){
   const date=parseDate(document.getElementById("birthDate").value);
@@ -868,19 +904,103 @@ function ensureChineseHelpModal(){
   document.body.appendChild(modal);
   return modal;
 }
-function showChineseHelp(title,html){
+function showChineseHelp(title,description,meaning){
   const modal=ensureChineseHelpModal();
   document.getElementById('chineseHelpTitle').textContent=title;
-  document.getElementById('chineseHelpBody').innerHTML=html;
+  const desc=description||'This item explains the context of the selected part of the Chinese Zodiac reading.';
+  const result=meaning||'Enter birth data and press GO to generate the interpretation for this item.';
+  document.getElementById('chineseHelpBody').innerHTML=
+    '<div class="chinese-help-section"><div class="chinese-help-section-title">Description</div><div class="chinese-help-description"><p>'+desc+'</p></div></div>'+
+    '<div class="chinese-help-section"><div class="chinese-help-section-title">Meaning / Interpretation</div><div class="chinese-help-meaning"><p>'+result+'</p></div></div>';
   modal.style.display='flex';
 }
 function closeChineseHelp(){const modal=document.getElementById('chineseHelpModal');if(modal)modal.style.display='none'}
-function openChineseHelp(event,key){if(event)event.stopPropagation();const data=chineseHelpText[key]||chineseHelpText.overview;showChineseHelp(data.title,'<p>'+data.text+'</p>')}
-function openChineseBoxHelp(event,button){if(event)event.stopPropagation();const box=button&&button.closest('.box');const label=box&&box.querySelector('.label')?box.querySelector('.label').textContent.trim():'Chinese item';const value=box&&box.querySelector('.value')?box.querySelector('.value').textContent.trim():'';showChineseHelp(label,'<p><strong>'+value+'</strong></p><p>This item is one small layer of the Chinese Zodiac reading. Read it together with the animal, element and BaZi pillars for context.</p>')}
-function openChinesePillarHelp(event,button){if(event)event.stopPropagation();const card=button&&button.closest('.pillar-card');const label=card&&card.querySelector('.pillar-label')?card.querySelector('.pillar-label').textContent.trim():'Pillar';const main=card&&card.querySelector('.pillar-main')?card.querySelector('.pillar-main').textContent.trim():'';const sub=card&&card.querySelector('.pillar-sub')?card.querySelector('.pillar-sub').textContent.trim():'';showChineseHelp(label,'<p><strong>'+main+'</strong></p><p>'+sub+'</p><p>Each pillar combines a Heavenly Stem and Earthly Branch. The Day Pillar is usually the personal center of the BaZi chart.</p>')}
-function openChinesePillHelp(event,button){if(event)event.stopPropagation();const pill=button&&button.closest('.pill');const text=pill?pill.textContent.replace(/^\?/,'').trim():'';showChineseHelp('Compatibility detail','<p>'+text+'</p><p>This is one factor in the relationship rhythm. Animal support is simple and visible; BaZi Day Master and elements describe a deeper layer.</p>')}
-function openChineseYearHelp(event,button){if(event)event.stopPropagation();const cell=button&&button.closest('.year-cell');const text=cell?cell.textContent.replace(/^\?/,'').trim():'';showChineseHelp('Year rhythm','<p>'+text+'</p><p>A Chinese year combines an element with an animal sign. This changes the collective tone for timing, mood and yearly themes.</p>')}
-function openChineseSignHelp(event,button){if(event)event.stopPropagation();const box=button&&button.closest('.box');const label=box&&box.querySelector('.label')?box.querySelector('.label').textContent.trim():'Chinese sign';const value=box&&box.querySelector('.value')?box.querySelector('.value').textContent.trim():'';showChineseHelp(label,'<p>'+value+'</p><p>This sign describes a basic instinctive style. Compatibility improves when the full element and BaZi pattern also support the connection.</p>')}
+function chineseSectionMeaning(key){
+  if(key==='overview'){
+    const name=document.getElementById('animalName')?.textContent.trim()||'Enter birth data';
+    const meta=document.getElementById('animalMeta')?.textContent.trim()||'';
+    const desc=document.getElementById('animalDesc')?.textContent.trim()||'';
+    return [name,meta,desc].filter(Boolean).join(' ');
+  }
+  if(key==='bazi'){
+    const text=document.getElementById('baziText')?.textContent.trim()||'Enter birth data and press GO.';
+    const note=document.getElementById('baziNote')?.textContent.trim()||'';
+    return [text,note].filter(Boolean).join(' ');
+  }
+  if(key==='element')return document.getElementById('elementText')?.textContent.trim()||'Enter birth data and press GO to see the element reading.';
+  if(key==='compatibility')return document.getElementById('compatText')?.textContent.trim()||'Enter both people and press COMPARE to generate the compatibility interpretation.';
+  if(key==='conception'){
+    const result=document.getElementById('conceptionResult')?.textContent.trim()||'Calculate to see the traditional result.';
+    return result+' This is a folklore tool and not a medical or scientific prediction.';
+  }
+  if(key==='today'){
+    const text=document.getElementById('todayText')?.textContent.trim()||'Enter birth data and press GO to compare today with your sign.';
+    const annual=document.getElementById('annualForecast')?.textContent.trim()||'';
+    return [text,annual].filter(Boolean).join(' ');
+  }
+  if(key==='years')return 'The visible year cards show the upcoming Chinese yearly fields. Each year combines one element with one animal sign.';
+  if(key==='signs')return 'The sign cards list traits and support signs for all twelve Chinese Zodiac animals.';
+  return 'Enter birth data and press GO to generate this interpretation.';
+}
+function chineseElementMeaning(label,value){
+  if(!currentResult)return value||'Enter birth data and press GO to generate this interpretation.';
+  const r=currentResult;
+  const elementText=elements[r.element]||'a distinct way of moving through life';
+  if(label==='Best use'){
+    return value+' In practice, this means the '+r.element+' element works best when the person trusts its natural rhythm instead of copying another style. It can become a strength through '+elementText+', especially when decisions need timing, emotional intelligence and a clear sense of direction. The challenge is to avoid forcing progress too early; this placement improves when action grows from the element\'s own wisdom.';
+  }
+  if(label==='Balance'){
+    return value+' This points to the correction method for the chart. When the sign becomes tense or reactive, balance comes from simplifying the next step and returning to a steadier rhythm. The strength is self-regulation; the challenge is noticing stress before it turns into stubbornness, avoidance or scattered choices.';
+  }
+  if(label==='Polarity'){
+    return value+' In the reading, polarity shows how the sign starts, responds and protects its energy. Yang tends to move outward and initiate; Yin tends to receive, observe and refine. This affects confidence, timing and relationship style, so it should be read together with the animal and element.';
+  }
+  if(label==='Animal'){
+    return 'The '+value+' animal gives the main instinctive style of the chart. It describes natural reactions, social rhythm, attraction patterns and the kind of situations where the person feels most alert. Its strengths and challenges become clearer when combined with the element, polarity and BaZi pillars.';
+  }
+  if(label==='Element'){
+    return 'The '+value+' element colors the whole animal sign. It describes how the person expresses instinct, handles pressure and moves toward goals. This element can show the strongest usable gift in the reading, but also the pattern that needs balance when life becomes demanding.';
+  }
+  if(label==='Core tone'){
+    return value+' This is the quick summary of the sign\'s visible temperament. It describes how the energy feels to others: the first impression, natural behavior style and repeated emotional pattern. Read it as the surface tone, while BaZi adds the deeper structure.';
+  }
+  return value||'No interpretation has been generated for this item yet.';
+}
+function chineseBoxDescription(label){
+  if(label==='Best use')return 'This item shows the healthiest way to use the dominant element in real life. It translates the element into practical behavior, timing and decision style.';
+  if(label==='Balance')return 'This item shows how the chart can regain stability when the natural rhythm becomes stressed, exaggerated or blocked.';
+  if(label==='Polarity')return 'This item explains whether the sign expresses itself through a more initiating Yang rhythm or a more receptive Yin rhythm.';
+  if(label==='Animal')return 'This item identifies the main Chinese Zodiac animal used as the first layer of the personality rhythm.';
+  if(label==='Element')return 'This item identifies the yearly element that colors the animal sign and changes how that sign behaves.';
+  if(label==='Core tone')return 'This item summarizes the most visible traits of the animal sign in a compact form.';
+  return 'This item is one small layer of the Chinese Zodiac reading. Read it together with the animal, element and BaZi pillars for context.';
+}
+function chinesePillarMeaning(label,main,sub){
+  const base=[main,sub].filter(Boolean).join(' - ');
+  const role=label.indexOf('Year')>-1?'The Year Pillar describes ancestry, social rhythm, public identity and the early environment around the person.':label.indexOf('Month')>-1?'The Month Pillar describes development, work rhythm, family climate and the conditions that shape maturity.':label.indexOf('Day')>-1?'The Day Pillar is the personal center of the BaZi chart. It describes the core self, intimate nature and the tone of close relationships.':label.indexOf('Hour')>-1?'The Hour Pillar describes private motivation, future direction, children, hidden drives and the way potential matures over time.':'This pillar adds one layer to the BaZi structure.';
+  return (base?base+'. ':'')+role+' Its stem shows the visible expression, while the branch shows the deeper instinct underneath. The full meaning becomes strongest when compared with the other three pillars and the element balance.';
+}
+function chinesePillMeaning(text){
+  if(!text)return 'No compatibility interpretation has been generated yet.';
+  if(text.indexOf('Support:')===0)return text+' This indicates an easier natural rhythm between the signs. Support signs often understand each other faster, cooperate with less friction and bring out confidence, humor or steadiness. It is not a guarantee of perfection, but it shows a softer starting point.';
+  if(text.indexOf('Challenge:')===0)return text+' This indicates a stronger learning rhythm between the signs. Challenge signs can create attraction, tension, growth and misunderstanding at the same time. The relationship needs patience, clear communication and respect for different timing styles.';
+  return text+' This factor should be read as one layer of compatibility rather than the whole relationship.';
+}
+function chineseYearMeaning(text){
+  if(!text)return 'No year interpretation is available yet.';
+  const clean=text.replace(/\s+/g,' ').trim();
+  return clean+' This yearly field describes the collective mood and timing for that Chinese year. The element shows the movement style, while the animal shows the instinctive pattern. For a personal reading, compare this year with the user\'s own animal, element and BaZi Day Master.';
+}
+function chineseSignMeaning(label,value){
+  const clean=value||'';
+  return clean+' This sign describes an instinctive archetype: how the person reacts, protects energy, seeks opportunity and relates to others. The support signs show easier rhythm and recognition; the challenge signs can show friction, growth and lessons in patience. Element and BaZi details can strongly modify this basic meaning.';
+}
+function openChineseHelp(event,key){if(event)event.stopPropagation();const data=chineseHelpText[key]||chineseHelpText.overview;showChineseHelp(data.title,data.text,chineseSectionMeaning(key))}
+function openChineseBoxHelp(event,button){if(event)event.stopPropagation();const box=button&&button.closest('.box');const label=box&&box.querySelector('.label')?box.querySelector('.label').textContent.trim():'Chinese item';const value=box&&box.querySelector('.value')?box.querySelector('.value').textContent.trim():'';showChineseHelp(label,chineseBoxDescription(label),chineseElementMeaning(label,value))}
+function openChinesePillarHelp(event,button){if(event)event.stopPropagation();const card=button&&button.closest('.pillar-card');const label=card&&card.querySelector('.pillar-label')?card.querySelector('.pillar-label').textContent.trim():'Pillar';const main=card&&card.querySelector('.pillar-main')?card.querySelector('.pillar-main').textContent.trim():'';const sub=card&&card.querySelector('.pillar-sub')?card.querySelector('.pillar-sub').textContent.trim():'';showChineseHelp(label,'Each pillar combines a Heavenly Stem and Earthly Branch. The Day Pillar is usually the personal center of the BaZi chart.',chinesePillarMeaning(label,main,sub))}
+function openChinesePillHelp(event,button){if(event)event.stopPropagation();const pill=button&&button.closest('.pill');const text=pill?pill.textContent.replace(/^\?/,'').trim():'';showChineseHelp('Compatibility detail','This is one factor in the relationship rhythm. Animal support is simple and visible; BaZi Day Master and elements describe a deeper layer.',chinesePillMeaning(text))}
+function openChineseYearHelp(event,button){if(event)event.stopPropagation();const cell=button&&button.closest('.year-cell');const text=cell?cell.textContent.replace(/^\?/,'').trim():'';showChineseHelp('Year rhythm','A Chinese year combines an element with an animal sign. This changes the collective tone for timing, mood and yearly themes.',chineseYearMeaning(text))}
+function openChineseSignHelp(event,button){if(event)event.stopPropagation();const box=button&&button.closest('.box');const label=box&&box.querySelector('.label')?box.querySelector('.label').textContent.trim():'Chinese sign';const value=box&&box.querySelector('.value')?box.querySelector('.value').textContent.trim():'';showChineseHelp(label,'This sign describes a basic instinctive style. Compatibility improves when the full element and BaZi pattern also support the connection.',chineseSignMeaning(label,value))}
 window.closeChineseHelp=closeChineseHelp;
 window.openChineseHelp=openChineseHelp;
 window.openChineseBoxHelp=openChineseBoxHelp;

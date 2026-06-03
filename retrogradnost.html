@@ -12,6 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pyramid App">
 <script src="app-shared-state.js"></script>
+<script src="world-cities.js"></script>
 <script src="app-notification-open.js"></script>
 
 <style>
@@ -881,6 +882,15 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
   margin:0!important;
 }
 
+
+
+/* ===== RETRO HELP TWO SECTION CONTENT ===== */
+.retro-help-section{border-top:1px solid rgba(255,215,0,.16);padding-top:10px;margin-top:10px}
+.retro-help-section:first-child{border-top:0;padding-top:0;margin-top:0}
+.retro-help-section-title{color:#f6cb71;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.retro-help-description{color:#94a3b8!important}
+.retro-help-meaning{color:#fff!important}
+.retro-help-description p,.retro-help-meaning p{margin:8px 0}
 </style>
 </head>
 <body>
@@ -1015,10 +1025,17 @@ function ensureRetroHelpModal(){
   document.body.appendChild(modal);
   return modal;
 }
-function showRetroHelp(title,body){
+function showRetroHelp(title,description,meaning){
   const modal=ensureRetroHelpModal();
+  if(meaning===undefined){
+    meaning=description;
+    description="This help item explains one part of the retrograde reading system and shows how to use it in the current or natal interpretation.";
+  }
+  function block(value){return /<\w+/i.test(String(value||""))?String(value||""):"<p>"+String(value||"")+"</p>"}
   document.getElementById("retroHelpTitle").textContent=title;
-  document.getElementById("retroHelpBody").innerHTML=body;
+  document.getElementById("retroHelpBody").innerHTML=
+    '<div class="retro-help-section"><div class="retro-help-section-title">Description</div><div class="retro-help-description">'+block(description)+'</div></div>'+
+    '<div class="retro-help-section"><div class="retro-help-section-title">Meaning / Interpretation</div><div class="retro-help-meaning">'+block(meaning)+'</div></div>';
   modal.style.display="flex";
 }
 function closeRetroHelp(){const modal=document.getElementById("retroHelpModal");if(modal)modal.style.display="none"}

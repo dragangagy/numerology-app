@@ -12,6 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Pyramid App">
 <script src="app-shared-state.js"></script>
+<script src="world-cities.js"></script>
 <script src="app-notification-open.js"></script>
 <style>
 *{
@@ -147,6 +148,71 @@ body{
   font-size:18px;
   margin-bottom:14px;
   text-shadow:0 0 8px rgba(255,215,0,0.2);
+}
+
+.transit-collapsible-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+.transit-collapsible-title{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+}
+
+.transit-collapsible-header .section-title{
+  margin:0!important;
+}
+
+.transit-collapse-toggle{
+  flex:0 0 auto!important;
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  border:1px solid rgba(255,215,0,.55);
+  background:rgba(15,23,42,.88);
+  color:#FFD700;
+  font-size:20px;
+  font-weight:900;
+  line-height:24px;
+  padding:0;
+  cursor:pointer;
+  box-shadow:0 0 8px rgba(255,215,0,.18);
+}
+
+.transit-collapse-toggle:hover{
+  border-color:#FFD700;
+  color:#fff4b0;
+  box-shadow:0 0 12px rgba(255,215,0,.32);
+}
+
+.transit-collapsible-card.collapsed .transit-collapsible-body{
+  display:none;
+}
+
+.transit-collapsible-card.collapsed{
+  padding-top:7px!important;
+  padding-bottom:7px!important;
+  margin-top:6px!important;
+}
+
+.transit-collapsible-card.collapsed + .transit-collapsible-card.collapsed{
+  margin-top:4px!important;
+}
+
+.transit-collapsible-card.collapsed .transit-collapsible-header{
+  margin-bottom:0!important;
+  min-height:28px;
+}
+
+.transit-collapsible-card.collapsed .section-title{
+  line-height:28px!important;
+  margin:0!important;
 }
 
 .input-line{
@@ -970,6 +1036,15 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 .transit-help-body p{margin:8px 0}
 .transit-help-body strong{color:#f6cb71}
 
+
+
+/* ===== TRANSIT HELP TWO SECTION CONTENT ===== */
+.transit-help-section{border-top:1px solid rgba(255,215,0,.16);padding-top:10px;margin-top:10px}
+.transit-help-section:first-child{border-top:0;padding-top:0;margin-top:0}
+.transit-help-section-title{color:#f6cb71;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px}
+.transit-help-description{color:#94a3b8!important}
+.transit-help-meaning{color:#fff!important}
+.transit-help-description p,.transit-help-meaning p{margin:8px 0}
 </style>
 </head>
 <body>
@@ -1091,56 +1166,74 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
             <div class="natal-pos"><button class="transit-help-btn" type="button" onclick="openNatalTransitHelp('Uranus', 88, 1)" aria-label="Explain natal Uranus">?</button><div><div class="natal-pos-planet">♅ Uranus</div><div class="natal-pos-sign">♊ Gemini</div><div class="natal-pos-degree">28&deg;47'</div></div></div>
         </div>    </div>
 
-    <!-- DATE PICKER FOR TRANSIT DATE -->
-    <div class="card">
-        <div class="section-title">TRANSIT DATE</div>
-        <div class="date-picker-row">
-            <input type="date" id="transitDate" value="2026-05-17">
-            <button class="calc-btn" style="margin:0;padding:8px 16px;font-size:12px;" onclick="setToday()">Today</button>
-            <button class="calc-btn" style="margin:0;padding:8px 16px;font-size:12px;" onclick="setTomorrow()">Tomorrow</button>
-        </div>
-    </div>
-
     <!-- ACTIVE TRANSITS -->
-    <div class="card">
-        <div class="section-title">ACTIVE TRANSITS</div>
-
-        <div class="filter-tabs">
-            <div class="filter-tab active" onclick="filterTransits('all', this)">All</div>
-            <div class="filter-tab" onclick="filterTransits('positive', this)">Positive</div>
-            <div class="filter-tab" onclick="filterTransits('challenge', this)">Challenging</div>
-            <div class="filter-tab" onclick="filterTransits('neutral', this)">Neutral</div>
-            <div class="filter-tab" onclick="filterTransits('major', this)">Major Only</div>
+    <div class="card transit-collapsible-card collapsed" data-transit-collapse="active">
+        <div class="transit-collapsible-header">
+            <div class="transit-collapsible-title">
+                <button class="transit-help-btn" type="button" onclick="openTransitSectionHelp(event, 'active')" aria-label="Explain Active Transits">?</button>
+                <div class="section-title">ACTIVE TRANSITS</div>
+            </div>
+            <button class="transit-collapse-toggle" type="button" onclick="toggleTransitCollapse(this)" aria-expanded="false" aria-label="Show Active Transits">+</button>
         </div>
+        <div class="transit-collapsible-body">
+            <div class="date-picker-row">
+                <input type="date" id="transitDate" value="2026-05-17">
+                <button class="calc-btn" style="margin:0;padding:8px 16px;font-size:12px;" onclick="setToday()">Today</button>
+                <button class="calc-btn" style="margin:0;padding:8px 16px;font-size:12px;" onclick="setTomorrow()">Tomorrow</button>
+            </div>
 
-        <div class="aspect-legend">
-            <div class="legend-item"><span class="legend-symbol">☌</span> Conjunction 0&deg;</div>
-            <div class="legend-item"><span class="legend-symbol">□</span> Square 90&deg;</div>
-            <div class="legend-item"><span class="legend-symbol">△</span> Trine 120&deg;</div>
-            <div class="legend-item"><span class="legend-symbol">⚹</span> Sextile 60&deg;</div>
-            <div class="legend-item"><span class="legend-symbol">☍</span> Opposition 180&deg;</div>
+            <div class="filter-tabs">
+                <div class="filter-tab active" onclick="filterTransits('all', this)">All</div>
+                <div class="filter-tab" onclick="filterTransits('positive', this)">Positive</div>
+                <div class="filter-tab" onclick="filterTransits('challenge', this)">Challenging</div>
+                <div class="filter-tab" onclick="filterTransits('neutral', this)">Neutral</div>
+                <div class="filter-tab" onclick="filterTransits('major', this)">Major Only</div>
+            </div>
+
+            <div class="aspect-legend">
+                <div class="legend-item"><span class="legend-symbol">☌</span> Conjunction 0&deg;</div>
+                <div class="legend-item"><span class="legend-symbol">□</span> Square 90&deg;</div>
+                <div class="legend-item"><span class="legend-symbol">△</span> Trine 120&deg;</div>
+                <div class="legend-item"><span class="legend-symbol">⚹</span> Sextile 60&deg;</div>
+                <div class="legend-item"><span class="legend-symbol">☍</span> Opposition 180&deg;</div>
+            </div>
+
+            <div id="transitList"></div>
         </div>
-
-        <div id="transitList"></div>
     </div>
 
     <!-- RETROGRADE IMPACT -->
-    <div class="card">
-        <div class="section-title">RETROGRADE IMPACT</div>
-        <div class="retro-impact">
-            <div class="retro-impact-title">Warning Mercury Retrograde in Gemini</div>
-            <div class="retro-impact-text">Mercury is retrograde in your 3rd house of communication. This affects how you express yourself, process information, and interact with your immediate environment. Old conversations may resurface. Review contracts carefully. It's an excellent time for editing, research, and reconnecting with siblings or neighbors. Avoid signing major agreements until June 3rd.</div>
+    <div class="card transit-collapsible-card collapsed" data-transit-collapse="retrograde">
+        <div class="transit-collapsible-header">
+            <div class="transit-collapsible-title">
+                <button class="transit-help-btn" type="button" onclick="openTransitSectionHelp(event, 'retrograde')" aria-label="Explain Retrograde Impact">?</button>
+                <div class="section-title">RETROGRADE IMPACT</div>
+            </div>
+            <button class="transit-collapse-toggle" type="button" onclick="toggleTransitCollapse(this)" aria-expanded="false" aria-label="Show Retrograde Impact">+</button>
         </div>
-        <div class="retro-impact" style="margin-top:10px;">
-            <div class="retro-impact-title">Warning Saturn Retrograde in Pisces</div>
-            <div class="retro-impact-text">Saturn is retrograde conjunct your natal Moon. This brings emotional restructuring and karmic lessons around security, family, and nurturing. Old emotional patterns surface for healing. You may feel more serious or isolated. Use this time for deep inner work, setting healthy boundaries, and releasing emotional baggage.</div>
+        <div class="transit-collapsible-body">
+            <div class="retro-impact">
+                <div class="retro-impact-title">Warning Mercury Retrograde in Gemini</div>
+                <div class="retro-impact-text">Mercury is retrograde in your 3rd house of communication. This affects how you express yourself, process information, and interact with your immediate environment. Old conversations may resurface. Review contracts carefully. It's an excellent time for editing, research, and reconnecting with siblings or neighbors. Avoid signing major agreements until June 3rd.</div>
+            </div>
+            <div class="retro-impact" style="margin-top:10px;">
+                <div class="retro-impact-title">Warning Saturn Retrograde in Pisces</div>
+                <div class="retro-impact-text">Saturn is retrograde conjunct your natal Moon. This brings emotional restructuring and karmic lessons around security, family, and nurturing. Old emotional patterns surface for healing. You may feel more serious or isolated. Use this time for deep inner work, setting healthy boundaries, and releasing emotional baggage.</div>
+            </div>
         </div>
     </div>
 
     <!-- UPCOMING TRANSITS -->
-    <div class="card">
-        <div class="section-title">UPCOMING TRANSITS</div>
-        <div class="upcoming-list">
+    <div class="card transit-collapsible-card collapsed" data-transit-collapse="upcoming">
+        <div class="transit-collapsible-header">
+            <div class="transit-collapsible-title">
+                <button class="transit-help-btn" type="button" onclick="openTransitSectionHelp(event, 'upcoming')" aria-label="Explain Upcoming Transits">?</button>
+                <div class="section-title">UPCOMING TRANSITS</div>
+            </div>
+            <button class="transit-collapse-toggle" type="button" onclick="toggleTransitCollapse(this)" aria-expanded="false" aria-label="Show Upcoming Transits">+</button>
+        </div>
+        <div class="transit-collapsible-body">
+            <div class="upcoming-list">
             <div class="upcoming-item">
                 <span class="upcoming-date">May 20</span>
                 <span class="upcoming-transit">☉ Sun enters ♊ Gemini</span>
@@ -1181,6 +1274,7 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
                 <span class="upcoming-transit">☉ Sun enters ♋ Cancer (Solstice)</span>
                 <span class="upcoming-type neutral">Season</span>
             </div>
+            </div>
         </div>
     </div>
 
@@ -1197,6 +1291,39 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 </div>
 
 <script>
+
+function toggleTransitCollapse(button){
+  const card = button && button.closest ? button.closest(".transit-collapsible-card") : null;
+  if(!card) return;
+  const collapsed = card.classList.toggle("collapsed");
+  button.textContent = collapsed ? "+" : "-";
+  button.setAttribute("aria-expanded", collapsed ? "false" : "true");
+  const title = card.querySelector(".section-title");
+  if(title) button.setAttribute("aria-label", (collapsed ? "Show " : "Hide ") + title.textContent.trim());
+}
+
+function openTransitSectionHelp(event, section){
+  if(event) event.stopPropagation();
+  const content = {
+    active: {
+      title: "ACTIVE TRANSITS",
+      description: "Active transits combine the selected transit date with the strongest planet-to-natal-chart contacts for that day.",
+      meaning: "<p>This card shows what is currently being activated in the chart. The transit date controls the calculation, while the list below shows supportive, challenging and neutral influences. Read the strongest and closest orbs first because they usually describe the most noticeable themes.</p>"
+    },
+    retrograde: {
+      title: "RETROGRADE IMPACT",
+      description: "Retrograde impact highlights transits that may feel delayed, repeated, internalized or connected with review and correction.",
+      meaning: "<p>This section points to places where life may ask for patience, revision and maturity. Retrograde themes often bring unfinished material back into focus so it can be understood, repaired or handled with more awareness.</p>"
+    },
+    upcoming: {
+      title: "UPCOMING TRANSITS",
+      description: "Upcoming transits preview the next important dates and planetary contacts after the selected transit date.",
+      meaning: "<p>Use this section for planning. It shows what is approaching, which type of influence it carries, and when the exact contact is expected. Positive entries can support action, while challenging entries are better used for preparation and conscious timing.</p>"
+    }
+  }[section];
+  if(!content) return;
+  showTransitHelp(content.title, content.description, content.meaning);
+}
 
 /* ===== TRANSIT DATA ===== */
 const sampleTransits = [
@@ -1511,10 +1638,17 @@ function ensureTransitHelpModal(){
   document.body.appendChild(modal);
   return modal;
 }
-function showTransitHelp(title, body){
+function showTransitHelp(title, description, meaning){
   const modal = ensureTransitHelpModal();
+  if(meaning === undefined){
+    meaning = description;
+    description = "This help item explains one part of the transit reading system and shows how to understand it in context.";
+  }
+  function block(value){return /<\w+/i.test(String(value||"")) ? String(value||"") : "<p>"+String(value||"")+"</p>"}
   document.getElementById("transitHelpTitle").textContent = title;
-  document.getElementById("transitHelpBody").innerHTML = body;
+  document.getElementById("transitHelpBody").innerHTML =
+    '<div class="transit-help-section"><div class="transit-help-section-title">Description</div><div class="transit-help-description">'+block(description)+'</div></div>'+
+    '<div class="transit-help-section"><div class="transit-help-section-title">Meaning / Interpretation</div><div class="transit-help-meaning">'+block(meaning)+'</div></div>';
   modal.style.display = "flex";
 }
 function closeTransitHelp(){
@@ -1537,7 +1671,8 @@ function openNatalTransitHelp(name, longitude, house){
     11:"friends, networks and future goals",
     12:"solitude, dreams and hidden patterns"
   };
-  showTransitHelp(name+" in "+sign.name, 
+  showTransitHelp(name+" in "+sign.name,
+    "Natal positions show the birth-chart points that current transits activate. The planet describes the life function, the sign describes its style, and the house shows where the person feels it most.",
     "<p><strong>Quick reading:</strong> Natal "+name+" in "+sign.name+" shows how "+transitKeyword(name,0)+" and "+transitKeyword(name,1)+" naturally express through "+sign.name+" style.</p>"+
     "<p><strong>Life area:</strong> House "+house+" brings this placement into "+(houseAreas[house] || "an important area of life")+". This is where transits to "+name+" will be felt most personally.</p>"+
     "<p><strong>How to read it:</strong> When a transit activates this point, watch changes in "+transitKeyword(name,2)+" and "+transitKeyword(name,3)+".</p>"+
@@ -1553,6 +1688,7 @@ function openTransitAspectHelpByIndex(index){
   const aspectName = normalizeTransitAspectName(t.aspect);
   const aspectData = transitAspectReadingData[aspectName] || {tone:"interactive", feel:"two chart themes influence each other", advice:"respond with awareness"};
   showTransitHelp(t.description || (transitName+" "+aspectName+" "+natalName),
+    "A transit compares a moving planet in the current sky with a fixed natal planet. It describes a temporary period, not a permanent personality trait.",
     "<p><strong>Quick reading:</strong> Transiting "+transitName+" "+aspectData.feel+" around natal "+natalName+". This creates a "+aspectData.tone+" period involving "+transitKeyword(transitName,0)+" and "+transitKeyword(natalName,0)+".</p>"+
     "<p><strong>How it feels:</strong> The moving planet brings current events, moods or pressure. The natal point shows the part of the birth chart being activated. Here, "+transitName+" stimulates "+transitKeyword(natalName,1)+" through the theme of "+aspectName+".</p>"+
     "<p><strong>What to do:</strong> "+transitAction(transitName)+". The aspect asks you to "+aspectData.advice+".</p>"+
@@ -1817,7 +1953,12 @@ async function getTransitSwe(){if(transitSweCache)return{mod:transitModCache,swe
 function planetId(mod,key){return mod.Planet[key.charAt(0).toUpperCase()+key.slice(1)]}
 function setCalcSourceStatus(source){const el=document.getElementById("calcSourceStatus");if(!el)return;const precise=source==="Local Swiss Ephemeris";el.classList.toggle("fallback",!precise);el.textContent=precise?"Swiss Ephemeris loaded - precise transit calculation.":"Fallback calculation used - approximate transit formulas."}
 async function calcBodyPositions(jd,cusps){try{const {mod,swe}=await getTransitSwe();const positions=transitBodies.map(b=>{const pos=swe.calculatePosition(jd,planetId(mod,b.key),mod.CalculationFlag.SwissEphemeris|mod.CalculationFlag.Speed);const longitude=normalize(pos.longitude);return{...b,longitude,house:houseOf(longitude,cusps),speed:pos.longitudeSpeed||0}});positions.source="Local Swiss Ephemeris";return positions}catch(e){const positions=transitBodies.map(b=>{const longitude=fallbackLongitude(jd,b.key);return{...b,longitude,house:houseOf(longitude,cusps),speed:0}});positions.source="browser formulas";return positions}}
-async function calculateNatalAndTransits(){const date=parseAstroDate(document.getElementById("birthDate").value);const time=parseAstroTime(document.getElementById("birthTime").value);const city=(document.getElementById("birthCity").value||"Belgrade").trim();const coords=transitCityData[city]||transitCityData.Belgrade;const utc=localBirthToUtc(date,time,coords);const natalJd=julianDay(utc);const angles=calculateAscMc(natalJd,coords.lat,coords.lon);const cusps=equalHouses(angles.asc);const natal=await calcBodyPositions(natalJd,cusps);const tDate=new Date(document.getElementById("transitDate").value+"T12:00:00Z");const transit=await calcBodyPositions(julianDay(tDate),cusps);const source=natal.source==="Local Swiss Ephemeris"&&transit.source==="Local Swiss Ephemeris"?"Local Swiss Ephemeris":"browser formulas";return{natal,transit,cusps,angles,city,transitDate:tDate,source}}
+function getTransitCityCoords(city){
+const raw=String(city||"").trim();
+const base=raw.split(",")[0].trim();
+return (window.WorldCities&&(WorldCities.find(raw)||WorldCities.find(base)))||transitCityData[raw]||transitCityData[base]||transitCityData.Belgrade;
+}
+async function calculateNatalAndTransits(){const date=parseAstroDate(document.getElementById("birthDate").value);const time=parseAstroTime(document.getElementById("birthTime").value);const city=(document.getElementById("birthCity").value||"Belgrade").trim();const coords=getTransitCityCoords(city);const utc=localBirthToUtc(date,time,coords);const natalJd=julianDay(utc);const angles=calculateAscMc(natalJd,coords.lat,coords.lon);const cusps=equalHouses(angles.asc);const natal=await calcBodyPositions(natalJd,cusps);const tDate=new Date(document.getElementById("transitDate").value+"T12:00:00Z");const transit=await calcBodyPositions(julianDay(tDate),cusps);const source=natal.source==="Local Swiss Ephemeris"&&transit.source==="Local Swiss Ephemeris"?"Local Swiss Ephemeris":"browser formulas";return{natal,transit,cusps,angles,city,transitDate:tDate,source}}
 function transitMeaning(t,n,aspect,type){const action={positive:"opens an easier flow",challenge:"creates pressure and asks for adjustment",neutral:"marks a strong activation"}[type];return `${t.name} ${aspect.name.toLowerCase()} natal ${n.name} ${action} between ${t.name.toLowerCase()} themes and your natal ${n.name.toLowerCase()} pattern. Watch timing, mood and choices around the affected house.`}
 function transitWindow(body,date){const pace=body.key==="moon"?"moon":["sun","mercury","venus"].includes(body.key)?"fast":body.key==="mars"?"medium":"slow";const days={moon:1,fast:4,medium:10,slow:45}[pace]||10;const start=new Date(date.getTime()-days*86400000);const end=new Date(date.getTime()+days*86400000);return{start:start.toISOString().slice(0,10),end:end.toISOString().slice(0,10)}}
 function timingFromOrb(orb){return orb<0.5?"exact":orb<2?"approaching":"separating"}
@@ -1864,7 +2005,7 @@ async function calculateTransits(evt){const btn=evt&&evt.target?evt.target:docum
 /* ===== INIT ===== */
 let transitCities=["Belgrade","Novi Sad","Nis","Kragujevac","Subotica","Zagreb","Split","Sarajevo","Banja Luka","Podgorica","Budva","Skopje","Ljubljana","Vienna","Budapest","Athens","Sofia","Bucharest","Istanbul","Rome","Milan","Madrid","Barcelona","Paris","London","Berlin","Munich","Amsterdam","Brussels","Zurich","Prague","Warsaw","Stockholm","Oslo","Copenhagen","Helsinki","Dublin","Lisbon","Moscow","Kyiv","New York","Los Angeles","Chicago","Miami","Toronto","Vancouver","Mexico City","Buenos Aires","Sao Paulo","Rio de Janeiro","Cairo","Dubai","Doha","Riyadh","Tel Aviv","Mumbai","New Delhi","Bangkok","Singapore","Hong Kong","Beijing","Shanghai","Tokyo","Seoul","Sydney","Melbourne","Auckland","Cape Town","Johannesburg"];
 const transitCityData={"Belgrade":{lat:44.7866,lon:20.4489,tz:"Europe/Belgrade"},"Novi Sad":{lat:45.2671,lon:19.8335,tz:"Europe/Belgrade"},"Nis":{lat:43.3209,lon:21.8958,tz:"Europe/Belgrade"},"Kragujevac":{lat:44.0128,lon:20.9114,tz:"Europe/Belgrade"},"Subotica":{lat:46.1005,lon:19.6651,tz:"Europe/Belgrade"},"Zagreb":{lat:45.815,lon:15.9819,tz:"Europe/Zagreb"},"Sarajevo":{lat:43.8563,lon:18.4131,tz:"Europe/Sarajevo"},"Podgorica":{lat:42.4304,lon:19.2594,tz:"Europe/Podgorica"},"Skopje":{lat:41.9981,lon:21.4254,tz:"Europe/Skopje"},"London":{lat:51.5074,lon:-0.1278,tz:"Europe/London"},"Paris":{lat:48.8566,lon:2.3522,tz:"Europe/Paris"},"Berlin":{lat:52.52,lon:13.405,tz:"Europe/Berlin"},"New York":{lat:40.7128,lon:-74.006,tz:"America/New_York"},"Los Angeles":{lat:34.0522,lon:-118.2437,tz:"America/Los_Angeles"},"Tokyo":{lat:35.6762,lon:139.6503,tz:"Asia/Tokyo"},"Sydney":{lat:-33.8688,lon:151.2093,tz:"Australia/Sydney"},"Dubai":{lat:25.2048,lon:55.2708,tz:"Asia/Dubai"}};
-async function loadSharedCityCatalog(){try{const html=await fetch("index.html").then(r=>r.text());const cityMatch=/const worldCities\s*=\s*(\[[\s\S]*?\]);/.exec(html);if(cityMatch){const sharedCities=Function("return "+cityMatch[1])();transitCities=[...new Set([...transitCities,...sharedCities])].sort((a,b)=>a.localeCompare(b))}const coordMatch=/const cityCoords\s*=\s*(\{[\s\S]*?\n\};)/.exec(html);if(coordMatch){const sharedCoords=Function("return "+coordMatch[1].replace(/;$/,""))();Object.entries(sharedCoords).forEach(([name,coords])=>{if(!transitCityData[name])transitCityData[name]={lat:coords.lat,lon:coords.lon}})}}catch(e){console.warn("Shared city catalog could not be loaded.",e)}}
+async function loadSharedCityCatalog(){try{if(window.WorldCities){transitCities=[...new Set([...transitCities,...WorldCities.names()])].sort((a,b)=>a.localeCompare(b));WorldCities.cities.forEach(city=>{const name=WorldCities.displayName(city);if(!transitCityData[name])transitCityData[name]={lat:city.lat,lon:city.lon,tz:city.tz};if(!transitCityData[city.ascii])transitCityData[city.ascii]={lat:city.lat,lon:city.lon,tz:city.tz};});}}catch(e){console.warn("Shared city catalog could not be loaded.",e)}}
 function setupTransitCityAutocomplete(){const input=document.getElementById("birthCity");const dropdown=document.getElementById("birthCityDropdown");if(!input||!dropdown)return;input.addEventListener("input",function(){const val=this.value.toLowerCase();if(!val){dropdown.style.display="none";return}const matches=transitCities.filter(city=>city.toLowerCase().includes(val)).slice(0,10);dropdown.innerHTML=matches.map(city=>'<div onclick="selectTransitCity(\''+city.replace(/'/g,"\\'")+'\')" style="padding:8px 12px;cursor:pointer;color:white;font-size:12px;border-bottom:1px solid #334155">'+city+'</div>').join("");dropdown.style.display=matches.length?"block":"none"});document.addEventListener("click",function(e){if(!input.contains(e.target)&&!dropdown.contains(e.target))dropdown.style.display="none"})}
 function selectTransitCity(city){document.getElementById("birthCity").value=city;document.getElementById("birthCityDropdown").style.display="none"}
 function readTransitOwnerProfile(){try{return JSON.parse(localStorage.getItem("numerology_owner_profile")||"null")}catch(e){return null}}
@@ -2026,6 +2167,16 @@ function appCopyTextFallback(text,message){const input=document.createElement("t
 async function appShare(shareData){try{if(window.Android&&typeof window.Android.share==="function"){window.Android.share(shareData.title||document.title,shareData.text||"",shareData.url||location.href);return}if(window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.Share){await window.Capacitor.Plugins.Share.share(shareData);return}if(navigator.share){await navigator.share(shareData);return}}catch(error){console.warn("Native share failed",error)}await appCopyText(shareData.url||location.href,"Link copied to clipboard.")}
 function appPrintPage(){try{if(window.Android&&typeof window.Android.printPage==="function"){window.Android.printPage();return}window.print()}catch(e){alert("Print is not available in this app view.")}}
 function appExit(fallbackUrl){if(window.closeNativeApp){window.closeNativeApp(fallbackUrl);return}try{window.close()}catch(e){}setTimeout(function(){window.location.href=fallbackUrl||"index.html"},160)}
+async function sharePage(){
+  const birth=[
+    document.getElementById("birthDate")?.value,
+    document.getElementById("birthTime")?.value,
+    document.getElementById("birthCity")?.value
+  ].filter(Boolean).join(" ");
+  const transitDate=document.getElementById("transitDate")?.value||"";
+  const text=["Transit report",birth,transitDate?("Transit date: "+transitDate):""].filter(Boolean).join(" - ");
+  await appShare({title:"Transits",text,url:window.location.href});
+}
 window.appCopyText=appCopyText;window.appShare=appShare;window.appPrintPage=appPrintPage;window.appExit=appExit;window.sharePage=sharePage;
 function formatBirthDate(input){let value=input.value.replace(/[^0-9]/g,"").slice(0,8);let formatted="";if(value.length>=2)formatted+=value.slice(0,2)+".";else formatted+=value;if(value.length>=4)formatted+=value.slice(2,4)+".";else if(value.length>2)formatted+=value.slice(2);if(value.length>=5)formatted+=value.slice(4);input.value=formatted}
 function validateBirthDateInput(input){if(!input.value)return;const normalized=normalizeDateForCalc(input.value);if(/^\d{2}\.\d{2}\.\d{4}$/.test(normalized))input.value=ownerUnits()==="US"?displayDateByUnits(normalized):normalized;input.style.borderColor=/^\d{2}\.\d{2}\.\d{4}$/.test(normalized)?"#38bdf8":"#ef4444"}

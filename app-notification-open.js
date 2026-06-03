@@ -39,35 +39,114 @@
     if(modal)modal.style.display = "none";
   }
 
+  function currentPageName(){
+    const path = String(window.location.pathname || "");
+    return (path.split(/[\/\\]/).pop() || "index.html").toLowerCase();
+  }
+
+  function saveOwnerInputFromParams(params){
+    const state = {
+      date: params.get("date") || "",
+      time: params.get("time") || "",
+      city: params.get("city") || "",
+      isTwin: params.get("isTwin") === "true",
+      isTwin3: params.get("isTwin3") === "true"
+    };
+    if((state.date || state.time || state.city) && window.AppSharedState && typeof AppSharedState.saveLastAstroInput === "function"){
+      try{ AppSharedState.saveLastAstroInput(state); }catch(e){}
+    }
+  }
+
+  function activateNotificationSource(pending){
+    if(!pending)return false;
+    if(pending.tab === "ownerProfile"){
+      setTimeout(function(){
+        if(typeof window.openOwnerProfile === "function")window.openOwnerProfile();
+      }, 240);
+      return true;
+    }
+    if(pending.tab && typeof window.showTab === "function"){
+      try{
+        window.showTab(pending.tab);
+        return true;
+      }catch(e){}
+    }
+    return false;
+  }
+
+  function cleanNotificationParams(){
+    if(!history.replaceState)return;
+    const cleanParams = new URLSearchParams(window.location.search);
+    ["notificationTopic","notificationTitle","notificationBody","notificationImage","notificationTab","notificationPage"].forEach(key => cleanParams.delete(key));
+    const query = cleanParams.toString();
+    history.replaceState({}, document.title, window.location.pathname + (query ? "?"+query : "") + (window.location.hash || ""));
+  }
+
   function openNotificationFromParams(){
     const params = new URLSearchParams(window.location.search);
     const topic = params.get("notificationTopic");
+    saveOwnerInputFromParams(params);
     if(topic){
+      const targetPage = (params.get("notificationPage") || "").toLowerCase();
+      if(targetPage && targetPage !== currentPageName()){
+        window.location.href = targetPage + "?" + params.toString();
+        return;
+      }
       window.__pendingNotificationInfo = {
         topic,
         title: params.get("notificationTitle") || "Notification",
         body: params.get("notificationBody") || "Open the related section for more details.",
         image: params.get("notificationImage") || "",
-        tab: params.get("notificationTab") || ""
+        tab: params.get("notificationTab") || "",
+        page: params.get("notificationPage") || ""
       };
     }
     const pending = window.__pendingNotificationInfo;
     if(!pending || !pending.topic)return;
-    if(pending.tab && typeof window.showTab === "function"){
-      try{ window.showTab(pending.tab); }catch(e){}
+    const activated = activateNotificationSource(pending);
+    if(!activated && !pending.page)showNotificationInfo(pending.title, pending.body, pending.image);
+    if(topic)cleanNotificationParams();
+  }
+
+  function openAppNotification(payload){
+    let data = payload;
+    if(typeof data === "string"){
+      try{data = JSON.parse(data)}catch(e){data = {openUrl:data,url:data}}
     }
-    showNotificationInfo(pending.title, pending.body, pending.image);
-    if(topic && history.replaceState){
-      const cleanParams = new URLSearchParams(window.location.search);
-      ["notificationTopic","notificationTitle","notificationBody","notificationImage","notificationTab"].forEach(key => cleanParams.delete(key));
-      const query = cleanParams.toString();
-      history.replaceState({}, document.title, window.location.pathname + (query ? "?"+query : "") + (window.location.hash || ""));
+    data = data || {};
+    const directUrl = data.openUrl || data.url;
+    if(directUrl){
+      window.location.href = directUrl;
+      return;
     }
+    const route = data.route || {};
+    const params = new URLSearchParams();
+    const topic = data.topic || route.topic || "";
+    const page = data.page || route.page || "";
+    const tab = data.tab || route.tab || "";
+    if(topic)params.set("notificationTopic", topic);
+    if(data.title || route.title)params.set("notificationTitle", data.title || route.title);
+    if(data.body || route.body)params.set("notificationBody", data.body || route.body);
+    if(data.image || data.imageUrl || route.image)params.set("notificationImage", data.image || data.imageUrl || route.image);
+    if(tab)params.set("notificationTab", tab);
+    if(page)params.set("notificationPage", page);
+    const ownerState = data.ownerInput || route.ownerInput || (window.AppSharedState && typeof AppSharedState.lastAstroInput === "function" ? AppSharedState.lastAstroInput() : null);
+    if(ownerState){
+      if(ownerState.date)params.set("date", ownerState.date);
+      if(ownerState.time)params.set("time", ownerState.time);
+      if(ownerState.city)params.set("city", ownerState.city);
+      if(ownerState.isTwin)params.set("isTwin", "true");
+      if(ownerState.isTwin3)params.set("isTwin3", "true");
+    }
+    window.location.href = (page || currentPageName() || "index.html") + (params.toString() ? "?" + params.toString() : "");
   }
 
   window.showNotificationInfo = window.showNotificationInfo || showNotificationInfo;
   window.closeNotificationInfo = window.closeNotificationInfo || closeNotificationInfo;
   window.openNotificationFromParams = openNotificationFromParams;
+  window.openAppNotification = openAppNotification;
+  window.handleNotificationOpen = openAppNotification;
+  window.onNotificationOpen = openAppNotification;
   document.addEventListener("DOMContentLoaded", function(){
     setTimeout(openNotificationFromParams, 180);
     setTimeout(openNotificationFromParams, 900);
