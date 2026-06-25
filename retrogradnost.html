@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -14,6 +14,7 @@
 <script src="app-shared-state.js"></script>
 <script src="world-cities.js"></script>
 <script src="app-notification-open.js"></script>
+<script src="capacitor-bridge.js"></script>
 
 <style>
 
@@ -59,7 +60,7 @@ body{
 }
 
 .calc-source-status.fallback{
-    color:#f6cb71;
+    color:#ef4444;
 }
 
 .container{
@@ -861,6 +862,18 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 .retro-summary-tools{
   min-height:22px;
 }
+.station-item{
+  position:relative;
+  padding-left:36px!important;
+  text-align:left;
+}
+.station-item > .retro-help-btn{
+  position:absolute;
+  left:7px;
+  top:50%;
+  transform:translateY(-50%);
+  margin:0!important;
+}
 .planet-cell .retro-help-btn,
 .natal-retro-chip .retro-help-btn{
   margin-right:5px;
@@ -884,6 +897,36 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 
 
 
+/* ===== FINAL RETRO CARD SYMBOL / HELP ALIGNMENT ===== */
+.station-planet-list .retro-item{
+  position:relative!important;
+}
+.station-planet-list .retro-item .retro-summary{
+  padding-left:32px!important;
+}
+.station-planet-list .retro-summary-tools .retro-help-btn{
+  left:8px!important;
+  top:10px!important;
+}
+.station-item{
+  padding-left:38px!important;
+}
+.planet-icon,.retro-sign-symbol,.retro-sign-box,.station-planet{
+  font-family:"DejaVu Sans","Noto Sans Symbols 2","Noto Sans Symbols","Segoe UI Symbol",Arial,sans-serif!important;
+  font-variant-emoji:text!important;
+}
+.retro-sign-box{
+  display:inline;
+  margin-right:3px;
+  border:0!important;
+  background:transparent!important;
+  color:inherit!important;
+  font-size:1em;
+  line-height:inherit;
+  vertical-align:baseline;
+  box-shadow:none!important;
+}
+
 /* ===== RETRO HELP TWO SECTION CONTENT ===== */
 .retro-help-section{border-top:1px solid rgba(255,215,0,.16);padding-top:10px;margin-top:10px}
 .retro-help-section:first-child{border-top:0;padding-top:0;margin-top:0}
@@ -891,6 +934,25 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 .retro-help-description{color:#94a3b8!important}
 .retro-help-meaning{color:#fff!important}
 .retro-help-description p,.retro-help-meaning p{margin:8px 0}
+
+/* ===== RETRO CARD TITLE HELP TOP LEFT ===== */
+.card{
+  position:relative!important;
+}
+.card > .section-title{
+  position:static!important;
+  padding:0 28px!important;
+  min-height:24px!important;
+  text-align:center!important;
+}
+.card > .section-title > .retro-help-btn{
+  position:absolute!important;
+  left:2px!important;
+  top:2px!important;
+  transform:none!important;
+  margin:0!important;
+  z-index:8!important;
+}
 </style>
 </head>
 <body>
@@ -968,14 +1030,14 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
                 <tr><th>Planet</th><th>Retrograde Meaning</th><th>Shadow Period</th><th>Frequency</th></tr>
             </thead>
             <tbody>
-                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Mercury')" aria-label="Explain Mercury retrograde">?</button> ☿ Mercury</td><td>Review, rethink, reconnect. Miscommunication, tech issues, travel delays.</td><td>~2 weeks before/after</td><td>3-4x / year (3 weeks)</td></tr>
-                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Venus')" aria-label="Explain Venus retrograde">?</button> ♀ Venus</td><td>Reevaluate love, values, money. Old flames return. Financial review.</td><td>~2 weeks before/after</td><td>~1x / 18 months (6 weeks)</td></tr>
-                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Mars')" aria-label="Explain Mars retrograde">?</button> ♂ Mars</td><td>Redirect anger, review actions. Slower initiative, internalized drive.</td><td>~2 weeks before/after</td><td>~1x / 2 years (2-3 months)</td></tr>
-                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Jupiter')" aria-label="Explain Jupiter retrograde">?</button> ♃ Jupiter</td><td>Reassess beliefs, growth, opportunities. Internal expansion.</td><td>~1 month before/after</td><td>~1x / year (4 months)</td></tr>
-                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Saturn')" aria-label="Explain Saturn retrograde">?</button> ♄ Saturn</td><td>Karmic restructuring, discipline review. Hard lessons internalized.</td><td>~1 month before/after</td><td>~1x / year (4-5 months)</td></tr>
-                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Uranus')" aria-label="Explain Uranus retrograde">?</button> ♅ Uranus</td><td>Sudden insights, rebellion review. Breakthroughs from within.</td><td>~1 month before/after</td><td>~1x / year (5 months)</td></tr>
-                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Neptune')" aria-label="Explain Neptune retrograde">?</button> ♆ Neptune</td><td>Dreams, illusions, spirituality revisited. Creative blocks or bursts.</td><td>~1 month before/after</td><td>~1x / year (5-6 months)</td></tr>
-                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Pluto')" aria-label="Explain Pluto retrograde">?</button> ♇ Pluto</td><td>Deep transformation, power review. Shadow work and regeneration.</td><td>~1 month before/after</td><td>~1x / year (5-6 months)</td></tr>
+                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Mercury')" aria-label="Explain Mercury retrograde">?</button> ? Mercury</td><td>Review, rethink, reconnect. Miscommunication, tech issues, travel delays.</td><td>~2 weeks before/after</td><td>3-4x / year (3 weeks)</td></tr>
+                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Venus')" aria-label="Explain Venus retrograde">?</button> ? Venus</td><td>Reevaluate love, values, money. Old flames return. Financial review.</td><td>~2 weeks before/after</td><td>~1x / 18 months (6 weeks)</td></tr>
+                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Mars')" aria-label="Explain Mars retrograde">?</button> ? Mars</td><td>Redirect anger, review actions. Slower initiative, internalized drive.</td><td>~2 weeks before/after</td><td>~1x / 2 years (2-3 months)</td></tr>
+                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Jupiter')" aria-label="Explain Jupiter retrograde">?</button> ? Jupiter</td><td>Reassess beliefs, growth, opportunities. Internal expansion.</td><td>~1 month before/after</td><td>~1x / year (4 months)</td></tr>
+                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Saturn')" aria-label="Explain Saturn retrograde">?</button> ? Saturn</td><td>Karmic restructuring, discipline review. Hard lessons internalized.</td><td>~1 month before/after</td><td>~1x / year (4-5 months)</td></tr>
+                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Uranus')" aria-label="Explain Uranus retrograde">?</button> ? Uranus</td><td>Sudden insights, rebellion review. Breakthroughs from within.</td><td>~1 month before/after</td><td>~1x / year (5 months)</td></tr>
+                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Neptune')" aria-label="Explain Neptune retrograde">?</button> ? Neptune</td><td>Dreams, illusions, spirituality revisited. Creative blocks or bursts.</td><td>~1 month before/after</td><td>~1x / year (5-6 months)</td></tr>
+                <tr><td class="planet-cell"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, 'Pluto')" aria-label="Explain Pluto retrograde">?</button> ? Pluto</td><td>Deep transformation, power review. Shadow work and regeneration.</td><td>~1 month before/after</td><td>~1x / year (5-6 months)</td></tr>
             </tbody>
         </table>
     </div>
@@ -983,7 +1045,7 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 </div>
 
 <div class="footer">
-    Local Swiss Ephemeris • Retrograde Detection • Station & Shadow Tracking
+                Local Swiss Ephemeris &#8226; Retrograde Detection &#8226; Station &amp; Shadow Tracking
 </div>
 
 <script src="app-notifications.js"></script>
@@ -1001,10 +1063,28 @@ const retroFullMeanings = {
   Pluto:{keywords:["power","shadow","control","trauma","transformation"], retro:"Pluto retrograde turns transformation inward. Shadow material, power patterns and old survival strategies ask to be seen honestly.", direct:"Pluto direct supports visible transformation and external power shifts.", natal:"Natal Pluto retrograde often shows deep internal transformation. The person may carry strong instincts and a lifelong need for psychological truth."}
 };
 function retroPlanetName(value){
-  return String(value||"").replace(/[☿♀♂♃♄♅♆♇]/g,"").trim();
+  return String(value||"").replace(/[\u263F-\u2653\uFE0E\uFE0F?]/g,"").trim();
+}
+function retroTextSymbol(value){
+  const clean=String(value||"").replace(/[\uFE0E\uFE0F]/g,"");
+  return clean ? clean+"\uFE0E" : "";
+}
+function retroSignName(value){
+  return String(value||"").replace(/[\u2648-\u2653\uFE0E\uFE0F?]/g,"").trim();
+}
+function retroSignDisplay(value){
+  const text=String(value||"").trim();
+  const symbolMatch=text.match(/[\u2648-\u2653]/);
+  const name=retroSignName(text);
+  if(!symbolMatch)return name;
+  return '<span class="retro-sign-box">'+retroTextSymbol(symbolMatch[0])+'</span>'+name;
+}
+function retroDegreeDisplay(value){
+  const match=String(value||"").match(/-?\d+(?:\.\d+)?/);
+  return match ? match[0]+"&deg;" : String(value||"").replace(/[\u00B0\uFFFD?]/g,"").trim();
 }
 function retroSignText(sign){
-  const clean=String(sign||"").replace(/[♈♉♊♋♌♍♎♏♐♑♒♓]/g,"").trim();
+  const clean=retroSignName(sign);
   const styles={Aries:"direct, urgent and instinctive",Taurus:"slow, stable and value-focused",Gemini:"mental, verbal and changeable",Cancer:"emotional, protective and memory-based",Leo:"expressive, proud and creative",Virgo:"analytical, practical and corrective",Libra:"relational, diplomatic and balance-seeking",Scorpio:"intense, private and transformative",Sagittarius:"philosophical, restless and truth-seeking",Capricorn:"serious, structured and goal-oriented",Aquarius:"independent, experimental and future-minded",Pisces:"sensitive, spiritual and dissolving"};
   return styles[clean]||"colored by this sign's style";
 }
@@ -1020,7 +1100,7 @@ function ensureRetroHelpModal(){
   modal=document.createElement("div");
   modal.id="retroHelpModal";
   modal.className="retro-help-modal";
-  modal.innerHTML='<div class="retro-help-panel"><button class="retro-help-close" type="button" onclick="closeRetroHelp()" aria-label="Close">x</button><div id="retroHelpTitle" class="retro-help-title"></div><div id="retroHelpBody" class="retro-help-body"></div></div>';
+  modal.innerHTML='<div class="retro-help-panel"><button class="retro-help-close" type="button" onclick="closeRetroHelp()" aria-label="Close">X</button><div id="retroHelpTitle" class="retro-help-title"></div><div id="retroHelpBody" class="retro-help-body"></div></div>';
   modal.addEventListener("click",function(event){if(event.target===modal)closeRetroHelp()});
   document.body.appendChild(modal);
   return modal;
@@ -1046,11 +1126,26 @@ function openRetroItemHelp(event,index){
   const name=retroPlanetName(r.planet);
   const data=retroFullMeanings[name]||{keywords:["review","inner work","timing","awareness"]};
   showRetroHelp(name+" "+r.status,
-    "<p><strong>Quick reading:</strong> "+name+" is "+r.status.toLowerCase()+" in "+r.sign+" at "+r.degree+". This makes its themes work through "+retroSignText(r.sign)+" energy.</p>"+
+    "<p><strong>Quick reading:</strong> "+name+" is "+r.status.toLowerCase()+" in "+retroSignDisplay(r.sign)+" at "+retroDegreeDisplay(r.degree)+". This makes its themes work through "+retroSignText(r.sign)+" energy.</p>"+
     "<p><strong>What it activates:</strong> "+data.keywords.slice(0,3).join(", ")+".</p>"+
     "<p><strong>How it feels:</strong> "+retroStatusMeaning(r)+"</p>"+
     "<p><strong>Timing:</strong> Station retrograde "+formatDate(r.stationRx)+", station direct "+formatDate(r.stationDirect)+". Around station dates the effect is usually stronger.</p>"+
     "<p><strong>What to do:</strong> Review, simplify, observe repeating patterns and avoid forcing a clean answer before the planet has turned direct.</p>"
+  );
+}
+function openRetroStationHelp(event,index){
+  if(event)event.stopPropagation();
+  const s=upcomingStationHelpItems[index];
+  if(!s)return;
+  const name=retroPlanetName(s.planet);
+  const data=retroFullMeanings[name]||{keywords:['timing','review','direction change'],retro:'This station begins a review period.',direct:'This station releases the review period into direct motion.'};
+  const isDirect=s.type==='direct';
+  showRetroHelp(name+' '+s.label,
+    '<p><strong>Station date:</strong> '+formatDate(s.date)+'.</p>'+
+    '<p><strong>What station means:</strong> The planet appears to pause before changing direction, so its topic becomes stronger and more noticeable.</p>',
+    '<p><strong>How to read it:</strong> '+(isDirect?data.direct:data.retro)+'</p>'+
+    '<p><strong>Practical use:</strong> Around this date, move slower, notice what repeats, and let decisions mature before forcing a final answer.</p>'+
+    '<p><strong>Keywords:</strong> '+(data.keywords||[]).slice(0,4).join(', ')+'.</p>'
   );
 }
 function openRetroPlanetHelp(event,planet){
@@ -1086,14 +1181,15 @@ function openRetroGeneralHelp(event,type){
 }
 window.closeRetroHelp=closeRetroHelp;
 window.openRetroItemHelp=openRetroItemHelp;
+window.openRetroStationHelp=openRetroStationHelp;
 window.openRetroPlanetHelp=openRetroPlanetHelp;
 window.openRetroGeneralHelp=openRetroGeneralHelp;
 
 /* ===== RETROGRADE DATA ===== */
 const retrogrades = [
     {
-        planet: "Mercury ☿",
-        icon: "☿",
+        planet: "Mercury \u263F",
+        icon: "\u263F",
         status: "Retrograde",
         type: "retro",
         description: "Communication, technology and travel delays",
@@ -1101,14 +1197,14 @@ const retrogrades = [
         end: "2026-06-03",
         stationRx: "2026-05-10",
         stationDirect: "2026-06-03",
-        sign: "♊ Gemini",
-        degree: "18°",
+        sign: "\u264A\uFE0E Gemini",
+        degree: "18�",
         meaning: "Revisit how you communicate and process information. Old conversations resurface. Perfect for editing, reviewing, and reconnecting. Avoid signing contracts if possible.",
         progress: 65
     },
     {
-        planet: "Venus ♀",
-        icon: "♀",
+        planet: "Venus \u2640",
+        icon: "\u2640",
         status: "Direct",
         type: "direct",
         description: "Love, beauty, and values flowing forward",
@@ -1116,14 +1212,14 @@ const retrogrades = [
         end: "2026-04-07",
         stationRx: "2026-07-20",
         stationDirect: "2026-09-05",
-        sign: "♌ Leo",
-        degree: "5°",
+        sign: "\u264C\uFE0E Leo",
+        degree: "5�",
         meaning: "Venus is direct now. Express love freely, make financial decisions, start new relationships. The retrograde review period is over.",
         progress: 100
     },
     {
-        planet: "Mars ♂",
-        icon: "♂",
+        planet: "Mars \u2642",
+        icon: "\u2642",
         status: "Direct",
         type: "direct",
         description: "Action, drive, and passion moving forward",
@@ -1131,14 +1227,14 @@ const retrogrades = [
         end: "2026-02-23",
         stationRx: "2026-12-10",
         stationDirect: "2027-02-15",
-        sign: "♋ Cancer",
-        degree: "22°",
+        sign: "\u264B\uFE0E Cancer",
+        degree: "22�",
         meaning: "Mars is direct. Take action, initiate projects, assert yourself. Energy is externalized and productive.",
         progress: 100
     },
     {
-        planet: "Jupiter ♃",
-        icon: "♃",
+        planet: "Jupiter \u2643",
+        icon: "\u2643",
         status: "Direct",
         type: "direct",
         description: "Expansion, luck, and growth flowing outward",
@@ -1146,14 +1242,14 @@ const retrogrades = [
         end: "2026-02-04",
         stationRx: "2026-10-12",
         stationDirect: "2027-02-08",
-        sign: "♋ Cancer",
-        degree: "10°",
+        sign: "\u264B\uFE0E Cancer",
+        degree: "10�",
         meaning: "Jupiter is direct. Expand your horizons, take risks, grow. Opportunities are external and visible.",
         progress: 100
     },
     {
-        planet: "Saturn ♄",
-        icon: "♄",
+        planet: "Saturn \u2644",
+        icon: "\u2644",
         status: "Retrograde",
         type: "retro",
         description: "Karmic lessons and internal restructuring",
@@ -1161,14 +1257,14 @@ const retrogrades = [
         end: "2026-08-23",
         stationRx: "2026-03-15",
         stationDirect: "2026-08-23",
-        sign: "♓ Pisces",
-        degree: "3°",
+        sign: "\u2653\uFE0E Pisces",
+        degree: "3�",
         meaning: "Internal restructuring of boundaries and responsibilities. Karmic debts surface for review. Perfect for deep discipline work and letting go of old structures.",
         progress: 40
     },
     {
-        planet: "Uranus ♅",
-        icon: "♅",
+        planet: "Uranus \u2645",
+        icon: "\u2645",
         status: "Direct",
         type: "direct",
         description: "Innovation, freedom, and change moving forward",
@@ -1176,14 +1272,14 @@ const retrogrades = [
         end: "2026-01-10",
         stationRx: "2026-09-05",
         stationDirect: "2027-01-15",
-        sign: "♊ Gemini",
-        degree: "28°",
+        sign: "\u264A\uFE0E Gemini",
+        degree: "28�",
         meaning: "Uranus is direct. Embrace change, innovate, break free. Sudden insights manifest externally.",
         progress: 100
     },
     {
-        planet: "Neptune ♆",
-        icon: "♆",
+        planet: "Neptune \u2646",
+        icon: "\u2646",
         status: "Retrograde",
         type: "retro",
         description: "Illusions, intuition and subconscious processes",
@@ -1191,14 +1287,14 @@ const retrogrades = [
         end: "2026-10-06",
         stationRx: "2026-03-30",
         stationDirect: "2026-10-06",
-        sign: "♈ Aries",
-        degree: "2°",
+        sign: "\u2648\uFE0E Aries",
+        degree: "2�",
         meaning: "Dreams and intuition turn inward. Spiritual illusions dissolve. Creative blocks may surface for healing. Perfect for meditation, dream work, and artistic revision.",
         progress: 35
     },
     {
-        planet: "Pluto ♇",
-        icon: "♇",
+        planet: "Pluto \u2647",
+        icon: "\u2647",
         status: "Retrograde",
         type: "retro",
         description: "Deep transformation, power, and regeneration",
@@ -1206,8 +1302,8 @@ const retrogrades = [
         end: "2026-10-12",
         stationRx: "2026-05-04",
         stationDirect: "2026-10-12",
-        sign: "♒ Aquarius",
-        degree: "3°",
+        sign: "\u2652\uFE0E Aquarius",
+        degree: "3�",
         meaning: "Shadow work intensifies. Power dynamics internalize. Deep psychological transformation. Old traumas resurface for healing and integration.",
         progress: 20
     }
@@ -1230,7 +1326,7 @@ function renderRetro(containerId='retroList', filterFn=null, detailPrefix='detai
         item.innerHTML = `
             <div class="retro-summary">
                 <div class="retro-main">
-                    <div class="planet"><span class="planet-icon">${r.icon}</span> ${r.planet.replace(r.icon,'').trim()}</div>
+                    <div class="planet"><span class="planet-icon">${retroTextSymbol(r.icon)}</span> ${retroPlanetName(r.planet)}</div>
                     <div class="description">${r.description}</div>
                 </div>
                 <div class="retro-meta">
@@ -1238,7 +1334,7 @@ function renderRetro(containerId='retroList', filterFn=null, detailPrefix='detai
                         <button class="retro-help-btn" type="button" onclick="openRetroItemHelp(event, ${index})" aria-label="Explain ${r.planet}">?</button>
                         <span class="status ${r.type}">${r.status}</span>
                     </div>
-                    <div class="retro-sign-degree">${r.sign} ${r.degree}</div>
+                    <div class="retro-sign-degree">${retroSignDisplay(r.sign)} ${retroDegreeDisplay(r.degree)}</div>
                 </div>
             </div>
             <div class="left" style="flex:1;">
@@ -1264,11 +1360,11 @@ function renderRetro(containerId='retroList', filterFn=null, detailPrefix='detai
                         </div>
                         <div class="detail-box">
                             <div class="detail-label">Current Sign</div>
-                            <div class="detail-value">${r.sign}</div>
+                            <div class="detail-value">${retroSignDisplay(r.sign)}</div>
                         </div>
                         <div class="detail-box">
                             <div class="detail-label">Current Degree</div>
-                            <div class="detail-value">${r.degree}</div>
+                            <div class="detail-value">${retroDegreeDisplay(r.degree)}</div>
                         </div>
                     </div>
                     <div class="retro-meaning"><strong>What this means:</strong> ${r.meaning}</div>
@@ -1367,6 +1463,7 @@ function renderCalendar(){
 }
 
 /* ===== STATIONS ===== */
+let upcomingStationHelpItems = [];
 function renderStations(){
     const list = document.getElementById('stationList');
     const stations = [];
@@ -1386,19 +1483,21 @@ function renderStations(){
         })
         .sort((a, b) => new Date(a.date) - new Date(b.date));
 
+    upcomingStationHelpItems = upcoming;
+
     if(upcoming.length === 0){
         list.innerHTML = '<div style="color:#64748b;text-align:center;padding:12px;font-size:12px">No stations in the next two months.</div>';
         return;
     }
 
-    upcoming.forEach(s => {
+    upcoming.forEach((s, index) => {
         const item = document.createElement('div');
         item.className = 'station-item';
-        item.innerHTML = `
-            <span class="station-date">${formatDate(s.date)}</span>
-            <span class="station-planet">${s.planet}</span>
-            <span class="station-type ${s.type}">${s.label}</span>
-        `;
+        item.innerHTML =
+            '<button class="retro-help-btn" type="button" onclick="openRetroStationHelp(event, '+index+')" aria-label="Explain upcoming station">?</button>'+
+            '<span class="station-date">'+formatDate(s.date)+'</span>'+
+            '<span class="station-planet">'+s.planet+'</span>'+
+            '<span class="station-type '+s.type+'">'+s.label+'</span>';
         list.appendChild(item);
     });
 }
@@ -1415,14 +1514,14 @@ function checkNatalRetro(){
 
     // Simulate natal retrograde check
     const simulatedRetro = [
-        { planet: '☿ Mercury', meaning: 'Deep thinker, revises before speaking, may struggle with expression but has profound inner wisdom.' },
-        { planet: '♀ Venus', meaning: 'Reevaluates love constantly, may attract karmic relationships, learns love through reflection.' },
-        { planet: '♂ Mars', meaning: 'Internalized anger, strategic action, may hesitate but acts with precision when ready.' },
-        { planet: '♃ Jupiter', meaning: 'Inner faith, philosophical depth, growth comes through introspection rather than external expansion.' },
-        { planet: '♄ Saturn', meaning: 'Heavy karmic lessons, deep discipline, may feel restricted but builds lasting inner strength.' },
-        { planet: '♅ Uranus', meaning: 'Unique internal insights, rebels quietly, innovation comes in bursts of inspiration.' },
-        { planet: '♆ Neptune', meaning: 'Deep dreamer, spiritual confusion possible, artistic genius through inner vision.' },
-        { planet: '♇ Pluto', meaning: 'Intense inner transformation, power struggles internalized, profound healing potential.' }
+        { planet: '\u263F Mercury', meaning: 'Deep thinker, revises before speaking, may struggle with expression but has profound inner wisdom.' },
+        { planet: '\u2640 Venus', meaning: 'Reevaluates love constantly, may attract karmic relationships, learns love through reflection.' },
+        { planet: '\u2642 Mars', meaning: 'Internalized anger, strategic action, may hesitate but acts with precision when ready.' },
+        { planet: '\u2643 Jupiter', meaning: 'Inner faith, philosophical depth, growth comes through introspection rather than external expansion.' },
+        { planet: '\u2644 Saturn', meaning: 'Heavy karmic lessons, deep discipline, may feel restricted but builds lasting inner strength.' },
+        { planet: '\u2645 Uranus', meaning: 'Unique internal insights, rebels quietly, innovation comes in bursts of inspiration.' },
+        { planet: '\u2646 Neptune', meaning: 'Deep dreamer, spiritual confusion possible, artistic genius through inner vision.' },
+        { planet: '\u2647 Pluto', meaning: 'Intense inner transformation, power struggles internalized, profound healing potential.' }
     ];
 
     // Random selection for demo
@@ -1477,7 +1576,7 @@ const retroPlanetDefs=[
   {key:"Pluto",symbol:"\u2647",meaning:"Power, shadow work and transformation move through deep inner pressure."}
 ];
 const retroSignNames=["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
-const retroSignSymbols=["\u2648","\u2649","\u264A","\u264B","\u264C","\u264D","\u264E","\u264F","\u2650","\u2651","\u2652","\u2653"];
+const retroSignSymbols=["\u2648\uFE0E","\u2649\uFE0E","\u264A\uFE0E","\u264B\uFE0E","\u264C\uFE0E","\u264D\uFE0E","\u264E\uFE0E","\u264F\uFE0E","\u2650\uFE0E","\u2651\uFE0E","\u2652\uFE0E","\u2653\uFE0E"];
 let retroSweCache=null, retroModCache=null;
 function parseRetroDate(value){const m=/^(\d{2})\.(\d{2})\.(\d{4})$/.exec(value||"");if(!m)throw new Error("Use date format DD.MM.YYYY");return{day:+m[1],month:+m[2],year:+m[3]}}
 function parseRetroTime(value){const m=/^(\d{2}):(\d{2})$/.exec(value||"12:00");return m?{hours:+m[1],minutes:+m[2]}:{hours:12,minutes:0}}
@@ -1491,20 +1590,100 @@ async function getRetroSwe(){if(retroSweCache)return{mod:retroModCache,swe:retro
 function retroPlanetId(mod,key){return mod.Planet[key]}
 function setCalcSourceStatus(source){const el=document.getElementById("calcSourceStatus");if(!el)return;const precise=source==="Local Swiss Ephemeris";el.classList.toggle("fallback",!precise);el.textContent=precise?"Swiss Ephemeris loaded - precise retrograde calculation.":"Fallback calculation used - Swiss module not available."}
 async function retroSpeedAt(jd,key){const {mod,swe}=await getRetroSwe();const pos=swe.calculatePosition(jd,retroPlanetId(mod,key),mod.CalculationFlag.SwissEphemeris|mod.CalculationFlag.Speed);const speed=Number(pos.longitudeSpeed??pos.speed??0);return{longitude:retroNormalize(pos.longitude),speed:Number.isFinite(speed)?speed:0}}
-async function findNearestStation(baseDate,key,direction){let prev=null;let prevDate=null;for(let i=0;i<=260;i+=4){const d=new Date(baseDate.getTime()+direction*i*86400000);const data=await retroSpeedAt(retroJulian(d),key);if(prev!==null&&Math.sign(prev)!==Math.sign(data.speed)){return d.toISOString().slice(0,10)}prev=data.speed;prevDate=d}return prevDate?prevDate.toISOString().slice(0,10):baseDate.toISOString().slice(0,10)}
-async function buildRetroData(baseDate){const jd=retroJulian(baseDate);const rows=[];for(const def of retroPlanetDefs){const data=await retroSpeedAt(jd,def.key);const sign=retroSign(data.longitude);const isStation=Math.abs(data.speed)<0.002;const isRetro=data.speed<0;const prev=await findNearestStation(baseDate,def.key,-1);const next=await findNearestStation(baseDate,def.key,1);rows.push({planet:def.key+" "+def.symbol,icon:def.symbol,status:isStation?"Station":isRetro?"Retrograde":"Direct",type:isStation?"station":isRetro?"retro":"direct",description:isRetro?def.meaning:"Moving direct: "+def.meaning.replace("turn inward for review","flows outward again"),start:isRetro?prev:prev,end:isRetro?next:next,stationRx:isRetro?prev:next,stationDirect:isRetro?next:prev,sign:sign.symbol+" "+sign.name,degree:sign.degree+"\u00B0",meaning:def.meaning,progress:isRetro?55:isStation?50:100,speed:data.speed})}return rows}
+function retroDateIso(date){return date.toISOString().slice(0,10)}
+function retroDayOffset(baseDate, days){return new Date(baseDate.getTime()+days*86400000)}
+function retroSpeedSign(speed){return speed < 0 ? -1 : 1}
+async function refineStationDate(key, beforeDate, afterDate){
+  let left = new Date(beforeDate.getTime());
+  let right = new Date(afterDate.getTime());
+  let leftSign = retroSpeedSign((await retroSpeedAt(retroJulian(left), key)).speed);
+  for(let i=0;i<14;i++){
+    const mid = new Date((left.getTime()+right.getTime())/2);
+    const midSign = retroSpeedSign((await retroSpeedAt(retroJulian(mid), key)).speed);
+    if(midSign === leftSign) left = mid;
+    else right = mid;
+  }
+  return right;
+}
+async function findStationTransition(baseDate,key,direction){
+  const startSign = retroSpeedSign((await retroSpeedAt(retroJulian(baseDate), key)).speed);
+  let previousDate = new Date(baseDate.getTime());
+  let previousSign = startSign;
+  for(let days=1; days<=420; days++){
+    const checkDate = retroDayOffset(baseDate, direction * days);
+    const sign = retroSpeedSign((await retroSpeedAt(retroJulian(checkDate), key)).speed);
+    if(sign !== previousSign){
+      const stationDate = direction > 0
+        ? await refineStationDate(key, previousDate, checkDate)
+        : await refineStationDate(key, checkDate, previousDate);
+      const before = retroSpeedSign((await retroSpeedAt(retroJulian(retroDayOffset(stationDate, -1)), key)).speed);
+      const after = retroSpeedSign((await retroSpeedAt(retroJulian(retroDayOffset(stationDate, 1)), key)).speed);
+      return {date:retroDateIso(stationDate), kind:before > 0 && after < 0 ? "rx" : "direct"};
+    }
+    previousDate = checkDate;
+    previousSign = sign;
+  }
+  return null;
+}
+function retroProgress(start,end,baseDate){
+  const a = Date.parse(start), b = Date.parse(end), c = baseDate.getTime();
+  if(!Number.isFinite(a)||!Number.isFinite(b)||a===b)return 50;
+  return Math.max(3, Math.min(97, Math.round(((c-a)/(b-a))*100)));
+}
+async function buildRetroData(baseDate){
+  const jd=retroJulian(baseDate);
+  const rows=[];
+  for(const def of retroPlanetDefs){
+    const data=await retroSpeedAt(jd,def.key);
+    const sign=retroSign(data.longitude);
+    const isStation=Math.abs(data.speed)<0.002;
+    const isRetro=data.speed<0;
+    const previous=await findStationTransition(baseDate,def.key,-1);
+    const next=await findStationTransition(baseDate,def.key,1);
+    let stationRx="", stationDirect="", start=retroDateIso(baseDate), end=retroDateIso(baseDate);
+    if(isRetro){
+      stationRx = previous && previous.kind === "rx" ? previous.date : "";
+      stationDirect = next && next.kind === "direct" ? next.date : "";
+      start = stationRx || retroDateIso(baseDate);
+      end = stationDirect || retroDateIso(baseDate);
+    }else{
+      const prevDirect = previous && previous.kind === "direct" ? previous.date : "";
+      stationRx = next && next.kind === "rx" ? next.date : "";
+      stationDirect = prevDirect || (next && next.kind === "direct" ? next.date : "");
+      start = stationDirect || retroDateIso(baseDate);
+      end = stationRx || retroDateIso(baseDate);
+    }
+    rows.push({
+      planet:def.key+" "+def.symbol,
+      icon:def.symbol,
+      status:isStation?"Station":isRetro?"Retrograde":"Direct",
+      type:isStation?"station":isRetro?"retro":"direct",
+      description:isRetro?def.meaning:"Moving direct: "+def.meaning.replace("turn inward for review","flows outward again"),
+      start,
+      end,
+      stationRx,
+      stationDirect,
+      sign:sign.symbol+" "+sign.name,
+      degree:sign.degree+"\u00B0",
+      meaning:def.meaning,
+      progress:isRetro?retroProgress(start,end,baseDate):isStation?50:100,
+      speed:data.speed
+    });
+  }
+  return rows;
+}
 function renderRetroFocus(){const retro=retrogrades.filter(r=>r.type==="retro");const station=retrogrades.filter(r=>r.type==="station");const title=document.getElementById("retroFocusTitle");const text=document.getElementById("retroFocusText");const chips=document.getElementById("retroFocusChips");if(!title||!text||!chips)return;title.textContent=retro.length?retro.length+" planets retrograde now":station.length?"Station focus":"No major retrogrades now";const focusItems=retro.length?retro:station.slice(0,2);chips.innerHTML=focusItems.length?focusItems.map(r=>'<span class="natal-retro-chip">'+r.icon+' '+r.planet.replace(r.icon,"").trim()+'</span>').join(""):'<span class="natal-retro-chip" style="color:#4ade80;border-color:rgba(74,222,128,.35);background:rgba(74,222,128,.12)">Direct flow</span>';if(retro.length){const names=retro.map(r=>r.planet.replace(r.icon,"").trim()).join(", ");text.innerHTML="<strong>Focus:</strong> "+names+" are asking for review, patience and inner adjustment. Use this period for editing choices, cleaning old patterns and noticing where life slows down on purpose."}else if(station.length){text.innerHTML="<strong>Focus:</strong> Station energy is louder than usual. Move slowly around decisions and watch what starts changing direction."}else{text.innerHTML="<strong>Focus:</strong> The sky is mostly direct. Use this period for outward movement, decisions and visible progress."}}
 async function renderLiveRetro(){const now=new Date();try{const data=await buildRetroData(now);setCalcSourceStatus("Local Swiss Ephemeris");retrogrades.splice(0,retrogrades.length,...data);document.getElementById('retroList').innerHTML='';document.getElementById('stationList').innerHTML='';document.getElementById('stationPlanetList').innerHTML='';document.querySelector('.section-title').textContent='ACTIVE RETROGRADES';renderRetro('stationPlanetList',null,'station-details');filterRetro('retro',document.querySelector('.filter-tab'));renderRetroFocus();renderStations()}catch(e){if(e&&e.code!=="SWISSEPH_UNAVAILABLE")console.warn("Live retrograde calculation failed, using bundled fallback.",e);setCalcSourceStatus("browser formulas");document.getElementById('retroList').innerHTML='';renderRetro('stationPlanetList',null,'station-details');filterRetro('retro',document.querySelector('.filter-tab'));renderRetroFocus();renderStations()}}
-async function calculateNatalRetro(dateValue,timeValue){const resultDiv=document.getElementById('natalResult');const listDiv=document.getElementById('natalRetroList');const meaningDiv=document.getElementById('natalMeaning');try{const date=parseRetroDate(dateValue);const time=parseRetroTime(timeValue);const jd=retroJulian(retroDateFromInput(date,time));const selected=[];for(const def of retroPlanetDefs){const data=await retroSpeedAt(jd,def.key);if(data.speed<0)selected.push(def)}if(selected.length===0){listDiv.innerHTML='<span class="natal-retro-chip" style="color:#4ade80;border-color:rgba(74,222,128,.35);background:rgba(74,222,128,.12)">No natal retrogrades</span>';meaningDiv.innerHTML='<strong style="color:#FFD700">Natal Retrograde Theme:</strong> Your chart has no major natal retrograde planets in this set. Retrograde lessons may arrive more through transits than as a constant natal signature.'}else{listDiv.innerHTML=selected.map(s=>`<span class="natal-retro-chip"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, '${s.key}')" aria-label="Explain ${s.key} natal retrograde">?</button> ${s.symbol} ${s.key}</span>`).join('');meaningDiv.innerHTML='<strong style="color:#FFD700">Natal Retrograde Theme:</strong> '+(selected.length>2?'Multiple natal retrogrades show a strongly reflective chart. Growth tends to come from inner timing, review and private integration.':'A focused natal retrograde signature shows where energy works inward first: '+selected.map(s=>s.key).join(', ')+'.')}resultDiv.classList.add('show')}catch(e){if(e&&e.code==="SWISSEPH_UNAVAILABLE"){listDiv.innerHTML='<span class="natal-retro-chip">☿ Mercury</span>';meaningDiv.innerHTML='<strong style="color:#FFD700">Natal Retrograde Theme:</strong> Detailed natal retrograde calculation is available in the app/server view. This view is using fallback retrograde guidance.';resultDiv.classList.add('show');return}alert('Natal retrograde could not be calculated.')}}
+async function calculateNatalRetro(dateValue,timeValue){const resultDiv=document.getElementById('natalResult');const listDiv=document.getElementById('natalRetroList');const meaningDiv=document.getElementById('natalMeaning');try{const date=parseRetroDate(dateValue);const time=parseRetroTime(timeValue);const jd=retroJulian(retroDateFromInput(date,time));const selected=[];for(const def of retroPlanetDefs){const data=await retroSpeedAt(jd,def.key);if(data.speed<0)selected.push(def)}if(selected.length===0){listDiv.innerHTML='<span class="natal-retro-chip" style="color:#4ade80;border-color:rgba(74,222,128,.35);background:rgba(74,222,128,.12)">No natal retrogrades</span>';meaningDiv.innerHTML='<strong style="color:#FFD700">Natal Retrograde Theme:</strong> Your chart has no major natal retrograde planets in this set. Retrograde lessons may arrive more through transits than as a constant natal signature.'}else{listDiv.innerHTML=selected.map(s=>`<span class="natal-retro-chip"><button class="retro-help-btn" type="button" onclick="openRetroPlanetHelp(event, '${s.key}')" aria-label="Explain ${s.key} natal retrograde">?</button> ${s.symbol} ${s.key}</span>`).join('');meaningDiv.innerHTML='<strong style="color:#FFD700">Natal Retrograde Theme:</strong> '+(selected.length>2?'Multiple natal retrogrades show a strongly reflective chart. Growth tends to come from inner timing, review and private integration.':'A focused natal retrograde signature shows where energy works inward first: '+selected.map(s=>s.key).join(', ')+'.')}resultDiv.classList.add('show')}catch(e){if(e&&e.code==="SWISSEPH_UNAVAILABLE"){listDiv.innerHTML='<span class="natal-retro-chip">\u263F Mercury</span>';meaningDiv.innerHTML='<strong style="color:#FFD700">Natal Retrograde Theme:</strong> Detailed natal retrograde calculation is available in the app/server view. This view is using fallback retrograde guidance.';resultDiv.classList.add('show');return}alert('Natal retrograde could not be calculated.')}}
 function checkNatalRetro(){const date=document.getElementById('natalDate').value;const time=document.getElementById('natalTime').value;if(!date){alert('Please enter your birth date');return}calculateNatalRetro(date,time)}
 function refreshRetro(){renderLiveRetro()}
-function goBack(){const date=document.getElementById('natalDate').value;const time=document.getElementById('natalTime').value;const last=window.AppSharedState?AppSharedState.lastAstroInput():null;const city=last&&last.city?last.city:"";if(window.AppSharedState)AppSharedState.saveLastAstroInput({date,time,city});let url='chart.html';if(date){url+='?date='+encodeURIComponent(date);if(time)url+='&time='+encodeURIComponent(time);if(city)url+='&city='+encodeURIComponent(city)}window.location.href=url}
+function goBack(){const date=document.getElementById('natalDate').value;const time=document.getElementById('natalTime').value;const last=window.AppSharedState?AppSharedState.lastAstroInput():null;const city=last&&last.city?last.city:"";if(window.AppSharedState)AppSharedState.saveLastAstroInput({date,time,city});let url='chart.html';if(date){url+='?date='+encodeURIComponent(date);if(time)url+='&time='+encodeURIComponent(time);if(city)url+='&city='+encodeURIComponent(city)}appNavigate(url)}
 function exitApp(){appExit("index.html")}
 function appCopyText(text,message){if(navigator.clipboard&&window.isSecureContext){return navigator.clipboard.writeText(text).then(()=>{if(message)alert(message)}).catch(()=>appCopyTextFallback(text,message))}return appCopyTextFallback(text,message)}
 function appCopyTextFallback(text,message){const input=document.createElement("textarea");input.value=text;input.setAttribute("readonly","");input.style.position="fixed";input.style.left="-9999px";document.body.appendChild(input);input.select();try{document.execCommand("copy");if(message)alert(message)}catch(e){alert(text)}document.body.removeChild(input);return Promise.resolve()}
 async function appShare(shareData){try{if(window.Android&&typeof window.Android.share==="function"){window.Android.share(shareData.title||document.title,shareData.text||"",shareData.url||location.href);return}if(window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.Share){await window.Capacitor.Plugins.Share.share(shareData);return}if(navigator.share){await navigator.share(shareData);return}}catch(error){console.warn("Native share failed",error)}await appCopyText(shareData.url||location.href,"Link copied to clipboard.")}
 function appPrintPage(){try{if(window.Android&&typeof window.Android.printPage==="function"){window.Android.printPage();return}window.print()}catch(e){alert("Print is not available in this app view.")}}
-function appExit(fallbackUrl){if(window.closeNativeApp){window.closeNativeApp(fallbackUrl);return}try{window.close()}catch(e){}setTimeout(function(){window.location.href=fallbackUrl||"index.html"},160)}
+function appExit(fallbackUrl){if(window.closeNativeApp){window.closeNativeApp(fallbackUrl);return}try{window.close()}catch(e){}setTimeout(function(){appNavigate(fallbackUrl||"index.html")},160)}
 window.appCopyText=appCopyText;window.appShare=appShare;window.appPrintPage=appPrintPage;window.appExit=appExit;
 document.getElementById('printBtn').addEventListener('click',()=>appPrintPage());
 document.getElementById('shareBtn').addEventListener('click',async()=>{await appShare({title:"Retrograde",text:"Retrograde report",url:window.location.href})});
@@ -1516,6 +1695,12 @@ window.addEventListener('load',()=>{const params=new URLSearchParams(window.loca
 
 </body>
 </html>
+
+
+
+
+
+
 
 
 

@@ -1,5 +1,5 @@
-﻿<!DOCTYPE html>
-<html lang="en" style="background:#0f172a;">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +14,7 @@
 <script src="app-shared-state.js"></script>
 <script src="world-cities.js"></script>
 <script src="app-notification-open.js"></script>
+<script src="capacitor-bridge.js"></script>
 <script>
 try{
   if(sessionStorage.getItem("portalArriveNumerology") === "1"){
@@ -51,9 +52,9 @@ html.portal-arrive-pending body::before{
   position: absolute;
   width: 60px;
   height: auto;
-  touch-action: none;     /* ðŸ”¥ bitno za mobile */
+  touch-action: none;     /* dz�A bitno za mobile */
   cursor: grab;
-  border-radius: 6px; /* ðŸ”¥ ispravljeno (ne moÅ¾e -2px) */
+  border-radius: 6px; /* dz�A ispravljeno (ne moLle -2px) */
 
   box-shadow:
     0 10px 20px rgba(0,0,0,0.5),
@@ -74,7 +75,7 @@ html.portal-arrive-pending body::before{
   z-index: 20;
 }
 
-/* ðŸ”¥ STACK RASPORED (preklapanje) */
+/* dz�A STACK RASPORED (preklapanje) */
 
 .c1 { top: 20px; left: 30px; transform: rotate(-12deg); z-index: 1; }
 .c2 { top: 10px; left: 70px; transform: rotate(8deg); z-index: 2; }
@@ -98,7 +99,7 @@ html.portal-arrive-pending body::before{
   background: #0f172a;
 }
 
-/* veliÄine po slici */
+/* veli�Tine po slici */
 .logo1 { width: 80%; }
 .logo2 { width: 75%; }
 .logo3 { width: 70%; }
@@ -106,7 +107,7 @@ html.portal-arrive-pending body::before{
 .logo5 { width: 65%; }
 .logo6 { width: 60%; }
 
-/* ðŸ”’ coming soon efekat */
+/* dz�� coming soon efekat */
 .coming {
   position: relative;
   opacity: 0.4;
@@ -130,13 +131,13 @@ html.portal-arrive-pending body::before{
   font-weight: bold;
   letter-spacing: 1px;
 
-  /* ðŸ”¥ PRAVI GOLD */
+  /* dz�A PRAVI GOLD */
   color: #FFD700;
 
   background: rgba(0,0,0,0.9);
   padding: 5px 0;
 
-  /* ðŸ”¥ JAK GOLD GLOW */
+  /* dz�A JAK GOLD GLOW */
   text-shadow:
     0 0 5px #FFD700,
     0 0 10px #FFD700,
@@ -148,12 +149,12 @@ html.portal-arrive-pending body::before{
 
   .store-links {
   width: 100%;
-  max-width: 220px;     /* ðŸ”¥ ista Å¡irina kao video */
-  margin: 30px auto;    /* ðŸ”¥ centriranje */
+  max-width: 220px;     /* dz�A ista L?irina kao video */
+  margin: 30px auto;    /* dz�A centriranje */
 
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;             /* ðŸ”½ malo manji gap da legne lepo */
+  gap: 8px;             /* dz�? malo manji gap da legne lepo */
 }
 
 .store-links div {
@@ -190,15 +191,25 @@ html.portal-arrive-pending body::before{
   margin-bottom: 20px;
 }
 
-.contact-icons img {
-  width: 40px;
-  height: 40px;
-  transition: 0.3s;
+.contact-icons{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(86px,1fr));
+  gap:12px;
+  width:min(230px,100%);
+  margin:0 auto 18px;
 }
-
-.contact-icons img:hover {
-  transform: scale(1.2);
+.contact-icons a{
+  min-height:58px;
+  border:1px solid rgba(56,189,248,.38);
+  border-radius:10px;
+  background:#1e293b;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 10px rgba(56,189,248,.14);
 }
+.contact-icons img{width:34px;height:34px;transition:.25s}
+.contact-icons a:hover img{transform:scale(1.14)}
 
 .contact-buttons {
   display: flex;
@@ -237,20 +248,200 @@ html.portal-arrive-pending body::before{
   line-height: 1.2;    /* zbijen tekst */
 }
 
-    .seasonBtn {
+.store-season-tabs{
+  display:grid!important;
+  grid-template-columns:repeat(4,1fr)!important;
+  gap:4px!important;
+  width:min(390px,82vw)!important;
+  margin:0 auto 8px!important;
+}
+
+.seasonBtn {
   cursor:pointer;
-  color:#FFD700;
-  font-size:12px;
-  letter-spacing:1px;
+  color:#38bdf8;
+  font-size:9px;
+  line-height:1.05;
+  letter-spacing:0;
   transition:0.3s;
+  background:#1e293b;
+  border:1px solid rgba(56,189,248,.35);
+  border-radius:6px;
+  padding:6px 4px;
+  text-align:center;
+  box-sizing:border-box;
+  min-height:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 .seasonBtn.active {
+  color:#fff;
+  border-color:#38bdf8;
+  box-shadow:0 0 8px rgba(56,189,248,.5);
   text-shadow:none;
 }
 
+.store-media-width,
+#storeVideo,
+#storeDownload img{
+  max-width:190px!important;
+  width:100%!important;
+}
+
+.store-links{
+  width:190px!important;
+  max-width:190px!important;
+  margin-top:14px!important;
+  margin-bottom:18px!important;
+  gap:6px!important;
+}
+
+.season-content.book-fan{
+  position:relative;
+  width:min(100%,390px);
+  height:clamp(300px,82vw,350px);
+  margin:8px auto 0;
+}
+
+.season-content.book-fan a{
+  position:absolute;
+  top:clamp(18px,6vw,28px);
+  left:50%;
+  display:block;
+  width:clamp(46px,13vw,60px);
+  aspect-ratio:7/12;
+  transform-origin:50% 118%;
+  transition:transform .25s,filter .25s,box-shadow .25s;
+  overflow:visible;
+  border-radius:8px;
+}
+
+.season-content.book-fan a:nth-child(1){--deal-final:translateX(clamp(-136px,-35vw,-112px)) translateY(22px) rotate(-30deg);transform:var(--deal-final)}
+.season-content.book-fan a:nth-child(2){--deal-final:translateX(clamp(-106px,-27vw,-88px)) translateY(7px) rotate(-22deg);transform:var(--deal-final)}
+.season-content.book-fan a:nth-child(3){--deal-final:translateX(clamp(-76px,-19vw,-64px)) translateY(-4px) rotate(-14deg);transform:var(--deal-final)}
+.season-content.book-fan a:nth-child(4){--deal-final:translateX(clamp(-46px,-11vw,-38px)) translateY(-11px) rotate(-6deg);transform:var(--deal-final)}
+.season-content.book-fan a:nth-child(5){--deal-final:translateX(clamp(-16px,-3vw,-10px)) translateY(-13px) rotate(2deg);transform:var(--deal-final)}
+.season-content.book-fan a:nth-child(6){--deal-final:translateX(clamp(14px,5vw,18px)) translateY(-11px) rotate(10deg);transform:var(--deal-final)}
+.season-content.book-fan a:nth-child(7){--deal-final:translateX(clamp(44px,13vw,46px)) translateY(-4px) rotate(18deg);transform:var(--deal-final)}
+.season-content.book-fan a:nth-child(8){--deal-final:translateX(clamp(74px,21vw,74px)) translateY(7px) rotate(25deg);transform:var(--deal-final)}
+.season-content.book-fan a:nth-child(9){--deal-final:translateX(clamp(104px,29vw,102px)) translateY(22px) rotate(32deg);transform:var(--deal-final)}
+
+.season-content.book-fan a.active,
+.season-content.book-fan a:hover{
+  filter:brightness(1.13);
+  box-shadow:0 0 16px rgba(56,189,248,.45),0 10px 20px rgba(0,0,0,.34);
+  z-index:30!important;
+  translate:0 -8px;
+}
+
+.season-content.book-fan .book{
+  width:100%;
+  height:100%;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+}
+
+.season-content.book-fan .book img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  border-radius:4px;
+  box-shadow:0 12px 20px rgba(0,0,0,.45),0 0 12px rgba(56,189,248,.25);
+}
+
+.season-content.book-fan .missing-book{
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(160deg,#334155,#0f172a 45%,#1e293b);
+  border:1px solid rgba(56,189,248,.4);
+  color:#38bdf8;
+  font-size:10px;
+  font-weight:900;
+  text-align:center;
+  border-radius:6px;
+}
+
+.book-selected-stage{
+  position:absolute;
+  left:0;
+  right:0;
+  top:clamp(150px,42vw,172px);
+  display:none;
+  justify-content:center;
+  align-items:flex-start;
+  z-index:50;
+  pointer-events:none;
+  width:fit-content;
+  height:fit-content;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.book-selected-stage.active{
+  display:flex;
+}
+
+.book-selected-stage img{
+  width:auto;
+  height:auto;
+  max-width:190px;
+  max-height:none;
+  object-fit:contain;
+  border-radius:7px;
+  box-shadow:0 18px 40px rgba(0,0,0,.62),0 0 22px rgba(56,189,248,.44);
+  cursor:pointer;
+  pointer-events:auto;
+  background:#020617;
+  display:block;
+}
+
+.book-preview{
+  position:fixed;
+  inset:0;
+  z-index:250000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(2,6,23,.82);
+  padding:18px;
+}
+
+.book-preview.active{
+  display:flex;
+}
+
+.book-preview img{
+  width:min(260px,78vw);
+  max-height:78vh;
+  object-fit:contain;
+  border-radius:7px;
+  box-shadow:0 18px 40px rgba(0,0,0,.65),0 0 24px rgba(56,189,248,.45);
+  cursor:pointer;
+}
+
+.book-preview-close{
+  position:fixed;
+  top:14px;
+  right:16px;
+  width:34px;
+  height:34px;
+  border-radius:8px;
+  border:1px solid rgba(56,189,248,.6);
+  background:#0f172a;
+  color:#38bdf8;
+  font-size:20px;
+  font-weight:900;
+  cursor:pointer;
+}
+
 #numberHint {
-  display: none; /* ðŸ”¥ SAKRIVEN NA STARTU */
+  display: none; /* dz�A SAKRIVEN NA STARTU */
   color: white;
   font-size: 10px;
   line-height: 1.1;
@@ -279,6 +470,11 @@ body.detail-active .tabs {
   display: none !important;
 }
 
+body.contact-active #tabs,
+body.contact-active .tabs {
+  display: none !important;
+}
+
 body.detail-active .left-bar .left-btn:nth-child(2) {
   display: none !important;
 }
@@ -291,11 +487,24 @@ body.detail-active #primaryOwnerIcon{
   display:none;
 }
 
+body.contact-active #primaryOwnerIcon{
+  display:none !important;
+}
+
 body.detail-active #primaryBackIcon{
   display:block;
 }
 
+body.contact-active #primaryBackIcon{
+  display:block !important;
+}
+
 body.detail-active #primaryLeftBtn{
+  color:#38bdf8;
+  border-color:#38bdf8;
+}
+
+body.contact-active #primaryLeftBtn{
   color:#38bdf8;
   border-color:#38bdf8;
 }
@@ -405,13 +614,13 @@ body {
 }
 
 .input-wrap input {
-  width: 100%;            /* ðŸ”¥ mora 100% */
+  width: 100%;            /* dz�A mora 100% */
   background: transparent;
   border: none;
   outline: none;
 
   font-size: 20px;        /* malo smanjeno */
-  height: 30px;           /* malo niÅ¾e */
+  height: 30px;           /* malo niLle */
   line-height: 30px;
 
   color: white;
@@ -658,6 +867,197 @@ body {
 .portal-ring-label.silver{fill:#e2e8f0;filter:drop-shadow(0 0 4px rgba(226,232,240,.7));animation-delay:1s}
 .portal-ring-label.gold{fill:#FFD700;filter:drop-shadow(0 0 4px rgba(255,215,0,.72));animation-delay:2s}
 .portal-ring-label.red{fill:#ef4444;filter:drop-shadow(0 0 4px rgba(239,68,68,.75));animation-delay:3s}
+
+.portal-center-badge{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:40%;
+  aspect-ratio:1;
+  transform:translate(-50%,-50%);
+  z-index:6;
+  pointer-events:auto;
+  cursor:pointer;
+  object-fit:contain;
+  filter:drop-shadow(0 0 10px rgba(255,215,0,.42)) drop-shadow(0 0 14px rgba(56,189,248,.22));
+}
+.portal-center-badge:hover{filter:drop-shadow(0 0 12px rgba(255,215,0,.7)) drop-shadow(0 0 18px rgba(56,189,248,.36));}
+.portal-choice-modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:10020;
+  background:rgba(2,6,23,.74);
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+}
+.portal-choice-panel{
+  width:min(330px,92vw);
+  border:1px solid rgba(56,189,248,.72);
+  border-radius:16px;
+  background:radial-gradient(circle at 50% 0,rgba(56,189,248,.18),transparent 34%),linear-gradient(180deg,rgba(15,23,42,.96),rgba(2,6,23,.98));
+  box-shadow:0 0 28px rgba(56,189,248,.28),inset 0 0 18px rgba(255,215,0,.08);
+  padding:14px;
+  position:relative;
+}
+.portal-choice-close{
+  position:absolute;
+  right:10px;
+  top:9px;
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  border:1px solid rgba(148,163,184,.5);
+  background:#0f172a;
+  color:#e2e8f0;
+  font-weight:900;
+  cursor:pointer;
+}
+.portal-choice-title{color:#ffd700;font-size:17px;font-weight:900;text-align:center;letter-spacing:.8px;margin:6px 32px 12px;text-shadow:0 0 12px rgba(255,215,0,.45)}
+.portal-choice-list{display:grid;grid-template-columns:1fr;gap:8px}
+.portal-choice-btn{
+  min-height:50px;
+  border-radius:12px;
+  border:1px solid currentColor;
+  background:#0f172a;
+  color:#fff;
+  cursor:pointer;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  font-weight:900;
+  text-transform:uppercase;
+  letter-spacing:.7px;
+  line-height:1.05;
+  box-shadow:0 0 12px rgba(0,0,0,.28);
+}
+.portal-choice-btn span{display:block}
+.portal-choice-btn.blue{color:#38bdf8;box-shadow:none}
+.portal-choice-btn.silver{color:#e2e8f0;box-shadow:none}
+.portal-choice-btn.gold{color:#ffd700;box-shadow:none}
+.portal-choice-btn.red{color:#ef4444;box-shadow:none}
+.portal-choice-btn:hover{background:transparent!important;filter:none!important}
+.portal-choice-modal{
+  background:#020617!important;
+  overflow:hidden;
+}
+.portal-choice-modal::before,
+.portal-choice-modal::after{
+  content:"1 2 3 4 5 6 7 8 9 11 22 33  �s�  �s�  �s�  �? ♉ ♊ ♋ �S �T ♎ �Z ♐ ♑ ♒ ♓  l�� 丑 lZ� lTZ cl� l�l lT? csS �l 酉 c?S �sA";
+  position:absolute;
+  left:-10%;
+  width:120%;
+  color:rgba(56,189,248,.18);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(22px,8vw,48px);
+  letter-spacing:18px;
+  line-height:1.8;
+  text-align:center;
+  white-space:normal;
+  text-shadow:0 0 14px rgba(56,189,248,.48),0 0 24px rgba(255,215,0,.18);
+  pointer-events:none;
+  animation:portalChoiceFloat 18s linear infinite;
+}
+.portal-choice-modal::before{top:-20%;transform:rotate(-8deg)}
+.portal-choice-modal::after{bottom:-22%;color:rgba(255,215,0,.13);transform:rotate(7deg);animation-duration:24s;animation-direction:reverse}
+.portal-choice-panel{
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  padding:18px!important;
+  z-index:1;
+}
+.portal-choice-close{
+  border:0!important;
+  background:transparent!important;
+  color:#94a3b8!important;
+  text-shadow:0 0 10px rgba(148,163,184,.9);
+}
+.portal-choice-title{
+  color:#e0f2fe!important;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:18px!important;
+  letter-spacing:2px!important;
+  margin-bottom:22px!important;
+  text-shadow:0 0 14px rgba(56,189,248,.72),0 0 28px rgba(255,215,0,.28)!important;
+}
+.portal-choice-list{gap:18px!important}
+.portal-choice-btn{
+  min-height:auto!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(22px,7vw,34px)!important;
+  letter-spacing:1.5px!important;
+  line-height:1.02!important;
+  padding:2px 0!important;
+  text-shadow:0 0 10px currentColor,0 0 24px currentColor,0 2px 3px rgba(0,0,0,.9);
+  animation:portalChoiceGlow 2.8s ease-in-out infinite alternate;
+}
+.portal-choice-btn:hover{
+  background:transparent!important;
+  transform:scale(1.04);
+}
+.portal-choice-btn,
+.portal-choice-btn:hover,
+.portal-choice-btn:focus,
+.portal-choice-btn:active{
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  outline:0!important;
+}
+.portal-choice-btn.gold,
+.portal-choice-btn.gold:hover,
+.portal-choice-btn.gold:focus,
+.portal-choice-btn.gold:active{
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  background-color:transparent!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+.portal-choice-btn.gold span{
+  color:#ffd700!important;
+  text-shadow:0 0 10px rgba(255,215,0,.92),0 0 26px rgba(255,215,0,.58),0 2px 3px rgba(0,0,0,.9)!important;
+}
+.portal-choice-btn span + span{font-size:.82em;letter-spacing:2px}
+.portal-choice-modal::before,
+.portal-choice-modal::after{content:""!important}
+.portal-choice-sky{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.portal-choice-sky span{
+  position:absolute;
+  left:var(--x);
+  top:var(--y);
+  color:rgba(226,242,255,.18);
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:var(--s);
+  line-height:1;
+  text-shadow:0 0 12px currentColor,0 0 24px rgba(56,189,248,.25);
+  animation:portalChoiceDrift var(--d) ease-in-out infinite alternate;
+}
+.portal-choice-sky span:nth-child(3n){color:rgba(255,215,0,.18)}
+.portal-choice-sky span:nth-child(4n){color:rgba(239,68,68,.16)}
+.portal-choice-sky span:nth-child(5n){color:rgba(56,189,248,.22)}
+@keyframes portalChoiceFloat{
+  from{transform:translateY(0) rotate(-8deg)}
+  to{transform:translateY(34%) rotate(-8deg)}
+}
+@keyframes portalChoiceDrift{
+  from{transform:translate3d(-8px,10px,0) rotate(-8deg);opacity:.3}
+  to{transform:translate3d(12px,-14px,0) rotate(9deg);opacity:.9}
+}
+@keyframes portalChoiceGlow{
+  from{opacity:.82;filter:brightness(.95)}
+  to{opacity:1;filter:brightness(1.2)}
+}
 
 @keyframes portalLabelPulse{
   0%,18%,100%{opacity:.58;filter:drop-shadow(0 0 3px currentColor)}
@@ -1243,6 +1643,89 @@ body.portal-transition .cosmic-portal-shell {
   to { text-shadow: 0 0 14px rgba(56,189,248,0.6); }
 }
 
+.contact-us-entry{
+  position:static;
+  display:block;
+  width:fit-content;
+  margin:10px auto 8px;
+  color:#38bdf8;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:2px;
+  text-shadow:0 0 10px rgba(56,189,248,.62);
+  cursor:pointer;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  text-align:center;
+}
+.contact-us-entry:hover{color:#fff;text-decoration:underline;text-underline-offset:3px}
+.footer-contact-slot{margin:16px auto 84px;text-align:center;width:100%}
+body:not(.home-active) .footer-contact-slot{display:none!important}
+body.contact-active .footer-contact-slot{display:none!important}
+.contact-screen .contact-panel{
+  width:min(92vw,420px);
+  margin:10px auto 0;
+  position:relative;
+  background:transparent;
+  border:0;
+  border-radius:0;
+  padding:42px 12px 18px;
+  box-shadow:none;
+  text-align:center;
+}
+.contact-back-btn{position:absolute;left:12px;top:10px;width:32px;height:32px;border-radius:8px;background:#1e293b;border:1px solid rgba(56,189,248,.65);color:#38bdf8;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(56,189,248,.22)}
+.contact-back-btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.contact-app-title{color:#38bdf8!important;text-shadow:0 0 10px rgba(56,189,248,.44)!important;margin:0!important;font-size:22px!important;letter-spacing:1px!important}
+.contact-subtitle{color:#94a3b8;font-size:11px;letter-spacing:2px;margin:6px 0 16px}
+.contact-panel .btn{border:1px solid rgba(56,189,248,.5);background:#1e293b;color:#e0f2fe;border-radius:8px;text-decoration:none}
+
+.contact-screen .contact-panel{padding-top:24px!important;max-width:420px!important}
+.contact-screen .contact-app-title{color:#38bdf8!important;font-size:34px!important;line-height:1!important;letter-spacing:1px!important;text-shadow:0 0 12px rgba(56,189,248,.55)!important;margin:0 0 28px!important}
+.contact-screen .contact-subtitle{display:none!important}
+.contact-screen .contact-wrapper{gap:24px!important;margin-top:0!important}
+.contact-screen .contact-icons{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:10px!important;width:min(420px,88vw)!important;max-width:100%!important;margin:0 auto!important;justify-content:center!important;justify-items:stretch!important;box-sizing:border-box!important}
+.contact-screen .contact-icons a{width:100%!important;aspect-ratio:1/1!important;height:auto!important;min-height:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;display:flex!important;align-items:center!important;justify-content:center!important}
+.contact-screen .contact-icons img{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important}
+.contact-screen .contact-buttons{display:grid!important;grid-template-columns:repeat(2,1fr)!important;width:min(420px,88vw)!important;gap:10px!important;margin:0 auto!important;box-sizing:border-box!important}
+.contact-screen .contact-buttons .btn{width:100%!important;box-sizing:border-box!important;min-height:58px!important;display:flex!important;align-items:center!important;justify-content:center!important;border:1px solid rgba(246,203,113,.82)!important;color:#f6cb71!important;background:transparent!important;border-radius:12px!important;font-size:24px!important;font-weight:400!important;box-shadow:none!important}
+.contact-screen #contactCollage{max-width:300px!important;height:310px!important;margin:28px auto 22px!important}
+.contact-screen #contactCollage .cimg{width:92px!important;box-shadow:0 12px 22px rgba(0,0,0,.5),0 0 16px rgba(56,189,248,.24)!important}
+.contact-screen #contactCollage .c1{top:30px!important;left:34px!important}.contact-screen #contactCollage .c2{top:10px!important;left:104px!important}.contact-screen #contactCollage .c3{top:42px!important;left:172px!important}.contact-screen #contactCollage .c4{top:98px!important;left:18px!important}.contact-screen #contactCollage .c5{top:88px!important;left:94px!important}.contact-screen #contactCollage .c6{top:112px!important;left:174px!important}.contact-screen #contactCollage .c7{top:178px!important;left:38px!important}.contact-screen #contactCollage .c8{top:190px!important;left:122px!important}.contact-screen #contactCollage .c9{top:170px!important;left:198px!important}
+.contact-screen .contact-info{width:min(440px,92vw)!important;margin:6px auto 22px!important;gap:22px!important;font-size:13px!important;line-height:1.25!important;opacity:.9!important;align-items:center!important;justify-content:center!important;color:#94a3b8!important}
+.contact-screen .contact-info .footer-logo{width:90px!important;flex:0 0 90px!important}
+.contact-screen .contact-info .footer-text{font-size:13px!important;line-height:1.25!important;text-align:left!important}
+@media(max-width:480px){.contact-screen .contact-icons{grid-template-columns:repeat(4,1fr)!important;gap:10px!important;width:min(420px,88vw)!important}.contact-screen .contact-icons a{width:100%!important;height:auto!important;min-height:0!important}.contact-screen .contact-icons img{width:100%!important;height:100%!important}.contact-screen .contact-buttons{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:10px!important;width:min(420px,88vw)!important}.contact-screen .contact-buttons .btn{font-size:20px!important;min-height:52px!important}.contact-screen #contactCollage{transform:scale(.88);transform-origin:top center;margin-bottom:-12px!important}.contact-screen .contact-info{gap:14px!important}.contact-screen .contact-info .footer-logo{width:74px!important;flex-basis:74px!important}.contact-screen .contact-info .footer-text{font-size:11px!important}}
+
+@media(max-width:480px){.contact-us-entry{font-size:11px;margin:8px auto 6px}.contact-panel{width:calc(100vw - 22px)}}
+
+.contact-screen .contact-icons,
+.contact-screen .contact-buttons{
+  display:grid!important;
+  --contact-row-width:min(420px,88vw);
+  --contact-gap:10px;
+  width:var(--contact-row-width)!important;
+  max-width:var(--contact-row-width)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+  gap:var(--contact-gap)!important;
+}
+.contact-screen .contact-icons{
+  grid-template-columns:repeat(4,calc((100% - (3 * var(--contact-gap))) / 4))!important;
+}
+.contact-screen .contact-buttons{
+  grid-template-columns:repeat(2,calc((100% - var(--contact-gap)) / 2))!important;
+}
+.contact-screen .contact-icons a,
+.contact-screen .contact-icons img{
+  width:100%!important;
+  height:auto!important;
+  aspect-ratio:1/1!important;
+}
+
 .footer {
   position: fixed;
   bottom: 0!important;
@@ -1369,14 +1852,14 @@ body {
   font-size: 13px;
 }
 
-/* ðŸ”¸ TEKST  -  ZLATAN */
+/* dz�� TEKST  -  ZLATAN */
 .spirit-text {
   font-size: 14px;
   color: #FFD700;
   opacity: 0.9;
 }
 
-/* ðŸ”¥ BROJ  -  ZLATAN + PULS */
+/* dz�A BROJ  -  ZLATAN + PULS */
 .spirit-number {
   font-size: 32px;
   font-weight: bold;
@@ -1387,7 +1870,7 @@ body {
 
 
 
-/* ðŸ”¥ INPUT LINE - CONTACT STYLE */
+/* dz�A INPUT LINE - CONTACT STYLE */
 .input-line {
   display: flex;
   align-items: center;
@@ -1934,6 +2417,95 @@ h1,h2,h3,.section-title{line-height:1.1!important;margin-top:2px!important;margi
 p,.subtitle,.description,.note,.small{line-height:1.25!important;margin-top:2px!important;margin-bottom:3px!important}
 .tab{line-height:1.05!important}
 .contact-buttons,.buttons,.input-line,.natal-input-line{gap:5px!important}
+.contact-screen .contact-icons,
+.contact-screen .contact-buttons{
+  --contact-row-width:min(420px,88vw);
+  --contact-gap:10px;
+  display:grid!important;
+  width:var(--contact-row-width)!important;
+  max-width:var(--contact-row-width)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+  gap:var(--contact-gap)!important;
+}
+.contact-screen .contact-icons{
+  grid-template-columns:repeat(4,calc((100% - (3 * var(--contact-gap))) / 4))!important;
+}
+.contact-screen .contact-buttons{
+  grid-template-columns:repeat(2,calc((100% - var(--contact-gap)) / 2))!important;
+}
+.contact-screen .contact-icons a,
+.contact-screen .contact-icons img{
+  width:100%!important;
+  height:auto!important;
+  aspect-ratio:1/1!important;
+}
+.left-bar,
+.top-bar,
+.title{
+  position:fixed!important;
+  top:8px!important;
+  z-index:9999!important;
+}
+.left-bar{left:12px!important}
+.top-bar{right:12px!important}
+.title{
+  display:block!important;
+  left:84px!important;
+  right:84px!important;
+  height:30px!important;
+  line-height:30px!important;
+  margin:0!important;
+  text-align:center!important;
+}
+#tabs,.tabs{
+  flex-wrap:wrap!important;
+  justify-content:center!important;
+  width:min(390px,82vw)!important;
+  max-width:min(390px,82vw)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  margin-top:42px!important;
+  margin-bottom:3px!important;
+  gap:4px!important;
+}
+body.has-tabs:not(.detail-active):not(.contact-active) #tabs{
+  display:flex!important;
+}
+body:not(.has-tabs) #tabs{
+  display:none!important;
+}
+#tabs .tab,
+.tabs .tab{
+  flex:0 0 calc((100% - 8px) / 3)!important;
+  width:calc((100% - 8px) / 3)!important;
+  box-sizing:border-box!important;
+  text-align:center!important;
+  padding:6px 10px!important;
+  border-radius:6px!important;
+  font-size:9px!important;
+  opacity:.6!important;
+  white-space:nowrap!important;
+}
+#tabs .tab.active,
+.tabs .tab.active{
+  opacity:1!important;
+}
+body.detail-active .title{
+  display:block!important;
+}
+body.detail-active #tabs,
+body.detail-active .tabs{
+  display:none!important;
+}
+body.detail-active .left-bar .left-btn:nth-child(2){
+  display:flex!important;
+}
+.contact-screen .contact-panel{
+  margin-top:0!important;
+  padding-top:42px!important;
+}
 .saved-contact-item,.contact-item{padding-top:7px!important;padding-bottom:7px!important;margin-bottom:5px!important;line-height:1.15!important}
 
 /* ===== NUMEROLOGY BLUE TOP BUTTONS ===== */
@@ -2128,6 +2700,120 @@ body.primary-astrology #disclaimerAcceptBtn{
   box-shadow:0 0 15px rgba(255,215,0,.4)!important;
 }
 
+
+
+/* ===== NUMEROLOGY HELP MODAL FOR FORMER HIDDEN TABS ===== */
+.num-help-btn,
+.num-help-dot{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  border:1px solid rgba(56,189,248,.72);
+  background:rgba(15,23,42,.96);
+  color:#38bdf8;
+  font-weight:900;
+  font-size:14px;
+  line-height:1;
+  cursor:pointer;
+  box-shadow:0 0 10px rgba(56,189,248,.28);
+  vertical-align:middle;
+}
+.num-help-btn:hover,
+.num-help-dot:hover{
+  border-color:#7dd3fc;
+  color:#7dd3fc;
+  box-shadow:0 0 14px rgba(56,189,248,.46);
+}
+.num-help-dot{
+  width:18px;
+  height:18px;
+  margin-left:6px;
+  font-size:11px;
+}
+.num-help-modal{
+  position:fixed;
+  inset:0;
+  z-index:220000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:14px;
+  background:rgba(2,6,23,.86);
+}
+.num-help-panel{
+  width:min(720px,calc(100vw - 24px));
+  max-height:min(82vh,760px);
+  overflow:auto;
+  border:1px solid rgba(255,215,0,.5);
+  border-radius:12px;
+  background:linear-gradient(180deg,#111827,#020617);
+  box-shadow:0 0 28px rgba(255,215,0,.22);
+  padding:16px;
+  color:#e5e7eb;
+}
+.num-help-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:10px;
+  border-bottom:1px solid rgba(255,215,0,.18);
+  padding-bottom:10px;
+}
+.num-help-title{
+  color:#FFD700;
+  font-weight:900;
+  font-size:16px;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  text-shadow:0 0 10px rgba(255,215,0,.28);
+}
+.num-help-close{
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  border:1px solid rgba(56,189,248,.55);
+  background:#0f172a;
+  color:#38bdf8;
+  font-size:18px;
+  font-weight:900;
+  cursor:pointer;
+}
+.num-help-body{
+  font-size:13px;
+  line-height:1.55;
+  text-align:left;
+  white-space:normal;
+}
+.num-help-body p{
+  margin:0 0 12px;
+}
+
+    .owner-city-cascade{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:6px;
+      margin-bottom:6px;
+    }
+
+    .owner-city-cascade select{
+      width:100%;
+      min-height:32px;
+      border-radius:8px;
+      border:1px solid rgba(56,189,248,0.48);
+      background:#0f172a;
+      color:#e0f2fe;
+      font-size:11px;
+      outline:none;
+      box-shadow:0 0 8px rgba(56,189,248,0.16);
+    }
+
+    @media(max-width:520px){
+      .owner-city-cascade{grid-template-columns:1fr;}
+    }
 </style>
 </head>
 
@@ -2185,14 +2871,12 @@ body.primary-astrology #disclaimerAcceptBtn{
 <div class="title">Numerology App</div>
 
 <div class="tabs" id="tabs">
-  <div class="tab active" data-tab="home" onclick="showTab('home')">HOME</div>
   <div class="tab" data-tab="spirit" onclick="showTab('spirit')">SPIRITUAL NUMBER</div>
   <div class="tab" data-tab="codes" onclick="showTab('codes')">CODES</div>
   <div class="tab" data-tab="analysis" onclick="showTab('analysis')">ANALYSIS</div>
   <div class="tab" data-tab="pyramid" onclick="showTab('pyramid')">ASPECT</div>
   <div class="tab" data-tab="pitagora" onclick="showTab('pitagora')">PYTHAGOREAN</div>
   <div class="tab" data-tab="store" onclick="showTab('store')">BOOK STORE</div>
-  <div class="tab" data-tab="contacts" onclick="showTab('contacts')">CONTACTS</div>
 </div>
 
 <!-- HOME -->
@@ -2347,6 +3031,25 @@ body.primary-astrology #disclaimerAcceptBtn{
       <button id="portalCode" class="portal-hotspot portal-code" type="button" onclick="openPortalCode()" title="Open numerological code"></button>
       <button id="portalChinese" class="portal-hotspot portal-chinese" type="button" onclick="openPortalChinese()" title="Open Chinese Zodiac"></button>
       <button id="portalTarot" class="portal-hotspot portal-tarot" type="button" onclick="openPortalTarot()" title="Open Tarot Cards"></button>
+      <img class="portal-center-badge" src="images/portal-center-4in1-core.png" alt="" role="button" tabindex="0" aria-label="Open 4 in 1 chooser" onclick="openPortalChoice(event)" onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();openPortalChoice(event);}">
+    </div>
+    <div id="portalChoiceModal" class="portal-choice-modal" onclick="if(event.target===this)closePortalChoice()">
+      <div class="portal-choice-sky" aria-hidden="true">
+        <span style="--x:8%;--y:14%;--s:34px;--d:9s">7</span><span style="--x:72%;--y:10%;--s:42px;--d:11s">&#9800;</span><span style="--x:48%;--y:6%;--s:24px;--d:8s">&#10022;</span>
+        <span style="--x:18%;--y:34%;--s:30px;--d:12s">22</span><span style="--x:82%;--y:32%;--s:36px;--d:10s">&#23376;</span><span style="--x:5%;--y:62%;--s:28px;--d:13s">&#10038;</span>
+        <span style="--x:68%;--y:58%;--s:31px;--d:9s">9</span><span style="--x:34%;--y:72%;--s:40px;--d:12s">&#9805;</span><span style="--x:86%;--y:78%;--s:26px;--d:8s">&#21320;</span>
+        <span style="--x:14%;--y:84%;--s:38px;--d:11s">11</span><span style="--x:55%;--y:88%;--s:25px;--d:10s">&#10026;</span><span style="--x:78%;--y:18%;--s:22px;--d:14s">3</span>
+      </div>
+      <div class="portal-choice-panel">
+        <button class="portal-choice-close" type="button" onclick="closePortalChoice()" aria-label="Close">X</button>
+        <div class="portal-choice-title">CHOOSE AREA</div>
+        <div class="portal-choice-list">
+          <button class="portal-choice-btn blue" type="button" onclick="closePortalChoice();openPortalCode()"><span>NUMEROLOGY</span><span>CODE</span></button>
+          <button class="portal-choice-btn silver" type="button" onclick="closePortalChoice();openPortalTarot()"><span>TAROT</span><span>MEANING</span></button>
+          <button class="portal-choice-btn gold" type="button" onclick="closePortalChoice();startPortalToAstrology()"><span>ASTROLOGY</span><span>SIGN</span></button>
+          <button class="portal-choice-btn red" type="button" onclick="closePortalChoice();openPortalChinese()"><span>CHINESE</span><span>ZODIAC</span></button>
+        </div>
+      </div>
     </div>
     <svg class="portal-switch-arc" viewBox="0 0 220 42" role="button" tabindex="0" aria-label="Change to Astrology App" onclick="startPortalToAstrology()" onkeydown="if(event.key==='Enter' || event.key===' '){ event.preventDefault(); startPortalToAstrology(); }">
       <defs>
@@ -2393,10 +3096,13 @@ For example, being born on the 29th carries a different meaning depending on whe
   <select id="spiritSelect"></select>
 
   <!-- REZULTAT -->
-  <div id="spiritNumber" class="main-number" style="font-size:90px;"></div>
+  <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px;">
+    <div id="spiritNumber" class="main-number" style="font-size:90px;"></div>
+    <button class="num-help-btn" type="button" onclick="event.stopPropagation(); openSpiritDetail(parseInt(document.getElementById('spiritSelect').value || '1', 10));" aria-label="Help for spiritual number">?</button>
+  </div>
 
   <div class="spirit-hint" style="margin-top:10px;">
-  Tap the number to reveal<br>
+  Tap ? to reveal<br>
   the meaning of your spiritual number
 </div>
 
@@ -2410,6 +3116,33 @@ For example, being born on the 29th carries a different meaning depending on whe
     0
   </div>
 
+</div>
+
+<div id="personalDayWrap" style="
+  margin:18px auto 0;
+  width:min(360px, calc(100vw - 28px));
+  background:rgba(30,41,59,.72);
+  border:1px solid rgba(56,189,248,.42);
+  border-radius:12px;
+  padding:12px;
+  box-shadow:0 0 14px rgba(56,189,248,.18);
+  text-align:center;
+">
+  <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;">
+    <div style="font-size:11px;letter-spacing:1.6px;color:#38bdf8;font-weight:bold;">PERSONAL DAY NUMBER</div>
+    <button class="num-help-btn" type="button" style="width:20px;height:20px;font-size:12px;" onclick="openPersonalDayHelp()" aria-label="Help for personal day number">?</button>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+    <div style="background:#0f172a;border:1px solid rgba(56,189,248,.24);border-radius:9px;padding:9px;">
+      <div id="personalDayNumber" style="font-size:34px;line-height:1;color:#38bdf8;font-weight:900;">-</div>
+      <div style="font-size:10px;color:#94a3b8;margin-top:4px;">TODAY</div>
+    </div>
+    <div style="background:#0f172a;border:1px solid rgba(56,189,248,.24);border-radius:9px;padding:9px;">
+      <div id="birthWeekdayName" style="font-size:15px;line-height:1.2;color:#e0f2fe;font-weight:900;">-</div>
+      <div style="font-size:10px;color:#94a3b8;margin-top:4px;">BIRTH WEEKDAY</div>
+    </div>
+  </div>
+  <div id="personalDaySummary" style="margin-top:9px;font-size:11px;color:#cbd5e1;line-height:1.35;">Enter birth date to calculate.</div>
 </div>
 
 </div>
@@ -2431,7 +3164,10 @@ For example, being born on the 29th carries a different meaning depending on whe
   </div>
 
   <select id="aspectYear"></select>
- <div id="aspectResult" onclick="openAspectDetail()" style="
+  <div style="margin-top:14px;text-align:center;">
+    <button class="num-help-btn" type="button" onclick="openAspectDetail()" aria-label="Help for selected aspect">?</button>
+  </div>
+ <div id="aspectResult" style="
   margin-top:20px;
   text-align:center;
   cursor:pointer;
@@ -2511,7 +3247,7 @@ For example, being born on the 29th carries a different meaning depending on whe
 
 <div id="analysis" class="section">
 
-  <!-- ðŸ” INPUT -->
+  <!-- dz�t INPUT -->
   <div id="analysisDatePicker" style="display:flex; justify-content:center; align-items:center; gap:6px; margin:15px auto; background:#1e293b; border-radius:14px; padding:4px 12px; width:fit-content; box-shadow:0 0 10px rgba(56,189,248,0.4); border:1px solid rgba(56,189,248,0.3);">
 
     <!-- DAN -->
@@ -2546,7 +3282,7 @@ For example, being born on the 29th carries a different meaning depending on whe
 
   <!-- Auto-calculate on date change -->
 
-    <!-- ðŸ”½ PIRAMIDA -->
+    <!-- dz�? PIRAMIDA -->
   <div class="pyramid-raw">
     <div style="
       margin-top:5px;
@@ -2559,12 +3295,12 @@ For example, being born on the 29th carries a different meaning depending on whe
     </div>
     <div id="analysisPyramid"></div>
   </div>
-<!-- ðŸ”» TIME DIFFERENCE NA KRAJU -->
+<!-- dz�� TIME DIFFERENCE NA KRAJU -->
   <div id="analysisText" style="margin-top:20px; background:transparent;"></div>
 
 </div>
 
- <!-- ðŸ”¥ INVISIBLE TAB -->
+ <!-- dz�A INVISIBLE TAB -->
 
  <div id="spiritDetail" class="section">
    <div id="spiritDetailText" style="margin-top:20px; text-align:left;"></div>
@@ -2642,12 +3378,7 @@ Suzy Q & G Lab Research
 <!-- BOOK STORE -->
 <div id="store" class="section">
 
-  <div style="
-  display:flex;
-  justify-content:center;
-  gap:15px;
-  margin-bottom:15px;
-">
+  <div class="store-season-tabs">
 
 <div class="seasonBtn" onclick="toggleSeason('s1', this)">SEASON 1</div>
 <div class="seasonBtn" onclick="toggleSeason('s2', this)">SEASON 2</div>
@@ -2682,7 +3413,7 @@ Suzy Q & G Lab Research
   </video>
 
   <div id="storeDownload" style="display:none; margin-top:10px; cursor:pointer;"
-onclick="window.location.href='free.pdf'">
+onclick="appNavigate('free.pdf')">
 
    <img src="images/free.png" style="
   width: 100%;
@@ -2777,6 +3508,11 @@ onclick="window.location.href='free.pdf'">
 </div>
 </div>
 
+<div id="bookPreview" class="book-preview" onclick="closeBookPreview(event)">
+  <button class="book-preview-close" type="button" onclick="closeBookPreview(event)">X</button>
+  <img id="bookPreviewImg" alt="Book preview" onclick="openPreviewBookLink(event)">
+</div>
+
 <!-- PITAGORA -->
 
 <div id="pitagora" class="section">
@@ -2837,16 +3573,10 @@ onclick="window.location.href='free.pdf'">
 </div>
 
 <!-- CONTACTS TAB -->
-<div id="contacts" class="section">
+<div id="contacts" class="section contact-screen">
 
-  <div style="margin-top:20px;">
-
-    <h2 style="
-      color:#FFD700;
-      text-align:center;
-    ">
-      CONTACT
-    </h2>
+  <div class="contact-panel">
+    <h2 class="contact-app-title">CONTACT</h2>
 
     <!-- WRAPPER -->
     <div class="contact-wrapper">
@@ -2915,6 +3645,16 @@ onclick="window.location.href='free.pdf'">
 
 <script src="app-notifications.js"></script>
 <script>
+function openContactWindow(){
+  document.body.classList.add('contact-active');
+  showTab('contacts');
+}
+function closeContactWindow(){
+  document.body.classList.remove('contact-active');
+  goBack();
+}
+document.addEventListener('keydown',function(event){if(event.key==='Escape'&&document.body.classList.contains('contact-active'))closeContactWindow()});
+
 function appCopyText(text, message){
   const done = () => { if(message) alert(message); };
   if(navigator.clipboard && window.isSecureContext){
@@ -2970,7 +3710,7 @@ function appPrintPage(){
   }
 }
 
-function appExit(fallbackUrl){if(window.closeNativeApp){window.closeNativeApp(fallbackUrl);return}try{window.close()}catch(e){}setTimeout(function(){window.location.href=fallbackUrl||"index.html"},160)}
+function appExit(fallbackUrl){if(window.closeNativeApp){window.closeNativeApp(fallbackUrl);return}try{window.close()}catch(e){}setTimeout(function(){appNavigate(fallbackUrl||"index.html")},160)}
 window.appCopyText = appCopyText;
 window.appShare = appShare;
 window.appPrintPage = appPrintPage;
@@ -2989,9 +3729,9 @@ async function shareCurrentPage(){
 window.shareCurrentPage = shareCurrentPage;
 
 
-// ðŸ”¥ TIME FORMATTING
+// dz�A TIME FORMATTING
 
-// ðŸ”¥ HANDLE TWIN CHECKBOXES - mutual exclusion
+// dz�A HANDLE TWIN CHECKBOXES - mutual exclusion
 function handleTwinCheck(changedId){
   let twin2 = document.getElementById("twinCheck");
   let twin3 = document.getElementById("twinCheck3");
@@ -3005,7 +3745,7 @@ function handleTwinCheck(changedId){
 }
 
 
-// ðŸ”¥ NATAL CHART CALCULATIONS
+// dz�A NATAL CHART CALCULATIONS
 
 // Planet orbital periods (in years) and approximate positions
 // Using simplified mean longitude calculations
@@ -3113,8 +3853,8 @@ function calculateHouses(ascendantDeg) {
 // Get sign from longitude
 function longitudeToSign(longitude) {
   let signIndex = Math.floor(longitude / 30) % 12;
-  let signs = ["♈ Aries", "♉ Taurus", "♊ Gemini", "♋ Cancer", "♌ Leo", "♍ Virgo",
-               "♎ Libra", "♏ Scorpio", "♐ Sagittarius", "♑ Capricorn", "♒ Aquarius", "♓ Pisces"];
+  let signs = ["? Aries", "? Taurus", "? Gemini", "? Cancer", "? Leo", "? Virgo",
+               "? Libra", "? Scorpio", "? Sagittarius", "? Capricorn", "? Aquarius", "? Pisces"];
   return signs[signIndex];
 }
 
@@ -3230,7 +3970,7 @@ function generateNatalChart() {
   for(let i = 0; i < 12; i++) {
     let sign = longitudeToSign(houseCusps[i]);
     let deg = getSignDegree(houseCusps[i]);
-    html += `<div style="font-size:11px; color:#94a3b8;">House ${i+1}: <span style="color:#38bdf8;">${sign} ${deg}°</span></div>`;
+    html += `<div style="font-size:11px; color:#94a3b8;">House ${i+1}: <span style="color:#38bdf8;">${sign} ${deg}dz?</span></div>`;
   }
 
   html += `</div></div>`;
@@ -3244,7 +3984,7 @@ function generateNatalChart() {
     let color = p.name === "Sun" || p.name === "Moon" ? "#FFD700" : "#38bdf8";
     html += `<div style="display:flex; justify-content:space-between; font-size:11px;">
       <span style="color:${color}; font-weight:bold;">${p.name}</span>
-      <span style="color:#94a3b8;">${p.sign} ${p.degree}°</span>
+      <span style="color:#94a3b8;">${p.sign} ${p.degree}dz?</span>
       <span style="color:#f6cb71;">House ${p.house}</span>
     </div>`;
   });
@@ -3263,14 +4003,11 @@ function generateNatalChart() {
     </div>
     <div style="text-align:center; margin-top:15px; padding:10px; background:#1e293b; border-radius:10px; max-width:700px; margin:15px auto 0;">
       <div style="font-size:12px; color:#FFD700;">ASCENDANT</div>
-      <div style="font-size:18px; color:#38bdf8; font-weight:bold;">${ascSign} ${ascDegree}°</div>
+      <div style="font-size:18px; color:#38bdf8; font-weight:bold;">${ascSign} ${ascDegree}dz?</div>
     </div>
   `;
 
-  document.getElementById("natalChartText").innerHTML = html;
-
-  document.body.classList.add("detail-active");
-  showTab("natalChart");
+  showNumerologyHelp("Natal Chart", html);
 }
 
 // Visual natal chart wheel - Professional astrological style
@@ -3298,7 +4035,7 @@ function generateNatalChartWheel(planetData, houseCusps, ascendantDeg) {
     "#FF8C94", "#7FDBDA", "#B4E7CE", "#C9B1FF", "#FFD93D", "#6BCB77"
   ];
 
-  let signSymbols = ["♈", "♉", "♊", "♋", "♌", "♍", "♎", "♏", "♐", "♑", "♒", "♓"];
+  let signSymbols = ["\u2648\uFE0E", "\u2649\uFE0E", "\u264A\uFE0E", "\u264B\uFE0E", "\u264C\uFE0E", "\u264D\uFE0E", "\u264E\uFE0E", "\u264F\uFE0E", "\u2650\uFE0E", "\u2651\uFE0E", "\u2652\uFE0E", "\u2653\uFE0E"];
   let signNames = ["Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
                    "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"];
 
@@ -3418,8 +4155,8 @@ function generateNatalChartWheel(planetData, houseCusps, ascendantDeg) {
 
   // Draw planets
   let planetSymbols = {
-    "Sun": "☉", "Moon": "☽", "Mercury": "☿", "Venus": "♀", "Mars": "♂",
-    "Jupiter": "♃", "Saturn": "♄", "Uranus": "♅", "Neptune": "♆", "Pluto": "♇"
+    "Sun": "?", "Moon": "?", "Mercury": "?", "Venus": "?", "Mars": "?",
+    "Jupiter": "?", "Saturn": "?", "Uranus": "?", "Neptune": "?", "Pluto": "?"
   };
 
   let planetColors = {
@@ -3466,7 +4203,7 @@ function generateNatalChartWheel(planetData, houseCusps, ascendantDeg) {
     ctx.font = "9px Arial";
     let dx = px + 18 * Math.cos(angle);
     let dy = py + 18 * Math.sin(angle);
-    ctx.fillText(p.degree + "°", dx, dy);
+    ctx.fillText(p.degree + "dz?", dx, dy);
 
     // Retrograde
     // (Would need retrograde calculation from Swiss Ephemeris)
@@ -3531,7 +4268,7 @@ function validateTime(timeStr){
   return true;
 }
 
-// ðŸ”¥ CITY DROPDOWN
+// dz�A CITY DROPDOWN
 const worldCities = [
   "Abu Dhabi",
   "Abuja",
@@ -3551,7 +4288,7 @@ const worldCities = [
   "Antalya",
   "Antananarivo",
   "Antwerp",
-  "AsunciÃ³n",
+  "AsunciAln",
   "Athens",
   "Atlanta",
   "Auckland",
@@ -3576,11 +4313,11 @@ const worldCities = [
   "Bhopal",
   "Birmingham",
   "Bishkek",
-  "BogotÃ¡",
+  "BogotA?",
   "Bologna",
   "Bonn",
   "Boston",
-  "BrasÃ­lia",
+  "BrasA�lia",
   "Brazzaville",
   "Brisbane",
   "Brussels",
@@ -3618,7 +4355,7 @@ const worldCities = [
   "Dresden",
   "Dubai",
   "Dublin",
-  "DÃ¼sseldorf",
+  "DALsseldorf",
   "Edinburgh",
   "Edmonton",
   "Florence",
@@ -3689,7 +4426,7 @@ const worldCities = [
   "Madrid",
   "Makassar",
   "Malaga",
-  "MalÃ©",
+  "MalA�",
   "Manama",
   "Manaus",
   "Manchester",
@@ -3698,7 +4435,7 @@ const worldCities = [
   "Maracaibo",
   "Marseille",
   "Medan",
-  "MedellÃ­n",
+  "MedellA�n",
   "Melbourne",
   "Memphis",
   "Mexico City",
@@ -3780,7 +4517,7 @@ const worldCities = [
   "San Juan",
   "Sanaa",
   "Santiago",
-  "SÃ£o Paulo",
+  "SALo Paulo",
   "Sapporo",
   "Sarajevo",
   "Seattle",
@@ -3835,7 +4572,7 @@ const worldCities = [
   "Wuhan",
   "Xi'an",
   "Yangon",
-  "YaoundÃ©",
+  "YaoundA�",
   "Yekaterinburg",
   "Yerevan",
   "Zagreb",
@@ -3848,6 +4585,138 @@ function loadCities(){
   setupCityAutocomplete();
 }
 
+
+function fillOwnerCitySelect(select, placeholder, items, valueFn, labelFn){
+  if(!select) return;
+  select.innerHTML = '';
+  const empty = document.createElement('option');
+  empty.value = '';
+  empty.textContent = placeholder;
+  select.appendChild(empty);
+  (items || []).forEach((item, index) => {
+    const option = document.createElement('option');
+    option.value = valueFn ? valueFn(item, index) : String(index);
+    option.textContent = labelFn ? labelFn(item, index) : String(item);
+    select.appendChild(option);
+  });
+}
+
+function setupOwnerCityCascade(prefix, inputId){
+  if(!window.WorldCities) return;
+  const continent = document.getElementById(prefix + 'Continent');
+  const country = document.getElementById(prefix + 'Country');
+  const city = document.getElementById(prefix + 'CitySelect');
+  const input = document.getElementById(inputId);
+  if(!continent || !country || !city || !input) return;
+  if(continent.dataset.ownerCascadeReady === '1') return;
+  continent.dataset.ownerCascadeReady = '1';
+
+  const populateCountries = () => {
+    const countries = WorldCities.countries(continent.value);
+    fillOwnerCitySelect(country, 'Country', countries, item => item.code, item => item.name);
+    fillOwnerCitySelect(city, 'City', [], null, null);
+    city._ownerCityList = [];
+  };
+
+  const populateCities = () => {
+    const list = WorldCities.citiesForCountry(country.value);
+    city._ownerCityList = list;
+    fillOwnerCitySelect(city, 'City', list, (item, index) => String(index), item => WorldCities.cityLabel(item));
+  };
+
+  fillOwnerCitySelect(continent, 'Continent', WorldCities.continents(), item => item.code, item => item.name);
+  fillOwnerCitySelect(country, 'Country', [], null, null);
+  fillOwnerCitySelect(city, 'City', [], null, null);
+
+  continent.addEventListener('change', populateCountries);
+  country.addEventListener('change', populateCities);
+  city.addEventListener('change', () => {
+    const selected = city._ownerCityList && city._ownerCityList[Number(city.value)];
+    if(selected) input.value = WorldCities.displayName(selected);
+  });
+}
+
+function syncOwnerCityCascadeFromInput(prefix, inputId){
+  if(!window.WorldCities) return;
+  const input = document.getElementById(inputId);
+  const continent = document.getElementById(prefix + 'Continent');
+  const country = document.getElementById(prefix + 'Country');
+  const city = document.getElementById(prefix + 'CitySelect');
+  if(!input || !continent || !country || !city || !input.value.trim()) return;
+  const found = WorldCities.find(input.value.trim());
+  if(!found || !found.country) return;
+  continent.value = found.continent || '';
+  continent.dispatchEvent(new Event('change'));
+  country.value = found.country || '';
+  country.dispatchEvent(new Event('change'));
+  const list = city._ownerCityList || [];
+  const foundName = (found.name || '').toLowerCase();
+  const foundLat = Number(found.lat);
+  const foundLon = Number(found.lon);
+  let index = list.findIndex(item => Number(item.lat) === foundLat && Number(item.lon) === foundLon);
+  if(index < 0) index = list.findIndex(item => String(item.ascii || item.name).toLowerCase() === foundName || String(item.name || '').toLowerCase() === foundName);
+  if(index >= 0) city.value = String(index);
+}
+function cityAutocompleteMatches(value){
+  if(window.WorldCities && typeof WorldCities.searchCities === "function") return WorldCities.searchCities(value, 12);
+  const val = String(value || "").toLowerCase();
+  return worldCities.filter(city => city.toLowerCase().includes(val)).slice(0, 12);
+}
+
+function cityAutocompleteValue(city){
+  if(city && typeof city === "object") return window.WorldCities && WorldCities.choiceName ? WorldCities.choiceName(city) : ((city.ascii || city.name) + (city.country ? ", " + city.country : ""));
+  return String(city || "");
+}
+
+function cityAutocompleteTitle(city){
+  if(city && typeof city === "object") return (city.ascii || city.name) + (city.admin1 ? " - " + city.admin1 : "");
+  return String(city || "");
+}
+
+function cityAutocompleteMeta(city){
+  if(!city || typeof city !== "object") return "";
+  return [city.countryName, city.continentName].filter(Boolean).join(" / ");
+}
+
+function selectCityFor(inputId, dropdownId, city){
+  let cityInput = document.getElementById(inputId);
+  let dropdown = document.getElementById(dropdownId);
+  if(cityInput){
+    cityInput.value = cityAutocompleteValue(city);
+    if(city && typeof city === "object"){
+      cityInput.dataset.selectedCityLat = city.lat;
+      cityInput.dataset.selectedCityLon = city.lon;
+      cityInput.dataset.selectedCityTz = city.tz || "";
+      cityInput.dataset.selectedCityCountry = city.country || "";
+    }
+  }
+  if(dropdown) dropdown.style.display = "none";
+}
+
+function renderCityAutocomplete(dropdown, inputId, dropdownId, matches){
+  dropdown.innerHTML = "";
+  matches.forEach(city => {
+    const row = document.createElement("div");
+    row.style.cssText = "padding:8px 12px;cursor:pointer;color:white;font-size:12px;border-bottom:1px solid #334155;transition:0.2s;line-height:1.2;";
+    const title = document.createElement("div");
+    title.textContent = cityAutocompleteTitle(city);
+    title.style.fontWeight = "700";
+    const metaText = cityAutocompleteMeta(city);
+    row.appendChild(title);
+    if(metaText){
+      const meta = document.createElement("div");
+      meta.textContent = metaText;
+      meta.style.cssText = "font-size:10px;color:#94a3b8;margin-top:3px;";
+      row.appendChild(meta);
+    }
+    row.addEventListener("mouseenter", () => { row.style.background = "#0f172a"; });
+    row.addEventListener("mouseleave", () => { row.style.background = "transparent"; });
+    row.addEventListener("click", () => selectCityFor(inputId, dropdownId, city));
+    dropdown.appendChild(row);
+  });
+  dropdown.style.display = matches.length ? "block" : "none";
+}
+
 function setupCityAutocomplete(inputId = "cityInput", dropdownId = "cityDropdown"){
   let cityInput = document.getElementById(inputId);
   let dropdown = document.getElementById(dropdownId);
@@ -3856,42 +4725,25 @@ function setupCityAutocomplete(inputId = "cityInput", dropdownId = "cityDropdown
   cityInput.dataset.cityAutocompleteBound = "true";
 
   cityInput.addEventListener("input", function(){
-    let val = this.value.toLowerCase();
-    if(!val){
+    const value = this.value.trim();
+    delete this.dataset.selectedCityLat;
+    delete this.dataset.selectedCityLon;
+    delete this.dataset.selectedCityTz;
+    delete this.dataset.selectedCityCountry;
+    if(!value){
       if(dropdown) dropdown.style.display = "none";
       return;
     }
-
-    let matches = window.WorldCities ? WorldCities.search(this.value, 10) : worldCities.filter(city => city.toLowerCase().includes(val)).slice(0, 10); // max 10 results
-
-    if(dropdown){
-      if(matches.length > 0){
-        dropdown.innerHTML = matches.map(city => 
-          `<div onclick="selectCityFor('${inputId}','${dropdownId}','${city.replace(/'/g, "\\'")}')" style="
-            padding: 8px 12px;
-            cursor: pointer;
-            color: white;
-            font-size: 12px;
-            border-bottom: 1px solid #334155;
-            transition: 0.2s;
-          " onmouseover="this.style.background='#0f172a'" 
-             onmouseout="this.style.background='transparent'">${city}</div>`
-        ).join('');
-        dropdown.style.display = "block";
-      } else {
-        dropdown.style.display = "none";
-      }
-    }
+    const matches = cityAutocompleteMatches(value);
+    if(dropdown) renderCityAutocomplete(dropdown, inputId, dropdownId, matches);
   });
 
-  // Hide dropdown when clicking outside
   document.addEventListener("click", function(e){
     if(dropdown && !cityInput.contains(e.target) && !dropdown.contains(e.target)){
       dropdown.style.display = "none";
     }
   });
 
-  // Handle Enter key
   cityInput.addEventListener("keypress", function(e){
     if(e.key === "Enter"){
       if(dropdown) dropdown.style.display = "none";
@@ -3903,16 +4755,9 @@ function selectCity(city){
   selectCityFor("cityInput", "cityDropdown", city);
 }
 
-function selectCityFor(inputId, dropdownId, city){
-  let cityInput = document.getElementById(inputId);
-  let dropdown = document.getElementById(dropdownId);
-  if(cityInput) cityInput.value = city;
-  if(dropdown) dropdown.style.display = "none";
-}
+// dz�A SUB-ZODIAC CALCULATION (Ascendant/Rising Sign) - TA�SNA ASTRONOMSKA VERZIJA
 
-// ðŸ”¥ SUB-ZODIAC CALCULATION (Ascendant/Rising Sign) - TAÄŒNA ASTRONOMSKA VERZIJA
-
-// TaÄne geografske koordinate gradova
+// Ta�Tne geografske koordinate gradova
 
 function getCityCoords(city){
   const raw = String(city || "").trim();
@@ -3934,7 +4779,7 @@ const cityCoords = {
   "Los Angeles": { lat: 34.0522, lon: -118.2437 },
   "Chicago": { lat: 41.8781, lon: -87.6298 },
   "Toronto": { lat: 43.6532, lon: -79.3832 },
-  "SÃ£o Paulo": { lat: -23.5505, lon: -46.6333 },
+  "SALo Paulo": { lat: -23.5505, lon: -46.6333 },
   "Buenos Aires": { lat: -34.6037, lon: -58.3816 },
   "Cairo": { lat: 30.0444, lon: 31.2357 },
   "Johannesburg": { lat: -26.2041, lon: 28.0473 },
@@ -3968,7 +4813,7 @@ const cityCoords = {
   "Hamburg": { lat: 53.5511, lon: 9.9937 },
   "Cologne": { lat: 50.9375, lon: 6.9603 },
   "Stuttgart": { lat: 48.7758, lon: 9.1829 },
-  "DÃ¼sseldorf": { lat: 51.2277, lon: 6.7735 },
+  "DALsseldorf": { lat: 51.2277, lon: 6.7735 },
   "Lyon": { lat: 45.7640, lon: 4.8357 },
   "Marseille": { lat: 43.2965, lon: 5.3698 },
   "Nice": { lat: 43.7102, lon: 7.2620 },
@@ -3984,11 +4829,11 @@ const cityCoords = {
   "Havana": { lat: 23.1136, lon: -82.3666 },
   "San Juan": { lat: 18.4655, lon: -66.1057 },
   "Panama City": { lat: 8.9824, lon: -79.5199 },
-  "BogotÃ¡": { lat: 4.7110, lon: -74.0721 },
+  "BogotA?": { lat: 4.7110, lon: -74.0721 },
   "Lima": { lat: -12.0464, lon: -77.0428 },
   "Caracas": { lat: 10.4806, lon: -66.9036 },
   "Montevideo": { lat: -34.9011, lon: -56.1645 },
-  "AsunciÃ³n": { lat: -25.2637, lon: -57.5759 },
+  "AsunciAln": { lat: -25.2637, lon: -57.5759 },
   "Santiago": { lat: -33.4489, lon: -70.6693 },
   "Casablanca": { lat: 33.5731, lon: -7.5898 },
   "Rabat": { lat: 34.0209, lon: -6.8416 },
@@ -4008,7 +4853,7 @@ const cityCoords = {
   "Luanda": { lat: -8.8390, lon: 13.2894 },
   "Kinshasa": { lat: -4.4419, lon: 15.2663 },
   "Brazzaville": { lat: -4.2634, lon: 15.2429 },
-  "YaoundÃ©": { lat: 3.8480, lon: 11.5021 },
+  "YaoundA�": { lat: 3.8480, lon: 11.5021 },
   "Abidjan": { lat: 5.3600, lon: -4.0083 },
   "Accra": { lat: 5.6037, lon: -0.1870 },
   "Lagos": { lat: 6.5244, lon: 3.3792 },
@@ -4238,7 +5083,7 @@ const cityCoords = {
   "Innsbruck": { lat: 47.2692, lon: 11.4041 }
 };
 
-// PomoÄ‡ne matematiÄke funkcije
+// Pomoćne matemati�Tke funkcije
 function toRadians(deg) {
   return deg * Math.PI / 180;
 }
@@ -4274,7 +5119,7 @@ function getObliquity(jd) {
   return 23.4392794444444 - 0.0130102136111 * T - 0.0000005922222 * T * T + 0.0000007572222 * T * T * T;
 }
 
-// TAÄŒAN ASCENDANT (sferna trigonometrija)
+// TA�SAN ASCENDANT (sferna trigonometrija)
 function calculateAscendant(year, month, day, hour, minute, lat, lon) {
   // Pretvori lokalno vreme u UTC (lon/15 = sati offseta)
   let utcOffset = lon / 15;
@@ -4355,23 +5200,23 @@ function getSubZodiacFallback(day, month, timeStr, city) {
   const cityOffsets = {
     "New York": -5, "London": 0, "Paris": 1, "Berlin": 1, "Moscow": 3,
     "Tokyo": 9, "Sydney": 10, "Beijing": 8, "Dubai": 4, "Mumbai": 5.5,
-    "Los Angeles": -8, "Chicago": -6, "Toronto": -5, "SÃ£o Paulo": -3,
+    "Los Angeles": -8, "Chicago": -6, "Toronto": -5, "SALo Paulo": -3,
     "Buenos Aires": -3, "Cairo": 2, "Johannesburg": 2, "Istanbul": 3,
     "Bangkok": 7, "Singapore": 8, "Hong Kong": 8, "Seoul": 9, "Madrid": 1,
     "Rome": 1, "Vienna": 1, "Amsterdam": 1, "Brussels": 1, "Zurich": 1,
     "Stockholm": 1, "Oslo": 1, "Copenhagen": 1, "Helsinki": 2, "Warsaw": 1,
     "Prague": 1, "Budapest": 1, "Athens": 2, "Lisbon": 0, "Dublin": 0,
     "Edinburgh": 0, "Barcelona": 1, "Milan": 1, "Venice": 1, "Munich": 1,
-    "Frankfurt": 1, "Hamburg": 1, "Cologne": 1, "Stuttgart": 1, "DÃ¼sseldorf": 1,
+    "Frankfurt": 1, "Hamburg": 1, "Cologne": 1, "Stuttgart": 1, "DALsseldorf": 1,
     "Lyon": 1, "Marseille": 1, "Nice": 1, "Toulouse": 1, "Montreal": -5,
     "Vancouver": -8, "Calgary": -7, "Ottawa": -5, "Quebec City": -5, "Winnipeg": -6,
     "Mexico City": -6, "Guadalajara": -6, "Havana": -5, "San Juan": -4,
-    "Panama City": -5, "BogotÃ¡": -5, "Lima": -5, "Caracas": -4, "Montevideo": -3,
-    "AsunciÃ³n": -4, "Santiago": -4, "Casablanca": 0, "Rabat": 0, "Algiers": 1,
+    "Panama City": -5, "BogotA?": -5, "Lima": -5, "Caracas": -4, "Montevideo": -3,
+    "AsunciAln": -4, "Santiago": -4, "Casablanca": 0, "Rabat": 0, "Algiers": 1,
     "Tunis": 1, "Tripoli": 2, "Alexandria": 2, "Khartoum": 2, "Addis Ababa": 3,
     "Nairobi": 3, "Kampala": 3, "Dar es Salaam": 3, "Lusaka": 2, "Harare": 2,
     "Gaborone": 2, "Windhoek": 2, "Luanda": 1, "Kinshasa": 1, "Brazzaville": 1,
-    "YaoundÃ©": 1, "Abidjan": 0, "Accra": 0, "Lagos": 1, "Abuja": 1,
+    "YaoundA�": 1, "Abidjan": 0, "Accra": 0, "Lagos": 1, "Abuja": 1,
     "Dakar": 0, "Nouakchott": 0, "Reykjavik": 0, "Abu Dhabi": 4, "Doha": 3,
     "Manama": 3, "Kuwait City": 3, "Riyadh": 3, "Jeddah": 3, "Muscat": 4,
     "Tehran": 3.5, "Baghdad": 3, "Amman": 3, "Jerusalem": 2, "Tel Aviv": 2,
@@ -4446,7 +5291,7 @@ function getSubZodiac(day, month, timeStr, city, year) {
     return getSubZodiacFallback(day, month, timeStr, city);
   }
 
-  // Koristi godinu roÄ‘enja ako je dostupna, inaÄe 2000
+  // Koristi godinu rođenja ako je dostupna, ina�Te 2000
   let calcYear = year || 2000;
 
   let ascendantDeg = calculateAscendant(calcYear, month, day, hours, minutes, coords.lat, coords.lon);
@@ -4553,6 +5398,46 @@ function validateDate(dateStr){
   return true;
 }
 
+
+
+function ensureNumerologyHelpModal(){
+  let modal = document.getElementById("numerologyHelpModal");
+  if(modal) return modal;
+  modal = document.createElement("div");
+  modal.id = "numerologyHelpModal";
+  modal.className = "num-help-modal";
+  modal.innerHTML =
+    '<div class="num-help-panel">'+
+      '<div class="num-help-head">'+
+        '<div id="numerologyHelpTitle" class="num-help-title"></div>'+
+        '<button class="num-help-close" type="button" onclick="closeNumerologyHelp()" aria-label="Close">X</button>'+
+      '</div>'+
+      '<div id="numerologyHelpBody" class="num-help-body"></div>'+
+    '</div>';
+  modal.addEventListener("click", function(event){
+    if(event.target === modal) closeNumerologyHelp();
+  });
+  document.body.appendChild(modal);
+  return modal;
+}
+
+function showNumerologyHelp(title, body){
+  const modal = ensureNumerologyHelpModal();
+  const titleEl = document.getElementById("numerologyHelpTitle");
+  const bodyEl = document.getElementById("numerologyHelpBody");
+  if(titleEl) titleEl.textContent = title || "Help";
+  if(bodyEl) bodyEl.innerHTML = body || "<p>No description yet.</p>";
+  modal.style.display = "flex";
+  if(window.AppSharedLanguage) window.AppSharedLanguage.apply();
+}
+
+function closeNumerologyHelp(){
+  const modal = document.getElementById("numerologyHelpModal");
+  if(modal) modal.style.display = "none";
+}
+
+window.showNumerologyHelp = showNumerologyHelp;
+window.closeNumerologyHelp = closeNumerologyHelp;
 //book shop//
 
 function openLink(type){
@@ -4588,7 +5473,7 @@ window.openSeason4ComingSoon = openSeason4ComingSoon;
   // uzmi datum iz HOME
   let input = document.getElementById("input").value;
 
-  // ðŸ”¥ PROVERA ZA DRUGOG BLIZANCA
+  // dz�A PROVERA ZA DRUGOG BLIZANCA
   let isTwin = document.getElementById("twinCheck") && document.getElementById("twinCheck").checked;
   let isTwin3 = document.getElementById("twinCheck3") && document.getElementById("twinCheck3").checked;
 
@@ -4620,7 +5505,7 @@ window.openSeason4ComingSoon = openSeason4ComingSoon;
   }
 
 } else {
-  age = 0; // ðŸ”¥ fallback da niÅ¡ta ne pukne
+  age = 0; // dz�A fallback da niL?ta ne pukne
 }
 
   for(let i = 1; i <= 99; i++){
@@ -4634,7 +5519,7 @@ window.openSeason4ComingSoon = openSeason4ComingSoon;
 
     select.appendChild(opt);
   }
-  // ðŸ”¥ OVO TI FALI
+  // dz�A OVO TI FALI
   select.onchange = function(){
     markAspectInPyramid(parseInt(this.value));
   };
@@ -4759,11 +5644,7 @@ function openAspectDetailFromCode(aspectVal){
 
   let text = texts[aspectVal] || "No description yet.";
 
-  document.getElementById("detailText").innerHTML =
-  `<p style="line-height:1.6; text-align:left;">${text}</p>`;
-
-  document.body.classList.add("detail-active");
-  showTab("detail");
+  showNumerologyHelp("Aspect " + aspectVal, `<p style="line-height:1.6; text-align:left;">${text}</p>`);
 }
 
 function closeAspectDetail(){
@@ -4778,13 +5659,13 @@ function markAspectInPyramid(steps){
 
   let spans = [];
 
-  // IDENTIÄŒNO kao ANALYSIS
+  // IDENTI�SNO kao ANALYSIS
   rows.forEach((row, index) => {
-    if(index === 0) return; // preskoÄi prvi red
+    if(index === 0) return; // presko�Ti prvi red
     spans.push(...row.querySelectorAll("span"));
   });
 
-  // ðŸ”¥ PROVERA ZA DRUGOG BLIZANCA
+  // dz�A PROVERA ZA DRUGOG BLIZANCA
   let isTwin = document.getElementById("twinCheck") && document.getElementById("twinCheck").checked;
   let isTwin3 = document.getElementById("twinCheck3") && document.getElementById("twinCheck3").checked;
 
@@ -4801,7 +5682,7 @@ function markAspectInPyramid(steps){
 
     index++;
 
-    // preskoÄi prvi element
+    // presko�Ti prvi element
     if(index === 0){
       index++;
     }
@@ -4893,7 +5774,7 @@ function calculateTodayPythagorean(){
   let c3 = reduce(base[2] + yr + mn + dy);
   let fullCode = `${c1}${c2}${c3}`;
 
-  // PRIKAÅ½I SVE
+  // PRIKAL?I SVE
   document.getElementById("todayPythCode").innerText = fullCode;
   document.getElementById("yearPythCode").innerText = yearCode;
   document.getElementById("monthPythCode").innerText = monthCode;
@@ -5021,16 +5902,12 @@ function openAspectDetail(){
   "9/8": "Period linked with secrecy, manipulation, hidden relationships, and illegal activities. Possible emotional deception, financial fraud, infections, and health risks related to medication or surgeries.",
   "9/9": "Strong intuition, vivid dreams, spirituality, and foreign travel. May also bring psychological instability, confusion, stubbornness, and dangerous temptations. Good period for mystical studies."
 
-    // ðŸ”¥ OSTAVI PROSTOR ZA SVE DO 9/9
+    // dz�A OSTAVI PROSTOR ZA SVE DO 9/9
   };
 
   let text = texts[val] || "No description yet.";
 
-  document.getElementById("detailText").innerHTML =
-  `<p style="line-height:1.6; text-align:left;">${text}</p>`;
-
-  document.body.classList.add("detail-active");
-  showTab("detail");
+  showNumerologyHelp("Aspect " + val, `<p style="line-height:1.6; text-align:left;">${text}</p>`);
 }
 
   //PITAGORA//
@@ -5043,7 +5920,7 @@ function selectPythDay(year, month, day, code){
     el.classList.remove("selected");
   });
 
-  // oznaÄi izabrani dan
+  // ozna�Ti izabrani dan
   let selected = document.getElementById(`day-${year}-${month}-${day}`);
   if(selected){
     selected.style.border = "2px solid gold";
@@ -5092,19 +5969,19 @@ function selectPythDay(year, month, day, code){
   let c3 = reduce(base[2] + yr + mn + dy);
   let fullCode = `${c1}${c2}${c3}`;
 
-  // PRIKAÅ½I SVE
+  // PRIKAL?I SVE
   document.getElementById("todayPythCode").innerText = fullCode;
   document.getElementById("yearPythCode").innerText = yearCode;
   document.getElementById("monthPythCode").innerText = monthCode;
 
-  // aÅ¾uriraj label
+  // aLluriraj label
   let label = document.getElementById("pythLabel");
   if(label){
     label.innerText = `Your Pythagorean code for ${day}.${parseInt(month)+1}.${year} is:`;
   }
 }
 
-// ðŸ”¥ GLOBALNA FUNKCIJA - Pythagorean Base
+// dz�A GLOBALNA FUNKCIJA - Pythagorean Base
 function getPythagoreanBase(){
   let input = document.getElementById("input").value;
   if(!input || !input.match(/^\d{2}\.\d{2}\.\d{4}$/)) return [0,0,0];
@@ -5205,12 +6082,12 @@ for(let y = 1950; y <= 2050; y++){
     border-radius:6px;
   `;
 
-  // ðŸ”´ nedelja
+  // dz�� nedelja
   if(isSunday){
     style += "box-shadow: 0 0 10px rgba(255,0,0,0.5);";
   }
 
-  // ðŸŸ¡ danas
+  // dzz? danas
   if(isToday){
     style += "box-shadow: 0 0 15px gold, 0 0 30px gold; border:1px solid gold;";
   }
@@ -5220,7 +6097,7 @@ for(let y = 1950; y <= 2050; y++){
 // GODINA
 let y = reduce(year);
 
-// MESEC (VAÅ½NO: +1 jer je 0-based)
+// MESEC (VAL?NO: +1 jer je 0-based)
 let m = reduce(month + 1);
 
 // DAN
@@ -5287,13 +6164,19 @@ html += `
   };
 }
 
-// ðŸ”¥ TAB HISTORY
+// dz�A TAB HISTORY
 let tabHistory = [];
 const MAX_HISTORY = 10;
 let skipSavePrompt = false;
+const numerologySectionTabs = new Set(["spirit","codes","analysis","pyramid","pitagora","store"]);
+
+function isNumerologySectionTab(id){
+  return numerologySectionTabs.has(id);
+}
 
 function goBack(){
 
+  document.body.classList.remove("contact-active");
   document.body.classList.remove("detail-active");
 
   // ukloni sve active sekcije
@@ -5328,7 +6211,9 @@ function goBack(){
 }
 
 function handlePrimaryLeftButton(){
-  if(document.body.classList.contains("detail-active")){
+  if(document.body.classList.contains("contact-active")){
+    closeContactWindow();
+  }else if(document.body.classList.contains("detail-active")){
     goBack();
   }else{
     openOwnerProfile();
@@ -5357,6 +6242,9 @@ function playStoreVideo(){
 
   let video = document.getElementById("storeVideo");
   let download = document.getElementById("storeDownload");
+  selectedSeasonBook = null;
+  document.querySelectorAll(".book-selected-stage").forEach(stage => stage.classList.remove("active"));
+  document.querySelectorAll(".season-content.book-fan a").forEach(a => a.classList.remove("active"));
 
   if(!video) return;
 
@@ -5382,17 +6270,39 @@ function playStoreVideo(){
 }
 
 let hasAnalyzedFlag = false;
+let pendingStoreBookId = "";
 
 function showTab(id){
-  const visibleTabs = document.getElementById("tabs");
-  if(visibleTabs && getComputedStyle(visibleTabs).display !== "none"){
-    document.body.classList.add("has-tabs");
+  if(isNumerologySectionTab(id) && !ensureNumerologyInputForTab()){
+    return;
   }
 
-  // ðŸ”¥ DODAJ U ISTORIJU (ako nije isti kao poslednji)
+  document.body.classList.toggle("contact-active", id === "contacts");
+  document.body.classList.toggle("detail-active", isNumerologySectionTab(id));
+  document.body.classList.toggle("home-active", id === "home");
+
+  const visibleTabs = document.getElementById("tabs");
+  if(visibleTabs){
+    if(id === "home"){
+      if(hasAnalyzedFlag){
+        visibleTabs.style.display = "flex";
+        document.body.classList.add("has-tabs");
+      }else{
+        visibleTabs.style.display = "none";
+        document.body.classList.remove("has-tabs");
+      }
+    }else if(id === "contacts" || isNumerologySectionTab(id)){
+      visibleTabs.style.display = "none";
+      document.body.classList.remove("has-tabs");
+    }else if(getComputedStyle(visibleTabs).display !== "none"){
+      document.body.classList.add("has-tabs");
+    }
+  }
+
+  // dz�A DODAJ U ISTORIJU (ako nije isti kao poslednji)
   if(tabHistory.length === 0 || tabHistory[tabHistory.length - 1] !== id){
     tabHistory.push(id);
-    // ograniÄi na MAX_HISTORY
+    // ograni�Ti na MAX_HISTORY
     if(tabHistory.length > MAX_HISTORY){
       tabHistory.shift();
     }
@@ -5412,19 +6322,19 @@ function showTab(id){
     t.classList.remove("active");
   });
 
-  // prikaÅ¾i sekciju
+  // prikaLli sekciju
   let current = document.getElementById(id);
   if(current){
     current.classList.add("active");
   }
 
-  // oznaÄi tab
+  // ozna�Ti tab
   let tab = document.querySelector(`[data-tab="${id}"]`);
   if(tab){
     tab.classList.add("active");
   }
 
-  // ðŸ”¥ OVDE IDE TVOJ KOD (NA SAMOM KRAJU)
+  // dz�A OVDE IDE TVOJ KOD (NA SAMOM KRAJU)
   if(id === "pitagora"){
     setTimeout(() => {
       generateCalendar();
@@ -5433,7 +6343,7 @@ function showTab(id){
   }
 
   if(id === "store"){
-  playStoreVideo();
+  if(!pendingStoreBookId) playStoreVideo();
 }
 
 if(id === "pyramid"){
@@ -5448,7 +6358,7 @@ if(id === "spirit"){
   loadSpirit();
 }
 
-// ðŸ”¥ FOOTER CONTROL
+// dz�A FOOTER CONTROL
 let footer = document.querySelector(".footer");
 if(footer){
   // Footer vidljiv SAMO na home i SAMO pre prvog ANALYZE
@@ -5470,7 +6380,11 @@ function toggleSeason(seasonId, el){
   let selected = document.getElementById(seasonId);
   let video = document.getElementById("storeVideo");
   let download = document.getElementById("storeDownload");
-  let icons = document.getElementById("storeIconsWrapper"); // ðŸ”¥ DODATO
+  let icons = document.getElementById("storeIconsWrapper"); // dz�A DODATO
+
+  selectedSeasonBook = null;
+  document.querySelectorAll(".book-selected-stage").forEach(stage => stage.classList.remove("active"));
+  document.querySelectorAll(".season-content.book-fan a").forEach(a => a.classList.remove("active"));
 
   if(selected.style.display === "block"){
 
@@ -5479,7 +6393,7 @@ function toggleSeason(seasonId, el){
     stopStoreVideo(true);
     if(video) video.style.display = "none";
     if(download) download.style.display = "block";
-    if(icons) icons.style.display = "block"; // ðŸ”¥ DODATO
+    if(icons) icons.style.display = "block"; // dz�A DODATO
 
     document.querySelectorAll(".seasonBtn").forEach(btn=>{
       btn.classList.remove("active");
@@ -5499,7 +6413,7 @@ function toggleSeason(seasonId, el){
   stopStoreVideo(true);
   if(video) video.style.display = "none";
   if(download) download.style.display = "none";
-  if(icons) icons.style.display = "none"; // ðŸ”¥ DODATO
+  if(icons) icons.style.display = "none"; // dz�A DODATO
 
   document.querySelectorAll(".season-content").forEach(s=>{
     s.style.display = "none";
@@ -5517,7 +6431,7 @@ let books = [
   `s1-b${mainNum}`,
   `s2-b${mainNum}`,
   `s3-b${mainNum}`,
-  `s4-b${mainNum}` // ðŸ”¥ OVO FALI
+  `s4-b${mainNum}` // dz�A OVO FALI
 ];
 
   books.forEach(id => {
@@ -5525,7 +6439,7 @@ let books = [
     let link = document.createElement("div");
 
 link.onclick = () => {
-  showTab('store');
+  openStoreBookFromHome(id);
 };
 
     let book = document.createElement("div");
@@ -5550,7 +6464,7 @@ function reduce(num){
   return num;
 }
 
-// ðŸ”¥ ANALYSIS DATE PICKER FUNCTIONS
+// dz�A ANALYSIS DATE PICKER FUNCTIONS
 let analysisDate = { day: 1, month: 1, year: 2026 };
 
 function initAnalysisDatePicker(){
@@ -5598,7 +6512,7 @@ function updateAnalysisDisplay(){
   document.getElementById('analysisMonth').innerText = m;
   document.getElementById('analysisYear').innerText = y;
 
-  // AÅ¾uriraj skriveni input
+  // ALluriraj skriveni input
   document.getElementById('analysisInput').value = d + '.' + m + '.' + y;
 }
 
@@ -5607,7 +6521,7 @@ function calculateDifference(){
   let firstDate = document.getElementById("input").value;
   let secondDate = document.getElementById("analysisInput").value;
 
-// ðŸ”¥ VALIDACIJA
+// dz�A VALIDACIJA
 if(!firstDate.match(/^\d{2}\.\d{2}\.\d{4}$/) ||
    !secondDate.match(/^\d{2}\.\d{2}\.\d{4}$/)){
 
@@ -5659,10 +6573,10 @@ alert("Use format DD.MM.YYYY");
     </div>
     </div>
   `;
-  // ðŸ”¥ UZMI SVA POLJA PIRAMIDE
+  // dz�A UZMI SVA POLJA PIRAMIDE
 let rows = document.querySelectorAll("#analysisPyramid .row");
 
-// preskoÄi prvi red
+// presko�Ti prvi red
 let spans = [];
 
 rows.forEach((row, index) => {
@@ -5670,11 +6584,11 @@ rows.forEach((row, index) => {
   spans.push(...row.querySelectorAll("span"));
 });
 
-// ðŸ”¥ PROVERA ZA DRUGOG BLIZANCA U ANALYSIS
+// dz�A PROVERA ZA DRUGOG BLIZANCA U ANALYSIS
 let isAnalysisTwin = document.getElementById("twinCheck") && document.getElementById("twinCheck").checked;
 let isAnalysisTwin3 = document.getElementById("twinCheck3") && document.getElementById("twinCheck3").checked;
 
-// ðŸ”¥ RESETUJ STARA OBELEÅ½JA
+// dz�A RESETUJ STARA OBELEL?JA
 spans.forEach(s => {
   s.style.border = "";
   s.style.boxShadow = "";
@@ -5682,7 +6596,7 @@ spans.forEach(s => {
   s.style.color = "white";
 });
 
-// ðŸ”¥ FUNKCIJA ZA KRETANJE
+// dz�A FUNKCIJA ZA KRETANJE
 function markPosition(startIndex, steps, color, glowColor, bgColor, skipFirst=false){
 
   let index = startIndex;
@@ -5699,7 +6613,7 @@ function markPosition(startIndex, steps, color, glowColor, bgColor, skipFirst=fa
     }
   }
 
-  // oznaÄi sa bojom i glow
+  // ozna�Ti sa bojom i glow
   spans[index].style.border = "2px solid " + color;
   spans[index].style.boxShadow = "0 0 15px " + glowColor + ", 0 0 30px " + glowColor;
   spans[index].style.background = bgColor;
@@ -5715,7 +6629,7 @@ function markPosition(startIndex, steps, color, glowColor, bgColor, skipFirst=fa
   return { index, current, next, sum };
 }
 
-// ðŸ”¥ KRETANJE KROZ PIRAMIDU
+// dz�A KRETANJE KROZ PIRAMIDU
 
 let currentIndex = -1;
 
@@ -5729,7 +6643,7 @@ currentIndex = m.index;
 
 // DAY (zeleno)
 let d = markPosition(currentIndex, days, "#4ade80", "#4ade80", "#113311", false);
-// obriÅ¡i stari rezultat
+// obriL?i stari rezultat
 let old = document.getElementById("resultBlock");
 if(old) old.remove();
 
@@ -5802,7 +6716,7 @@ row2.style.marginTop = "6px";
 // YEAR ASPECT
 let yearAspect = document.createElement("div");
 yearAspect.style.cssText = "color:#FFD700; font-size:18px; font-weight:bold; cursor:pointer; transition:0.3s; width:60px; text-align:center;";
-yearAspect.innerHTML = `${y.current}/${y.next}`;
+yearAspect.innerHTML = `${y.current}/${y.next}<span class="num-help-dot">?</span>`;
 yearAspect.onmouseover = function(){ this.style.transform = "scale(1.08)"; };
 yearAspect.onmouseout = function(){ this.style.transform = "scale(1)"; };
 yearAspect.onclick = function(){ openAspectDetailFromCode(`${y.current}/${y.next}`); };
@@ -5810,7 +6724,7 @@ yearAspect.onclick = function(){ openAspectDetailFromCode(`${y.current}/${y.next
 // MONTH ASPECT
 let monthAspect = document.createElement("div");
 monthAspect.style.cssText = "color:#FFD700; font-size:18px; font-weight:bold; cursor:pointer; transition:0.3s; width:60px; text-align:center;";
-monthAspect.innerHTML = `${m.current}/${m.next}`;
+monthAspect.innerHTML = `${m.current}/${m.next}<span class="num-help-dot">?</span>`;
 monthAspect.onmouseover = function(){ this.style.transform = "scale(1.08)"; };
 monthAspect.onmouseout = function(){ this.style.transform = "scale(1)"; };
 monthAspect.onclick = function(){ openAspectDetailFromCode(`${m.current}/${m.next}`); };
@@ -5818,7 +6732,7 @@ monthAspect.onclick = function(){ openAspectDetailFromCode(`${m.current}/${m.nex
 // DAY ASPECT
 let dayAspect = document.createElement("div");
 dayAspect.style.cssText = "color:#FFD700; font-size:18px; font-weight:bold; cursor:pointer; transition:0.3s; width:60px; text-align:center;";
-dayAspect.innerHTML = `${d.current}/${d.next}`;
+dayAspect.innerHTML = `${d.current}/${d.next}<span class="num-help-dot">?</span>`;
 dayAspect.onmouseover = function(){ this.style.transform = "scale(1.08)"; };
 dayAspect.onmouseout = function(){ this.style.transform = "scale(1)"; };
 dayAspect.onclick = function(){ openAspectDetailFromCode(`${d.current}/${d.next}`); };
@@ -5851,7 +6765,7 @@ function createRow(numbers){
   let row=document.createElement("div");
   row.className="row";
 
-  // ðŸ”¥ SAMO PRVI RED (8 BROJEVA)
+  // dz�A SAMO PRVI RED (8 BROJEVA)
   if(numbers.length === 8){
     row.classList.add("first-row");
   }
@@ -5885,9 +6799,9 @@ function getZodiac(day, month){
 
 function zodiacSymbol(name){
   return {
-    ARIES:"\u2648", TAURUS:"\u2649", GEMINI:"\u264A", CANCER:"\u264B",
-    LEO:"\u264C", VIRGO:"\u264D", LIBRA:"\u264E", SCORPIO:"\u264F",
-    SAGITTARIUS:"\u2650", CAPRICORN:"\u2651", AQUARIUS:"\u2652", PISCES:"\u2653"
+    ARIES:"\u2648\uFE0E", TAURUS:"\u2649\uFE0E", GEMINI:"\u264A\uFE0E", CANCER:"\u264B\uFE0E",
+    LEO:"\u264C\uFE0E", VIRGO:"\u264D\uFE0E", LIBRA:"\u264E\uFE0E", SCORPIO:"\u264F\uFE0E",
+    SAGITTARIUS:"\u2650\uFE0E", CAPRICORN:"\u2651\uFE0E", AQUARIUS:"\u2652\uFE0E", PISCES:"\u2653\uFE0E"
   }[String(name || "").toUpperCase()] || "";
 }
 
@@ -5967,6 +6881,17 @@ function openPortalCode(){
   if(code) openDetail(code);
 }
 
+function openPortalChoice(event){
+  if(event)event.stopPropagation();
+  const modal=document.getElementById("portalChoiceModal");
+  if(modal)modal.style.display="flex";
+}
+
+function closePortalChoice(){
+  const modal=document.getElementById("portalChoiceModal");
+  if(modal)modal.style.display="none";
+}
+
 function runPortalVortex(done){
   if(!document.querySelector(".portal-fade-curtain")){
     const curtain = document.createElement("div");
@@ -5984,7 +6909,7 @@ function runPortalVortex(done){
 
 function buildVortexTokens(core, mainNum){
   if(!core) return;
-  const signs = ["\u2648","\u2649","\u264A","\u264B","\u264C","\u264D","\u264E","\u264F","\u2650","\u2651","\u2652","\u2653"];
+  const signs = ["\u2648\uFE0E","\u2649\uFE0E","\u264A\uFE0E","\u264B\uFE0E","\u264C\uFE0E","\u264D\uFE0E","\u264E\uFE0E","\u264F\uFE0E","\u2650\uFE0E","\u2651\uFE0E","\u2652\uFE0E","\u2653\uFE0E"];
   const nums = [1,2,3,4,5,6,7,8,9, mainNum || 0, 11, 22];
   core.innerHTML = "";
   nums.forEach((num, i) => {
@@ -6016,7 +6941,7 @@ function startPortalToAstrology(){
   }
   document.body.classList.add("portal-transition");
   setTimeout(() => {
-    window.location.href = pageUrl;
+    appNavigate(pageUrl);
   }, 2850);
 }
 
@@ -6030,7 +6955,7 @@ function openPortalModule(page){
   }
   document.body.classList.add("portal-transition");
   setTimeout(() => {
-    window.location.href = pageUrl;
+    appNavigate(pageUrl);
   }, 2850);
 }
 
@@ -6043,17 +6968,53 @@ function openPortalTarot(){
 }
 
 function openPrimaryAstrology(){
+  fillEmptyHomeInputsFromOwner();
   const pageUrl = buildAstroPageUrl("chart.html");
   if(!pageUrl) return;
   try{ sessionStorage.setItem("portalArriveAstrology", "1"); }catch(e){}
-  window.location.href = pageUrl;
+  appNavigate(pageUrl);
+}
+
+function fillEmptyHomeInputsFromOwner(force = false){
+  let owner = null;
+  try{ owner = JSON.parse(localStorage.getItem("numerology_owner_profile") || "null"); }catch(e){ owner = null; }
+  if(!owner) return false;
+  const date = document.getElementById("input");
+  const time = document.getElementById("timeInput");
+  const city = document.getElementById("cityInput");
+  const twin = document.getElementById("twinCheck");
+  const twin3 = document.getElementById("twinCheck3");
+  let changed = false;
+  if(date && (force || !date.value) && owner.birthDate){ date.value = owner.birthDate; changed = true; }
+  if(time && (force || !time.value) && owner.birthTime){ time.value = owner.birthTime; changed = true; }
+  if(city && (force || !city.value) && (owner.birthCity || owner.currentCity)){ city.value = owner.birthCity || owner.currentCity; changed = true; }
+  if(twin && !twin.checked && owner.isTwin){ twin.checked = true; changed = true; }
+  if(twin3 && !twin3.checked && owner.isTwin3){ twin3.checked = true; changed = true; }
+  return changed;
+}
+
+function ensureNumerologyInputForTab(){
+  fillEmptyHomeInputsFromOwner(true);
+  const date = document.getElementById("input");
+  const value = date ? date.value : "";
+  if(validateDate(value)) return true;
+  showTab("home");
+  if(typeof showOwnerSetupMessageIfNeeded === "function"){
+    showOwnerSetupMessageIfNeeded();
+  }else{
+    alert("Please enter owner birth data first.");
+  }
+  return false;
 }
 
 function generate(){
   if(primaryPage() === "astrology"){
+    fillEmptyHomeInputsFromOwner();
     openPrimaryAstrology();
     return;
   }
+
+  fillEmptyHomeInputsFromOwner();
 
   document.getElementById("tabs").style.display="flex";
   document.body.classList.add("has-tabs");
@@ -6088,7 +7049,7 @@ if(intro){
 
   document.getElementById("mainLabel").style.display="none";
 
-  // ðŸ”¥ SET ANALYZE FLAG
+  // dz�A SET ANALYZE FLAG
   hasAnalyzedFlag = true;
 
   setTimeout(()=>{
@@ -6097,23 +7058,23 @@ if(intro){
 
   let numEl = document.getElementById("mainNumber");
 
-  // ðŸ”¥ RESET (da ne baguje pri viÅ¡e klikova)
+  // dz�A RESET (da ne baguje pri viL?e klikova)
   numEl.style.animation = "none";
   numEl.offsetHeight; // force refresh
 
-  // ðŸ”¥ POSTAVLJANJE BROJA
+  // dz�A POSTAVLJANJE BROJA
   numEl.innerText = mainNum;
   numEl.style.opacity = "0";
   numEl.style.display = "none";
   numEl.classList.add("show-number");
 
-  // ðŸ”¥ PRIKAÅ½I TEKST KAD SE POJAVI BROJ
+  // dz�A PRIKAL?I TEKST KAD SE POJAVI BROJ
 document.getElementById("numberHint").style.display = "none";
 
-  // ðŸ”¥ ANIMACIJA
+  // dz�A ANIMACIJA
   numEl.style.animation = "glowBig 1s infinite alternate";
 
-  // ðŸ”¥ KLIK NA BROJ (modal)
+  // dz�A KLIK NA BROJ (modal)
   numEl.style.cursor = "pointer";
   numEl.onclick = function() {
   openDetail(mainNum);
@@ -6145,7 +7106,7 @@ document.getElementById("numberHint").style.display = "none";
   // BOOKS
   showRecommendedBooks(mainNum);
 
-  // ðŸ”¥ PONUDI ÄŒUVANJE DATUMA
+  // dz�A PONUDI �SUVANJE DATUMA
   offerSaveDate(inputVal);
 
 },150);
@@ -6153,7 +7114,7 @@ document.getElementById("numberHint").style.display = "none";
   // PIRAMIDA
   let numbers=raw.split('').map(Number);
 
-  // ðŸ”¥ SAÄŒUVAJ ORIGINALNE REDOVE pre bilo kakve modifikacije
+  // dz�A SA�SUVAJ ORIGINALNE REDOVE pre bilo kakve modifikacije
   let originalRowsForCodes = [];
   let tempOriginal = [...numbers];
   while(tempOriginal.length > 0){
@@ -6165,7 +7126,7 @@ document.getElementById("numberHint").style.display = "none";
     tempOriginal = next;
   }
 
-  // ðŸ”¥ PROVERA ZA DRUGOG I TREÄ†EG BLIZANCA
+  // dz�A PROVERA ZA DRUGOG I TREĆEG BLIZANCA
   let isTwin = document.getElementById("twinCheck") && document.getElementById("twinCheck").checked;
   let isTwin3 = document.getElementById("twinCheck3") && document.getElementById("twinCheck3").checked;
 
@@ -6175,7 +7136,7 @@ document.getElementById("numberHint").style.display = "none";
   let twin3FirstRow = null;
 
   if(isTwin || isTwin3){
-    // KREÄ†EMO OD DRUGOG REDA originalne piramide
+    // KREĆEMO OD DRUGOG REDA originalne piramide
     let secondRow = originalRowsForCodes[1]; // [R1,R2,R3,R4,R5,R6,R7]
     let thirdRow = originalRowsForCodes[2];  // [T1,T2,T3,T4,T5,T6]
     // Novi twin prvi red: [R3,R4,R5,R6,R7,T1,T2]
@@ -6195,10 +7156,10 @@ document.getElementById("numberHint").style.display = "none";
       }
       tempTwin = next;
     }
-    // Sada od druge twin piramide izgradi treÄ‡u
-    // Formula: od drugog i treÄ‡eg reda druge piramide: [A3,A4,A5,A6,B1,B2]
+    // Sada od druge twin piramide izgradi treću
+    // Formula: od drugog i trećeg reda druge piramide: [A3,A4,A5,A6,B1,B2]
     let twin2SecondRow = twin2Rows[1]; // drugi red druge piramide
-    let twin2ThirdRow = twin2Rows[2];  // treÄ‡i red druge piramide
+    let twin2ThirdRow = twin2Rows[2];  // treći red druge piramide
     twin3FirstRow = twin2SecondRow.slice(2).concat(twin2ThirdRow.slice(0,2));
   }
 
@@ -6208,7 +7169,7 @@ document.getElementById("numberHint").style.display = "none";
   output.innerHTML="";
   result.innerHTML="";
 
-  // ðŸ”¥ KOPIJA PIRAMIDE U ANALYSIS
+  // dz�A KOPIJA PIRAMIDE U ANALYSIS
 
 
   let rows=[];
@@ -6245,10 +7206,10 @@ document.getElementById("numberHint").style.display = "none";
     temp=next;
   }
 
-  // ðŸ”¥ SADA KOPIRAMO GOTOVU PIRAMIDU
+  // dz�A SADA KOPIRAMO GOTOVU PIRAMIDU
 document.getElementById("analysisPyramid").innerHTML = output.innerHTML;
 
-  // ðŸ”¥ SAKRIJ FOOTER NAKON PRVOG ANALYZE
+  // dz�A SAKRIJ FOOTER NAKON PRVOG ANALYZE
   let footer = document.querySelector(".footer");
   if(footer) footer.style.display = "none";
 
@@ -6259,7 +7220,7 @@ function generateFromAnalysis(){
   // ubaci vrednost u glavni input
   document.getElementById("input").value = val;
 
-  // pokreni postojeÄ‡u funkciju
+  // pokreni postojeću funkciju
   generate();
 
   // opcionalno: ostani u ANALYSIS tabu
@@ -6274,8 +7235,8 @@ function generateFromAnalysis(){
 
   let labels=["Life Path","Core Essence","Marriage","Children","Connections","Pyramidal Code",""];
 
-  // ðŸ”¥ Koristi odgovarajuÄ‡e redove u zavisnosti od twin moda
-  // Za twin3: koristi rows (treÄ‡a piramida)
+  // dz�A Koristi odgovarajuće redove u zavisnosti od twin moda
+  // Za twin3: koristi rows (treća piramida)
   // Za twin: koristi rows (druga piramida)
   // Za normalan: koristi originalRowsForCodes
   let codesRows = (isTwin || isTwin3) ? rows : originalRowsForCodes;
@@ -6290,7 +7251,7 @@ function generateFromAnalysis(){
 
     let row=createRow(r);
 
-    // ðŸ”¥ ZLATNA BOJA ZA POSLEDNJA 2 REDA
+    // dz�A ZLATNA BOJA ZA POSLEDNJA 2 REDA
     if(i >= codesRows.slice(1).length - 2){
       row.querySelectorAll("span").forEach(span => {
         span.style.color = "#FFD700";
@@ -6314,7 +7275,7 @@ function generateFromAnalysis(){
   let p3=reduce(p1+p2);
 
   let pyth=[p1,p2,p3];
-  // ðŸ”¥ Pyramidal Code koristi odgovarajuÄ‡u piramidu
+  // dz�A Pyramidal Code koristi odgovarajuću piramidu
   let pyr=codesRows[codesRows.length-2].join("") + codesRows[codesRows.length-1].join("");
 
   let unique=[
@@ -6343,7 +7304,7 @@ function generateFromAnalysis(){
 /* LOAD BOOKS */
 function loadBooks(){
 
-  // ðŸ”¥ OVDE UNOSIÅ  AMAZON LINKOVE
+  // dz�A OVDE UNOSIL� AMAZON LINKOVE
   const amazonLinks = {
 
     // SEASON 1
@@ -6394,8 +7355,54 @@ function loadBooks(){
     "s4-b9": "COMING_SOON",
    "s4-b10": "COMING_SOON"
   };
+  window.storeAmazonLinks = amazonLinks;
 
-  let layout = [4,3,2];
+  for(let s=1; s<=4; s++){
+    let season = document.getElementById(`s${s}`);
+    if(!season) continue;
+    season.classList.add("book-fan");
+    season.innerHTML = "";
+
+    for(let bookNum=1; bookNum<=9; bookNum++){
+      let id = `s${s}-b${bookNum}`;
+      let link = document.createElement("a");
+      const rawBookUrl = amazonLinks[id] || "#";
+      const bookUrl = rawBookUrl === "UNESI_LINK" ? "COMING_SOON" : rawBookUrl;
+
+      link.href = bookUrl === "COMING_SOON" ? "#" : bookUrl;
+      link.dataset.bookId = id;
+      link.dataset.bookUrl = bookUrl;
+      link.addEventListener("click", function(event){
+        event.preventDefault();
+        selectSeasonBook(s, id, bookUrl, link);
+      });
+
+      let book = document.createElement("div");
+      book.className = "book";
+
+      let img = document.createElement("img");
+      img.src = `images/${id}.png`;
+      img.alt = id;
+      img.onerror = function(){
+        const fallback = document.createElement("div");
+        fallback.className = "missing-book";
+        fallback.textContent = "COMING SOON";
+        img.replaceWith(fallback);
+      };
+
+      book.appendChild(img);
+      link.appendChild(book);
+      season.appendChild(link);
+    }
+
+    let selectedStage = document.createElement("div");
+    selectedStage.className = "book-selected-stage";
+    selectedStage.id = `s${s}-selected`;
+    selectedStage.innerHTML = `<img id="s${s}-selected-img" alt="Selected book">`;
+    season.appendChild(selectedStage);
+  }
+
+  return;
 
   for(let s=1; s<=4; s++){
 
@@ -6412,7 +7419,7 @@ function loadBooks(){
         let link = document.createElement("a");
         const bookUrl = amazonLinks[id] || "#";
 
-        // ðŸ”¥ POVLAÄŒI LINK IZ LISTE
+        // dz�A POVLA�SI LINK IZ LISTE
         link.href = bookUrl === "COMING_SOON" ? "#" : bookUrl;
         if(bookUrl !== "COMING_SOON") link.target = "_blank";
         if(bookUrl === "COMING_SOON"){
@@ -6427,7 +7434,7 @@ function loadBooks(){
 
         let img = document.createElement("img");
 
-        // ðŸ”¥ PNG SLIKE
+        // dz�A PNG SLIKE
         img.src = `images/${id}.png`;
 
         book.appendChild(img);
@@ -6441,6 +7448,107 @@ function loadBooks(){
 }
 
 loadBooks();
+
+let currentPreviewBookUrl = "";
+let selectedSeasonBook = null;
+
+function openStoreBookFromHome(id){
+  pendingStoreBookId = id;
+  showTab("store");
+  openStoreBookById(id);
+  pendingStoreBookId = "";
+}
+
+function openStoreBookById(id){
+  const match = String(id || "").match(/^s([1-4])-b([1-9])$/);
+  if(!match) return;
+  const seasonNumber = Number(match[1]);
+  const season = document.getElementById(`s${seasonNumber}`);
+  if(!season) return;
+
+  stopStoreVideo(true);
+  const video = document.getElementById("storeVideo");
+  const download = document.getElementById("storeDownload");
+  const icons = document.getElementById("storeIconsWrapper");
+  if(video) video.style.display = "none";
+  if(download) download.style.display = "none";
+  if(icons) icons.style.display = "none";
+
+  document.querySelectorAll(".season-content").forEach(s => s.style.display = "none");
+  document.querySelectorAll(".seasonBtn").forEach((btn, index) => btn.classList.toggle("active", index === seasonNumber - 1));
+  season.style.display = "block";
+
+  const link = season.querySelector(`[data-book-id="${id}"]`);
+  const rawUrl = link ? link.dataset.bookUrl : ((window.storeAmazonLinks && window.storeAmazonLinks[id]) || "#");
+  const url = rawUrl === "UNESI_LINK" ? "COMING_SOON" : rawUrl;
+  selectSeasonBook(seasonNumber, id, url, link);
+}
+
+function selectSeasonBook(seasonNumber, id, url, linkEl){
+  const season = document.getElementById(`s${seasonNumber}`);
+  const stage = document.getElementById(`s${seasonNumber}-selected`);
+  const img = document.getElementById(`s${seasonNumber}-selected-img`);
+  if(!season || !stage || !img) return;
+
+  const key = `s${seasonNumber}:${id}`;
+  if(selectedSeasonBook === key && stage.classList.contains("active")){
+    selectedSeasonBook = null;
+    stage.classList.remove("active");
+    img.removeAttribute("src");
+    season.querySelectorAll("a").forEach(a => a.classList.remove("active"));
+    return;
+  }
+
+  selectedSeasonBook = key;
+  currentPreviewBookUrl = url || "#";
+  season.querySelectorAll("a").forEach(a => a.classList.toggle("active", a === linkEl));
+  img.src = `images/${id}.png`;
+  img.onerror = function(){
+    img.onerror = null;
+    img.removeAttribute("src");
+    img.alt = "Coming soon";
+  };
+  img.onclick = openPreviewBookLink;
+  stage.classList.add("active");
+}
+
+function openBookPreview(src, url){
+  const preview = document.getElementById("bookPreview");
+  const img = document.getElementById("bookPreviewImg");
+  if(!preview || !img) return;
+  currentPreviewBookUrl = url || "#";
+  img.src = src;
+  img.onerror = function(){
+    img.onerror = null;
+    img.removeAttribute("src");
+    img.alt = "Coming soon";
+  };
+  preview.classList.add("active");
+}
+
+function closeBookPreview(event){
+  if(event){
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  const preview = document.getElementById("bookPreview");
+  if(preview) preview.classList.remove("active");
+}
+
+function openPreviewBookLink(event){
+  if(event){
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  if(currentPreviewBookUrl === "COMING_SOON"){
+    closeBookPreview();
+    openSeason4ComingSoon();
+    return;
+  }
+  if(currentPreviewBookUrl && currentPreviewBookUrl !== "#"){
+    window.open(currentPreviewBookUrl, "_blank");
+  }
+}
 
 function openDetail(num){
 
@@ -6547,12 +7655,7 @@ In essence, number 9 is the completion - it represents the end of a cycle and th
 
   };
 
-  document.getElementById("detailText").innerHTML =
-  `<p style="line-height:1.6; text-align:left; white-space:pre-line;">
-    ${texts[num]}
-  </p>`;
-  document.body.classList.add("detail-active"); // ðŸ”¥ sakrij tabove
-  showTab("detail");
+  showNumerologyHelp("Number " + num, `<p style="line-height:1.6; text-align:left; white-space:pre-line;">${texts[num]}</p>`);
 }
 
 window.onload = function(){
@@ -6576,10 +7679,10 @@ window.onload = function(){
     video.pause();
   };
 
-  // ðŸ”¥ LOAD CITIES
+  // dz�A LOAD CITIES
   loadCities();
 
-  // ðŸ”¥ DODAJ OVO
+  // dz�A DODAJ OVO
   showTab("home");
   restoreAstroReturnState();
 };
@@ -6591,7 +7694,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 
 function openEmail(){
-  window.location.href = "mailto:your@email.com";
+  appNavigate("mailto:your@email.com");
 }
 
 function openInsta(){
@@ -6605,6 +7708,7 @@ function openSite(){
 //SPIRITUAL NUMBER
 
 function loadSpirit(){
+  fillEmptyHomeInputsFromOwner();
 
   let select = document.getElementById("spiritSelect");
   select.innerHTML = "";
@@ -6616,17 +7720,22 @@ function loadSpirit(){
     select.appendChild(opt);
   }
 
-  // ðŸ”¥ auto iz inputa
+  // dz�A auto iz inputa
   let input = document.getElementById("input").value;
 
   if(input.match(/^\d{2}\.\d{2}\.\d{4}$/)){
     let day = parseInt(input.split(".")[0]);
     select.value = day;
     showSpiritNumber(day);
+  } else if(select.value){
+    showSpiritNumber(parseInt(select.value));
   }
+
+  updatePersonalDayPanel();
 
   select.onchange = function(){
     showSpiritNumber(parseInt(this.value));
+    updatePersonalDayPanel();
   };
 }
 
@@ -6641,7 +7750,7 @@ function showSpiritNumber(day){
   el.onclick = function(){
     openSpiritDetail(day);
   };
-  // ðŸ”¥ DODAJ OVO (OVO TI FALI)
+  // dz�A DODAJ OVO (OVO TI FALI)
   let code = getSpiritualCode(day);
   document.getElementById("spiritCode").innerText = code;
 }
@@ -6650,9 +7759,121 @@ function showSpiritNumber(day){
 
 
 
-function openSpiritDetail(day){
 
-  document.body.classList.add("detail-active"); // ðŸ‘ˆ OVDE IDE
+
+function reducePersonalDigit(value){
+  let n = String(value || "").replace(/\D/g,"").split("").reduce((sum,d)=>sum+Number(d),0);
+  while(n > 9) n = String(n).split("").reduce((sum,d)=>sum+Number(d),0);
+  return n || 0;
+}
+
+function reducePersonalNumber(value){
+  let n = String(value || "").replace(/\D/g,"").split("").reduce((sum,d)=>sum+Number(d),0);
+  while(n > 9 && n !== 11 && n !== 22) n = String(n).split("").reduce((sum,d)=>sum+Number(d),0);
+  return n || 0;
+}
+
+function parseNumerologyDate(value){
+  const match = /^(\d{2})\.(\d{2})\.(\d{4})$/.exec(String(value || "").trim());
+  if(!match) return null;
+  const day = Number(match[1]);
+  const month = Number(match[2]);
+  const year = Number(match[3]);
+  const date = new Date(year, month - 1, day);
+  if(date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) return null;
+  return {day, month, year, date};
+}
+
+function getSpiritBirthDate(){
+  fillEmptyHomeInputsFromOwner();
+  const inputDate = parseNumerologyDate(document.getElementById("input")?.value);
+  if(inputDate) return inputDate;
+  try{
+    const owner = JSON.parse(localStorage.getItem("numerology_owner_profile") || "null");
+    return parseNumerologyDate(owner && owner.birthDate);
+  }catch(e){
+    return null;
+  }
+}
+
+function personalYearNumber(birth, targetDate){
+  return reducePersonalNumber(String(birth.day) + String(birth.month) + String(targetDate.getFullYear()));
+}
+
+function personalMonthNumber(birth, targetDate){
+  return reducePersonalDigit(personalYearNumber(birth, targetDate) + targetDate.getMonth() + 1);
+}
+
+function personalDayNumber(birth, targetDate){
+  return reducePersonalDigit(personalMonthNumber(birth, targetDate) + targetDate.getDate());
+}
+
+const personalDayTexts = {
+  1:"Start, decision, independence and clean initiative. Good for beginning something and taking the lead.",
+  2:"Cooperation, patience and emotional intelligence. Good for talks, support and gentle adjustments.",
+  3:"Expression, social contact and creativity. Good for writing, presenting, learning and lighter movement.",
+  4:"Order, work and structure. Good for discipline, planning, fixing details and building stability.",
+  5:"Change, movement and flexibility. Good for travel, communication and breaking stale routines.",
+  6:"Love, family, care and responsibility. Good for home, beauty, relationships and emotional repair.",
+  7:"Reflection, study and intuition. Good for research, quiet focus, prayer, meditation and deeper questions.",
+  8:"Power, money and results. Good for business, decisions, authority and practical achievement.",
+  9:"Completion, release and compassion. Good for finishing cycles, forgiveness, service and letting go."
+};
+
+const weekdayTexts = [
+  {name:"Sunday", text:"Sunday birth carries solar energy: visibility, vitality, pride, leadership and the need to shine with purpose."},
+  {name:"Monday", text:"Monday birth carries lunar energy: sensitivity, memory, intuition, family themes and strong emotional reactions."},
+  {name:"Tuesday", text:"Tuesday birth carries Mars energy: action, courage, speed, conflict management and the need to direct force wisely."},
+  {name:"Wednesday", text:"Wednesday birth carries Mercury energy: speech, learning, trade, movement, curiosity and quick mental reactions."},
+  {name:"Thursday", text:"Thursday birth carries Jupiter energy: growth, faith, teaching, travel, law, opportunity and broad life vision."},
+  {name:"Friday", text:"Friday birth carries Venus energy: love, beauty, pleasure, art, harmony, social grace and values."},
+  {name:"Saturday", text:"Saturday birth carries Saturn energy: discipline, karma, patience, responsibility, endurance and long-term building."}
+];
+
+function updatePersonalDayPanel(){
+  const birth = getSpiritBirthDate();
+  const dayEl = document.getElementById("personalDayNumber");
+  const weekdayEl = document.getElementById("birthWeekdayName");
+  const summaryEl = document.getElementById("personalDaySummary");
+  if(!dayEl || !weekdayEl || !summaryEl) return;
+  if(!birth){
+    dayEl.textContent = "-";
+    weekdayEl.textContent = "-";
+    summaryEl.textContent = "Enter birth date to calculate.";
+    return;
+  }
+  const today = new Date();
+  const pDay = personalDayNumber(birth, today);
+  const pMonth = personalMonthNumber(birth, today);
+  const pYear = personalYearNumber(birth, today);
+  const weekday = weekdayTexts[birth.date.getDay()];
+  dayEl.textContent = pDay || "-";
+  weekdayEl.textContent = weekday ? weekday.name : "-";
+  summaryEl.textContent = "Personal year " + pYear + " / month " + pMonth + " / day " + pDay + ". " + (personalDayTexts[pDay] || "");
+}
+
+function openPersonalDayHelp(){
+  const birth = getSpiritBirthDate();
+  if(!birth){
+    showNumerologyHelp("Personal Day Number", "<p>Enter birth date first. The app calculates your personal day from your birth day, birth month and today's date.</p>");
+    return;
+  }
+  const today = new Date();
+  const pDay = personalDayNumber(birth, today);
+  const pMonth = personalMonthNumber(birth, today);
+  const pYear = personalYearNumber(birth, today);
+  const weekday = weekdayTexts[birth.date.getDay()];
+  const body =
+    '<p><strong>Personal day '+pDay+'</strong></p>'+
+    '<p>'+ (personalDayTexts[pDay] || "Follow today's number.") +'</p>'+
+    '<p><strong>Formula:</strong> personal year '+pYear+' -> personal month '+pMonth+' -> personal day '+pDay+'. This is the same rhythm used for numerology notifications.</p>'+
+    '<p><strong>Birth weekday: '+(weekday ? weekday.name : "-")+'</strong></p>'+
+    '<p>'+(weekday ? weekday.text : "Birth weekday describes the planetary tone of the day you were born.")+'</p>';
+  showNumerologyHelp("Personal Day Number", body);
+}
+
+
+function openSpiritDetail(day){
 
   let texts = {
 
@@ -7492,11 +8713,7 @@ The key to their success lies in balance - remaining grounded, disciplined, and 
 
    let text = texts[day] || "Coming soon...";
 
-  let el = document.getElementById("spiritDetailText");
-
-  el.innerText = "DAY " + day + "\n\n" + text;
-
-  showTab("spiritDetail");
+  showNumerologyHelp("DAY " + day, `<p style="line-height:1.6; text-align:left; white-space:pre-line;">${text}</p>`);
 }
 
 function getSpiritualCode(day){
@@ -7562,7 +8779,7 @@ window.showOwnerSetupMessageIfNeeded = showOwnerSetupMessageIfNeeded;
 window.closeOwnerSetupMessage = closeOwnerSetupMessage;
 window.openOwnerFromSetupMessage = openOwnerFromSetupMessage;
 
-// Proveri disclaimer pri uÄitavanju
+// Proveri disclaimer pri u�Titavanju
 document.addEventListener('DOMContentLoaded', function(){
   applyPrimaryPageSettings();
   checkDisclaimer();
@@ -7630,14 +8847,14 @@ function enableDrag(){
   });
 }
 
-// ðŸ”¥ pokreni kad se uÄita
+// dz�A pokreni kad se u�Tita
 document.addEventListener("DOMContentLoaded", enableDrag);
 
 
 calculateTodayPythagorean();
 
 
-// ðŸ”¥ FUNKCIJE ZA ÄŒUVANJE DATUMA
+// dz�A FUNKCIJE ZA �SUVANJE DATUMA
 
 function safeText(value){
   return String(value ?? '').replace(/[&<>"']/g, ch => ({
@@ -7696,31 +8913,31 @@ function getAppSettings(){
 
 const APP_TRANSLATIONS = {
   sr: {
-    "Numerology App": "Numerološka aplikacija",
+    "Numerology App": "Numerolodz?ka aplikacija",
     "OWNER PROFILE": "PROFIL VLASNIKA",
     "Owner": "Vlasnik",
     "Notifications": "Notifikacije",
-    "Settings": "Podešavanja",
+    "Settings": "Podedz?avanja",
     "First name": "Ime",
     "Last name": "Prezime",
-    "Birth date": "Datum rođenja",
-    "Birth time": "Vreme rođenja",
-    "Birth place": "Mesto rođenja",
-    "City of residence": "Grad prebivališta",
-    "Birth type": "Tip rođenja",
+    "Birth date": "Datum rodenja",
+    "Birth time": "Vreme rodenja",
+    "Birth place": "Mesto rodenja",
+    "City of residence": "Grad prebivalidz?ta",
+    "Birth type": "Tip rodenja",
     "Second Twin": "Drugi blizanac",
-    "3rd Twin": "Treći blizanac",
+    "3rd Twin": "Treci blizanac",
     "Receive notifications": "Primaj notifikacije",
     "New Moon": "Mlad Mesec",
     "Full Moon": "Pun Mesec",
-    "Moon guidance": "Mesečeve smernice",
+    "Moon guidance": "Meseceve smernice",
     "Void of Course Moon": "Mesec van kursa",
-    "Retrograde starts": "Početak retrogradnosti",
-    "Planet goes direct": "Planeta kreće direktno",
-    "Important transit": "Važan tranzit",
+    "Retrograde starts": "Pocetak retrogradnosti",
+    "Planet goes direct": "Planeta krece direktno",
+    "Important transit": "Vadz?an tranzit",
     "Pythagorean day code": "Pitagorin kod dana",
     "Pyramidal day code": "Piramidalni kod dana",
-    "Notifications use the owner birth data. Moon alerts and local sky timing use the city of residence, so keep it updated.": "Notifikacije koriste podatke rođenja vlasnika. Mesečeva upozorenja i lokalna astro vremena koriste grad prebivališta, zato ga održavaj ažurnim.",
+    "Notifications use the owner birth data. Moon alerts and local sky timing use the city of residence, so keep it updated.": "Notifikacije koriste podatke rodenja vlasnika. Meseceva upozorenja i lokalna astro vremena koriste grad prebivalidz?ta, zato ga odrdz?avaj adz?urnim.",
     "Date format": "Format datuma",
     "EU metric": "EU format",
     "US imperial": "US format",
@@ -7728,45 +8945,45 @@ const APP_TRANSLATIONS = {
     "English": "Engleski",
     "Srpski": "Srpski",
     "Sound": "Zvuk",
-    "On / Off": "Uključi / isključi",
-    "Volume": "Jačina zvuka",
-    "Sound controls are ready for a future ambient or affirmation audio file. Language is saved as an app preference.": "Kontrole zvuka su spremne za budući ambijentalni ili afirmacioni audio fajl. Jezik se čuva kao podešavanje aplikacije.",
-    "SAVE": "SAČUVAJ",
-    "CANCEL": "OTKAŽI",
-    "Save Profile": "Sačuvaj profil",
-    "Birth data:": "Podaci rođenja:",
+    "On / Off": "Ukljuci / iskljuci",
+    "Volume": "Jacina zvuka",
+    "Sound controls are ready for a future ambient or affirmation audio file. Language is saved as an app preference.": "Kontrole zvuka su spremne za buduci ambijentalni ili afirmacioni audio fajl. Jezik se cuva kao podedz?avanje aplikacije.",
+    "SAVE": "SACUVAJ",
+    "CANCEL": "OTKAdz?I",
+    "Save Profile": "Sacuvaj profil",
+    "Birth data:": "Podaci rodenja:",
     "Enter name...": "Unesi ime...",
-    "SAVED PROFILES": "SAČUVANI PROFILI",
-    "No saved profiles": "Nema sačuvanih profila",
+    "SAVED PROFILES": "SACUVANI PROFILI",
+    "No saved profiles": "Nema sacuvanih profila",
     "OWNER": "VLASNIK",
     "EDIT": "IZMENI",
     "TWIN": "BLIZANAC",
-    "3rd TWIN": "TREĆI BLIZANAC",
+    "3rd TWIN": "TRECI BLIZANAC",
     "ANALYZE": "ANALIZIRAJ",
-    "YOUR NUMEROLOGICAL CODE": "TVOJ NUMEROLOŠKI KOD",
-    "(Touch the code. Reveal the truth.)": "(Dodirni kod. Otkrij značenje.)",
-    "(enter your date of birth, time, and place)": "(unesi datum, vreme i mesto rođenja)",
-    "LEARN MORE ABOUT THE AUTHORS": "SAZNAJ VIŠE O AUTORIMA",
-    "Change to Astrology": "Pređi na astrologiju",
-    "CLICK FOR MEANING": "KLIKNI ZA ZNAČENJE",
-    "In our Book Store section": "U našoj Book Store sekciji",
-    "you can find books related to your number": "možeš pronaći knjige povezane sa svojim brojem",
+    "YOUR NUMEROLOGICAL CODE": "TVOJ NUMEROLOdz?KI KOD",
+    "(Touch the code. Reveal the truth.)": "(Dodirni kod. Otkrij znacenje.)",
+    "(enter your date of birth, time, and place)": "(unesi datum, vreme i mesto rodenja)",
+    "LEARN MORE ABOUT THE AUTHORS": "SAZNAJ VIdz?E O AUTORIMA",
+    "Change to Astrology": "Predi na astrologiju",
+    "CLICK FOR MEANING": "KLIKNI ZA ZNACENJE",
+    "In our Book Store section": "U nadz?oj Book Store sekciji",
+    "you can find books related to your number": "modz?edz? pronaci knjige povezane sa svojim brojem",
     "AS  WELL  AS  BOOKS  FOR  ALL  THE  OTHER  NUMBERS": "KAO I KNJIGE ZA SVE OSTALE BROJEVE",
     "BOOK STORE": "KNJIGE",
     "SPIRITUAL NUMBER": "DUHOVNI BROJ",
-    "Saved profile": "Sačuvan profil",
+    "Saved profile": "Sacuvan profil",
     "Please enter a profile name": "Unesi ime profila",
-    "Delete this saved profile?": "Obrisati ovaj sačuvani profil?",
-    "Owner profile cannot be deleted from contacts.": "Profil vlasnika ne može biti obrisan iz kontakata.",
+    "Delete this saved profile?": "Obrisati ovaj sacuvani profil?",
+    "Owner profile cannot be deleted from contacts.": "Profil vlasnika ne modz?e biti obrisan iz kontakata.",
     "Please enter first and last name.": "Unesi ime i prezime.",
-    "Owner profile could not be saved.": "Profil vlasnika nije mogao biti sačuvan.",
-    "OWNER SETUP": "PODEŠAVANJE VLASNIKA",
-    "OPEN OWNER SETUP": "OTVORI PODEŠAVANJE",
+    "Owner profile could not be saved.": "Profil vlasnika nije mogao biti sacuvan.",
+    "OWNER SETUP": "PODEdz?AVANJE VLASNIKA",
+    "OPEN OWNER SETUP": "OTVORI PODEdz?AVANJE",
     "LATER": "KASNIJE",
-    "Enter the main owner through the button in the upper-left corner. This connects contacts, notifications, EU/US format and personal calculations across the app.": "Unesi glavnog vlasnika preko dugmeta u gornjem levom uglu. To povezuje kontakte, notifikacije, EU/US format i lične proračune kroz celu aplikaciju.",
+    "Enter the main owner through the button in the upper-left corner. This connects contacts, notifications, EU/US format and personal calculations across the app.": "Unesi glavnog vlasnika preko dugmeta u gornjem levom uglu. To povezuje kontakte, notifikacije, EU/US format i licne proracune kroz celu aplikaciju.",
     "DISCLAIMER": "NAPOMENA",
     "I UNDERSTAND & ACCEPT": "RAZUMEM I PRIHVATAM",
-    "This application is intended for informational and entertainment purposes only. Results and interpretations are subjective opinions and do not constitute professional advice. By using this application, you accept full responsibility for your decisions and actions.": "Ova aplikacija je namenjena isključivo informativnoj i zabavnoj upotrebi. Rezultati i tumačenja su subjektivna mišljenja i ne predstavljaju profesionalni savet. Korišćenjem aplikacije prihvataš punu odgovornost za svoje odluke i postupke."
+    "This application is intended for informational and entertainment purposes only. Results and interpretations are subjective opinions and do not constitute professional advice. By using this application, you accept full responsibility for your decisions and actions.": "Ova aplikacija je namenjena iskljucivo informativnoj i zabavnoj upotrebi. Rezultati i tumacenja su subjektivna midz?ljenja i ne predstavljaju profesionalni savet. Koridz?cenjem aplikacije prihvatadz? punu odgovornost za svoje odluke i postupke."
   }
 };
 
@@ -7982,6 +9199,10 @@ function openOwnerProfile(){
   document.getElementById('ownerBirthTime').value = profile.birthTime || '';
   document.getElementById('ownerBirthCity').value = profile.birthCity || '';
   document.getElementById('ownerCurrentCity').value = profile.currentCity || '';
+  setupOwnerCityCascade('ownerBirth', 'ownerBirthCity');
+  setupOwnerCityCascade('ownerCurrent', 'ownerCurrentCity');
+  syncOwnerCityCascadeFromInput('ownerBirth', 'ownerBirthCity');
+  syncOwnerCityCascadeFromInput('ownerCurrent', 'ownerCurrentCity');
   document.getElementById('ownerTwin').checked = !!profile.isTwin;
   document.getElementById('ownerTwin3').checked = !!profile.isTwin3;
   document.getElementById('ownerUnitsEU').checked = (profile.units || 'EU') === 'EU';
@@ -8202,6 +9423,8 @@ function saveOwnerProfile(){
     window.localStorage.setItem('numerology_owner_profile', JSON.stringify(profile));
     saveAppSettings();
     syncOwnerContact();
+    fillEmptyHomeInputsFromOwner();
+    updatePersonalDayPanel();
     if(window.refreshAppNotifications){
       window.refreshAppNotifications().then(result => {
         if(profile.notificationsEnabled){
@@ -8270,7 +9493,7 @@ function currentInputMatchesOwner(dateStr, timeStr, city, isTwin, isTwin3){
 }
 
 function offerSaveDate(dateStr){
-  // PreskoÄi ako uÄitavamo saÄuvani datum
+  // Presko�Ti ako u�Titavamo sa�Tuvani datum
   if(skipSavePrompt){
     skipSavePrompt = false;
     return;
@@ -8283,12 +9506,12 @@ function offerSaveDate(dateStr){
 
   if(currentInputMatchesOwner(dateStr, timeStr, city, isTwin, isTwin3)) return;
 
-  // Proveri da li veÄ‡ postoji identiÄan zapis
+  // Proveri da li već postoji identi�Tan zapis
   let saved = getSavedDates();
   let exists = saved.some(d => d.date === dateStr && d.time === timeStr && d.city === city && d.isTwin === isTwin && d.isTwin3 === isTwin3);
-  if(exists) return; // VeÄ‡ saÄuvano, ne pitaj
+  if(exists) return; // Već sa�Tuvano, ne pitaj
 
-  // PrikaÅ¾i modal
+  // PrikaLli modal
   let modal = document.getElementById('saveModal');
   let dateSpan = document.getElementById('saveModalDate');
   let nameInput = document.getElementById('saveNameInput');
@@ -8523,9 +9746,11 @@ function renderSavedList(){
   container.innerHTML = html;
 }
 
-// Inicijalizacija pri uÄitavanju
+// Inicijalizacija pri u�Titavanju
 document.addEventListener('DOMContentLoaded', function(){
   syncOwnerContact();
+  fillEmptyHomeInputsFromOwner();
+  updatePersonalDayPanel();
   updateSavedCount();
   loadAppSettings();
   syncAmbientAudio();
@@ -8542,7 +9767,7 @@ function saveAstroReturnState(date, time, city){
     `${baseUrl}?astroReturn=1&date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}&city=${encodeURIComponent(city)}&isTwin=${isTwin}&isTwin3=${isTwin3}#astroEntry`;
   sessionStorage.setItem("astroReturnUrl", returnUrl);
   sessionStorage.setItem("returningFromChart", "true");
-  const astroTransferState = {date, time, city, isTwin, isTwin3, updatedAt:new Date().toISOString()};
+  const astroTransferState = window.AppSharedState ? AppSharedState.saveLastAstroInput({date, time, city, isTwin, isTwin3}) : {date, time, city, isTwin, isTwin3, updatedAt:new Date().toISOString()};
   sessionStorage.setItem("astroReturnState", JSON.stringify(astroTransferState));
   localStorage.setItem("astroReturnState", JSON.stringify(astroTransferState));
   localStorage.setItem("lastAstroInput", JSON.stringify(astroTransferState));
@@ -8684,14 +9909,14 @@ function restoreAstroReturnState(){
     setTimeout(scrollToAstroEntry, 350);
     setTimeout(scrollToAstroEntry, 800);
 
-    // OÄisti URL parametre, ali zadrÅ¾i povratak na ulaz za astro chart
+    // O�Tisti URL parametre, ali zadrLli povratak na ulaz za astro chart
     if(history.replaceState){
       history.replaceState({}, document.title, window.location.pathname + "#astroEntry");
     }
     return;
   }
 
-  // InaÄe koristi sessionStorage (stari astro.html povratak)
+  // Ina�Te koristi sessionStorage (stari astro.html povratak)
   if(!raw && params.get("astroReturn") !== "1") return;
 
   // Keep astroReturnState so date/time/city remain available after chart back.
@@ -8756,7 +9981,7 @@ function buildAstroPageUrl(page){
     return "";
   }
 
-  // SaÄuvaj stanje za povratak
+  // Sa�Tuvaj stanje za povratak
   let returnUrl = `${window.location.href.split("#")[0].split("?")[0]}#astroEntry`;
   try{
     returnUrl = saveAstroReturnState(date, time, city);
@@ -8775,7 +10000,7 @@ function buildAstroPageUrl(page){
 
 function openAstroPage(page){
   const pageUrl = buildAstroPageUrl(page);
-  if(pageUrl) window.location.href = pageUrl;
+  if(pageUrl) appNavigate(pageUrl);
 }
 
 function openAstro(){
@@ -8784,12 +10009,14 @@ function openAstro(){
     openAstroPage("chart.html");
     return;
   }
-  window.location.href = "chart.html";
+  appNavigate("chart.html");
 }
 
 
 </script>
 
+
+<div class="footer-contact-slot"><div id="numerologyContactUs" class="contact-us-entry" onclick="openContactWindow()">CONTACT US</div></div>
 
 <div class="footer">
   <img src="images/logo.png" class="footer-logo">
@@ -8850,14 +10077,24 @@ function openAstro(){
         <div class="profile-field full">
           <label for="ownerBirthCity">Birth place</label>
           <div class="profile-city-wrap">
-            <input type="text" id="ownerBirthCity" placeholder="City of birth" autocomplete="off">
+      <div class="owner-city-cascade" data-owner-city-cascade="ownerBirth">
+        <select id="ownerBirthContinent" aria-label="Birth continent"><option value="">Continent</option></select>
+        <select id="ownerBirthCountry" aria-label="Birth country"><option value="">Country</option></select>
+        <select id="ownerBirthCitySelect" aria-label="Birth city"><option value="">City</option></select>
+      </div>
+      <input type="text" id="ownerBirthCity" placeholder="City of birth" autocomplete="off">
             <div class="owner-city-dropdown" id="ownerBirthCityDropdown"></div>
           </div>
         </div>
         <div class="profile-field full">
           <label for="ownerCurrentCity">City of residence</label>
           <div class="profile-city-wrap">
-            <input type="text" id="ownerCurrentCity" placeholder="Current city" autocomplete="off">
+      <div class="owner-city-cascade" data-owner-city-cascade="ownerCurrent">
+        <select id="ownerCurrentContinent" aria-label="Residence continent"><option value="">Continent</option></select>
+        <select id="ownerCurrentCountry" aria-label="Residence country"><option value="">Country</option></select>
+        <select id="ownerCurrentCitySelect" aria-label="Residence city"><option value="">City</option></select>
+      </div>
+      <input type="text" id="ownerCurrentCity" placeholder="Current city" autocomplete="off">
             <div class="owner-city-dropdown" id="ownerCurrentCityDropdown"></div>
           </div>
         </div>
@@ -9054,7 +10291,7 @@ function openAstro(){
 </div>
 
 
-<!-- ðŸ”¥ MODAL ZA ÄŒUVANJE DATUMA -->
+<!-- dz�A MODAL ZA �SUVANJE DATUMA -->
 <div id="saveModal" style="
   display:none;
   position:fixed;
@@ -9120,7 +10357,7 @@ function openAstro(){
   </div>
 </div>
 
-<!-- ðŸ”¥ PANEL ZA SAÄŒUVANE DATUME -->
+<!-- dz�A PANEL ZA SA�SUVANE DATUME -->
 <div id="savedPanel" style="
   display:none;
   position:fixed;
@@ -9291,6 +10528,19 @@ function openAstro(){
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

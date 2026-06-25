@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -14,9 +14,11 @@
 <script src="app-shared-state.js"></script>
 <script src="world-cities.js"></script>
 <script src="app-notification-open.js"></script>
+<script src="capacitor-bridge.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{
+html{background:#0f172a!important;color-scheme:dark;min-height:100%;}
+body{min-height:100vh;
   font-family: Arial;
   background: #0f172a;
   color: white;
@@ -66,7 +68,7 @@ body{
 }
 
 .calc-source-status.fallback{
-  color:#f6cb71;
+  color:#ef4444;
 }
 
 /* ===== TABS - 2 REDA PO 3 ===== */
@@ -77,6 +79,16 @@ body{
   gap: 6px;
   margin: 48px auto 22px;
   max-width: 420px;
+}
+
+body.contact-active #tabs,
+body.contact-active .tabs{
+  display:none !important;
+}
+
+body.contact-active .footer,
+body.contact-active #astrologyContactUs{
+  display:none !important;
 }
 
 .tab {
@@ -290,7 +302,7 @@ body{
 }
 
 .astro-status.fallback {
-  color: #f6cb71;
+  color: #ef4444;
 }
 
 .astro-layout {
@@ -691,6 +703,86 @@ body{
   z-index:99999;
 }
 
+.contact-us-entry{
+  position:static;
+  display:block;
+  width:fit-content;
+  margin:10px auto 8px;
+  color:#FFD700;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:2px;
+  text-shadow:0 0 10px rgba(255,215,0,.55);
+  cursor:pointer;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  text-align:center;
+}
+.contact-us-entry:hover{color:#fff;text-decoration:underline;text-underline-offset:3px}
+.contact-screen .contact-panel{
+  width:min(92vw,420px);
+  margin:8px auto 0;
+  position:relative;
+  background:transparent;
+  border:0;
+  border-radius:0;
+  padding:42px 12px 18px;
+  box-shadow:none;
+  text-align:center;
+}
+.contact-back-btn{position:absolute;left:12px;top:10px;width:32px;height:32px;border-radius:8px;background:#1e293b;border:1px solid rgba(255,215,0,.6);color:#FFD700;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(255,215,0,.22)}
+.contact-back-btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.contact-app-title{color:#FFD700;text-shadow:0 0 10px rgba(255,215,0,.48);margin:0;font-size:22px;letter-spacing:1px}
+.contact-subtitle{color:#f6cb71;font-size:11px;letter-spacing:2px;margin:6px 0 16px}
+.contact-wrapper{display:flex;flex-direction:column;align-items:center;gap:16px}
+.contact-icons{display:grid;grid-template-columns:repeat(2,minmax(86px,1fr));gap:12px;width:min(230px,100%);margin:0 auto}
+.contact-icons a{min-height:58px;border:1px solid rgba(255,215,0,.42);border-radius:10px;background:#1e293b;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(255,215,0,.13)}
+.contact-icons img{width:34px;height:34px;transition:.25s}.contact-icons img:hover{transform:scale(1.14)}
+.contact-buttons{display:flex;width:min(240px,100%);gap:10px}.contact-buttons .btn{flex:1;text-align:center;padding:10px 0;border:1px solid rgba(255,215,0,.52);background:#1e293b;color:#fff4b0;border-radius:8px;text-decoration:none;font-weight:800;box-shadow:0 0 10px rgba(255,215,0,.12)}
+@media(max-width:480px){.contact-us-entry{font-size:11px;margin:8px auto 6px}.contact-panel{width:calc(100vw - 22px)}}
+
+.contact-screen .contact-panel{padding-top:4px!important;max-width:420px!important}
+.contact-screen .contact-app-title{color:#FFD700!important;font-size:34px!important;line-height:1!important;letter-spacing:1px!important;text-shadow:0 0 12px rgba(255,215,0,.55)!important;margin:0 0 28px!important}
+.contact-screen .contact-subtitle{display:none!important}
+.contact-screen .contact-wrapper{gap:24px!important;margin-top:0!important}
+.contact-screen .contact-icons{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:10px!important;width:min(420px,88vw)!important;max-width:100%!important;margin:0 auto!important;justify-content:center!important;justify-items:stretch!important;box-sizing:border-box!important}
+.contact-screen .contact-icons a{width:100%!important;aspect-ratio:1/1!important;height:auto!important;min-height:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;display:flex!important;align-items:center!important;justify-content:center!important}
+.contact-screen .contact-icons img{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important}
+.contact-screen .contact-buttons{display:grid!important;grid-template-columns:repeat(2,1fr)!important;width:min(420px,88vw)!important;gap:10px!important;margin:0 auto!important;box-sizing:border-box!important}
+.contact-screen .contact-buttons .btn{width:100%!important;box-sizing:border-box!important;min-height:58px!important;display:flex!important;align-items:center!important;justify-content:center!important;border:1px solid rgba(246,203,113,.82)!important;color:#f6cb71!important;background:transparent!important;border-radius:12px!important;font-size:24px!important;font-weight:400!important;box-shadow:none!important}
+#contactCollage{position:relative;width:100%;max-width:300px;height:310px;margin:28px auto 22px}.cimg{position:absolute;width:92px;height:auto;border-radius:6px;box-shadow:0 12px 22px rgba(0,0,0,.5),0 0 16px rgba(56,189,248,.24);transition:.25s}.cimg:hover{transform:scale(1.12) rotate(0deg)!important;z-index:20}.c1{top:30px;left:34px;transform:rotate(-12deg);z-index:1}.c2{top:10px;left:104px;transform:rotate(8deg);z-index:2}.c3{top:42px;left:172px;transform:rotate(-6deg);z-index:3}.c4{top:98px;left:18px;transform:rotate(10deg);z-index:4}.c5{top:88px;left:94px;transform:rotate(-4deg);z-index:5}.c6{top:112px;left:174px;transform:rotate(6deg);z-index:6}.c7{top:178px;left:38px;transform:rotate(-8deg);z-index:7}.c8{top:190px;left:122px;transform:rotate(12deg);z-index:8}.c9{top:170px;left:198px;transform:rotate(-10deg);z-index:9}
+.contact-info{display:flex;width:min(440px,92vw);margin:6px auto 22px;gap:22px;font-size:13px;line-height:1.25;opacity:.9;align-items:center;justify-content:center;color:#94a3b8;text-align:left}.contact-info .footer-logo{width:90px;flex:0 0 90px}.contact-info .footer-text{font-size:13px;line-height:1.25;text-align:left}
+@media(max-width:480px){.contact-screen .contact-icons{grid-template-columns:repeat(4,1fr)!important;gap:10px!important;width:min(420px,88vw)!important}.contact-screen .contact-icons a{width:100%!important;height:auto!important;min-height:0!important}.contact-screen .contact-icons img{width:100%!important;height:100%!important}.contact-screen .contact-buttons{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:10px!important;width:min(420px,88vw)!important}.contact-screen .contact-buttons .btn{font-size:20px!important;min-height:52px!important}#contactCollage{transform:scale(.88);transform-origin:top center;margin-bottom:-12px}.contact-info{gap:14px}.contact-info .footer-logo{width:74px;flex-basis:74px}.contact-info .footer-text{font-size:11px}}
+
+.contact-screen .contact-icons,
+.contact-screen .contact-buttons{
+  display:grid!important;
+  --contact-row-width:min(420px,88vw);
+  --contact-gap:10px;
+  width:var(--contact-row-width)!important;
+  max-width:var(--contact-row-width)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+  gap:var(--contact-gap)!important;
+}
+.contact-screen .contact-icons{
+  grid-template-columns:repeat(4,calc((100% - (3 * var(--contact-gap))) / 4))!important;
+}
+.contact-screen .contact-buttons{
+  grid-template-columns:repeat(2,calc((100% - var(--contact-gap)) / 2))!important;
+}
+.contact-screen .contact-icons a,
+.contact-screen .contact-icons img{
+  width:100%!important;
+  height:auto!important;
+  aspect-ratio:1/1!important;
+}
+
+
 /* ===== FOOTER ===== */
 .footer {
   position: fixed;
@@ -801,6 +893,29 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 .calc-source-status{margin-top:1px!important;margin-bottom:2px!important;line-height:1.05!important}
 .calc-source-status + .section{margin-top:2px!important}
 .analyze-btn{display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;line-height:1.05!important;min-height:34px!important;margin:8px auto 4px!important;font-size:13px!important;width:min(340px,calc(100vw - 40px))!important;max-width:340px!important}
+
+.left-bar,
+.top-bar,
+.title{
+  position:fixed!important;
+  top:8px!important;
+  z-index:9999!important;
+}
+.left-bar{left:12px!important}
+.top-bar{right:12px!important}
+.title{
+  display:block!important;
+  left:84px!important;
+  right:84px!important;
+  height:30px!important;
+  line-height:30px!important;
+  margin:0!important;
+  text-align:center!important;
+}
+.contact-screen .contact-panel{
+  margin-top:0!important;
+  padding-top:42px!important;
+}
 
 /* ===== INNER BOX TEXT COMPACT ===== */
 .card,.panel,.box,.content-card,.result-card,.planet-card,.aspect-card,.house-card{border-radius:12px!important;padding:8px!important;margin-top:6px!important;margin-bottom:6px!important}
@@ -925,6 +1040,110 @@ p,.subtitle,.description,.small,.note{line-height:1.25!important;margin-top:2px!
 .position-help-description p,
 .position-help-meaning p{margin:8px 0}
 
+
+/* ASTRO CHART header must scroll with page, not stay pinned */
+#astrologyContactUs{
+  display:none!important;
+}
+
+body:not(.print-mode) .left-bar,
+body:not(.print-mode) .top-bar,
+body:not(.print-mode) .title{
+  position:absolute!important;
+  top:8px!important;
+  z-index:9999!important;
+}
+
+body:not(.print-mode) .left-bar{
+  left:12px!important;
+  right:auto!important;
+  margin:0!important;
+}
+
+body:not(.print-mode) .top-bar{
+  right:12px!important;
+  left:auto!important;
+  margin:0!important;
+}
+
+body:not(.print-mode) .title{
+  display:block!important;
+  left:84px!important;
+  right:84px!important;
+  width:auto!important;
+  height:30px!important;
+  line-height:30px!important;
+  margin:0!important;
+  padding:0!important;
+  text-align:center!important;
+}
+
+body:not(.print-mode) #tabs,
+body:not(.print-mode) .tabs{
+  margin-top:42px!important;
+}
+
+/* ===== HELP BUTTON STANDARD POSITION ===== */
+.position-row,.angle-box,.aspect-row{position:relative!important;padding-left:32px!important;}
+.position-row > .position-help-btn,.angle-box > .position-help-btn,.aspect-row > .position-help-btn{position:absolute!important;left:6px!important;top:50%!important;right:auto!important;bottom:auto!important;transform:translateY(-50%)!important;margin:0!important;z-index:5!important;display:flex!important;align-items:center!important;justify-content:center!important;line-height:1!important;}
+.accordion-header > .position-help-btn{position:absolute!important;left:8px!important;top:50%!important;transform:translateY(-50%)!important;margin:0!important;}
+.accordion-header{position:relative!important;padding-left:42px!important;}
+/* ===== ASTRO COLLAPSIBLE HEADER HELP ALIGNMENT ===== */
+.astro-collapsible-title{
+  position:relative!important;
+  padding-left:28px!important;
+  min-height:28px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:0!important;
+}
+.astro-collapsible-title > .position-help-btn{
+  position:absolute!important;
+  left:0!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+  margin:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  line-height:1!important;
+}
+.astro-collapsible-title > .section-title{
+  margin:0!important;
+  min-height:28px!important;
+  display:flex!important;
+  align-items:center!important;
+  line-height:1.05!important;
+}
+/* ===== ASTRO ASPECT ROW CENTER ALIGNMENT ===== */
+.aspect-row{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 92px 40px!important;
+  align-items:center!important;
+  column-gap:10px!important;
+  min-height:24px!important;
+  padding-top:4px!important;
+  padding-bottom:4px!important;
+}
+.aspect-row > span{
+  min-height:20px!important;
+  display:flex!important;
+  align-items:center!important;
+  line-height:1!important;
+}
+.aspect-row > span:nth-of-type(1){
+  justify-content:flex-start!important;
+  text-align:left!important;
+}
+.aspect-row > span:nth-of-type(2){
+  justify-content:center!important;
+  text-align:center!important;
+  transform:translateY(1px)!important;
+}
+.aspect-row > span:nth-of-type(3){
+  justify-content:flex-end!important;
+  text-align:right!important;
+}
 </style>
 <base target="_blank">
 </head>
@@ -991,7 +1210,7 @@ ASTROCARTOGRAPHY
 </div>
 
 <div class="tab unlocked"
-onclick="window.location.href='sinastrija.html'">
+onclick="appNavigate('sinastrija.html')">
 SINASTRIJA
 </div>
 
@@ -1120,7 +1339,6 @@ LUNAR PHASES
       </div>
     </div>
   </div>
-
 </div>
 
 <!-- ===== TRANSIT TAB ===== -->
@@ -1155,6 +1373,47 @@ LUNAR PHASES
 <div id="lunarPhases" class="section">
   <div style="padding:40px 20px; color:#64748b; font-size:14px;">
     Lunar phases coming soon...
+  </div>
+</div>
+
+<div id="contactSection" class="section contact-screen">
+  <div class="contact-panel">
+    <h2 class="contact-app-title">CONTACT</h2>
+    <div class="contact-wrapper">
+      <div class="contact-icons">
+        <a href="https://www.tiktok.com/@powernumbercodes?_r=1&_t=ZS-96DgPhsnrAQ" target="_blank" rel="noopener"><img src="images/tiktok.png" alt="TikTok"></a>
+        <a href="https://www.instagram.com/powernumbercodes?igsh=MXV3cGZ4Y2s2dWtiNQ%3D%3D&utm_source=qr" target="_blank" rel="noopener"><img src="images/instagram.png" alt="Instagram"></a>
+        <a href="https://www.facebook.com/share/1CTs5Y18qa/?mibextid=wwXIfr" target="_blank" rel="noopener"><img src="images/facebook.png" alt="Facebook"></a>
+        <a href="https://x.com/powernumbercode?s=21" target="_blank" rel="noopener"><img src="images/x.png" alt="X"></a>
+      </div>
+      <div class="contact-buttons">
+        <a href="mailto:powernumbercodes@gmail.com" class="btn">Email</a>
+        <a href="https://dragangagy.github.io/numerology-app" target="_blank" rel="noopener" class="btn">Website</a>
+      </div>
+    </div>
+    <div id="contactCollage">
+      <img src="images/s3-b1.png" class="cimg c1">
+      <img src="images/s3-b2.png" class="cimg c2">
+      <img src="images/s3-b3.png" class="cimg c3">
+      <img src="images/s3-b4.png" class="cimg c4">
+      <img src="images/s3-b5.png" class="cimg c5">
+      <img src="images/s3-b6.png" class="cimg c6">
+      <img src="images/s3-b7.png" class="cimg c7">
+      <img src="images/s3-b8.png" class="cimg c8">
+      <img src="images/s3-b9.png" class="cimg c9">
+    </div>
+    <div class="contact-info">
+      <img src="images/logo.png" class="footer-logo" alt="G-Lab logo">
+      <div class="footer-text">
+        <div>G-Lab Team</div>
+        <div>IT Research & Development</div>
+        <br>
+        <div>Concept, design and realization by our team.</div>
+        <div>(c) 2025 G-Lab - Dragan Milosevic</div>
+        <div><b>All rights reserved.</b></div>
+        <div><b>Beta Version - Not a Final Release</b></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1295,7 +1554,7 @@ async function appShare(shareData){
   await appCopyText(shareData.url||location.href,"Link copied to clipboard.");
 }
 function appPrintPage(){try{if(window.Android&&typeof window.Android.printPage==="function"){window.Android.printPage();return}window.print()}catch(e){alert("Print is not available in this app view.")}}
-function appExit(fallbackUrl){if(window.closeNativeApp){window.closeNativeApp(fallbackUrl);return}try{window.close()}catch(e){}setTimeout(function(){window.location.href=fallbackUrl||"index.html"},160)}
+function appExit(fallbackUrl){if(window.closeNativeApp){window.closeNativeApp(fallbackUrl);return}try{window.close()}catch(e){}setTimeout(function(){appNavigate(fallbackUrl||"index.html")},160)}
 window.appCopyText=appCopyText;window.appShare=appShare;window.appPrintPage=appPrintPage;window.appExit=appExit;
 
 document.getElementById("printBtn").addEventListener("click", async () => {
@@ -1317,7 +1576,9 @@ let tabHistory = [];
 const MAX_HISTORY = 10;
 
 function showTab(id) {
-  if (!tabsUnlocked && id !== 'astroChart') return;
+  if (!tabsUnlocked && id !== 'astroChart' && id !== 'contactSection') return;
+
+  document.body.classList.toggle('contact-active', id === 'contactSection');
   
   if(tabHistory.length === 0 || tabHistory[tabHistory.length - 1] !== id){
     tabHistory.push(id);
@@ -1344,7 +1605,7 @@ document.querySelectorAll('.tab').forEach(tab => {
   });
 });
 
-// ===== ANALYZE - otkljuÄava tabove i pokreÄ‡e chart =====
+// ===== ANALYZE - otklju�Tava tabove i pokreće chart =====
 async function analyze() {
   const date = readInputDate();
   const time = readInputTime();
@@ -1356,13 +1617,13 @@ async function analyze() {
     return;
   }
 
-  // OtkljuÄaj tabove
+  // Otklju�Taj tabove
   tabsUnlocked = true;
   document.querySelectorAll('.tab').forEach(tab => {
     tab.classList.add('unlocked');
   });
 
-  // PrikaÅ¾i astro chart
+  // PrikaLli astro chart
   document.getElementById("astroContent").style.display = "block";
   document.body.classList.add("chart-loaded");
   
@@ -1370,9 +1631,19 @@ async function analyze() {
   showLoadingPanel();
   await calculateChart();
   
-  // SaÄuvaj stanje
+  // Sa�Tuvaj stanje
   saveAstroReturnState(date, time, city);
 }
+
+function openContactWindow(){
+  document.body.classList.add('contact-active');
+  showTab('contactSection');
+}
+function closeContactWindow(){
+  document.body.classList.remove('contact-active');
+  showTab('astroChart');
+}
+document.addEventListener('keydown',function(event){if(event.key==='Escape'&&document.getElementById('contactSection')?.classList.contains('active'))closeContactWindow()});
 
 // ===== GO BACK =====
 
@@ -1416,7 +1687,7 @@ function openAstrocartography(){
   url += "&isTwin=" + encodeURIComponent(params.get("isTwin") || (fallback&&fallback.isTwin ? "true" : "false"));
   url += "&isTwin3=" + encodeURIComponent(params.get("isTwin3") || (fallback&&fallback.isTwin3 ? "true" : "false"));
 
-  window.location.href = url;
+  appNavigate(url);
 }
 
 function openTransit(){
@@ -1434,7 +1705,7 @@ function openTransit(){
   url += "&isTwin=" + encodeURIComponent(params.get("isTwin") || "false");
   url += "&isTwin3=" + encodeURIComponent(params.get("isTwin3") || "false");
 
-  window.location.href = url;
+  appNavigate(url);
 }
 
 function openLunarPhases(){
@@ -1451,7 +1722,7 @@ function openLunarPhases(){
   url += "&isTwin=" + encodeURIComponent(params.get("isTwin") || "false");
   url += "&isTwin3=" + encodeURIComponent(params.get("isTwin3") || "false");
 
-  window.location.href = url;
+  appNavigate(url);
 }
 
 function openRetrogradnost(){
@@ -1468,7 +1739,7 @@ function openRetrogradnost(){
   url += "&isTwin=" + encodeURIComponent(params.get("isTwin") || "false");
   url += "&isTwin3=" + encodeURIComponent(params.get("isTwin3") || "false");
 
-  window.location.href = url;
+  appNavigate(url);
 }
 
 // ===== DATE FORMATTING =====
@@ -1635,7 +1906,7 @@ const worldCities = [
   "Vienna","Budapest","Athens","Bucharest","Sofia","Ljubljana","Prague","Warsaw",
   "Amsterdam","Zurich","Stockholm","Oslo","Dublin","Lisbon","Cairo","Johannesburg",
   "Singapore","Hong Kong","Seoul","Beijing","Mumbai","New Delhi","Mexico City",
-  "Buenos Aires","Sao Paulo","SÃ£o Paulo"
+  "Buenos Aires","Sao Paulo","SALo Paulo"
 ];
 
 function setupCityAutocomplete(){
@@ -1726,7 +1997,7 @@ const cityCoords = {
   "Mexico City": { lat: 19.4326, lon: -99.1332, tz: "America/Mexico_City" },
   "Buenos Aires": { lat: -34.6037, lon: -58.3816, tz: "America/Argentina/Buenos_Aires" },
   "Sao Paulo": { lat: -23.5505, lon: -46.6333, tz: "America/Sao_Paulo" },
-  "SÃ£o Paulo": { lat: -23.5505, lon: -46.6333, tz: "America/Sao_Paulo" }
+  "SALo Paulo": { lat: -23.5505, lon: -46.6333, tz: "America/Sao_Paulo" }
 };
 
 // ===== SAVE ASTRO RETURN STATE =====
@@ -1735,7 +2006,7 @@ function saveAstroReturnState(date, time, city){
   const isTwin = params.get("isTwin") || "false";
   const isTwin3 = params.get("isTwin3") || "false";
   sessionStorage.setItem("returningFromChart", "true");
-  const astroTransferState = {date: date, time: time, city: city, isTwin: isTwin === "true", isTwin3: isTwin3 === "true", updatedAt:new Date().toISOString()};
+  const astroTransferState = window.AppSharedState ? AppSharedState.saveLastAstroInput({date, time, city, isTwin: isTwin === "true", isTwin3: isTwin3 === "true"}) : {date: date, time: time, city: city, isTwin: isTwin === "true", isTwin3: isTwin3 === "true", updatedAt:new Date().toISOString()};
   sessionStorage.setItem("astroReturnState", JSON.stringify(astroTransferState));
   localStorage.setItem("astroReturnState", JSON.stringify(astroTransferState));
   localStorage.setItem("lastAstroInput", JSON.stringify(astroTransferState));
@@ -1918,11 +2189,11 @@ function loadSavedDate(dateStr, timeStr, city, isTwin, isTwin3){
   let cityInput = document.getElementById('cityInput');
   if(cityInput) cityInput.value = next.city;
 
-  if(window.AppSharedState) AppSharedState.saveLastAstroInput(next);
+  const savedNext = window.AppSharedState ? AppSharedState.saveLastAstroInput(next) : {...next, updatedAt:new Date().toISOString()};
   try{
-    sessionStorage.setItem("astroReturnState", JSON.stringify({...next, updatedAt:new Date().toISOString()}));
-    localStorage.setItem("astroReturnState", JSON.stringify({...next, updatedAt:new Date().toISOString()}));
-    localStorage.setItem("lastAstroInput", JSON.stringify({...next, updatedAt:new Date().toISOString()}));
+    sessionStorage.setItem("astroReturnState", JSON.stringify(savedNext));
+    localStorage.setItem("astroReturnState", JSON.stringify(savedNext));
+    localStorage.setItem("lastAstroInput", JSON.stringify(savedNext));
   }catch(e){}
   skipSavePrompt = true;
   closeSavedPanel();
@@ -2017,7 +2288,8 @@ function toggleAstroCollapse(button){
 const NS = "http://www.w3.org/2000/svg";
 const centerX = 450;
 const centerY = 450;
-const signSymbols = ["\u2648","\u2649","\u264A","\u264B","\u264C","\u264D","\u264E","\u264F","\u2650","\u2651","\u2652","\u2653"];
+const signSymbols = ["\u2648\uFE0E","\u2649\uFE0E","\u264A\uFE0E","\u264B\uFE0E","\u264C\uFE0E","\u264D\uFE0E","\u264E\uFE0E","\u264F\uFE0E","\u2650\uFE0E","\u2651\uFE0E","\u2652\uFE0E","\u2653\uFE0E"];
+const signSymbolsSvg = ["\u2648\uFE0E","\u2649\uFE0E","\u264A\uFE0E","\u264B\uFE0E","\u264C\uFE0E","\u264D\uFE0E","\u264E\uFE0E","\u264F\uFE0E","\u2650\uFE0E","\u2651\uFE0E","\u2652\uFE0E","\u2653\uFE0E"];
 const signNames = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
 const planets = [
   {name:"Sun", symbol:"\u2609", color:"#FFD700"},
@@ -2216,7 +2488,7 @@ function renderWheel(data, cusps, asc, mc, aspects){
   for(let i = 0; i < 12; i++){
     const mid = i * 30 + 15;
     const p = point(mid, 338, asc);
-    if(zodiacLayer) zodiacLayer.appendChild(svgEl("text", {x:p.x, y:p.y, fill:"#FFD700", "font-size":42, "text-anchor":"middle", "dominant-baseline":"middle", filter:"url(#glowGold)"}, signSymbols[i]));
+    if(zodiacLayer) zodiacLayer.appendChild(svgEl("text", {x:p.x, y:p.y + 1, fill:"#FFD700", "font-size":36, "text-anchor":"middle", "dominant-baseline":"middle"}, signSymbolsSvg[i]));
     for(let d = 0; d < 30; d += 5){
       const a = i * 30 + d;
       const p1 = point(a, d === 0 ? 315 : 326, asc);
@@ -2411,7 +2683,7 @@ function ensurePositionHelpModal(){
   modal.className = "position-help-modal";
   modal.innerHTML =
     '<div class="position-help-panel">'+
-      '<button class="position-help-close" type="button" onclick="closePositionHelp()" aria-label="Close">x</button>'+
+      '<button class="position-help-close" type="button" onclick="closePositionHelp()" aria-label="Close">X</button>'+
       '<div id="positionHelpTitle" class="position-help-title"></div>'+
       '<div id="positionHelpBody" class="position-help-body"></div>'+
     '</div>';
@@ -2453,7 +2725,7 @@ function openAstroSectionHelp(event, section){
     }
   }[section];
   if(!content) return;
-  openPositionHelpModal(content.title, content.description, content.meaning);
+  showAstroHelp(content.title, content.description, content.meaning);
 }
 
 function openPositionHelp(planet, longitude, house){
@@ -2723,6 +2995,27 @@ window.onload = function(){
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,5 +1,5 @@
-﻿<!DOCTYPE html>
-<html lang="en" style="background:#0f172a;">
+<!DOCTYPE html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +14,7 @@
 <script src="app-shared-state.js"></script>
 <script src="world-cities.js"></script>
 <script src="app-notification-open.js"></script>
+<script src="capacitor-bridge.js"></script>
 <script>
 try{
   if(sessionStorage.getItem("portalArriveAstrology") === "1"){
@@ -87,7 +88,7 @@ body{
 }
 
 .calc-source-status.fallback{
-  color:#f6cb71;
+  color:#ef4444;
 }
 
 /* ===== TABS - 2 REDA PO 3 ===== */
@@ -314,6 +315,79 @@ body{
 .portal-ring-label.silver{fill:#e2e8f0;filter:drop-shadow(0 0 4px rgba(226,232,240,.7));animation-delay:1s}
 .portal-ring-label.gold{fill:#FFD700;filter:drop-shadow(0 0 4px rgba(255,215,0,.72));animation-delay:2s}
 .portal-ring-label.red{fill:#ef4444;filter:drop-shadow(0 0 4px rgba(239,68,68,.75));animation-delay:3s}
+
+.portal-center-badge{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:40%;
+  aspect-ratio:1;
+  transform:translate(-50%,-50%);
+  z-index:6;
+  pointer-events:auto;
+  cursor:pointer;
+  object-fit:contain;
+  filter:drop-shadow(0 0 10px rgba(255,215,0,.42)) drop-shadow(0 0 14px rgba(56,189,248,.22));
+}
+.portal-center-badge:hover{filter:drop-shadow(0 0 12px rgba(255,215,0,.7)) drop-shadow(0 0 18px rgba(56,189,248,.36));}
+.portal-choice-modal{display:none;position:fixed;inset:0;z-index:10020;background:rgba(2,6,23,.74);align-items:center;justify-content:center;padding:18px}
+.portal-choice-panel{width:min(330px,92vw);border:1px solid rgba(56,189,248,.72);border-radius:16px;background:radial-gradient(circle at 50% 0,rgba(56,189,248,.18),transparent 34%),linear-gradient(180deg,rgba(15,23,42,.96),rgba(2,6,23,.98));box-shadow:0 0 28px rgba(56,189,248,.28),inset 0 0 18px rgba(255,215,0,.08);padding:14px;position:relative}
+.portal-choice-close{position:absolute;right:10px;top:9px;width:26px;height:26px;border-radius:50%;border:1px solid rgba(148,163,184,.5);background:#0f172a;color:#e2e8f0;font-weight:900;cursor:pointer}
+.portal-choice-title{color:#ffd700;font-size:17px;font-weight:900;text-align:center;letter-spacing:.8px;margin:6px 32px 12px;text-shadow:0 0 12px rgba(255,215,0,.45)}
+.portal-choice-list{display:grid;grid-template-columns:1fr;gap:8px}
+.portal-choice-btn{min-height:50px;border:0;background:transparent;color:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-weight:900;text-transform:uppercase;letter-spacing:.7px;line-height:1.05;box-shadow:none}
+.portal-choice-btn span{display:block}
+.portal-choice-btn.blue{color:#38bdf8;box-shadow:none}
+.portal-choice-btn.silver{color:#e2e8f0;box-shadow:none}
+.portal-choice-btn.gold{color:#ffd700;box-shadow:none}
+.portal-choice-btn.red{color:#ef4444;box-shadow:none}
+.portal-choice-btn:hover{background:transparent!important;filter:none!important}
+.portal-choice-modal{background:#020617!important;overflow:hidden}
+.portal-choice-modal::before,.portal-choice-modal::after{content:"1 2 3 4 5 6 7 8 9 11 22 33  �s�  �s�  �s�  �? ♉ ♊ ♋ �S �T ♎ �Z ♐ ♑ ♒ ♓  l�� 丑 lZ� lTZ cl� l�l lT? csS �l 酉 c?S �sA";position:absolute;left:-10%;width:120%;color:rgba(56,189,248,.18);font-family:Georgia,"Times New Roman",serif;font-size:clamp(22px,8vw,48px);letter-spacing:18px;line-height:1.8;text-align:center;white-space:normal;text-shadow:0 0 14px rgba(56,189,248,.48),0 0 24px rgba(255,215,0,.18);pointer-events:none;animation:portalChoiceFloat 18s linear infinite}
+.portal-choice-modal::before{top:-20%;transform:rotate(-8deg)}
+.portal-choice-modal::after{bottom:-22%;color:rgba(255,215,0,.13);transform:rotate(7deg);animation-duration:24s;animation-direction:reverse}
+.portal-choice-panel{border:0!important;background:transparent!important;box-shadow:none!important;padding:18px!important;z-index:1}
+.portal-choice-close{border:0!important;background:transparent!important;color:#94a3b8!important;text-shadow:0 0 10px rgba(148,163,184,.9)}
+.portal-choice-title{color:#e0f2fe!important;font-family:Georgia,"Times New Roman",serif;font-size:18px!important;letter-spacing:2px!important;margin-bottom:22px!important;text-shadow:0 0 14px rgba(56,189,248,.72),0 0 28px rgba(255,215,0,.28)!important}
+.portal-choice-list{gap:18px!important}
+.portal-choice-btn{min-height:auto!important;border:0!important;background:transparent!important;box-shadow:none!important;font-family:Georgia,"Times New Roman",serif;font-size:clamp(22px,7vw,34px)!important;letter-spacing:1.5px!important;line-height:1.02!important;padding:2px 0!important;text-shadow:0 0 10px currentColor,0 0 24px currentColor,0 2px 3px rgba(0,0,0,.9);animation:portalChoiceGlow 2.8s ease-in-out infinite alternate}
+.portal-choice-btn:hover{background:transparent!important;transform:scale(1.04)}
+.portal-choice-btn,
+.portal-choice-btn:hover,
+.portal-choice-btn:focus,
+.portal-choice-btn:active{
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  outline:0!important;
+}
+.portal-choice-btn.gold,
+.portal-choice-btn.gold:hover,
+.portal-choice-btn.gold:focus,
+.portal-choice-btn.gold:active{
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  background-color:transparent!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+.portal-choice-btn.gold span{
+  color:#ffd700!important;
+  text-shadow:0 0 10px rgba(255,215,0,.92),0 0 26px rgba(255,215,0,.58),0 2px 3px rgba(0,0,0,.9)!important;
+}
+.portal-choice-btn span + span{font-size:.82em;letter-spacing:2px}
+.portal-choice-modal::before,.portal-choice-modal::after{content:""!important}
+.portal-choice-sky{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.portal-choice-sky span{position:absolute;left:var(--x);top:var(--y);color:rgba(226,242,255,.18);font-family:Georgia,"Times New Roman",serif;font-size:var(--s);line-height:1;text-shadow:0 0 12px currentColor,0 0 24px rgba(56,189,248,.25);animation:portalChoiceDrift var(--d) ease-in-out infinite alternate}
+.portal-choice-sky span:nth-child(3n){color:rgba(255,215,0,.18)}
+.portal-choice-sky span:nth-child(4n){color:rgba(239,68,68,.16)}
+.portal-choice-sky span:nth-child(5n){color:rgba(56,189,248,.22)}
+@keyframes portalChoiceFloat{from{transform:translateY(0) rotate(-8deg)}to{transform:translateY(34%) rotate(-8deg)}}
+@keyframes portalChoiceDrift{from{transform:translate3d(-8px,10px,0) rotate(-8deg);opacity:.3}to{transform:translate3d(12px,-14px,0) rotate(9deg);opacity:.9}}
+@keyframes portalChoiceGlow{from{opacity:.82;filter:brightness(.95)}to{opacity:1;filter:brightness(1.2)}}
 
 @keyframes portalLabelPulse{
   0%,18%,100%{opacity:.58;filter:drop-shadow(0 0 3px currentColor)}
@@ -763,7 +837,7 @@ body.portal-return-transition .cosmic-portal-shell.show {
 }
 
 .astro-status.fallback {
-  color: #f6cb71;
+  color: #ef4444;
 }
 
 .astro-layout {
@@ -926,12 +1000,30 @@ body.portal-return-transition .cosmic-portal-shell.show {
   display:none;
 }
 
+body.contact-active #tabs,
+body.contact-active .tabs{
+  display:none !important;
+}
+
 body.chart-loaded #chartOwnerIcon{
   display:none;
 }
 
+body.contact-active #chartOwnerIcon{
+  display:none !important;
+}
+
 body.chart-loaded #chartBackIcon{
   display:block;
+}
+
+body.contact-active #chartBackIcon{
+  display:block !important;
+}
+
+body.contact-active .footer,
+body.contact-active #astrologyContactUs{
+  display:none !important;
 }
 .profile-modal-panel{
   background:#1e293b;
@@ -1363,6 +1455,86 @@ body.chart-loaded #chartBackIcon{
   z-index:99999;
 }
 
+.contact-us-entry{
+  position:static;
+  display:block;
+  width:fit-content;
+  margin:10px auto 8px;
+  color:#FFD700;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:2px;
+  text-shadow:0 0 10px rgba(255,215,0,.55);
+  cursor:pointer;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  text-align:center;
+}
+.contact-us-entry:hover{color:#fff;text-decoration:underline;text-underline-offset:3px}
+.contact-screen .contact-panel{
+  width:min(92vw,420px);
+  margin:8px auto 0;
+  position:relative;
+  background:transparent;
+  border:0;
+  border-radius:0;
+  padding:42px 12px 18px;
+  box-shadow:none;
+  text-align:center;
+}
+.contact-back-btn{position:absolute;left:12px;top:10px;width:32px;height:32px;border-radius:8px;background:#1e293b;border:1px solid rgba(255,215,0,.6);color:#FFD700;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(255,215,0,.22)}
+.contact-back-btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.contact-app-title{color:#FFD700;text-shadow:0 0 10px rgba(255,215,0,.48);margin:0;font-size:22px;letter-spacing:1px}
+.contact-subtitle{color:#f6cb71;font-size:11px;letter-spacing:2px;margin:6px 0 16px}
+.contact-wrapper{display:flex;flex-direction:column;align-items:center;gap:16px}
+.contact-icons{display:grid;grid-template-columns:repeat(2,minmax(86px,1fr));gap:12px;width:min(230px,100%);margin:0 auto}
+.contact-icons a{min-height:58px;border:1px solid rgba(255,215,0,.42);border-radius:10px;background:#1e293b;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(255,215,0,.13)}
+.contact-icons img{width:34px;height:34px;transition:.25s}.contact-icons img:hover{transform:scale(1.14)}
+.contact-buttons{display:flex;width:min(240px,100%);gap:10px}.contact-buttons .btn{flex:1;text-align:center;padding:10px 0;border:1px solid rgba(255,215,0,.52);background:#1e293b;color:#fff4b0;border-radius:8px;text-decoration:none;font-weight:800;box-shadow:0 0 10px rgba(255,215,0,.12)}
+@media(max-width:480px){.contact-us-entry{font-size:11px;margin:8px auto 6px}.contact-panel{width:calc(100vw - 22px)}}
+
+.contact-screen .contact-panel{padding-top:4px!important;max-width:420px!important}
+.contact-screen .contact-app-title{color:#FFD700!important;font-size:34px!important;line-height:1!important;letter-spacing:1px!important;text-shadow:0 0 12px rgba(255,215,0,.55)!important;margin:0 0 28px!important}
+.contact-screen .contact-subtitle{display:none!important}
+.contact-screen .contact-wrapper{gap:24px!important;margin-top:0!important}
+.contact-screen .contact-icons{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:10px!important;width:min(420px,88vw)!important;max-width:100%!important;margin:0 auto!important;justify-content:center!important;justify-items:stretch!important;box-sizing:border-box!important}
+.contact-screen .contact-icons a{width:100%!important;aspect-ratio:1/1!important;height:auto!important;min-height:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;display:flex!important;align-items:center!important;justify-content:center!important}
+.contact-screen .contact-icons img{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important}
+.contact-screen .contact-buttons{display:grid!important;grid-template-columns:repeat(2,1fr)!important;width:min(420px,88vw)!important;gap:10px!important;margin:0 auto!important;box-sizing:border-box!important}
+.contact-screen .contact-buttons .btn{width:100%!important;box-sizing:border-box!important;min-height:58px!important;display:flex!important;align-items:center!important;justify-content:center!important;border:1px solid rgba(246,203,113,.82)!important;color:#f6cb71!important;background:transparent!important;border-radius:12px!important;font-size:24px!important;font-weight:400!important;box-shadow:none!important}
+#contactCollage{position:relative;width:100%;max-width:300px;height:310px;margin:28px auto 22px}.cimg{position:absolute;width:92px;height:auto;border-radius:6px;box-shadow:0 12px 22px rgba(0,0,0,.5),0 0 16px rgba(56,189,248,.24);transition:.25s}.cimg:hover{transform:scale(1.12) rotate(0deg)!important;z-index:20}.c1{top:30px;left:34px;transform:rotate(-12deg);z-index:1}.c2{top:10px;left:104px;transform:rotate(8deg);z-index:2}.c3{top:42px;left:172px;transform:rotate(-6deg);z-index:3}.c4{top:98px;left:18px;transform:rotate(10deg);z-index:4}.c5{top:88px;left:94px;transform:rotate(-4deg);z-index:5}.c6{top:112px;left:174px;transform:rotate(6deg);z-index:6}.c7{top:178px;left:38px;transform:rotate(-8deg);z-index:7}.c8{top:190px;left:122px;transform:rotate(12deg);z-index:8}.c9{top:170px;left:198px;transform:rotate(-10deg);z-index:9}
+.contact-info{display:flex;width:min(440px,92vw);margin:6px auto 22px;gap:22px;font-size:13px;line-height:1.25;opacity:.9;align-items:center;justify-content:center;color:#94a3b8;text-align:left}.contact-info .footer-logo{width:90px;flex:0 0 90px}.contact-info .footer-text{font-size:13px;line-height:1.25;text-align:left}
+@media(max-width:480px){.contact-screen .contact-icons{grid-template-columns:repeat(4,1fr)!important;gap:10px!important;width:min(420px,88vw)!important}.contact-screen .contact-icons a{width:100%!important;height:auto!important;min-height:0!important}.contact-screen .contact-icons img{width:100%!important;height:100%!important}.contact-screen .contact-buttons{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:10px!important;width:min(420px,88vw)!important}.contact-screen .contact-buttons .btn{font-size:20px!important;min-height:52px!important}#contactCollage{transform:scale(.88);transform-origin:top center;margin-bottom:-12px}.contact-info{gap:14px}.contact-info .footer-logo{width:74px;flex-basis:74px}.contact-info .footer-text{font-size:11px}}
+
+.contact-screen .contact-icons,
+.contact-screen .contact-buttons{
+  display:grid!important;
+  --contact-row-width:min(420px,88vw);
+  --contact-gap:10px;
+  width:var(--contact-row-width)!important;
+  max-width:var(--contact-row-width)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+  gap:var(--contact-gap)!important;
+}
+.contact-screen .contact-icons{
+  grid-template-columns:repeat(4,calc((100% - (3 * var(--contact-gap))) / 4))!important;
+}
+.contact-screen .contact-buttons{
+  grid-template-columns:repeat(2,calc((100% - var(--contact-gap)) / 2))!important;
+}
+.contact-screen .contact-icons a,
+.contact-screen .contact-icons img{
+  width:100%!important;
+  height:auto!important;
+  aspect-ratio:1/1!important;
+}
+
+
 /* ===== FOOTER ===== */
 .footer {
   position: fixed;
@@ -1466,15 +1638,41 @@ table{max-width:100%;border-collapse:collapse}
 body{padding-top:4px!important;padding-bottom:4px!important}
 .title,.header-title{top:8px!important;height:26px!important;line-height:26px!important}
 .left-bar,.top-bar{top:8px!important}
-#tabs,.tabs{display:flex!important;margin-top:8px!important;margin-bottom:6px!important;gap:5px!important}
+#tabs,.tabs{display:flex!important;margin-top:42px!important;margin-bottom:3px!important;gap:4px!important}
 .tab{padding-top:5px!important;padding-bottom:5px!important}
 .section{padding-top:2px!important;padding-bottom:2px!important}
 .input-line,.natal-input-line{margin-top:4px!important;margin-bottom:4px!important;gap:5px!important}
 .card,.panel,.box,.content-card,.result-card{margin-top:8px!important;margin-bottom:8px!important;padding-top:10px!important;padding-bottom:10px!important}
 h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!important}
-.subtitle{padding-top:40px!important;margin-bottom:2px!important}
 .calc-source-status{margin-top:1px!important;margin-bottom:2px!important;line-height:1.05!important}
 .calc-source-status + .section{margin-top:2px!important}
+
+.left-bar,
+.top-bar,
+.title{
+  top:8px!important;
+  z-index:9999!important;
+}
+.left-bar{left:12px!important}
+.top-bar{right:12px!important}
+.title{
+  display:block!important;
+  left:84px!important;
+  right:84px!important;
+  height:30px!important;
+  line-height:30px!important;
+  margin:0!important;
+  text-align:center!important;
+}
+#tabs,.tabs{
+  margin-top:42px!important;
+  margin-bottom:3px!important;
+  gap:4px!important;
+}
+.contact-screen .contact-panel{
+  margin-top:0!important;
+  padding-top:42px!important;
+}
 #analyzeBtn,#astroContent{display:none!important}
 .analyze-btn{display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;line-height:1.05!important;min-height:34px!important;margin:8px auto 4px!important;font-size:13px!important}
 #astroChart > div[style*="margin-top:10px"]{margin-top:4px!important}
@@ -1642,6 +1840,35 @@ body:not(.chart-loaded){padding-bottom:132px!important}
 @keyframes astroReelTumble{0%{transform:translateY(-12px) scale(.96) rotateX(0deg)}50%{transform:translateY(12px) scale(1.04) rotateX(180deg)}100%{transform:translateY(-12px) scale(.96) rotateX(360deg)}}
 @media(max-width:620px){.astro-slot-machine{width:min(300px,calc(100vw - 18px));margin-top:24px}.astro-slot-body{grid-template-columns:minmax(0,1fr) clamp(36px,13vw,44px)}.astro-slot-controls{grid-template-rows:1fr 1fr}.astro-slot-window{height:clamp(44px,16vw,62px)}.astro-slot-reels{gap:3px}.astro-slot-picked{font-size:6px;padding-left:2px;padding-right:2px}.astro-slot-spin,.astro-slot-stop{min-height:34px!important;font-size:8px!important}.astro-slot-spin span{font-size:14px}.astro-slot-small-stop{font-size:6px;min-height:15px!important}.astro-slot-small-stop span{width:7px;height:7px;margin-right:3px}}
 
+
+    .owner-city-cascade{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:6px;
+      margin-bottom:6px;
+    }
+
+    .owner-city-cascade select{
+      width:100%;
+      min-height:32px;
+      border-radius:8px;
+      border:1px solid rgba(255,215,0,0.55);
+      background:#0f172a;
+      color:#fef3c7;
+      font-size:11px;
+      outline:none;
+      box-shadow:0 0 8px rgba(255,215,0,0.18);
+    }
+
+    @media(max-width:520px){
+      .owner-city-cascade{grid-template-columns:1fr;}
+    }
+
+/* ===== HELP BUTTON STANDARD POSITION ===== */
+.position-row,.angle-box,.aspect-row{position:relative!important;padding-left:32px!important;}
+.position-row > .position-help-btn,.angle-box > .position-help-btn,.aspect-row > .position-help-btn{position:absolute!important;left:6px!important;top:6px!important;right:auto!important;bottom:auto!important;margin:0!important;z-index:5!important;}
+.accordion-header > .position-help-btn{position:absolute!important;left:8px!important;top:50%!important;transform:translateY(-50%)!important;margin:0!important;}
+.accordion-header{position:relative!important;padding-left:42px!important;}
 </style>
 <base target="_blank">
 </head>
@@ -1690,7 +1917,6 @@ body:not(.chart-loaded){padding-bottom:132px!important}
 
 <!-- TITLE -->
 <div class="title">ASTROLOGY APP</div>
-<div class="subtitle">Choose an astrology section</div>
 
 <!-- TABS - 2 REDA PO 3 -->
 <div class="tabs" id="tabs">
@@ -1778,13 +2004,32 @@ LUNAR PHASES
         </defs>
         <text class="portal-ring-label blue" onclick="openPortalCodeInNumerology()"><textPath href="#portalTopArc" startOffset="50%" text-anchor="middle">NUMEROLOGY CODE</textPath></text>
         <text class="portal-ring-label silver" onclick="openPortalTarot()"><textPath href="#portalRightArc" startOffset="50%" text-anchor="middle">TAROT MEANING</textPath></text>
-        <text class="portal-ring-label gold" dy="9" onclick="openAstrologyAppHome()"><textPath href="#portalBottomArc" startOffset="50%" text-anchor="middle">ASTROLOGY APP</textPath></text>
+        <text class="portal-ring-label gold" dy="9" onclick="openAstrologyAppHome()"><textPath href="#portalBottomArc" startOffset="50%" text-anchor="middle">ASTROLOGY SIGN</textPath></text>
         <text class="portal-ring-label red" onclick="openPortalChinese()"><textPath href="#portalLeftArc" startOffset="50%" text-anchor="middle">CHINESE ZODIAC</textPath></text>
       </svg>
       <button id="portalCode" class="portal-hotspot portal-code" type="button" onclick="openPortalCodeInNumerology()" title="Open numerological code"></button>
       <button id="portalZodiac" class="portal-hotspot portal-zodiac" type="button" onclick="openAstrologyAppHome()" title="Open Astrology App"></button>
       <button id="portalChinese" class="portal-hotspot portal-chinese" type="button" onclick="openPortalChinese()" title="Open Chinese Zodiac"></button>
       <button id="portalTarot" class="portal-hotspot portal-tarot" type="button" onclick="openPortalTarot()" title="Open Tarot Cards"></button>
+      <img class="portal-center-badge" src="images/portal-center-4in1-core.png" alt="" role="button" tabindex="0" aria-label="Open 4 in 1 chooser" onclick="openPortalChoice(event)" onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();openPortalChoice(event);}">
+    </div>
+    <div id="portalChoiceModal" class="portal-choice-modal" onclick="if(event.target===this)closePortalChoice()">
+      <div class="portal-choice-sky" aria-hidden="true">
+        <span style="--x:8%;--y:14%;--s:34px;--d:9s">7</span><span style="--x:72%;--y:10%;--s:42px;--d:11s">&#9800;</span><span style="--x:48%;--y:6%;--s:24px;--d:8s">&#10022;</span>
+        <span style="--x:18%;--y:34%;--s:30px;--d:12s">22</span><span style="--x:82%;--y:32%;--s:36px;--d:10s">&#23376;</span><span style="--x:5%;--y:62%;--s:28px;--d:13s">&#10038;</span>
+        <span style="--x:68%;--y:58%;--s:31px;--d:9s">9</span><span style="--x:34%;--y:72%;--s:40px;--d:12s">&#9805;</span><span style="--x:86%;--y:78%;--s:26px;--d:8s">&#21320;</span>
+        <span style="--x:14%;--y:84%;--s:38px;--d:11s">11</span><span style="--x:55%;--y:88%;--s:25px;--d:10s">&#10026;</span><span style="--x:78%;--y:18%;--s:22px;--d:14s">3</span>
+      </div>
+      <div class="portal-choice-panel">
+        <button class="portal-choice-close" type="button" onclick="closePortalChoice()" aria-label="Close">X</button>
+        <div class="portal-choice-title">CHOOSE AREA</div>
+        <div class="portal-choice-list">
+          <button class="portal-choice-btn blue" type="button" onclick="closePortalChoice();openPortalCodeInNumerology()"><span>NUMEROLOGY</span><span>CODE</span></button>
+          <button class="portal-choice-btn silver" type="button" onclick="closePortalChoice();openPortalTarot()"><span>TAROT</span><span>MEANING</span></button>
+          <button class="portal-choice-btn gold" type="button" onclick="closePortalChoice();openAstrologyAppHome()"><span>ASTROLOGY</span><span>SIGN</span></button>
+          <button class="portal-choice-btn red" type="button" onclick="closePortalChoice();openPortalChinese()"><span>CHINESE</span><span>ZODIAC</span></button>
+        </div>
+      </div>
     </div>
     <svg class="portal-switch-arc" viewBox="0 0 220 42" role="button" tabindex="0" aria-label="Change to Numerology App" onclick="startPortalToNumerology()" onkeydown="if(event.key==='Enter' || event.key===' '){ event.preventDefault(); startPortalToNumerology(); }">
       <defs>
@@ -1885,6 +2130,7 @@ LUNAR PHASES
       </div>
     </div>
   </div>
+  <div id="astrologyContactUs" class="contact-us-entry" onclick="openContactWindow()">CONTACT US</div>
 
 </div>
 
@@ -1920,6 +2166,47 @@ LUNAR PHASES
 <div id="lunarPhases" class="section">
   <div style="padding:40px 20px; color:#64748b; font-size:14px;">
     Lunar phases coming soon...
+  </div>
+</div>
+
+<div id="contactSection" class="section contact-screen">
+  <div class="contact-panel">
+    <h2 class="contact-app-title">CONTACT</h2>
+    <div class="contact-wrapper">
+      <div class="contact-icons">
+        <a href="https://www.tiktok.com/@powernumbercodes?_r=1&_t=ZS-96DgPhsnrAQ" target="_blank" rel="noopener"><img src="images/tiktok.png" alt="TikTok"></a>
+        <a href="https://www.instagram.com/powernumbercodes?igsh=MXV3cGZ4Y2s2dWtiNQ%3D%3D&utm_source=qr" target="_blank" rel="noopener"><img src="images/instagram.png" alt="Instagram"></a>
+        <a href="https://www.facebook.com/share/1CTs5Y18qa/?mibextid=wwXIfr" target="_blank" rel="noopener"><img src="images/facebook.png" alt="Facebook"></a>
+        <a href="https://x.com/powernumbercode?s=21" target="_blank" rel="noopener"><img src="images/x.png" alt="X"></a>
+      </div>
+      <div class="contact-buttons">
+        <a href="mailto:powernumbercodes@gmail.com" class="btn">Email</a>
+        <a href="https://dragangagy.github.io/numerology-app" target="_blank" rel="noopener" class="btn">Website</a>
+      </div>
+    </div>
+    <div id="contactCollage">
+      <img src="images/s3-b1.png" class="cimg c1">
+      <img src="images/s3-b2.png" class="cimg c2">
+      <img src="images/s3-b3.png" class="cimg c3">
+      <img src="images/s3-b4.png" class="cimg c4">
+      <img src="images/s3-b5.png" class="cimg c5">
+      <img src="images/s3-b6.png" class="cimg c6">
+      <img src="images/s3-b7.png" class="cimg c7">
+      <img src="images/s3-b8.png" class="cimg c8">
+      <img src="images/s3-b9.png" class="cimg c9">
+    </div>
+    <div class="contact-info">
+      <img src="images/logo.png" class="footer-logo" alt="G-Lab logo">
+      <div class="footer-text">
+        <div>G-Lab Team</div>
+        <div>IT Research & Development</div>
+        <br>
+        <div>Concept, design and realization by our team.</div>
+        <div>(c) 2025 G-Lab - Dragan Milosevic</div>
+        <div><b>All rights reserved.</b></div>
+        <div><b>Beta Version - Not a Final Release</b></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -2065,14 +2352,24 @@ LUNAR PHASES
         <div class="profile-field full">
           <label for="ownerBirthCity">Birth place</label>
           <div class="profile-city-wrap">
-            <input type="text" id="ownerBirthCity" placeholder="City of birth" autocomplete="off">
+      <div class="owner-city-cascade" data-owner-city-cascade="ownerBirth">
+        <select id="ownerBirthContinent" aria-label="Birth continent"><option value="">Continent</option></select>
+        <select id="ownerBirthCountry" aria-label="Birth country"><option value="">Country</option></select>
+        <select id="ownerBirthCitySelect" aria-label="Birth city"><option value="">City</option></select>
+      </div>
+      <input type="text" id="ownerBirthCity" placeholder="City of birth" autocomplete="off">
             <div class="owner-city-dropdown" id="ownerBirthCityDropdown"></div>
           </div>
         </div>
         <div class="profile-field full">
           <label for="ownerCurrentCity">City of residence</label>
           <div class="profile-city-wrap">
-            <input type="text" id="ownerCurrentCity" placeholder="Current city" autocomplete="off">
+      <div class="owner-city-cascade" data-owner-city-cascade="ownerCurrent">
+        <select id="ownerCurrentContinent" aria-label="Residence continent"><option value="">Continent</option></select>
+        <select id="ownerCurrentCountry" aria-label="Residence country"><option value="">Country</option></select>
+        <select id="ownerCurrentCitySelect" aria-label="Residence city"><option value="">City</option></select>
+      </div>
+      <input type="text" id="ownerCurrentCity" placeholder="Current city" autocomplete="off">
             <div class="owner-city-dropdown" id="ownerCurrentCityDropdown"></div>
           </div>
         </div>
@@ -2298,7 +2595,7 @@ async function appShare(shareData){
   await appCopyText(shareData.url||location.href,"Link copied to clipboard.");
 }
 function appPrintPage(){try{if(window.Android&&typeof window.Android.printPage==="function"){window.Android.printPage();return}window.print()}catch(e){alert("Print is not available in this app view.")}}
-function appExit(fallbackUrl){if(window.closeNativeApp){window.closeNativeApp(fallbackUrl);return}try{window.close()}catch(e){}setTimeout(function(){window.location.href=fallbackUrl||"index.html"},160)}
+function appExit(fallbackUrl){if(window.closeNativeApp){window.closeNativeApp(fallbackUrl);return}try{window.close()}catch(e){}setTimeout(function(){appNavigate(fallbackUrl||"index.html")},160)}
 window.appCopyText=appCopyText;window.appShare=appShare;window.appPrintPage=appPrintPage;window.appExit=appExit;
 
 document.getElementById("printBtn").addEventListener("click", async () => {
@@ -2320,7 +2617,9 @@ let tabHistory = [];
 const MAX_HISTORY = 10;
 
 function showTab(id) {
-  if (!tabsUnlocked && id !== 'astroChart') return;
+  if (!tabsUnlocked && id !== 'astroChart' && id !== 'contactSection') return;
+
+  document.body.classList.toggle('contact-active', id === 'contactSection');
   
   if(tabHistory.length === 0 || tabHistory[tabHistory.length - 1] !== id){
     tabHistory.push(id);
@@ -2347,7 +2646,7 @@ document.querySelectorAll('.tab').forEach(tab => {
   });
 });
 
-// ===== ANALYZE - otkljuÄava tabove i pokreÄ‡e chart =====
+// ===== ANALYZE - otklju�Tava tabove i pokreće chart =====
 async function analyze() {
   const date = readInputDate();
   const time = readInputTime();
@@ -2359,13 +2658,13 @@ async function analyze() {
     return;
   }
 
-  // OtkljuÄaj tabove
+  // Otklju�Taj tabove
   tabsUnlocked = true;
   document.querySelectorAll('.tab').forEach(tab => {
     tab.classList.add('unlocked');
   });
 
-  // PrikaÅ¾i astro chart
+  // PrikaLli astro chart
   document.getElementById("astroContent").style.display = "block";
   document.body.classList.add("chart-loaded");
   
@@ -2373,9 +2672,19 @@ async function analyze() {
   showLoadingPanel();
   await calculateChart();
   
-  // SaÄuvaj stanje
+  // Sa�Tuvaj stanje
   saveAstroReturnState(date, time, city);
 }
+
+function openContactWindow(){
+  document.body.classList.add('contact-active');
+  showTab('contactSection');
+}
+function closeContactWindow(){
+  document.body.classList.remove('contact-active');
+  showTab('astroChart');
+}
+document.addEventListener('keydown',function(event){if(event.key==='Escape'&&document.getElementById('contactSection')?.classList.contains('active'))closeContactWindow()});
 
 // ===== GO BACK =====
 
@@ -2384,6 +2693,10 @@ function exitApp(){
 }
 
 function handleChartLeftButton(){
+  if(document.body.classList.contains("contact-active")){
+    closeContactWindow();
+    return;
+  }
   if(document.body.classList.contains("chart-loaded")){
     goBack();
     return;
@@ -2479,6 +2792,10 @@ function openOwnerProfile(){
   setValue("ownerBirthTime", formatOwnerProfileTime(profile.birthTime, units));
   setValue("ownerBirthCity", profile.birthCity);
   setValue("ownerCurrentCity", profile.currentCity);
+  setupOwnerCityCascade("ownerBirth", "ownerBirthCity");
+  setupOwnerCityCascade("ownerCurrent", "ownerCurrentCity");
+  syncOwnerCityCascadeFromInput("ownerBirth", "ownerBirthCity");
+  syncOwnerCityCascadeFromInput("ownerCurrent", "ownerCurrentCity");
   const twin = document.getElementById("ownerTwin");
   const twin3 = document.getElementById("ownerTwin3");
   const eu = document.getElementById("ownerUnitsEU");
@@ -2606,7 +2923,7 @@ function portalNavigateTo(url){
   document.body.classList.add("portal-transition");
   document.body.classList.add("portal-return-transition");
   setTimeout(() => {
-    window.location.href = url;
+    appNavigate(url);
   }, 2850);
 }
 
@@ -2616,27 +2933,27 @@ function openAstrologyAppHome(){
 
 function openAstroChart(){
   const url = buildAstroSectionUrl("astrochart.html");
-  window.location.href = url;
+  appNavigate(url);
 }
 
 function openAstrocartography(){
-  window.location.href = buildAstroSectionUrl("astrocartography.html");
+  appNavigate(buildAstroSectionUrl("astrocartography.html"));
 }
 
 function openTransit(){
-  window.location.href = buildAstroSectionUrl("transit.html");
+  appNavigate(buildAstroSectionUrl("transit.html"));
 }
 
 function openLunarPhases(){
-  window.location.href = buildAstroSectionUrl("lunarphases.html");
+  appNavigate(buildAstroSectionUrl("lunarphases.html"));
 }
 
 function openRetrogradnost(){
-  window.location.href = buildAstroSectionUrl("retrogradnost.html");
+  appNavigate(buildAstroSectionUrl("retrogradnost.html"));
 }
 
 function openSinastrija(){
-  window.location.href = buildAstroSectionUrl("sinastrija.html");
+  appNavigate(buildAstroSectionUrl("sinastrija.html"));
 }
 
 function openPortalChinese(){
@@ -2645,6 +2962,17 @@ function openPortalChinese(){
 
 function openPortalTarot(){
   portalNavigateTo(buildAstroSectionUrl("tarot.html"));
+}
+
+function openPortalChoice(event){
+  if(event)event.stopPropagation();
+  const modal=document.getElementById("portalChoiceModal");
+  if(modal)modal.style.display="flex";
+}
+
+function closePortalChoice(){
+  const modal=document.getElementById("portalChoiceModal");
+  if(modal)modal.style.display="none";
 }
 
 // ===== DATE FORMATTING =====
@@ -2724,9 +3052,9 @@ function portalZodiacFromDate(dateValue){
 
 function portalZodiacSymbol(name){
   return {
-    ARIES:"\u2648", TAURUS:"\u2649", GEMINI:"\u264A", CANCER:"\u264B",
-    LEO:"\u264C", VIRGO:"\u264D", LIBRA:"\u264E", SCORPIO:"\u264F",
-    SAGITTARIUS:"\u2650", CAPRICORN:"\u2651", AQUARIUS:"\u2652", PISCES:"\u2653"
+    ARIES:"\u2648\uFE0E", TAURUS:"\u2649\uFE0E", GEMINI:"\u264A\uFE0E", CANCER:"\u264B\uFE0E",
+    LEO:"\u264C\uFE0E", VIRGO:"\u264D\uFE0E", LIBRA:"\u264E\uFE0E", SCORPIO:"\u264F\uFE0E",
+    SAGITTARIUS:"\u2650\uFE0E", CAPRICORN:"\u2651\uFE0E", AQUARIUS:"\u2652\uFE0E", PISCES:"\u2653\uFE0E"
   }[String(name || "").toUpperCase()] || "";
 }
 
@@ -3041,7 +3369,7 @@ function returnToNumerologyApp(){
   if(time) backUrl += "&time=" + encodeURIComponent(time);
   if(city) backUrl += "&city=" + encodeURIComponent(city);
   backUrl += "#astroEntry";
-  window.location.href = backUrl;
+  appNavigate(backUrl);
 }
 
 function applyUnitFormatToInputs(){
@@ -3165,8 +3493,140 @@ const worldCities = [
   "Vienna","Budapest","Athens","Bucharest","Sofia","Ljubljana","Prague","Warsaw",
   "Amsterdam","Zurich","Stockholm","Oslo","Dublin","Lisbon","Cairo","Johannesburg",
   "Singapore","Hong Kong","Seoul","Beijing","Mumbai","New Delhi","Mexico City",
-  "Buenos Aires","Sao Paulo","SÃ£o Paulo"
+  "Buenos Aires","Sao Paulo","SALo Paulo"
 ];
+
+
+function fillOwnerCitySelect(select, placeholder, items, valueFn, labelFn){
+  if(!select) return;
+  select.innerHTML = '';
+  const empty = document.createElement('option');
+  empty.value = '';
+  empty.textContent = placeholder;
+  select.appendChild(empty);
+  (items || []).forEach((item, index) => {
+    const option = document.createElement('option');
+    option.value = valueFn ? valueFn(item, index) : String(index);
+    option.textContent = labelFn ? labelFn(item, index) : String(item);
+    select.appendChild(option);
+  });
+}
+
+function setupOwnerCityCascade(prefix, inputId){
+  if(!window.WorldCities) return;
+  const continent = document.getElementById(prefix + 'Continent');
+  const country = document.getElementById(prefix + 'Country');
+  const city = document.getElementById(prefix + 'CitySelect');
+  const input = document.getElementById(inputId);
+  if(!continent || !country || !city || !input) return;
+  if(continent.dataset.ownerCascadeReady === '1') return;
+  continent.dataset.ownerCascadeReady = '1';
+
+  const populateCountries = () => {
+    const countries = WorldCities.countries(continent.value);
+    fillOwnerCitySelect(country, 'Country', countries, item => item.code, item => item.name);
+    fillOwnerCitySelect(city, 'City', [], null, null);
+    city._ownerCityList = [];
+  };
+
+  const populateCities = () => {
+    const list = WorldCities.citiesForCountry(country.value);
+    city._ownerCityList = list;
+    fillOwnerCitySelect(city, 'City', list, (item, index) => String(index), item => WorldCities.cityLabel(item));
+  };
+
+  fillOwnerCitySelect(continent, 'Continent', WorldCities.continents(), item => item.code, item => item.name);
+  fillOwnerCitySelect(country, 'Country', [], null, null);
+  fillOwnerCitySelect(city, 'City', [], null, null);
+
+  continent.addEventListener('change', populateCountries);
+  country.addEventListener('change', populateCities);
+  city.addEventListener('change', () => {
+    const selected = city._ownerCityList && city._ownerCityList[Number(city.value)];
+    if(selected) input.value = WorldCities.displayName(selected);
+  });
+}
+
+function syncOwnerCityCascadeFromInput(prefix, inputId){
+  if(!window.WorldCities) return;
+  const input = document.getElementById(inputId);
+  const continent = document.getElementById(prefix + 'Continent');
+  const country = document.getElementById(prefix + 'Country');
+  const city = document.getElementById(prefix + 'CitySelect');
+  if(!input || !continent || !country || !city || !input.value.trim()) return;
+  const found = WorldCities.find(input.value.trim());
+  if(!found || !found.country) return;
+  continent.value = found.continent || '';
+  continent.dispatchEvent(new Event('change'));
+  country.value = found.country || '';
+  country.dispatchEvent(new Event('change'));
+  const list = city._ownerCityList || [];
+  const foundName = (found.name || '').toLowerCase();
+  const foundLat = Number(found.lat);
+  const foundLon = Number(found.lon);
+  let index = list.findIndex(item => Number(item.lat) === foundLat && Number(item.lon) === foundLon);
+  if(index < 0) index = list.findIndex(item => String(item.ascii || item.name).toLowerCase() === foundName || String(item.name || '').toLowerCase() === foundName);
+  if(index >= 0) city.value = String(index);
+}
+function cityAutocompleteMatches(value){
+  if(window.WorldCities && typeof WorldCities.searchCities === "function") return WorldCities.searchCities(value, 12);
+  const val = String(value || "").toLowerCase();
+  return worldCities.filter(function(city){ return city.toLowerCase().includes(val); }).slice(0, 12);
+}
+
+function cityAutocompleteValue(city){
+  if(city && typeof city === "object") return window.WorldCities && WorldCities.choiceName ? WorldCities.choiceName(city) : ((city.ascii || city.name) + (city.country ? ", " + city.country : ""));
+  return String(city || "");
+}
+
+function cityAutocompleteTitle(city){
+  if(city && typeof city === "object") return (city.ascii || city.name) + (city.admin1 ? " - " + city.admin1 : "");
+  return String(city || "");
+}
+
+function cityAutocompleteMeta(city){
+  if(!city || typeof city !== "object") return "";
+  return [city.countryName, city.continentName].filter(Boolean).join(" / ");
+}
+
+function selectCityForInput(inputId, dropdownId, city){
+  let cityInput = document.getElementById(inputId);
+  let dropdown = document.getElementById(dropdownId);
+  if(cityInput){
+    cityInput.value = cityAutocompleteValue(city);
+    if(city && typeof city === "object"){
+      cityInput.dataset.selectedCityLat = city.lat;
+      cityInput.dataset.selectedCityLon = city.lon;
+      cityInput.dataset.selectedCityTz = city.tz || "";
+      cityInput.dataset.selectedCityCountry = city.country || "";
+    }
+  }
+  if(dropdown) dropdown.style.display = "none";
+}
+
+function renderCityAutocomplete(dropdown, inputId, dropdownId, matches){
+  dropdown.innerHTML = "";
+  matches.forEach(function(city){
+    const row = document.createElement("div");
+    row.style.cssText = "padding:8px 12px;cursor:pointer;color:white;font-size:12px;border-bottom:1px solid #334155;transition:0.2s;line-height:1.2;";
+    const title = document.createElement("div");
+    title.textContent = cityAutocompleteTitle(city);
+    title.style.fontWeight = "700";
+    const metaText = cityAutocompleteMeta(city);
+    row.appendChild(title);
+    if(metaText){
+      const meta = document.createElement("div");
+      meta.textContent = metaText;
+      meta.style.cssText = "font-size:10px;color:#94a3b8;margin-top:3px;";
+      row.appendChild(meta);
+    }
+    row.addEventListener("mouseenter", function(){ row.style.background = "#0f172a"; });
+    row.addEventListener("mouseleave", function(){ row.style.background = "transparent"; });
+    row.addEventListener("click", function(){ selectCityForInput(inputId, dropdownId, city); });
+    dropdown.appendChild(row);
+  });
+  dropdown.style.display = matches.length ? "block" : "none";
+}
 
 function setupCityAutocomplete(inputId = "cityInput", dropdownId = "cityDropdown"){
   let cityInput = document.getElementById(inputId);
@@ -3176,23 +3636,17 @@ function setupCityAutocomplete(inputId = "cityInput", dropdownId = "cityDropdown
   cityInput.dataset.cityAutocompleteReady = "1";
 
   cityInput.addEventListener("input", function(){
-    let val = this.value.toLowerCase();
-    if(!val){
+    const value = this.value.trim();
+    delete this.dataset.selectedCityLat;
+    delete this.dataset.selectedCityLon;
+    delete this.dataset.selectedCityTz;
+    delete this.dataset.selectedCityCountry;
+    if(!value){
       if(dropdown) dropdown.style.display = "none";
       return;
     }
-    let matches = window.WorldCities ? WorldCities.search(this.value, 10) : worldCities.filter(function(city){ return city.toLowerCase().includes(val); }).slice(0, 10);
-
-    if(dropdown){
-      if(matches.length > 0){
-        dropdown.innerHTML = matches.map(function(city){
-          return '<div onclick="selectCityForInput(\'' + inputId + '\',\'' + dropdownId + '\',\'' + city.replace(/'/g, "\\'") + '\')" style="padding: 8px 12px; cursor: pointer; color: white; font-size: 12px; border-bottom: 1px solid #334155; transition: 0.2s;" onmouseover="this.style.background=\'#0f172a\'" onmouseout="this.style.background=\'transparent\'">' + city + '</div>';
-        }).join('');
-        dropdown.style.display = "block";
-      } else {
-        dropdown.style.display = "none";
-      }
-    }
+    const matches = cityAutocompleteMatches(value);
+    if(dropdown) renderCityAutocomplete(dropdown, inputId, dropdownId, matches);
   });
 
   document.addEventListener("click", function(e){
@@ -3200,13 +3654,6 @@ function setupCityAutocomplete(inputId = "cityInput", dropdownId = "cityDropdown
       dropdown.style.display = "none";
     }
   });
-}
-
-function selectCityForInput(inputId, dropdownId, city){
-  let cityInput = document.getElementById(inputId);
-  let dropdown = document.getElementById(dropdownId);
-  if(cityInput) cityInput.value = city;
-  if(dropdown) dropdown.style.display = "none";
 }
 
 function selectCity(city){
@@ -3262,7 +3709,7 @@ const cityCoords = {
   "Mexico City": { lat: 19.4326, lon: -99.1332, tz: "America/Mexico_City" },
   "Buenos Aires": { lat: -34.6037, lon: -58.3816, tz: "America/Argentina/Buenos_Aires" },
   "Sao Paulo": { lat: -23.5505, lon: -46.6333, tz: "America/Sao_Paulo" },
-  "SÃ£o Paulo": { lat: -23.5505, lon: -46.6333, tz: "America/Sao_Paulo" }
+  "SALo Paulo": { lat: -23.5505, lon: -46.6333, tz: "America/Sao_Paulo" }
 };
 
 // ===== SAVE ASTRO RETURN STATE =====
@@ -3270,11 +3717,8 @@ function saveAstroReturnState(date, time, city){
   const params = new URLSearchParams(window.location.search);
   const isTwin = params.get("isTwin") || "false";
   const isTwin3 = params.get("isTwin3") || "false";
-  if(window.AppSharedState){
-    AppSharedState.saveLastAstroInput({date, time, city, isTwin:isTwin === "true", isTwin3:isTwin3 === "true"});
-  }
-  sessionStorage.setItem("returningFromChart", "true");
-  const astroTransferState = {date: date, time: time, city: city, isTwin: isTwin === "true", isTwin3: isTwin3 === "true", updatedAt:new Date().toISOString()};
+  sessionStorage.setItem('returningFromChart', 'true');
+  const astroTransferState = window.AppSharedState ? AppSharedState.saveLastAstroInput({date, time, city, isTwin: isTwin === "true", isTwin3: isTwin3 === "true"}) : {date: date, time: time, city: city, isTwin: isTwin === "true", isTwin3: isTwin3 === "true", updatedAt:new Date().toISOString()};
   sessionStorage.setItem("astroReturnState", JSON.stringify(astroTransferState));
   localStorage.setItem("astroReturnState", JSON.stringify(astroTransferState));
   localStorage.setItem("lastAstroInput", JSON.stringify(astroTransferState));
@@ -3331,34 +3775,34 @@ function escapeHtml(value){
 
 const APP_TRANSLATIONS = {
   sr: {
-    "Astrology App": "Astrološka aplikacija",
-    "Choose an astrology section": "Izaberi astrološku sekciju",
+    "Astrology App": "Astrolodz?ka aplikacija",
+    "Choose an astrology section": "Izaberi astrolodz?ku sekciju",
     "ASTRO CHART": "ASTRO KARTA",
-    "Calculate My Chart": "Izračunaj moju kartu",
-    "(enter your date of birth, time, and place)": "(unesi datum, vreme i mesto rođenja)",
-    "Change to Numerology": "Pređi na numerologiju",
-    "CLICK FOR MEANING": "KLIKNI ZA ZNAČENJE",
-    "Save Profile": "Sačuvaj profil",
-    "Birth data:": "Podaci rođenja:",
+    "Calculate My Chart": "Izracunaj moju kartu",
+    "(enter your date of birth, time, and place)": "(unesi datum, vreme i mesto rodenja)",
+    "Change to Numerology": "Predi na numerologiju",
+    "CLICK FOR MEANING": "KLIKNI ZA ZNACENJE",
+    "Save Profile": "Sacuvaj profil",
+    "Birth data:": "Podaci rodenja:",
     "Enter name...": "Unesi ime...",
-    "SAVED PROFILES": "SAČUVANI PROFILI",
-    "No saved profiles": "Nema sačuvanih profila",
+    "SAVED PROFILES": "SACUVANI PROFILI",
+    "No saved profiles": "Nema sacuvanih profila",
     "Please enter a profile name": "Unesi ime profila",
-    "Delete this saved profile?": "Obrisati ovaj sačuvani profil?",
-    "Owner profile cannot be deleted from contacts.": "Profil vlasnika ne može biti obrisan iz kontakata.",
+    "Delete this saved profile?": "Obrisati ovaj sacuvani profil?",
+    "Owner profile cannot be deleted from contacts.": "Profil vlasnika ne modz?e biti obrisan iz kontakata.",
     "OWNER": "VLASNIK",
     "EDIT": "IZMENI",
     "TWIN": "BLIZANAC",
-    "3rd TWIN": "TREĆI BLIZANAC",
-    "SAVE": "SAČUVAJ",
-    "CANCEL": "OTKAŽI",
-    "Calculating...": "Računam...",
-    "House": "Kuća",
+    "3rd TWIN": "TRECI BLIZANAC",
+    "SAVE": "SACUVAJ",
+    "CANCEL": "OTKAdz?I",
+    "Calculating...": "Racunam...",
+    "House": "Kuca",
     "NATAL CHART": "NATALNA KARTA",
     "TRANSIT": "TRANZITI",
     "SYNASTRY": "SINASTRIJA",
     "RETROGRADE": "RETROGRADNOST",
-    "LUNAR PHASES": "MESEČEVE FAZE"
+    "LUNAR PHASES": "MESECEVE FAZE"
   }
 };
 
@@ -3676,10 +4120,10 @@ function loadSavedDate(dateStr, timeStr, city, isTwin, isTwin3){
   if(timeEl) timeEl.value = next.time;
   if(cityEl) cityEl.value = next.city;
 
-  if(window.AppSharedState) AppSharedState.saveLastAstroInput(next);
+  const savedNext = window.AppSharedState ? AppSharedState.saveLastAstroInput(next) : {...next, updatedAt:new Date().toISOString()};
   try{
-    sessionStorage.setItem("astroReturnState", JSON.stringify({...next, updatedAt:new Date().toISOString()}));
-    localStorage.setItem("lastAstroInput", JSON.stringify(next));
+    sessionStorage.setItem("astroReturnState", JSON.stringify(savedNext));
+    localStorage.setItem("lastAstroInput", JSON.stringify(savedNext));
   }catch(e){}
   skipSavePrompt = true;
   closeSavedPanel();
@@ -3764,7 +4208,8 @@ function renderSavedList(){
 const NS = "http://www.w3.org/2000/svg";
 const centerX = 450;
 const centerY = 450;
-const signSymbols = ["\u2648","\u2649","\u264A","\u264B","\u264C","\u264D","\u264E","\u264F","\u2650","\u2651","\u2652","\u2653"];
+const signSymbols = ["\u2648\uFE0E","\u2649\uFE0E","\u264A\uFE0E","\u264B\uFE0E","\u264C\uFE0E","\u264D\uFE0E","\u264E\uFE0E","\u264F\uFE0E","\u2650\uFE0E","\u2651\uFE0E","\u2652\uFE0E","\u2653\uFE0E"];
+const signSymbolsSvg = ["\u2648\uFE0E","\u2649\uFE0E","\u264A\uFE0E","\u264B\uFE0E","\u264C\uFE0E","\u264D\uFE0E","\u264E\uFE0E","\u264F\uFE0E","\u2650\uFE0E","\u2651\uFE0E","\u2652\uFE0E","\u2653\uFE0E"];
 const signNames = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
 const planets = [
   {name:"Sun", symbol:"\u2609", color:"#FFD700"},
@@ -3963,7 +4408,7 @@ function renderWheel(data, cusps, asc, mc, aspects){
   for(let i = 0; i < 12; i++){
     const mid = i * 30 + 15;
     const p = point(mid, 338, asc);
-    if(zodiacLayer) zodiacLayer.appendChild(svgEl("text", {x:p.x, y:p.y, fill:"#FFD700", "font-size":42, "text-anchor":"middle", "dominant-baseline":"middle", filter:"url(#glowGold)"}, signSymbols[i]));
+    if(zodiacLayer) zodiacLayer.appendChild(svgEl("text", {x:p.x, y:p.y + 1, fill:"#FFD700", "font-size":36, "text-anchor":"middle", "dominant-baseline":"middle"}, signSymbolsSvg[i]));
     for(let d = 0; d < 30; d += 5){
       const a = i * 30 + d;
       const p1 = point(a, d === 0 ? 315 : 326, asc);
@@ -4158,7 +4603,7 @@ function ensurePositionHelpModal(){
   modal.className = "position-help-modal";
   modal.innerHTML =
     '<div class="position-help-panel">'+
-      '<button class="position-help-close" type="button" onclick="closePositionHelp()" aria-label="Close">x</button>'+
+      '<button class="position-help-close" type="button" onclick="closePositionHelp()" aria-label="Close">X</button>'+
       '<div id="positionHelpTitle" class="position-help-title"></div>'+
       '<div id="positionHelpBody" class="position-help-body"></div>'+
     '</div>';
@@ -4486,6 +4931,24 @@ window.onload = function(){
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -14,6 +14,7 @@
 <script src="app-shared-state.js"></script>
 <script src="world-cities.js"></script>
 <script src="app-notification-open.js"></script>
+<script src="capacitor-bridge.js"></script>
 <style>
 *{
     margin:0;
@@ -125,7 +126,7 @@ body{
 }
 
 .calc-source-status.fallback{
-  color:#f6cb71;
+  color:#ef4444;
 }
 
 .container{
@@ -1045,6 +1046,41 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 .transit-help-description{color:#94a3b8!important}
 .transit-help-meaning{color:#fff!important}
 .transit-help-description p,.transit-help-meaning p{margin:8px 0}
+
+/* ===== HELP BUTTON STANDARD POSITION ===== */
+.section-title{position:relative!important;}
+.section-title > .transit-help-btn{position:absolute!important;left:8px!important;top:0!important;transform:none!important;margin:0!important;}
+.natal-pos,.transit-card,.upcoming-item,.retrograde-item{position:relative!important;}
+.natal-pos > .transit-help-btn,.transit-card > .transit-help-btn,.upcoming-item > .transit-help-btn,.retrograde-item > .transit-help-btn{position:absolute!important;left:8px!important;top:8px!important;right:auto!important;bottom:auto!important;transform:none!important;margin:0!important;z-index:5!important;}
+.natal-pos:has(> .transit-help-btn),.transit-card:has(> .transit-help-btn),.upcoming-item:has(> .transit-help-btn),.retrograde-item:has(> .transit-help-btn){padding-left:38px!important;}
+
+/* ===== TRANSIT COLLAPSIBLE HEADER HELP ALIGNMENT ===== */
+.transit-collapsible-title{
+  position:relative!important;
+  padding-left:28px!important;
+  min-height:28px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:0!important;
+}
+.transit-collapsible-title > .transit-help-btn{
+  position:absolute!important;
+  left:0!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+  margin:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  line-height:1!important;
+}
+.transit-collapsible-title > .section-title{
+  margin:0!important;
+  min-height:28px!important;
+  display:flex!important;
+  align-items:center!important;
+  line-height:1.05!important;
+}
 </style>
 </head>
 <body>
@@ -1156,14 +1192,14 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
     <div class="card">
         <div class="section-title">NATAL POSITIONS</div>
                 <div class="natal-mini">
-            <div class="natal-pos"><button class="transit-help-btn" type="button" onclick="openNatalTransitHelp('Sun', 15, 1)" aria-label="Explain natal Sun">?</button><div><div class="natal-pos-planet">☉ Sun</div><div class="natal-pos-sign">♌ Leo</div><div class="natal-pos-degree">15&deg;22'</div></div></div>
-            <div class="natal-pos"><button class="transit-help-btn" type="button" onclick="openNatalTransitHelp('Moon', 338, 1)" aria-label="Explain natal Moon">?</button><div><div class="natal-pos-planet">☽ Moon</div><div class="natal-pos-sign">♓ Pisces</div><div class="natal-pos-degree">8&deg;15'</div></div></div>
-            <div class="natal-pos"><button class="transit-help-btn" type="button" onclick="openNatalTransitHelp('Mercury', 22, 1)" aria-label="Explain natal Mercury">?</button><div><div class="natal-pos-planet">☿ Mercury</div><div class="natal-pos-sign">♌ Leo</div><div class="natal-pos-degree">22&deg;08'</div></div></div>
-            <div class="natal-pos"><button class="transit-help-btn" type="button" onclick="openNatalTransitHelp('Venus', 155, 1)" aria-label="Explain natal Venus">?</button><div><div class="natal-pos-planet">♀ Venus</div><div class="natal-pos-sign">♍ Virgo</div><div class="natal-pos-degree">5&deg;44'</div></div></div>
-            <div class="natal-pos"><button class="transit-help-btn" type="button" onclick="openNatalTransitHelp('Mars', 228, 1)" aria-label="Explain natal Mars">?</button><div><div class="natal-pos-planet">♂ Mars</div><div class="natal-pos-sign">♏ Scorpio</div><div class="natal-pos-degree">18&deg;33'</div></div></div>
-            <div class="natal-pos"><button class="transit-help-btn" type="button" onclick="openNatalTransitHelp('Jupiter', 100, 1)" aria-label="Explain natal Jupiter">?</button><div><div class="natal-pos-planet">♃ Jupiter</div><div class="natal-pos-sign">♋ Cancer</div><div class="natal-pos-degree">10&deg;05'</div></div></div>
-            <div class="natal-pos"><button class="transit-help-btn" type="button" onclick="openNatalTransitHelp('Saturn', 333, 1)" aria-label="Explain natal Saturn">?</button><div><div class="natal-pos-planet">♄ Saturn</div><div class="natal-pos-sign">♓ Pisces</div><div class="natal-pos-degree">3&deg;18'</div></div></div>
-            <div class="natal-pos"><button class="transit-help-btn" type="button" onclick="openNatalTransitHelp('Uranus', 88, 1)" aria-label="Explain natal Uranus">?</button><div><div class="natal-pos-planet">♅ Uranus</div><div class="natal-pos-sign">♊ Gemini</div><div class="natal-pos-degree">28&deg;47'</div></div></div>
+            <div class="natal-pos"><button class="transit-help-btn" type="button" onclick="openNatalTransitHelp('Sun', 15, 1)" aria-label="Explain natal Sun">?</button><div><div class="natal-pos-planet">? Sun</div><div class="natal-pos-sign">? Leo</div><div class="natal-pos-degree">15&deg;22'</div></div></div>
+            <div class="natal-pos"><button class="transit-help-btn" type="button" onclick="openNatalTransitHelp('Moon', 338, 1)" aria-label="Explain natal Moon">?</button><div><div class="natal-pos-planet">? Moon</div><div class="natal-pos-sign">? Pisces</div><div class="natal-pos-degree">8&deg;15'</div></div></div>
+            <div class="natal-pos"><button class="transit-help-btn" type="button" onclick="openNatalTransitHelp('Mercury', 22, 1)" aria-label="Explain natal Mercury">?</button><div><div class="natal-pos-planet">? Mercury</div><div class="natal-pos-sign">? Leo</div><div class="natal-pos-degree">22&deg;08'</div></div></div>
+            <div class="natal-pos"><button class="transit-help-btn" type="button" onclick="openNatalTransitHelp('Venus', 155, 1)" aria-label="Explain natal Venus">?</button><div><div class="natal-pos-planet">? Venus</div><div class="natal-pos-sign">? Virgo</div><div class="natal-pos-degree">5&deg;44'</div></div></div>
+            <div class="natal-pos"><button class="transit-help-btn" type="button" onclick="openNatalTransitHelp('Mars', 228, 1)" aria-label="Explain natal Mars">?</button><div><div class="natal-pos-planet">? Mars</div><div class="natal-pos-sign">? Scorpio</div><div class="natal-pos-degree">18&deg;33'</div></div></div>
+            <div class="natal-pos"><button class="transit-help-btn" type="button" onclick="openNatalTransitHelp('Jupiter', 100, 1)" aria-label="Explain natal Jupiter">?</button><div><div class="natal-pos-planet">? Jupiter</div><div class="natal-pos-sign">? Cancer</div><div class="natal-pos-degree">10&deg;05'</div></div></div>
+            <div class="natal-pos"><button class="transit-help-btn" type="button" onclick="openNatalTransitHelp('Saturn', 333, 1)" aria-label="Explain natal Saturn">?</button><div><div class="natal-pos-planet">? Saturn</div><div class="natal-pos-sign">? Pisces</div><div class="natal-pos-degree">3&deg;18'</div></div></div>
+            <div class="natal-pos"><button class="transit-help-btn" type="button" onclick="openNatalTransitHelp('Uranus', 88, 1)" aria-label="Explain natal Uranus">?</button><div><div class="natal-pos-planet">? Uranus</div><div class="natal-pos-sign">? Gemini</div><div class="natal-pos-degree">28&deg;47'</div></div></div>
         </div>    </div>
 
     <!-- ACTIVE TRANSITS -->
@@ -1191,11 +1227,11 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
             </div>
 
             <div class="aspect-legend">
-                <div class="legend-item"><span class="legend-symbol">☌</span> Conjunction 0&deg;</div>
-                <div class="legend-item"><span class="legend-symbol">□</span> Square 90&deg;</div>
-                <div class="legend-item"><span class="legend-symbol">△</span> Trine 120&deg;</div>
-                <div class="legend-item"><span class="legend-symbol">⚹</span> Sextile 60&deg;</div>
-                <div class="legend-item"><span class="legend-symbol">☍</span> Opposition 180&deg;</div>
+                <div class="legend-item"><span class="legend-symbol">?</span> Conjunction 0&deg;</div>
+                <div class="legend-item"><span class="legend-symbol">?</span> Square 90&deg;</div>
+                <div class="legend-item"><span class="legend-symbol">?</span> Trine 120&deg;</div>
+                <div class="legend-item"><span class="legend-symbol">?</span> Sextile 60&deg;</div>
+                <div class="legend-item"><span class="legend-symbol">?</span> Opposition 180&deg;</div>
             </div>
 
             <div id="transitList"></div>
@@ -1236,42 +1272,42 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
             <div class="upcoming-list">
             <div class="upcoming-item">
                 <span class="upcoming-date">May 20</span>
-                <span class="upcoming-transit">☉ Sun enters ♊ Gemini</span>
+                <span class="upcoming-transit">? Sun enters ? Gemini</span>
                 <span class="upcoming-type neutral">Shift</span>
             </div>
             <div class="upcoming-item">
                 <span class="upcoming-date">May 24</span>
-                <span class="upcoming-transit">Full Moon Full Moon in ♐ Sagittarius</span>
+                <span class="upcoming-transit">Full Moon Full Moon in ? Sagittarius</span>
                 <span class="upcoming-type positive">Full Moon</span>
             </div>
             <div class="upcoming-item">
                 <span class="upcoming-date">May 28</span>
-                <span class="upcoming-transit">♂ Mars Trine ☉ Natal Sun</span>
+                <span class="upcoming-transit">? Mars Trine ? Natal Sun</span>
                 <span class="upcoming-type positive">Trine</span>
             </div>
             <div class="upcoming-item">
                 <span class="upcoming-date">Jun 3</span>
-                <span class="upcoming-transit">☿ Mercury Station Direct</span>
+                <span class="upcoming-transit">? Mercury Station Direct</span>
                 <span class="upcoming-type neutral">Station</span>
             </div>
             <div class="upcoming-item">
                 <span class="upcoming-date">Jun 6</span>
-                <span class="upcoming-transit">♀ Venus Square ♄ Natal Saturn</span>
+                <span class="upcoming-transit">? Venus Square ? Natal Saturn</span>
                 <span class="upcoming-type challenge">Square</span>
             </div>
             <div class="upcoming-item">
                 <span class="upcoming-date">Jun 10</span>
-                <span class="upcoming-transit">♃ Jupiter Conjunct ☽ Natal Moon</span>
+                <span class="upcoming-transit">? Jupiter Conjunct ? Natal Moon</span>
                 <span class="upcoming-type positive">Conjunct</span>
             </div>
             <div class="upcoming-item">
                 <span class="upcoming-date">Jun 15</span>
-                <span class="upcoming-transit">♇ Pluto Opposite ☿ Natal Mercury</span>
+                <span class="upcoming-transit">? Pluto Opposite ? Natal Mercury</span>
                 <span class="upcoming-type challenge">Opposition</span>
             </div>
             <div class="upcoming-item">
                 <span class="upcoming-date">Jun 21</span>
-                <span class="upcoming-transit">☉ Sun enters ♋ Cancer (Solstice)</span>
+                <span class="upcoming-transit">? Sun enters ? Cancer (Solstice)</span>
                 <span class="upcoming-type neutral">Season</span>
             </div>
             </div>
@@ -1328,12 +1364,12 @@ function openTransitSectionHelp(event, section){
 /* ===== TRANSIT DATA ===== */
 const sampleTransits = [
     {
-        transit: "♄ Saturn",
-        transitIcon: "♄",
-        aspect: "☌ Conjunct",
-        aspectShort: "☌",
-        natal: "☽ Moon",
-        natalIcon: "☽",
+        transit: "? Saturn",
+        transitIcon: "?",
+        aspect: "? Conjunct",
+        aspectShort: "?",
+        natal: "? Moon",
+        natalIcon: "?",
         orb: "0&deg;32'",
         type: "challenge",
         major: true,
@@ -1347,12 +1383,12 @@ const sampleTransits = [
         progress: 35
     },
     {
-        transit: "♃ Jupiter",
-        transitIcon: "♃",
-        aspect: "△ Trine",
-        aspectShort: "△",
-        natal: "☉ Sun",
-        natalIcon: "☉",
+        transit: "? Jupiter",
+        transitIcon: "?",
+        aspect: "? Trine",
+        aspectShort: "?",
+        natal: "? Sun",
+        natalIcon: "?",
         orb: "1&deg;11'",
         type: "positive",
         major: true,
@@ -1366,12 +1402,12 @@ const sampleTransits = [
         progress: 65
     },
     {
-        transit: "♂ Mars",
-        transitIcon: "♂",
-        aspect: "☍ Opposition",
-        aspectShort: "☍",
-        natal: "☿ Mercury",
-        natalIcon: "☿",
+        transit: "? Mars",
+        transitIcon: "?",
+        aspect: "? Opposition",
+        aspectShort: "?",
+        natal: "? Mercury",
+        natalIcon: "?",
         orb: "2&deg;04'",
         type: "challenge",
         major: true,
@@ -1385,10 +1421,10 @@ const sampleTransits = [
         progress: 50
     },
     {
-        transit: "♀ Venus",
-        transitIcon: "♀",
-        aspect: "⚹ Sextile",
-        aspectShort: "⚹",
+        transit: "? Venus",
+        transitIcon: "?",
+        aspect: "? Sextile",
+        aspectShort: "?",
         natal: "ASC",
         natalIcon: "ASC",
         orb: "0&deg;48'",
@@ -1404,12 +1440,12 @@ const sampleTransits = [
         progress: 50
     },
     {
-        transit: "☽ Moon",
-        transitIcon: "☽",
-        aspect: "☌ Conjunct",
-        aspectShort: "☌",
-        natal: "♀ Venus",
-        natalIcon: "♀",
+        transit: "? Moon",
+        transitIcon: "?",
+        aspect: "? Conjunct",
+        aspectShort: "?",
+        natal: "? Venus",
+        natalIcon: "?",
         orb: "0&deg;12'",
         type: "neutral",
         major: false,
@@ -1423,12 +1459,12 @@ const sampleTransits = [
         progress: 50
     },
     {
-        transit: "♅ Uranus",
-        transitIcon: "♅",
-        aspect: "□ Square",
-        aspectShort: "□",
-        natal: "♃ Jupiter",
-        natalIcon: "♃",
+        transit: "? Uranus",
+        transitIcon: "?",
+        aspect: "? Square",
+        aspectShort: "?",
+        natal: "? Jupiter",
+        natalIcon: "?",
         orb: "1&deg;45'",
         type: "challenge",
         major: true,
@@ -1442,12 +1478,12 @@ const sampleTransits = [
         progress: 40
     },
     {
-        transit: "♆ Neptune",
-        transitIcon: "♆",
-        aspect: "△ Trine",
-        aspectShort: "△",
-        natal: "☉ Sun",
-        natalIcon: "☉",
+        transit: "? Neptune",
+        transitIcon: "?",
+        aspect: "? Trine",
+        aspectShort: "?",
+        natal: "? Sun",
+        natalIcon: "?",
         orb: "0&deg;55'",
         type: "positive",
         major: true,
@@ -1461,12 +1497,12 @@ const sampleTransits = [
         progress: 70
     },
     {
-        transit: "☉ Sun",
-        transitIcon: "☉",
-        aspect: "⚹ Sextile",
-        aspectShort: "⚹",
-        natal: "♂ Mars",
-        natalIcon: "♂",
+        transit: "? Sun",
+        transitIcon: "?",
+        aspect: "? Sextile",
+        aspectShort: "?",
+        natal: "? Mars",
+        natalIcon: "?",
         orb: "2&deg;30'",
         type: "positive",
         major: false,
@@ -1480,10 +1516,10 @@ const sampleTransits = [
         progress: 50
     },
     {
-        transit: "♇ Pluto",
-        transitIcon: "♇",
-        aspect: "□ Square",
-        aspectShort: "□",
+        transit: "? Pluto",
+        transitIcon: "?",
+        aspect: "? Square",
+        aspectShort: "?",
         natal: "ASC",
         natalIcon: "ASC",
         orb: "3&deg;10'",
@@ -1499,12 +1535,12 @@ const sampleTransits = [
         progress: 25
     },
     {
-        transit: "☿ Mercury",
-        transitIcon: "☿",
-        aspect: "☌ Conjunct",
-        aspectShort: "☌",
-        natal: "☊ North Node",
-        natalIcon: "☊",
+        transit: "? Mercury",
+        transitIcon: "?",
+        aspect: "? Conjunct",
+        aspectShort: "?",
+        natal: "? North Node",
+        natalIcon: "?",
         orb: "1&deg;20'",
         type: "neutral",
         major: false,
@@ -1588,7 +1624,7 @@ const transitAspectReadingData = {
 };
 
 function cleanTransitLabel(value){
-  return String(value || "").replace(/[☉☽☿♀♂♃♄♅♆♇☌☍△□⚹]/g,"").replace(/\bNatal\b/g,"").trim();
+  return String(value || "").replace(/[???????????????]/g,"").replace(/\bNatal\b/g,"").trim();
 }
 function normalizeTransitAspectName(value){
   const clean = cleanTransitLabel(value);
@@ -1630,7 +1666,7 @@ function ensureTransitHelpModal(){
   modal.className = "transit-help-modal";
   modal.innerHTML =
     '<div class="transit-help-panel">'+
-      '<button class="transit-help-close" type="button" onclick="closeTransitHelp()" aria-label="Close">x</button>'+
+      '<button class="transit-help-close" type="button" onclick="closeTransitHelp()" aria-label="Close">X</button>'+
       '<div id="transitHelpTitle" class="transit-help-title"></div>'+
       '<div id="transitHelpBody" class="transit-help-body"></div>'+
     '</div>';
@@ -1928,7 +1964,7 @@ const transitAspectDefs=[
     {name:"Opposition",short:"\u260D",angle:180,orb:6,type:"challenge"}
 ];
 const transitSignNames=["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
-const transitSignSymbols=["\u2648","\u2649","\u264A","\u264B","\u264C","\u264D","\u264E","\u264F","\u2650","\u2651","\u2652","\u2653"];
+const transitSignSymbols=["\u2648\uFE0E","\u2649\uFE0E","\u264A\uFE0E","\u264B\uFE0E","\u264C\uFE0E","\u264D\uFE0E","\u264E\uFE0E","\u264F\uFE0E","\u2650\uFE0E","\u2651\uFE0E","\u2652\uFE0E","\u2653\uFE0E"];
 let transitSweCache=null, transitModCache=null;
 function normalize(deg){deg%=360;return deg<0?deg+360:deg}
 function toRad(deg){return deg*Math.PI/180}
@@ -2084,9 +2120,8 @@ function forceTransitBirthPrefill(overwrite){
   if(dateEl&&(overwrite||!dateEl.value)&&state.date)dateEl.value=state.date;
   if(timeEl&&(overwrite||!timeEl.value)&&state.time)timeEl.value=state.time;
   if(cityEl&&(overwrite||!cityEl.value)&&state.city)cityEl.value=state.city;
-  if(window.AppSharedState)AppSharedState.saveLastAstroInput(state);
+  const next=window.AppSharedState?AppSharedState.saveLastAstroInput(state):{...state,updatedAt:new Date().toISOString()};
   try{
-    const next={...state,updatedAt:new Date().toISOString()};
     sessionStorage.setItem("astroReturnState",JSON.stringify(next));
     localStorage.setItem("astroReturnState",JSON.stringify(next));
     localStorage.setItem("lastAstroInput",JSON.stringify(next));
@@ -2145,28 +2180,28 @@ function initTransitFromParams(){
   const picked=(paramState&&(paramState.date||paramState.time||paramState.city))?paramState:
     (storedState&&(storedState.date||storedState.time||storedState.city))?storedState:
     (sharedState&&(sharedState.date||sharedState.time||sharedState.city))?sharedState:
-    ownerState||{date:"",time:"",city:"Belgrade",isTwin:false,isTwin3:false};
-  const state={...picked,city:picked.city||"Belgrade"};
+    ownerState||{date:"",time:"",city:"",isTwin:false,isTwin3:false};
+  const state={...picked,city:picked.city||""};
   document.getElementById("birthDate").value=state.date||"";
   document.getElementById("birthTime").value=state.time||"";
-  document.getElementById("birthCity").value=state.city||"Belgrade";
+  document.getElementById("birthCity").value=state.city||"";
   document.getElementById("transitDate").value=new Date().toISOString().slice(0,10);
+  const savedState=window.AppSharedState?AppSharedState.saveLastAstroInput(state):{...state,updatedAt:new Date().toISOString()};
   try{
-    sessionStorage.setItem("astroReturnState", JSON.stringify({...state, updatedAt:new Date().toISOString()}));
-    localStorage.setItem("lastAstroInput", JSON.stringify({...state, updatedAt:new Date().toISOString()}));
+    sessionStorage.setItem("astroReturnState", JSON.stringify(savedState));
+    localStorage.setItem("lastAstroInput", JSON.stringify(savedState));
   }catch(e){}
   if(window.AppSharedState){
-    AppSharedState.saveLastAstroInput(state);
     AppSharedState.bindLastAstroInput({dateId:"birthDate",timeId:"birthTime",cityId:"birthCity"});
   }
 }
-function goBack(){const date=document.getElementById("birthDate").value;const time=document.getElementById("birthTime").value;const city=document.getElementById("birthCity").value;if(window.AppSharedState)AppSharedState.saveLastAstroInput({date,time,city});let url="chart.html";if(date){url+="?date="+encodeURIComponent(date);if(time)url+="&time="+encodeURIComponent(time);if(city)url+="&city="+encodeURIComponent(city)}window.location.href=url}
+function goBack(){const date=document.getElementById("birthDate").value;const time=document.getElementById("birthTime").value;const city=document.getElementById("birthCity").value;if(window.AppSharedState)AppSharedState.saveLastAstroInput({date,time,city});let url="chart.html";if(date){url+="?date="+encodeURIComponent(date);if(time)url+="&time="+encodeURIComponent(time);if(city)url+="&city="+encodeURIComponent(city)}appNavigate(url)}
 function exitApp(){appExit("index.html")}
 function appCopyText(text,message){if(navigator.clipboard&&window.isSecureContext){return navigator.clipboard.writeText(text).then(()=>{if(message)alert(message)}).catch(()=>appCopyTextFallback(text,message))}return appCopyTextFallback(text,message)}
 function appCopyTextFallback(text,message){const input=document.createElement("textarea");input.value=text;input.setAttribute("readonly","");input.style.position="fixed";input.style.left="-9999px";document.body.appendChild(input);input.select();try{document.execCommand("copy");if(message)alert(message)}catch(e){alert(text)}document.body.removeChild(input);return Promise.resolve()}
 async function appShare(shareData){try{if(window.Android&&typeof window.Android.share==="function"){window.Android.share(shareData.title||document.title,shareData.text||"",shareData.url||location.href);return}if(window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.Share){await window.Capacitor.Plugins.Share.share(shareData);return}if(navigator.share){await navigator.share(shareData);return}}catch(error){console.warn("Native share failed",error)}await appCopyText(shareData.url||location.href,"Link copied to clipboard.")}
 function appPrintPage(){try{if(window.Android&&typeof window.Android.printPage==="function"){window.Android.printPage();return}window.print()}catch(e){alert("Print is not available in this app view.")}}
-function appExit(fallbackUrl){if(window.closeNativeApp){window.closeNativeApp(fallbackUrl);return}try{window.close()}catch(e){}setTimeout(function(){window.location.href=fallbackUrl||"index.html"},160)}
+function appExit(fallbackUrl){if(window.closeNativeApp){window.closeNativeApp(fallbackUrl);return}try{window.close()}catch(e){}setTimeout(function(){appNavigate(fallbackUrl||"index.html")},160)}
 async function sharePage(){
   const birth=[
     document.getElementById("birthDate")?.value,
@@ -2189,15 +2224,15 @@ function updateSavedCount(){const icon=document.getElementById("savedIcon");cons
 function closeSavedPanel(){const panel=document.getElementById("savedPanel");if(panel)panel.style.display="none"}
 function toggleSavedPanel(){const panel=document.getElementById("savedPanel");if(!panel)return;if(panel.style.display==="block"){panel.style.display="none"}else{panel.style.display="block";renderSavedList()}}
 function loadSavedDate(dateStr,timeStr,city,isTwin,isTwin3){
-  const next={date:dateStr||"",time:timeStr||"",city:city||"Belgrade",isTwin:!!isTwin,isTwin3:!!isTwin3};
+  const next={date:dateStr||"",time:timeStr||"",city:city||"",isTwin:!!isTwin,isTwin3:!!isTwin3};
   document.getElementById("birthDate").value=next.date;
   document.getElementById("birthTime").value=next.time;
   document.getElementById("birthCity").value=next.city;
+  const savedNext=window.AppSharedState?AppSharedState.saveLastAstroInput(next):{...next,updatedAt:new Date().toISOString()};
   try{
-    sessionStorage.setItem("astroReturnState",JSON.stringify({...next,updatedAt:new Date().toISOString()}));
-    localStorage.setItem("lastAstroInput",JSON.stringify(next));
+    sessionStorage.setItem("astroReturnState",JSON.stringify(savedNext));
+    localStorage.setItem("lastAstroInput",JSON.stringify(savedNext));
   }catch(e){}
-  if(window.AppSharedState)AppSharedState.saveLastAstroInput(next);
   closeSavedPanel();
   calculateTransits();
 }
@@ -2236,6 +2271,13 @@ window.addEventListener('load', () => {
 
 </body>
 </html>
+
+
+
+
+
+
+
 
 
 

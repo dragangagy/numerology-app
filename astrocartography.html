@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -14,6 +14,7 @@
 <script src="app-shared-state.js"></script>
 <script src="world-cities.js"></script>
 <script src="app-notification-open.js"></script>
+<script src="capacitor-bridge.js"></script>
 <style>
 *{
     margin:0;
@@ -54,7 +55,7 @@ body{
 }
 
 .calc-source-status.fallback{
-    color:#f6cb71;
+    color:#ef4444;
 }
 
 .container{
@@ -1461,6 +1462,79 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
 .carto-help-description{color:#94a3b8!important}
 .carto-help-meaning{color:#fff!important}
 .carto-help-description p,.carto-help-meaning p{margin:8px 0}
+
+/* ===== HELP BUTTON STANDARD POSITION ===== */
+.section-title{position:relative!important;}
+.section-title > .carto-help-btn{position:absolute!important;left:8px!important;top:0!important;transform:none!important;margin:0!important;}
+.info-card,.crossing-card,.place-item,.legend-item{position:relative!important;}
+.info-card > .carto-help-btn,.crossing-card > .carto-help-btn,.place-item > .carto-help-btn,.legend-item > .carto-help-btn{position:absolute!important;left:8px!important;top:8px!important;right:auto!important;bottom:auto!important;transform:none!important;margin:0!important;z-index:5!important;}
+.parans-table td:first-child{position:relative!important;padding-left:34px!important;}
+.parans-table td:first-child .carto-help-btn{position:absolute!important;left:6px!important;top:50%!important;transform:translateY(-50%)!important;margin:0!important;}
+
+/* ===== PLANETARY MAP HELP TOP LEFT ===== */
+.planetary-map-card{
+  position:relative!important;
+}
+.planetary-map-card > .section-title{
+  position:static!important;
+  padding:0 28px!important;
+  min-height:24px!important;
+  text-align:center!important;
+}
+.planetary-map-card > .section-title > .carto-help-btn{
+  position:absolute!important;
+  left:2px!important;
+  top:2px!important;
+  transform:none!important;
+  margin:0!important;
+  z-index:8!important;
+}
+
+/* ===== PLANETARY MAP LEGEND HELP ALIGNMENT ===== */
+.planetary-map-card .legend-item{
+  position:relative!important;
+  display:flex!important;
+  align-items:center!important;
+  min-height:30px!important;
+  padding-left:32px!important;
+}
+.planetary-map-card .legend-item > .carto-help-btn{
+  position:absolute!important;
+  left:5px!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+  margin:0!important;
+  z-index:8!important;
+}
+.planetary-map-card .legend-item .planet-check,
+.planetary-map-card .legend-item .legend-color,
+.planetary-map-card .legend-item .legend-text{
+  flex:0 0 auto!important;
+}
+
+/* ===== RECOMMENDED PLACES RATING ALIGNMENT ===== */
+#recommendedPlacesList .place-item{
+  position:relative!important;
+  padding-right:62px!important;
+}
+#recommendedPlacesList .place-item > div:not(.place-rating){
+  width:100%!important;
+  min-width:0!important;
+  padding-right:0!important;
+}
+#recommendedPlacesList .place-rating{
+  position:absolute!important;
+  right:26px!important;
+  top:50%!important;
+  transform:translateY(-50%)!important;
+  width:36px!important;
+  min-width:36px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  text-align:right!important;
+  margin:0!important;
+}
 </style>
 </head>
 <body>
@@ -1550,7 +1624,7 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
     </div>
 
     <!-- PLANETARY MAP -->
-    <div class="card">
+    <div class="card planetary-map-card">
         <div class="section-title">PLANETARY MAP <button class="carto-help-btn" type="button" onclick="openCartoGeneralHelp(event, 'map')" aria-label="Explain planetary map">?</button></div>
 
         <div class="filter-tabs">
@@ -1699,73 +1773,73 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
                 <button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'sun')" aria-label="Explain sun line">?</button>
                 <input type="checkbox" class="planet-check" data-planet="sun" checked onchange="togglePlanetLine('sun')" onclick="event.stopPropagation()">
                 <div class="legend-color" style="background:#FFD700;"></div>
-                <span class="legend-text">☉ Sun</span>
+                <span class="legend-text">&#9737; Sun</span>
             </div>
             <div class="legend-item" onclick="highlightPlanet('moon')">
                 <button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'moon')" aria-label="Explain moon line">?</button>
                 <input type="checkbox" class="planet-check" data-planet="moon" checked onchange="togglePlanetLine('moon')" onclick="event.stopPropagation()">
                 <div class="legend-color" style="background:#e2e8f0;"></div>
-                <span class="legend-text">☽ Moon</span>
+                <span class="legend-text">&#9789; Moon</span>
             </div>
             <div class="legend-item" onclick="highlightPlanet('mercury')">
                 <button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'mercury')" aria-label="Explain mercury line">?</button>
                 <input type="checkbox" class="planet-check" data-planet="mercury" checked onchange="togglePlanetLine('mercury')" onclick="event.stopPropagation()">
                 <div class="legend-color" style="background:#a78bfa;"></div>
-                <span class="legend-text">☿ Mercury</span>
+                <span class="legend-text">&#9791; Mercury</span>
             </div>
             <div class="legend-item" onclick="highlightPlanet('venus')">
                 <button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'venus')" aria-label="Explain venus line">?</button>
                 <input type="checkbox" class="planet-check" data-planet="venus" checked onchange="togglePlanetLine('venus')" onclick="event.stopPropagation()">
                 <div class="legend-color" style="background:#fb7185;"></div>
-                <span class="legend-text">♀ Venus</span>
+                <span class="legend-text">&#9792; Venus</span>
             </div>
             <div class="legend-item" onclick="highlightPlanet('mars')">
                 <button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'mars')" aria-label="Explain mars line">?</button>
                 <input type="checkbox" class="planet-check" data-planet="mars" checked onchange="togglePlanetLine('mars')" onclick="event.stopPropagation()">
                 <div class="legend-color" style="background:#ef4444;"></div>
-                <span class="legend-text">♂ Mars</span>
+                <span class="legend-text">&#9794; Mars</span>
             </div>
             <div class="legend-item" onclick="highlightPlanet('jupiter')">
                 <button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'jupiter')" aria-label="Explain jupiter line">?</button>
                 <input type="checkbox" class="planet-check" data-planet="jupiter" checked onchange="togglePlanetLine('jupiter')" onclick="event.stopPropagation()">
                 <div class="legend-color" style="background:#38bdf8;"></div>
-                <span class="legend-text">♃ Jupiter</span>
+                <span class="legend-text">&#9795; Jupiter</span>
             </div>
             <div class="legend-item" onclick="highlightPlanet('saturn')">
                 <button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'saturn')" aria-label="Explain saturn line">?</button>
                 <input type="checkbox" class="planet-check" data-planet="saturn" checked onchange="togglePlanetLine('saturn')" onclick="event.stopPropagation()">
                 <div class="legend-color" style="background:#475569;"></div>
-                <span class="legend-text">♄ Saturn</span>
+                <span class="legend-text">&#9796; Saturn</span>
             </div>
             <div class="legend-item" onclick="highlightPlanet('uranus')">
                 <button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'uranus')" aria-label="Explain uranus line">?</button>
                 <input type="checkbox" class="planet-check" data-planet="uranus" onchange="togglePlanetLine('uranus')" onclick="event.stopPropagation()">
                 <div class="legend-color" style="background:#22d3ee;"></div>
-                <span class="legend-text">♅ Uranus</span>
+                <span class="legend-text">&#9797; Uranus</span>
             </div>
             <div class="legend-item" onclick="highlightPlanet('neptune')">
                 <button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'neptune')" aria-label="Explain neptune line">?</button>
                 <input type="checkbox" class="planet-check" data-planet="neptune" onchange="togglePlanetLine('neptune')" onclick="event.stopPropagation()">
                 <div class="legend-color" style="background:#818cf8;"></div>
-                <span class="legend-text">♆ Neptune</span>
+                <span class="legend-text">&#9798; Neptune</span>
             </div>
             <div class="legend-item" onclick="highlightPlanet('pluto')">
                 <button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'pluto')" aria-label="Explain pluto line">?</button>
                 <input type="checkbox" class="planet-check" data-planet="pluto" onchange="togglePlanetLine('pluto')" onclick="event.stopPropagation()">
                 <div class="legend-color" style="background:#a855f7;"></div>
-                <span class="legend-text">♇ Pluto</span>
+                <span class="legend-text">&#9799; Pluto</span>
             </div>
             <div class="legend-item" onclick="highlightPlanet('chiron')">
                 <button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'chiron')" aria-label="Explain chiron line">?</button>
                 <input type="checkbox" class="planet-check" data-planet="chiron" onchange="togglePlanetLine('chiron')" onclick="event.stopPropagation()">
                 <div class="legend-color" style="background:#f472b6;"></div>
-                <span class="legend-text">⚷ Chiron</span>
+                <span class="legend-text">&#9911; Chiron</span>
             </div>
             <div class="legend-item" onclick="highlightPlanet('nnode')">
                 <button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'nnode')" aria-label="Explain nnode line">?</button>
                 <input type="checkbox" class="planet-check" data-planet="nnode" onchange="togglePlanetLine('nnode')" onclick="event.stopPropagation()">
                 <div class="legend-color" style="background:#fbbf24;"></div>
-                <span class="legend-text">☊ N.Node</span>
+                <span class="legend-text">&#9738; N.Node</span>
             </div>
         </div>
     </div>
@@ -1784,37 +1858,37 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
             <div class="place-item"><button class="carto-help-btn" type="button" onclick="openCartoPlaceHelp(event, this)" aria-label="Explain recommended place">?</button>
                 <div>
                     <div class="place-name"> New York, USA</div>
-                    <div class="place-lines">☉ Sun MC • ♃ Jupiter AC • ♄ Saturn DC</div>
+                    <div class="place-lines">&#9737; Sun MC � &#9795; Jupiter AC � &#9796; Saturn DC</div>
                 </div>
                 <div class="place-rating">
-                    <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span>
+                    <span class="star">?</span><span class="star">?</span><span class="star">?</span><span class="star">?</span><span class="star empty">?</span>
                 </div>
             </div>
             <div class="place-item"><button class="carto-help-btn" type="button" onclick="openCartoPlaceHelp(event, this)" aria-label="Explain recommended place">?</button>
                 <div>
                     <div class="place-name"> Paris, France</div>
-                    <div class="place-lines">♀ Venus MC • ☽ Moon AC • ☿ Mercury DC</div>
+                    <div class="place-lines">&#9792; Venus MC � &#9789; Moon AC � &#9791; Mercury DC</div>
                 </div>
                 <div class="place-rating">
-                    <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+                    <span class="star">?</span><span class="star">?</span><span class="star">?</span><span class="star">?</span><span class="star">?</span>
                 </div>
             </div>
             <div class="place-item"><button class="carto-help-btn" type="button" onclick="openCartoPlaceHelp(event, this)" aria-label="Explain recommended place">?</button>
                 <div>
                     <div class="place-name"> Tokyo, Japan</div>
-                    <div class="place-lines">♂ Mars MC • ♅ Uranus AC • ♇ Pluto DC</div>
+                    <div class="place-lines">&#9794; Mars MC � &#9797; Uranus AC � &#9799; Pluto DC</div>
                 </div>
                 <div class="place-rating">
-                    <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span><span class="star empty">★</span>
+                    <span class="star">?</span><span class="star">?</span><span class="star">?</span><span class="star empty">?</span><span class="star empty">?</span>
                 </div>
             </div>
             <div class="place-item"><button class="carto-help-btn" type="button" onclick="openCartoPlaceHelp(event, this)" aria-label="Explain recommended place">?</button>
                 <div>
                     <div class="place-name"> Bali, Indonesia</div>
-                    <div class="place-lines">♆ Neptune MC • ⚷ Chiron AC • ☊ N.Node DC</div>
+                    <div class="place-lines">&#9798; Neptune MC � &#9911; Chiron AC � &#9738; N.Node DC</div>
                 </div>
                 <div class="place-rating">
-                    <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star empty">★</span>
+                    <span class="star">?</span><span class="star">?</span><span class="star">?</span><span class="star">?</span><span class="star empty">?</span>
                 </div>
             </div>
         </div>
@@ -1832,51 +1906,51 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
         <div class="carto-collapsible-body">
         <div class="info-grid" id="activeLinesGrid">
             <div class="info-card" id="card-sun" onclick="highlightPlanet('sun')"><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'sun')" aria-label="Explain active line">?</button>
-                <div class="planet"><span class="planet-icon">☉</span> Sun MC</div>
+                <div class="planet"><span class="planet-icon">&#9737;</span> Sun MC</div>
                 <div class="text">Career visibility, confidence, success and leadership energy. Best for professional recognition.</div>
             </div>
             <div class="info-card" id="card-moon" onclick="highlightPlanet('moon')"><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'moon')" aria-label="Explain active line">?</button>
-                <div class="planet"><span class="planet-icon">☽</span> Moon MC</div>
+                <div class="planet"><span class="planet-icon">&#9789;</span> Moon MC</div>
                 <div class="text">Emotional fulfillment, public popularity, nurturing career. Strong connection with the public.</div>
             </div>
             <div class="info-card" id="card-mercury" onclick="highlightPlanet('mercury')"><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'mercury')" aria-label="Explain active line">?</button>
-                <div class="planet"><span class="planet-icon">☿</span> Mercury MC</div>
+                <div class="planet"><span class="planet-icon">&#9791;</span> Mercury MC</div>
                 <div class="text">Communication, writing, teaching, media. Excellent for intellectual work and networking.</div>
             </div>
             <div class="info-card" id="card-venus" onclick="highlightPlanet('venus')"><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'venus')" aria-label="Explain active line">?</button>
-                <div class="planet"><span class="planet-icon">♀</span> Venus AC</div>
+                <div class="planet"><span class="planet-icon">&#9792;</span> Venus AC</div>
                 <div class="text">Love, attraction, beauty, harmony and relationships. Social grace and artistic expression.</div>
             </div>
             <div class="info-card" id="card-mars" onclick="highlightPlanet('mars')"><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'mars')" aria-label="Explain active line">?</button>
-                <div class="planet"><span class="planet-icon">♂</span> Mars MC</div>
+                <div class="planet"><span class="planet-icon">&#9794;</span> Mars MC</div>
                 <div class="text">Drive, ambition, competitive energy. Good for athletics, military, or entrepreneurial ventures.</div>
             </div>
             <div class="info-card" id="card-jupiter" onclick="highlightPlanet('jupiter')"><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'jupiter')" aria-label="Explain active line">?</button>
-                <div class="planet"><span class="planet-icon">♃</span> Jupiter DC</div>
+                <div class="planet"><span class="planet-icon">&#9795;</span> Jupiter DC</div>
                 <div class="text">Growth, luck, expansion and beneficial partnerships. Fortune through others and travel.</div>
             </div>
             <div class="info-card" id="card-saturn" onclick="highlightPlanet('saturn')"><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'saturn')" aria-label="Explain active line">?</button>
-                <div class="planet"><span class="planet-icon">♄</span> Saturn IC</div>
+                <div class="planet"><span class="planet-icon">&#9796;</span> Saturn IC</div>
                 <div class="text">Discipline, karmic lessons, responsibility and structure. Hard work brings lasting results.</div>
             </div>
             <div class="info-card" id="card-uranus" onclick="highlightPlanet('uranus')"><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'uranus')" aria-label="Explain active line">?</button>
-                <div class="planet"><span class="planet-icon">♅</span> Uranus AC</div>
+                <div class="planet"><span class="planet-icon">&#9797;</span> Uranus AC</div>
                 <div class="text">Sudden changes, innovation, freedom, uniqueness. Breakthroughs and unexpected opportunities.</div>
             </div>
             <div class="info-card" id="card-neptune" onclick="highlightPlanet('neptune')"><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'neptune')" aria-label="Explain active line">?</button>
-                <div class="planet"><span class="planet-icon">♆</span> Neptune MC</div>
+                <div class="planet"><span class="planet-icon">&#9798;</span> Neptune MC</div>
                 <div class="text">Spirituality, creativity, inspiration, idealism. Great for arts, healing, and compassion work.</div>
             </div>
             <div class="info-card" id="card-pluto" onclick="highlightPlanet('pluto')"><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'pluto')" aria-label="Explain active line">?</button>
-                <div class="planet"><span class="planet-icon">♇</span> Pluto MC</div>
+                <div class="planet"><span class="planet-icon">&#9799;</span> Pluto MC</div>
                 <div class="text">Transformation, power, deep change, regeneration. Intense career and public influence.</div>
             </div>
             <div class="info-card" id="card-chiron" onclick="highlightPlanet('chiron')"><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'chiron')" aria-label="Explain active line">?</button>
-                <div class="planet"><span class="planet-icon">⚷</span> Chiron AC</div>
+                <div class="planet"><span class="planet-icon">&#9911;</span> Chiron AC</div>
                 <div class="text">Healing, the wounded healer, turning pain into wisdom. Teaching through personal experience.</div>
             </div>
             <div class="info-card" id="card-nnode" onclick="highlightPlanet('nnode')"><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'nnode')" aria-label="Explain active line">?</button>
-                <div class="planet"><span class="planet-icon">☊</span> North Node MC</div>
+                <div class="planet"><span class="planet-icon">&#9738;</span> North Node MC</div>
                 <div class="text">Karmic destiny, soul growth, life purpose. Moving toward your highest potential.</div>
             </div>
         </div>
@@ -1937,16 +2011,16 @@ h1,h2,h3,p,.section-title,.subtitle{margin-top:4px!important;margin-bottom:5px!i
                 <tr><th>Planet</th><th>Rising Longitude</th><th>Culminating Latitude</th><th>Effect</th></tr>
             </thead>
             <tbody>
-                <tr><td><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'sun')" aria-label="Explain Sun paran">?</button> ☉ Sun</td><td>15° E - 45° E</td><td>30° N - 60° N</td><td>Leadership rising</td></tr>
-                <tr><td><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'moon')" aria-label="Explain Moon paran">?</button> ☽ Moon</td><td>60° W - 30° W</td><td>20° S - 20° N</td><td>Emotional tides</td></tr>
-                <tr><td><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'mercury')" aria-label="Explain Mercury paran">?</button> ☿ Mercury</td><td>0° - 30° E</td><td>40° N - 70° N</td><td>Communication hubs</td></tr>
-                <tr><td><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'venus')" aria-label="Explain Venus paran">?</button> ♀ Venus</td><td>90° W - 60° W</td><td>10° N - 40° N</td><td>Love & beauty zones</td></tr>
-                <tr><td><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'mars')" aria-label="Explain Mars paran">?</button> ♂ Mars</td><td>120° E - 150° E</td><td>35° N - 55° N</td><td>Action & drive</td></tr>
-                <tr><td><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'jupiter')" aria-label="Explain Jupiter paran">?</button> ♃ Jupiter</td><td>30° W - 0°</td><td>20° S - 40° N</td><td>Expansion & luck</td></tr>
-                <tr><td><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'saturn')" aria-label="Explain Saturn paran">?</button> ♄ Saturn</td><td>150° E - 180°</td><td>50° N - 70° N</td><td>Discipline & karma</td></tr>
-                <tr><td><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'uranus')" aria-label="Explain Uranus paran">?</button> ♅ Uranus</td><td>45° E - 75° E</td><td>25° N - 55° N</td><td>Innovation bursts</td></tr>
-                <tr><td><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'neptune')" aria-label="Explain Neptune paran">?</button> ♆ Neptune</td><td>75° W - 45° W</td><td>15° S - 35° N</td><td>Dream & illusion</td></tr>
-                <tr><td><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'pluto')" aria-label="Explain Pluto paran">?</button> ♇ Pluto</td><td>135° E - 165° E</td><td>30° S - 30° N</td><td>Deep transformation</td></tr>
+                <tr><td><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'sun')" aria-label="Explain Sun paran">?</button> &#9737; Sun</td><td>15� E - 45� E</td><td>30� N - 60� N</td><td>Leadership rising</td></tr>
+                <tr><td><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'moon')" aria-label="Explain Moon paran">?</button> &#9789; Moon</td><td>60� W - 30� W</td><td>20� S - 20� N</td><td>Emotional tides</td></tr>
+                <tr><td><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'mercury')" aria-label="Explain Mercury paran">?</button> &#9791; Mercury</td><td>0� - 30� E</td><td>40� N - 70� N</td><td>Communication hubs</td></tr>
+                <tr><td><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'venus')" aria-label="Explain Venus paran">?</button> &#9792; Venus</td><td>90� W - 60� W</td><td>10� N - 40� N</td><td>Love & beauty zones</td></tr>
+                <tr><td><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'mars')" aria-label="Explain Mars paran">?</button> &#9794; Mars</td><td>120� E - 150� E</td><td>35� N - 55� N</td><td>Action & drive</td></tr>
+                <tr><td><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'jupiter')" aria-label="Explain Jupiter paran">?</button> &#9795; Jupiter</td><td>30� W - 0�</td><td>20� S - 40� N</td><td>Expansion & luck</td></tr>
+                <tr><td><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'saturn')" aria-label="Explain Saturn paran">?</button> &#9796; Saturn</td><td>150� E - 180�</td><td>50� N - 70� N</td><td>Discipline & karma</td></tr>
+                <tr><td><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'uranus')" aria-label="Explain Uranus paran">?</button> &#9797; Uranus</td><td>45� E - 75� E</td><td>25� N - 55� N</td><td>Innovation bursts</td></tr>
+                <tr><td><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'neptune')" aria-label="Explain Neptune paran">?</button> &#9798; Neptune</td><td>75� W - 45� W</td><td>15� S - 35� N</td><td>Dream & illusion</td></tr>
+                <tr><td><button class="carto-help-btn" type="button" onclick="openCartoPlanetHelp(event, 'pluto')" aria-label="Explain Pluto paran">?</button> &#9799; Pluto</td><td>135� E - 165� E</td><td>30� S - 30� N</td><td>Deep transformation</td></tr>
             </tbody>
         </table>
         </div>
@@ -2331,14 +2405,11 @@ function saveAstroReturnState(date, time, city){
   const params = new URLSearchParams(window.location.search);
   const isTwin = params.get("isTwin") || "false";
   const isTwin3 = params.get("isTwin3") || "false";
+  const astroTransferState = window.AppSharedState
+    ? AppSharedState.saveLastAstroInput({ date, time, city, isTwin: isTwin === "true", isTwin3: isTwin3 === "true" })
+    : { date, time, city, isTwin: isTwin === "true", isTwin3: isTwin3 === "true", updatedAt: new Date().toISOString() };
   sessionStorage.setItem("returningFromChart", "true");
-  sessionStorage.setItem("astroReturnState", JSON.stringify({
-    date: date,
-    time: time,
-    city: city,
-    isTwin: isTwin === "true",
-    isTwin3: isTwin3 === "true"
-  }));
+  sessionStorage.setItem("astroReturnState", JSON.stringify(astroTransferState));
 }
 
 
@@ -2527,12 +2598,12 @@ function loadSavedDate(dateStr, timeStr, city){
   document.getElementById('input').value = dateStr || '';
 
   let timeInput = document.getElementById('timeInput');
-  if(timeInput) timeInput.value = timeStr || '12:00';
+  if(timeInput) timeInput.value = timeStr || (window.AppSharedState && AppSharedState.lastAstroInput() && AppSharedState.lastAstroInput().time) || '';
 
   let cityInput = document.getElementById('cityInput');
-  if(cityInput) cityInput.value = city || 'Belgrade';
+  if(cityInput) cityInput.value = city || (window.AppSharedState && AppSharedState.lastAstroInput() && AppSharedState.lastAstroInput().city) || '';
 
-  if(window.AppSharedState) AppSharedState.saveLastAstroInput({date:dateStr || "", time:timeStr || "12:00", city:city || "Belgrade"});
+  if(window.AppSharedState) AppSharedState.saveLastAstroInput({date:dateStr || "", time:timeStr || "", city:city || ""});
   skipSavePrompt = true;
   toggleSavedPanel();
   autoAnalyzeAstrocartography();
@@ -2882,18 +2953,18 @@ const activeLineText = {
 };
 
 const activeLineSymbols = {
-    sun:'☉',
-    moon:'☽',
-    mercury:'☿',
-    venus:'♀',
-    mars:'♂',
-    jupiter:'♃',
-    saturn:'♄',
-    uranus:'♅',
-    neptune:'♆',
-    pluto:'♇',
-    chiron:'⚷',
-    nnode:'☊'
+    sun:'&#9737;',
+    moon:'&#9789;',
+    mercury:'&#9791;',
+    venus:'&#9792;',
+    mars:'&#9794;',
+    jupiter:'&#9795;',
+    saturn:'&#9796;',
+    uranus:'&#9797;',
+    neptune:'&#9798;',
+    pluto:'&#9799;',
+    chiron:'&#9911;',
+    nnode:'&#9738;'
 };
 
 function cityDistanceToLine(coords, line){
@@ -3713,7 +3784,7 @@ function appCopyText(text, message){if(navigator.clipboard&&window.isSecureConte
 function appCopyTextFallback(text,message){const input=document.createElement("textarea");input.value=text;input.setAttribute("readonly","");input.style.position="fixed";input.style.left="-9999px";document.body.appendChild(input);input.select();try{document.execCommand("copy");if(message)alert(message)}catch(e){alert(text)}document.body.removeChild(input);return Promise.resolve()}
 async function appShare(shareData){try{if(window.Android&&typeof window.Android.share==="function"){window.Android.share(shareData.title||document.title,shareData.text||"",shareData.url||location.href);return}if(window.Capacitor&&window.Capacitor.Plugins&&window.Capacitor.Plugins.Share){await window.Capacitor.Plugins.Share.share(shareData);return}if(navigator.share){await navigator.share(shareData);return}}catch(error){console.warn("Native share failed",error)}await appCopyText(shareData.url||location.href,"Link copied to clipboard.")}
 function appPrintPage(){try{if(window.Android&&typeof window.Android.printPage==="function"){window.Android.printPage();return}window.print()}catch(e){alert("Print is not available in this app view.")}}
-function appExit(fallbackUrl){if(window.closeNativeApp){window.closeNativeApp(fallbackUrl);return}try{window.close()}catch(e){}setTimeout(function(){window.location.href=fallbackUrl||"index.html"},160)}
+function appExit(fallbackUrl){if(window.closeNativeApp){window.closeNativeApp(fallbackUrl);return}try{window.close()}catch(e){}setTimeout(function(){appNavigate(fallbackUrl||"index.html")},160)}
 window.appCopyText=appCopyText;window.appShare=appShare;window.appPrintPage=appPrintPage;window.appExit=appExit;
 const printBtn = document.getElementById("printBtn");
 if(printBtn){
@@ -3848,7 +3919,7 @@ function ensureCartoHelpModal(){
     modal = document.createElement('div');
     modal.id = 'cartoHelpModal';
     modal.className = 'carto-help-modal';
-    modal.innerHTML = '<div class="carto-help-panel"><button class="carto-help-close" type="button" onclick="closeCartoHelp()" aria-label="Close">×</button><h3 id="cartoHelpTitle"></h3><div id="cartoHelpBody"></div></div>';
+    modal.innerHTML = '<div class="carto-help-panel"><button class="carto-help-close" type="button" onclick="closeCartoHelp()" aria-label="Close">X</button><h3 id="cartoHelpTitle"></h3><div id="cartoHelpBody"></div></div>';
     modal.addEventListener('click', function(e){ if(e.target === modal) closeCartoHelp(); });
     document.body.appendChild(modal);
     return modal;
@@ -3922,6 +3993,15 @@ window.openCartoPlaceHelp = openCartoPlaceHelp;
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
 
 
 
