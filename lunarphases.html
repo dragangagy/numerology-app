@@ -2878,6 +2878,82 @@ async function calculateLunarData(date,time,city){
     const illum=Math.round((1-Math.cos(toRad(angle)))/2*100);
     const key=phaseKeyFromAge(age);
     return{utc,jd,sun,moon,age,illum,key,distance,waxing:age<synodicMonth/2,source};
+}
+let preciseLunarContextPromise=null;
+async function lunarLongitudesAtUtc(utc){
+    const jd=julianDay(utc);
+    let sun=fallbackLongitude(jd,"sun"),moon=fallbackLongitude(jd,"moon");
+    const timeout=(label)=>new Promise((_,reject)=>setTimeout(()=>reject(new Error(label+" timed out")),2500));
+    try{
+        if(!preciseLunarContextPromise){
+            preciseLunarContextPromise=(async()=>{
+                const mod=await Promise.race([import("./vendor/swisseph/swisseph-local.js"),timeout("Swiss Ephemeris module")]);
+                const swe=new mod.SwissEphemeris();
+                await Promise.race([swe.init(),timeout("Swiss Ephemeris initialization")]);
+                return{mod,swe};
+            })();
+        }
+        const ctx=await preciseLunarContextPromise;
+        sun=normalize(ctx.swe.calculatePosition(jd,ctx.mod.Planet.Sun,ctx.mod.CalculationFlag.SwissEphemeris).longitude);
+        moon=normalize(ctx.swe.calculatePosition(jd,ctx.mod.Planet.Moon,ctx.mod.CalculationFlag.SwissEphemeris).longitude);
+    }catch(e){
+        preciseLunarContextPromise=null;
+        console.warn("Precise New Moon search using fallback formulas.",e);
+    }
+    return{sun,moon};
+}
+async function signedNewMoonAngleAtUtc(utc){
+    const p=await lunarLongitudesAtUtc(utc);
+    let angle=normalize(p.moon-p.sun);
+    if(angle>180)angle-=360;
+    return angle;
+}
+async function findNextNewMoonUtc(baseUtc){
+    const step=6*3600000;
+    let left=new Date(baseUtc.getTime()+60000);
+    let leftVal=await signedNewMoonAngleAtUtc(left);
+    for(let i=0;i<170;i++){
+        const right=new Date(left.getTime()+step);
+        const rightVal=await signedNewMoonAngleAtUtc(right);
+        if(leftVal<0&&rightVal>=0&&Math.abs(leftVal)<30&&Math.abs(rightVal)<30){
+            let a=left,b=right;
+            for(let j=0;j<36;j++){
+                const mid=new Date((a.getTime()+b.getTime())/2);
+                const midVal=await signedNewMoonAngleAtUtc(mid);
+                if(midVal>=0)b=mid;else a=mid;
+            }
+            return new Date((a.getTime()+b.getTime())/2);
+        }
+        left=right;
+        leftVal=rightVal;
+    }
+    return null;
+}
+async function findPreviousNewMoonUtc(baseUtc){
+    let cursor=new Date(baseUtc.getTime()-40*86400000);
+    let previous=null;
+    for(let i=0;i<3;i++){
+        const next=await findNextNewMoonUtc(cursor);
+        if(!next||next.getTime()>=baseUtc.getTime())break;
+        previous=next;
+        cursor=new Date(next.getTime()+86400000);
+    }
+    return previous;
+}
+async function abundanceNewMoonTargetForNow(baseUtc){
+    const previous=await findPreviousNewMoonUtc(baseUtc);
+    const next=await findNextNewMoonUtc(baseUtc);
+    const now=Date.now();
+    if(previous){
+        const openAt=previous.getTime()-12*3600000;
+        const closeAt=previous.getTime()+12*3600000;
+        if(now>=openAt&&now<=closeAt)return previous;
+    }
+    return next;
+}
+function formatAbundanceNewMoonDate(date,city){
+    const timeZone=cityTimeZone(city||currentResidenceCity());
+    return date.toLocaleDateString("en-US",{timeZone,month:"long",day:"numeric",year:"numeric"})+" "+date.toLocaleTimeString("en-US",{timeZone,hour:"2-digit",minute:"2-digit",hour12:false});
 }function nextPhaseDate(baseDate,age){const targets=[0,7.3826,14.7653,22.1479,29.5306];let delta=targets.find(t=>t>age+.05);if(delta===undefined)delta=synodicMonth;const d=new Date(baseDate.getTime()+(delta-age)*86400000);return d.toLocaleDateString("en-US",{month:"short",day:"numeric"})}
 function lunarSignatureText(data){const s=signOf(data.moon);const phase=phases[data.key].name.toLowerCase();const tone=data.key.includes("waning")?"You process life through release, reflection and emotional wisdom.":data.key.includes("waxing")?"Your emotional rhythm grows through movement, practice and visible progress.":data.key==="full"?"You carry a strong mirror quality: emotions, intuition and relationships tend to become visible and intense.":data.key==="new"?"You carry a private, instinctive rhythm for beginnings, renewal and inner reset.":"Your lunar nature works through turning points, decisions and emotional adjustment.";return"Born under the "+phase+" with Moon in "+s.name+". "+tone+" This is your lunar signature: how your body, memory and intuition naturally keep time."}
 function aspectName(diff){const aspects=[{n:"conjunction",a:0},{n:"sextile",a:60},{n:"square",a:90},{n:"trine",a:120},{n:"opposition",a:180}];let best=aspects.map(x=>({...x,orb:Math.abs(diff-x.a)})).sort((a,b)=>a.orb-b.orb)[0];return best.orb<=10?best:null}
@@ -2904,10 +2980,9 @@ async function renderAbundanceCheck(){
     try{
         const state=getTodayState();
         const data=await calculateLunarData(parseDateString(state.date),parseTimeString(state.time),state.city);
-        let daysUntil=synodicMonth-data.age;
-        if(daysUntil<0.05)daysUntil=synodicMonth;
-        abundanceCountdownTarget=new Date(data.utc.getTime()+daysUntil*86400000);
-        nextEl.textContent="Next New Moon: "+abundanceCountdownTarget.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"})+" "+abundanceCountdownTarget.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:false});
+        abundanceCountdownTarget=await findNextNewMoonUtc(data.utc);
+        if(!abundanceCountdownTarget)throw new Error("New Moon calculation unavailable");
+        nextEl.textContent="Next New Moon: "+formatAbundanceNewMoonDate(abundanceCountdownTarget,state.city);
         updateAbundanceCountdown();
         if(!abundanceCountdownTimer)abundanceCountdownTimer=setInterval(updateAbundanceCountdown,1000);
     }catch(e){
@@ -2981,15 +3056,9 @@ async function updateAbundanceFullMoonLabel(){
     try{
         const state=getTodayState();
         const data=await calculateLunarData(parseDateString(state.date),parseTimeString(state.time),state.city);
-        const lastNewMoon=new Date(data.utc.getTime()-data.age*86400000);
-        let daysUntil=synodicMonth-data.age;
-        if(daysUntil<0.05)daysUntil=synodicMonth;
-        const nextNewMoon=new Date(data.utc.getTime()+daysUntil*86400000);
-        const now=Date.now();
-        const lastOpen=lastNewMoon.getTime()-12*3600000;
-        const lastClose=lastNewMoon.getTime()+12*3600000;
-        abundanceNewMoonTarget=(now>=lastOpen&&now<=lastClose)?lastNewMoon:nextNewMoon;
-        abundanceFullMoonLabel=abundanceNewMoonTarget.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"})+" "+abundanceNewMoonTarget.toLocaleTimeString("en-US",{hour:"2-digit",minute:"2-digit",hour12:false});
+        abundanceNewMoonTarget=await abundanceNewMoonTargetForNow(data.utc);
+        if(!abundanceNewMoonTarget)throw new Error("New Moon calculation unavailable");
+        abundanceFullMoonLabel=formatAbundanceNewMoonDate(abundanceNewMoonTarget,state.city);
     }catch(e){
         abundanceFullMoonLabel="calculation unavailable";
         abundanceNewMoonTarget=null;
@@ -3008,7 +3077,7 @@ function ensureAbundanceCheckModal(){
     modal=document.createElement("div");
     modal.id="abundanceCheckModal";
     modal.className="lunar-help-modal";
-    modal.innerHTML='<div class="lunar-help-panel abundance-check-modal-panel"><button class="lunar-help-close" type="button" onclick="closeAbundanceCheckModal()" aria-label="Close">X</button><h3>ABUNDANCE CHECK</h3><div class="abundance-check-visual"><img src="'+abundanceCheckImageSrc+'" alt="Abundance check template"><div class="abundance-fullmoon-date" id="abundanceFullMoonDate">'+abundanceFullMoonLabel+'</div><div class="abundance-bank-title">BANK OF THE UNIVERSE</div><div class="abundance-check-label" id="abundanceAmountLabel">AMOUNT</div><input class="abundance-check-field" id="abundanceAmount" type="text"><div class="abundance-check-label" id="abundanceReceiverLabel">RECEIVER</div><input class="abundance-check-field" id="abundanceReceiver" type="text"><div class="abundance-check-label" id="abundancePayerLabel">PAYER</div><input class="abundance-check-field" id="abundancePayer" type="text"><div class="abundance-check-label" id="abundanceAccountLabel">ACCOUNT NUMBER</div><input class="abundance-check-field" id="abundanceAccount" type="text"><textarea class="abundance-message-field" id="abundanceMessage" placeholder="Write your abundance intention here"></textarea></div><div class="abundance-modal-actions"><button class="abundance-modal-action-btn" type="button" onclick="saveAbundanceCheck()">SAVE</button><button class="abundance-modal-action-btn" type="button" onclick="editAbundanceCheck()">EDIT</button></div><div class="abundance-modal-status" id="abundanceCheckStatus">Fill the check, then SAVE to unlock download. SEND unlocks 12h before New Moon for 24h.</div></div>';
+    modal.innerHTML='<div class="lunar-help-panel abundance-check-modal-panel"><button class="lunar-help-close" type="button" onclick="closeAbundanceCheckModal()" aria-label="Close">X</button><h3>ABUNDANCE CHECK</h3><div class="abundance-check-visual"><img src="'+abundanceCheckImageSrc+'" alt="Abundance check template"><div class="abundance-fullmoon-date" id="abundanceFullMoonDate">'+abundanceFullMoonLabel+'</div><div class="abundance-bank-title">BANK OF THE UNIVERSE</div><div class="abundance-check-label" id="abundanceAmountLabel">AMOUNT</div><input class="abundance-check-field" id="abundanceAmount" type="text"><div class="abundance-check-label" id="abundanceReceiverLabel">RECEIVER</div><input class="abundance-check-field" id="abundanceReceiver" type="text"><div class="abundance-check-label" id="abundancePayerLabel">PAYER</div><input class="abundance-check-field" id="abundancePayer" type="text"><div class="abundance-check-label" id="abundanceAccountLabel">ACCOUNT NUMBER</div><input class="abundance-check-field" id="abundanceAccount" type="text"><textarea class="abundance-message-field" id="abundanceMessage" placeholder="Write your abundance intention here"></textarea></div><div class="abundance-modal-actions"><button class="abundance-modal-action-btn" type="button" onclick="saveAbundanceCheck()">SAVE</button><button class="abundance-modal-action-btn" type="button" onclick="editAbundanceCheck()">EDIT</button></div><div class="abundance-modal-status" id="abundanceCheckStatus">Fill out the check, then tap SAVE. DOWNLOAD unlocks after saving; SEND opens 12h before the New Moon and stays available for 24h.</div></div>';
     modal.addEventListener("click",function(e){if(e.target===modal)closeAbundanceCheckModal()});
     document.body.appendChild(modal);
     return modal;
@@ -3045,7 +3114,7 @@ async function writeAbundanceCheck(){
     loadAbundanceFields(saved||defaultAbundanceCheckData());
     setAbundanceFieldsReadonly(!!saved);
     const status=document.getElementById("abundanceCheckStatus");
-    if(status)status.textContent=saved?"Saved check is ready. "+abundanceSendWindowState().message:"Fill the check, then SAVE to unlock download. SEND unlocks 12h before New Moon for 24h.";
+    if(status)status.textContent=saved?"Saved check is ready. "+abundanceSendWindowState().message:"Fill out the check, then tap SAVE. DOWNLOAD unlocks after saving; SEND opens 12h before the New Moon and stays available for 24h.";
     modal.style.display="flex";
     if(!saved)setTimeout(()=>document.getElementById("abundanceAmount")?.focus(),50);
 }
@@ -3055,7 +3124,7 @@ function closeAbundanceCheckModal(){
 }
 function saveAbundanceCheck(){
     const data=readAbundanceFields();
-    if(!data.amount&&!data.receiver&&!data.payer&&!data.account&&!data.message){alert("Fill the check first.");return;}
+    if(!data.amount&&!data.receiver&&!data.payer&&!data.account&&!data.message){alert("Fill out the check first.");return;}
     setSavedAbundanceCheck(data);
     setAbundanceFieldsReadonly(true);
     const status=document.getElementById("abundanceCheckStatus");
