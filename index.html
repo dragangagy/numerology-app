@@ -2085,6 +2085,70 @@ body {
   box-shadow:0 0 15px rgba(56,189,248,0.4);
 }
 
+
+.owner-custom-city-link{
+  display:inline-block;
+  border:0;
+  background:transparent;
+  padding:0;
+  text-align:left;
+  margin-top:6px;
+  color:#ff4d4d;
+  font-size:11px;
+  font-weight:800;
+  text-decoration:underline;
+  cursor:pointer;
+}
+
+.owner-custom-city-panel{
+  display:none;
+  margin-top:8px;
+  padding:8px;
+  border:1px solid rgba(239,68,68,0.65);
+  border-radius:8px;
+  background:rgba(127,29,29,0.18);
+  gap:6px;
+}
+
+.owner-custom-city-panel.active{
+  display:grid;
+}
+
+.owner-custom-city-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+}
+
+.owner-custom-city-grid input,
+.owner-custom-city-panel input{
+  width:100%;
+  background:#0f172a;
+  border:1px solid rgba(239,68,68,0.65);
+  border-radius:8px;
+  color:white;
+  padding:7px;
+  font-size:11px;
+  outline:none;
+}
+
+.owner-custom-city-note{
+  color:#fca5a5;
+  font-size:10px;
+  line-height:1.25;
+}
+
+.owner-custom-city-save{
+  justify-self:end;
+  border:1px solid #ff4d4d;
+  border-radius:8px;
+  background:rgba(239,68,68,0.2);
+  color:#fff;
+  padding:7px 12px;
+  font-size:11px;
+  font-weight:800;
+  cursor:pointer;
+}
 .profile-check-row{
   display:flex;
   align-items:center;
@@ -4657,6 +4721,50 @@ function syncOwnerCityCascadeFromInput(prefix, inputId){
   if(index < 0) index = list.findIndex(item => String(item.ascii || item.name).toLowerCase() === foundName || String(item.name || '').toLowerCase() === foundName);
   if(index >= 0) city.value = String(index);
 }
+
+function ownerCustomCityTimezone(){
+  try{return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";}catch(e){return "UTC";}
+}
+
+function toggleOwnerCustomCity(prefix){
+  const panel=document.getElementById(prefix+'CustomCityPanel');
+  if(!panel) return;
+  panel.classList.toggle('active');
+  const tz=document.getElementById(prefix+'CustomTz');
+  if(tz && !tz.value.trim()) tz.value=ownerCustomCityTimezone();
+}
+
+function ownerLocalCustomCityFallbackAdd(city){
+  const key='numerology_custom_cities';
+  let list=[];
+  try{list=JSON.parse(localStorage.getItem(key)||'[]');if(!Array.isArray(list)) list=[];}catch(e){list=[];}
+  const label=String(city.displayName||city.name||'').trim().toLowerCase();
+  list=list.filter(item=>String(item.displayName||item.name||'').trim().toLowerCase()!==label);
+  list.unshift(city);
+  localStorage.setItem(key,JSON.stringify(list.slice(0,50)));
+  return city;
+}
+
+function saveOwnerCustomCity(prefix,inputId){
+  const nameEl=document.getElementById(prefix+'CustomName');
+  const latEl=document.getElementById(prefix+'CustomLat');
+  const lonEl=document.getElementById(prefix+'CustomLon');
+  const tzEl=document.getElementById(prefix+'CustomTz');
+  const name=String(nameEl&&nameEl.value||'').trim();
+  const lat=Number(String(latEl&&latEl.value||'').replace(',','.'));
+  const lon=Number(String(lonEl&&lonEl.value||'').replace(',','.'));
+  const tz=String(tzEl&&tzEl.value||'').trim()||ownerCustomCityTimezone();
+  if(!name || !Number.isFinite(lat) || !Number.isFinite(lon) || lat<-90 || lat>90 || lon<-180 || lon>180){
+    alert('Enter city name, latitude and longitude.');
+    return;
+  }
+  const city={custom:true,local:true,name,ascii:name,displayName:name,country:'CUSTOM',countryName:'Custom local city',continent:'LOCAL',continentName:'This device only',admin1:'Local',lat,lon,tz};
+  const saved=(window.AppCustomCities&&typeof AppCustomCities.add==='function')?AppCustomCities.add(city):ownerLocalCustomCityFallbackAdd(city);
+  selectCityFor(inputId,prefix+'CityDropdown',saved);
+  const panel=document.getElementById(prefix+'CustomCityPanel');
+  if(panel) panel.classList.remove('active');
+  alert(name+' saved locally on this device.');
+}
 function cityAutocompleteMatches(value){
   if(window.WorldCities && typeof WorldCities.searchCities === "function") return WorldCities.searchCities(value, 12);
   const val = String(value || "").toLowerCase();
@@ -4701,12 +4809,14 @@ function renderCityAutocomplete(dropdown, inputId, dropdownId, matches){
     const title = document.createElement("div");
     title.textContent = cityAutocompleteTitle(city);
     title.style.fontWeight = "700";
+    const isCustomCity = city && typeof city === "object" && (city.custom || city.local);
+    if(isCustomCity) title.style.color = "#ff4d4d";
     const metaText = cityAutocompleteMeta(city);
     row.appendChild(title);
     if(metaText){
       const meta = document.createElement("div");
       meta.textContent = metaText;
-      meta.style.cssText = "font-size:10px;color:#94a3b8;margin-top:3px;";
+      meta.style.cssText = "font-size:10px;color:" + (isCustomCity ? "#fca5a5" : "#94a3b8") + ";margin-top:3px;";
       row.appendChild(meta);
     }
     row.addEventListener("mouseenter", () => { row.style.background = "#0f172a"; });
@@ -5781,6 +5891,33 @@ function calculateTodayPythagorean(){
 }
 
 
+function showPythagoreanDaySelectionNotice(monthIndex, year){
+  const label = document.getElementById("pythLabel");
+  const code = document.getElementById("todayPythCode");
+  const yearEl = document.getElementById("yearPythCode");
+  const monthEl = document.getElementById("monthPythCode");
+  const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const monthNumber = parseInt(monthIndex) + 1;
+  const selectedYear = parseInt(year);
+  const base = getPythagoreanBase();
+
+  if(base[0] === 0 && base[1] === 0 && base[2] === 0){
+    if(label) label.innerText = "Enter a valid birth date first.";
+    if(code) code.innerText = "0";
+    if(yearEl) yearEl.innerText = "0";
+    if(monthEl) monthEl.innerText = "0";
+    return;
+  }
+
+  const yr = reduce(selectedYear);
+  const yearCode = `${reduce(base[0] + yr)}${reduce(base[1] + yr)}${reduce(base[2] + yr)}`;
+  const monthCode = `${reduce(base[0] + yr + monthNumber)}${reduce(base[1] + yr + monthNumber)}${reduce(base[2] + yr + monthNumber)}`;
+
+  if(label) label.innerText = `You have not selected a specific day. Choose a day in ${months[parseInt(monthIndex)]} ${selectedYear}.`;
+  if(code) code.innerText = "--";
+  if(yearEl) yearEl.innerText = yearCode;
+  if(monthEl) monthEl.innerText = monthCode;
+}
 function openAbout(){
   document.body.classList.add("detail-active");
   showTab("about");
@@ -6150,16 +6287,20 @@ html += `
 
   // promene
   monthSelect.onchange = ()=>{
-    renderCalendar(parseInt(monthSelect.value), parseInt(yearSelect.value));
+    const selectedMonth = parseInt(monthSelect.value);
+    const selectedYear = parseInt(yearSelect.value);
+    renderCalendar(selectedMonth, selectedYear);
     setTimeout(() => {
-      calculateTodayPythagorean();
+      showPythagoreanDaySelectionNotice(selectedMonth, selectedYear);
     }, 100);
   };
 
   yearSelect.onchange = ()=>{
-    renderCalendar(parseInt(monthSelect.value), parseInt(yearSelect.value));
+    const selectedMonth = parseInt(monthSelect.value);
+    const selectedYear = parseInt(yearSelect.value);
+    renderCalendar(selectedMonth, selectedYear);
     setTimeout(() => {
-      calculateTodayPythagorean();
+      showPythagoreanDaySelectionNotice(selectedMonth, selectedYear);
     }, 100);
   };
 }
@@ -10084,6 +10225,17 @@ function openAstro(){
       </div>
       <input type="text" id="ownerBirthCity" placeholder="City of birth" autocomplete="off">
             <div class="owner-city-dropdown" id="ownerBirthCityDropdown"></div>
+            <button type="button" class="owner-custom-city-link" onclick="toggleOwnerCustomCity('ownerBirth')">Click here if you did not find your city in the list</button>
+            <div class="owner-custom-city-panel" id="ownerBirthCustomCityPanel">
+              <input type="text" id="ownerBirthCustomName" placeholder="City name">
+              <div class="owner-custom-city-grid">
+                <input type="text" id="ownerBirthCustomLat" placeholder="Latitude">
+                <input type="text" id="ownerBirthCustomLon" placeholder="Longitude">
+              </div>
+              <input type="text" id="ownerBirthCustomTz" placeholder="Time zone, e.g. Europe/Belgrade">
+              <div class="owner-custom-city-note">Saved only on this device. It will appear first in red in city search.</div>
+              <button type="button" class="owner-custom-city-save" onclick="saveOwnerCustomCity('ownerBirth','ownerBirthCity')">SAVE CITY</button>
+            </div>
           </div>
         </div>
         <div class="profile-field full">
@@ -10096,6 +10248,17 @@ function openAstro(){
       </div>
       <input type="text" id="ownerCurrentCity" placeholder="Current city" autocomplete="off">
             <div class="owner-city-dropdown" id="ownerCurrentCityDropdown"></div>
+            <button type="button" class="owner-custom-city-link" onclick="toggleOwnerCustomCity('ownerCurrent')">Click here if you did not find your city in the list</button>
+            <div class="owner-custom-city-panel" id="ownerCurrentCustomCityPanel">
+              <input type="text" id="ownerCurrentCustomName" placeholder="City name">
+              <div class="owner-custom-city-grid">
+                <input type="text" id="ownerCurrentCustomLat" placeholder="Latitude">
+                <input type="text" id="ownerCurrentCustomLon" placeholder="Longitude">
+              </div>
+              <input type="text" id="ownerCurrentCustomTz" placeholder="Time zone, e.g. Europe/Belgrade">
+              <div class="owner-custom-city-note">Saved only on this device. It will appear first in red in city search.</div>
+              <button type="button" class="owner-custom-city-save" onclick="saveOwnerCustomCity('ownerCurrent','ownerCurrentCity')">SAVE CITY</button>
+            </div>
           </div>
         </div>
       </div>

@@ -80,3 +80,95 @@
 })();
 
 
+
+;(function(){
+  var KEY='numerology_custom_cities';
+  function safeList(){
+    try{
+      var parsed=JSON.parse(localStorage.getItem(KEY)||'[]');
+      if(!Array.isArray(parsed)) return [];
+      return parsed.map(normalizeCity).filter(Boolean);
+    }catch(e){return []}
+  }
+  function saveList(list){
+    try{localStorage.setItem(KEY,JSON.stringify((list||[]).map(normalizeCity).filter(Boolean).slice(0,50)));}catch(e){}
+  }
+  function fallbackTimeZone(){
+    try{return Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC';}catch(e){return 'UTC'}
+  }
+  function normalizeCity(city){
+    if(!city) return null;
+    var name=String(city.displayName||city.name||city.ascii||'').trim();
+    var lat=Number(city.lat);
+    var lon=Number(city.lon);
+    if(!name||!isFinite(lat)||!isFinite(lon)) return null;
+    return {
+      custom:true,
+      local:true,
+      name:name,
+      ascii:name,
+      displayName:name,
+      country:'CUSTOM',
+      countryName:'Custom local city',
+      continent:'LOCAL',
+      continentName:'This device only',
+      admin1:'Local',
+      lat:lat,
+      lon:lon,
+      tz:String(city.tz||'').trim()||fallbackTimeZone()
+    };
+  }
+  function norm(value){return String(value||'').trim().toLowerCase();}
+  function base(value){return norm(String(value||'').split(',')[0]);}
+  function findCustom(value){
+    var q=norm(value), b=base(value);
+    if(!q) return null;
+    var list=safeList();
+    for(var i=0;i<list.length;i++){
+      var city=list[i];
+      var names=[city.displayName,city.name,city.ascii].map(norm);
+      if(names.indexOf(q)>=0 || names.indexOf(b)>=0) return city;
+    }
+    return null;
+  }
+  function searchCustom(value,limit){
+    var q=norm(value), n=limit||12;
+    if(!q) return [];
+    return safeList().filter(function(city){return norm(city.displayName||city.name).indexOf(q)>=0;}).slice(0,n);
+  }
+  function addCustom(city){
+    var normalized=normalizeCity(city);
+    if(!normalized) return null;
+    var id=norm(normalized.displayName||normalized.name);
+    var list=safeList().filter(function(item){return norm(item.displayName||item.name)!==id;});
+    list.unshift(normalized);
+    saveList(list);
+    return normalized;
+  }
+  var wc=window.WorldCities;
+  if(wc && !wc.__customCitiesPatched){
+    var originalFind=typeof wc.find==='function'?wc.find.bind(wc):null;
+    var originalSearch=typeof wc.searchCities==='function'?wc.searchCities.bind(wc):null;
+    var originalChoice=typeof wc.choiceName==='function'?wc.choiceName.bind(wc):null;
+    var originalDisplay=typeof wc.displayName==='function'?wc.displayName.bind(wc):null;
+    var originalLabel=typeof wc.cityLabel==='function'?wc.cityLabel.bind(wc):null;
+    wc.find=function(value){return findCustom(value)||(originalFind?originalFind(value):null);};
+    wc.searchCities=function(value,limit){
+      var n=limit||12;
+      var custom=searchCustom(value,n);
+      var rest=originalSearch?originalSearch(value,n):[];
+      var seen={};
+      return custom.concat(rest||[]).filter(function(city){
+        var key=norm((city&&typeof city==='object')?(city.displayName||city.name||city.ascii):city);
+        if(!key||seen[key]) return false;
+        seen[key]=true;
+        return true;
+      }).slice(0,n);
+    };
+    wc.choiceName=function(city){return city&&city.custom?city.displayName:(originalChoice?originalChoice(city):String(city||''));};
+    wc.displayName=function(city){return city&&city.custom?city.displayName:(originalDisplay?originalDisplay(city):String(city||''));};
+    wc.cityLabel=function(city){return city&&city.custom?city.displayName:(originalLabel?originalLabel(city):String(city||''));};
+    wc.__customCitiesPatched=true;
+  }
+  window.AppCustomCities={list:safeList,find:findCustom,search:searchCustom,add:addCustom,save:saveList};
+})();
