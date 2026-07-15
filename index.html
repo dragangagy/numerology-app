@@ -299,7 +299,7 @@ html.portal-arrive-pending body::before{
 
 .season-content.book-fan{
   position:relative;
-  width:min(100%,390px);
+  width:min(100%,350px);
   height:clamp(300px,82vw,350px);
   margin:8px auto 0;
 }
@@ -317,15 +317,15 @@ html.portal-arrive-pending body::before{
   border-radius:8px;
 }
 
-.season-content.book-fan a:nth-child(1){--deal-final:translateX(clamp(-136px,-35vw,-112px)) translateY(22px) rotate(-30deg);transform:var(--deal-final)}
-.season-content.book-fan a:nth-child(2){--deal-final:translateX(clamp(-106px,-27vw,-88px)) translateY(7px) rotate(-22deg);transform:var(--deal-final)}
-.season-content.book-fan a:nth-child(3){--deal-final:translateX(clamp(-76px,-19vw,-64px)) translateY(-4px) rotate(-14deg);transform:var(--deal-final)}
-.season-content.book-fan a:nth-child(4){--deal-final:translateX(clamp(-46px,-11vw,-38px)) translateY(-11px) rotate(-6deg);transform:var(--deal-final)}
-.season-content.book-fan a:nth-child(5){--deal-final:translateX(clamp(-16px,-3vw,-10px)) translateY(-13px) rotate(2deg);transform:var(--deal-final)}
-.season-content.book-fan a:nth-child(6){--deal-final:translateX(clamp(14px,5vw,18px)) translateY(-11px) rotate(10deg);transform:var(--deal-final)}
-.season-content.book-fan a:nth-child(7){--deal-final:translateX(clamp(44px,13vw,46px)) translateY(-4px) rotate(18deg);transform:var(--deal-final)}
-.season-content.book-fan a:nth-child(8){--deal-final:translateX(clamp(74px,21vw,74px)) translateY(7px) rotate(25deg);transform:var(--deal-final)}
-.season-content.book-fan a:nth-child(9){--deal-final:translateX(clamp(104px,29vw,102px)) translateY(22px) rotate(32deg);transform:var(--deal-final)}
+.season-content.book-fan a:nth-child(1){--deal-final:translateX(clamp(-116px,-30vw,-96px)) translateY(22px) rotate(-27deg);transform:var(--deal-final)}
+.season-content.book-fan a:nth-child(2){--deal-final:translateX(clamp(-90px,-23vw,-75px)) translateY(7px) rotate(-20deg);transform:var(--deal-final)}
+.season-content.book-fan a:nth-child(3){--deal-final:translateX(clamp(-65px,-16vw,-54px)) translateY(-4px) rotate(-13deg);transform:var(--deal-final)}
+.season-content.book-fan a:nth-child(4){--deal-final:translateX(clamp(-39px,-9vw,-32px)) translateY(-11px) rotate(-6deg);transform:var(--deal-final)}
+.season-content.book-fan a:nth-child(5){--deal-final:translateX(clamp(-12px,-2vw,-8px)) translateY(-13px) rotate(2deg);transform:var(--deal-final)}
+.season-content.book-fan a:nth-child(6){--deal-final:translateX(clamp(12px,4vw,15px)) translateY(-11px) rotate(9deg);transform:var(--deal-final)}
+.season-content.book-fan a:nth-child(7){--deal-final:translateX(clamp(37px,11vw,39px)) translateY(-4px) rotate(16deg);transform:var(--deal-final)}
+.season-content.book-fan a:nth-child(8){--deal-final:translateX(clamp(63px,18vw,63px)) translateY(7px) rotate(22deg);transform:var(--deal-final)}
+.season-content.book-fan a:nth-child(9){--deal-final:translateX(clamp(88px,25vw,87px)) translateY(22px) rotate(28deg);transform:var(--deal-final)}
 
 .season-content.book-fan a.active,
 .season-content.book-fan a:hover{
@@ -2121,7 +2121,8 @@ body {
 }
 
 .owner-custom-city-grid input,
-.owner-custom-city-panel input{
+.owner-custom-city-panel input,
+.owner-custom-city-panel select{
   width:100%;
   background:#0f172a;
   border:1px solid rgba(239,68,68,0.65);
@@ -3608,8 +3609,16 @@ onclick="appNavigate('free.pdf')">
     font-size:32px;
     font-weight:bold;
     color:#FFD700;
-    margin-bottom:15px;">
+    margin-bottom:6px;">
     0
+  </div>
+
+  <div id="pythCycleLine" style="
+    font-size:11px;
+    color:#94a3b8;
+    margin-bottom:12px;
+    line-height:1.35;">
+    Main -> Year -> Month -> Day
   </div>
 
   <!-- CODE FOR YEAR -->
@@ -5831,6 +5840,34 @@ function markAspectInPyramid(steps){
 }
 
 
+function pythagoreanCodeFromParts(parts){
+  return `${parts[0]}${parts[1]}${parts[2]}`;
+}
+
+function addPythagoreanStep(parts, value){
+  const step = reduce(value);
+  return parts.map(part => reduce(part + step));
+}
+
+function pythagoreanCycleCodes(base, year, month, day){
+  const mainParts = [reduce(base[0]), reduce(base[1]), reduce(base[2])];
+  const yearParts = addPythagoreanStep(mainParts, year);
+  const monthParts = addPythagoreanStep(yearParts, month);
+  const dayParts = addPythagoreanStep(monthParts, day);
+  return {
+    main: pythagoreanCodeFromParts(mainParts),
+    year: pythagoreanCodeFromParts(yearParts),
+    month: pythagoreanCodeFromParts(monthParts),
+    day: pythagoreanCodeFromParts(dayParts)
+  };
+}
+
+function updatePythagoreanCycleLine(codes){
+  const line = document.getElementById("pythCycleLine");
+  if(line && codes){
+    line.innerText = `Main ${codes.main} -> Year ${codes.year} -> Month ${codes.month} -> Day ${codes.day}`;
+  }
+}
 function calculateTodayPythagorean(){
 
   // Use selected month/year from dropdowns if available, otherwise use today
@@ -5856,38 +5893,12 @@ function calculateTodayPythagorean(){
     return;
   }
 
-  let yr = reduce(y);
-  let mn = reduce(m);
-  let dy = reduce(d);
+  const codes = pythagoreanCycleCodes(base, y, m, d);
 
-  // KOD ZA GODINU (base + godina)
-  let yearC1 = reduce(base[0] + yr);
-  let yearC2 = reduce(base[1] + yr);
-  let yearC3 = reduce(base[2] + yr);
-  let yearCode = `${yearC1}${yearC2}${yearC3}`;
-
-  // KOD ZA MESEC (base + godina + mesec)
-  let monthC1 = reduce(base[0] + yr + m);
-  let monthC2 = reduce(base[1] + yr + m);
-  let monthC3 = reduce(base[2] + yr + m);
-  let monthCode = `${monthC1}${monthC2}${monthC3}`;
-
-  // KOD ZA DAN (base + dan)
-  let dayC1 = reduce(base[0] + dy);
-  let dayC2 = reduce(base[1] + dy);
-  let dayC3 = reduce(base[2] + dy);
-  let dayCode = `${dayC1}${dayC2}${dayC3}`;
-
-  // GLAVNI KOD (base + godina + mesec + dan)
-  let c1 = reduce(base[0] + yr + mn + dy);
-  let c2 = reduce(base[1] + yr + mn + dy);
-  let c3 = reduce(base[2] + yr + mn + dy);
-  let fullCode = `${c1}${c2}${c3}`;
-
-  // PRIKAL?I SVE
-  document.getElementById("todayPythCode").innerText = fullCode;
-  document.getElementById("yearPythCode").innerText = yearCode;
-  document.getElementById("monthPythCode").innerText = monthCode;
+  document.getElementById("todayPythCode").innerText = codes.day;
+  document.getElementById("yearPythCode").innerText = codes.year;
+  document.getElementById("monthPythCode").innerText = codes.month;
+  updatePythagoreanCycleLine(codes);
 }
 
 
@@ -5909,14 +5920,14 @@ function showPythagoreanDaySelectionNotice(monthIndex, year){
     return;
   }
 
-  const yr = reduce(selectedYear);
-  const yearCode = `${reduce(base[0] + yr)}${reduce(base[1] + yr)}${reduce(base[2] + yr)}`;
-  const monthCode = `${reduce(base[0] + yr + monthNumber)}${reduce(base[1] + yr + monthNumber)}${reduce(base[2] + yr + monthNumber)}`;
+  const codes = pythagoreanCycleCodes(base, selectedYear, monthNumber, 0);
+
 
   if(label) label.innerText = `You have not selected a specific day. Choose a day in ${months[parseInt(monthIndex)]} ${selectedYear}.`;
   if(code) code.innerText = "--";
-  if(yearEl) yearEl.innerText = yearCode;
-  if(monthEl) monthEl.innerText = monthCode;
+  if(yearEl) yearEl.innerText = codes.year;
+  if(monthEl) monthEl.innerText = codes.month;
+  updatePythagoreanCycleLine({main: codes.main, year: codes.year, month: codes.month, day: "--"});
 }
 function openAbout(){
   document.body.classList.add("detail-active");
@@ -6078,38 +6089,16 @@ function selectPythDay(year, month, day, code){
     return;
   }
 
-  let yr = reduce(year);
-  let mn = reduce(parseInt(month) + 1);
-  let dy = reduce(day);
-
-  // KOD ZA GODINU
-  let yearC1 = reduce(base[0] + yr);
-  let yearC2 = reduce(base[1] + yr);
-  let yearC3 = reduce(base[2] + yr);
-  let yearCode = `${yearC1}${yearC2}${yearC3}`;
-
-  // KOD ZA MESEC
-  let monthC1 = reduce(base[0] + yr + mn);
-  let monthC2 = reduce(base[1] + yr + mn);
-  let monthC3 = reduce(base[2] + yr + mn);
-  let monthCode = `${monthC1}${monthC2}${monthC3}`;
-
-  // KOD ZA DAN
-  let dayC1 = reduce(base[0] + dy);
-  let dayC2 = reduce(base[1] + dy);
-  let dayC3 = reduce(base[2] + dy);
-  let dayCode = `${dayC1}${dayC2}${dayC3}`;
-
-  // GLAVNI KOD
-  let c1 = reduce(base[0] + yr + mn + dy);
-  let c2 = reduce(base[1] + yr + mn + dy);
-  let c3 = reduce(base[2] + yr + mn + dy);
-  let fullCode = `${c1}${c2}${c3}`;
+  const codes = pythagoreanCycleCodes(base, year, parseInt(month) + 1, day);
+  const yearCode = codes.year;
+  const monthCode = codes.month;
+  const fullCode = codes.day;
 
   // PRIKAL?I SVE
   document.getElementById("todayPythCode").innerText = fullCode;
   document.getElementById("yearPythCode").innerText = yearCode;
   document.getElementById("monthPythCode").innerText = monthCode;
+  updatePythagoreanCycleLine(codes);
 
   // aLluriraj label
   let label = document.getElementById("pythLabel");
@@ -6231,21 +6220,8 @@ for(let y = 1950; y <= 2050; y++){
 
   let base = getPythagoreanBase();
 
-// GODINA
-let y = reduce(year);
-
-// MESEC (VAL?NO: +1 jer je 0-based)
-let m = reduce(month + 1);
-
-// DAN
-let dayVal = reduce(d);
-
-// VERTIKALNO SABIRANJE
-let c1 = reduce(base[0] + y + m + dayVal);
-let c2 = reduce(base[1] + y + m + dayVal);
-let c3 = reduce(base[2] + y + m + dayVal);
-
-let finalNumber = `${c1}${c2}${c3}`;
+// SLOJEVITO: main -> year -> month -> day
+let finalNumber = pythagoreanCycleCodes(base, year, month + 1, d).day;
 
 // HTML BLOK
 let dayId = `day-${year}-${month}-${d}`;
@@ -10227,13 +10203,43 @@ function openAstro(){
             <div class="owner-city-dropdown" id="ownerBirthCityDropdown"></div>
             <button type="button" class="owner-custom-city-link" onclick="toggleOwnerCustomCity('ownerBirth')">Click here if you did not find your city in the list</button>
             <div class="owner-custom-city-panel" id="ownerBirthCustomCityPanel">
-              <input type="text" id="ownerBirthCustomName" placeholder="City name">
+              <input type="text" id="ownerBirthCustomName" placeholder="City name, e.g. Belgrade">
               <div class="owner-custom-city-grid">
-                <input type="text" id="ownerBirthCustomLat" placeholder="Latitude">
-                <input type="text" id="ownerBirthCustomLon" placeholder="Longitude">
+                <input type="text" id="ownerBirthCustomLat" placeholder="Latitude, e.g. 44.7866">
+                <input type="text" id="ownerBirthCustomLon" placeholder="Longitude, e.g. 20.4489">
               </div>
-              <input type="text" id="ownerBirthCustomTz" placeholder="Time zone, e.g. Europe/Belgrade">
-              <div class="owner-custom-city-note">Saved only on this device. It will appear first in red in city search.</div>
+              <select id="ownerBirthCustomTz" aria-label="Time zone offset">
+                <option value="">Auto local time zone</option>
+                <option value="Europe/Belgrade">Europe/Belgrade</option>
+                <option value="Etc/GMT+12">UTC-12</option>
+                <option value="Etc/GMT+11">UTC-11</option>
+                <option value="Etc/GMT+10">UTC-10</option>
+                <option value="Etc/GMT+9">UTC-9</option>
+                <option value="Etc/GMT+8">UTC-8</option>
+                <option value="Etc/GMT+7">UTC-7</option>
+                <option value="Etc/GMT+6">UTC-6</option>
+                <option value="Etc/GMT+5">UTC-5</option>
+                <option value="Etc/GMT+4">UTC-4</option>
+                <option value="Etc/GMT+3">UTC-3</option>
+                <option value="Etc/GMT+2">UTC-2</option>
+                <option value="Etc/GMT+1">UTC-1</option>
+                <option value="Etc/GMT">UTC+0</option>
+                <option value="Etc/GMT-1">UTC+1</option>
+                <option value="Etc/GMT-2">UTC+2</option>
+                <option value="Etc/GMT-3">UTC+3</option>
+                <option value="Etc/GMT-4">UTC+4</option>
+                <option value="Etc/GMT-5">UTC+5</option>
+                <option value="Etc/GMT-6">UTC+6</option>
+                <option value="Etc/GMT-7">UTC+7</option>
+                <option value="Etc/GMT-8">UTC+8</option>
+                <option value="Etc/GMT-9">UTC+9</option>
+                <option value="Etc/GMT-10">UTC+10</option>
+                <option value="Etc/GMT-11">UTC+11</option>
+                <option value="Etc/GMT-12">UTC+12</option>
+                <option value="Etc/GMT-13">UTC+13</option>
+                <option value="Etc/GMT-14">UTC+14</option>
+              </select>
+              <div class="owner-custom-city-note">Use decimal coordinates: Example: Belgrade, 44.7866, 20.4489, Europe/Belgrade. Saved only on this device and shown first in red.</div>
               <button type="button" class="owner-custom-city-save" onclick="saveOwnerCustomCity('ownerBirth','ownerBirthCity')">SAVE CITY</button>
             </div>
           </div>
@@ -10250,13 +10256,43 @@ function openAstro(){
             <div class="owner-city-dropdown" id="ownerCurrentCityDropdown"></div>
             <button type="button" class="owner-custom-city-link" onclick="toggleOwnerCustomCity('ownerCurrent')">Click here if you did not find your city in the list</button>
             <div class="owner-custom-city-panel" id="ownerCurrentCustomCityPanel">
-              <input type="text" id="ownerCurrentCustomName" placeholder="City name">
+              <input type="text" id="ownerCurrentCustomName" placeholder="City name, e.g. Belgrade">
               <div class="owner-custom-city-grid">
-                <input type="text" id="ownerCurrentCustomLat" placeholder="Latitude">
-                <input type="text" id="ownerCurrentCustomLon" placeholder="Longitude">
+                <input type="text" id="ownerCurrentCustomLat" placeholder="Latitude, e.g. 44.7866">
+                <input type="text" id="ownerCurrentCustomLon" placeholder="Longitude, e.g. 20.4489">
               </div>
-              <input type="text" id="ownerCurrentCustomTz" placeholder="Time zone, e.g. Europe/Belgrade">
-              <div class="owner-custom-city-note">Saved only on this device. It will appear first in red in city search.</div>
+              <select id="ownerCurrentCustomTz" aria-label="Time zone offset">
+                <option value="">Auto local time zone</option>
+                <option value="Europe/Belgrade">Europe/Belgrade</option>
+                <option value="Etc/GMT+12">UTC-12</option>
+                <option value="Etc/GMT+11">UTC-11</option>
+                <option value="Etc/GMT+10">UTC-10</option>
+                <option value="Etc/GMT+9">UTC-9</option>
+                <option value="Etc/GMT+8">UTC-8</option>
+                <option value="Etc/GMT+7">UTC-7</option>
+                <option value="Etc/GMT+6">UTC-6</option>
+                <option value="Etc/GMT+5">UTC-5</option>
+                <option value="Etc/GMT+4">UTC-4</option>
+                <option value="Etc/GMT+3">UTC-3</option>
+                <option value="Etc/GMT+2">UTC-2</option>
+                <option value="Etc/GMT+1">UTC-1</option>
+                <option value="Etc/GMT">UTC+0</option>
+                <option value="Etc/GMT-1">UTC+1</option>
+                <option value="Etc/GMT-2">UTC+2</option>
+                <option value="Etc/GMT-3">UTC+3</option>
+                <option value="Etc/GMT-4">UTC+4</option>
+                <option value="Etc/GMT-5">UTC+5</option>
+                <option value="Etc/GMT-6">UTC+6</option>
+                <option value="Etc/GMT-7">UTC+7</option>
+                <option value="Etc/GMT-8">UTC+8</option>
+                <option value="Etc/GMT-9">UTC+9</option>
+                <option value="Etc/GMT-10">UTC+10</option>
+                <option value="Etc/GMT-11">UTC+11</option>
+                <option value="Etc/GMT-12">UTC+12</option>
+                <option value="Etc/GMT-13">UTC+13</option>
+                <option value="Etc/GMT-14">UTC+14</option>
+              </select>
+              <div class="owner-custom-city-note">Use decimal coordinates: Example: Belgrade, 44.7866, 20.4489, Europe/Belgrade. Saved only on this device and shown first in red.</div>
               <button type="button" class="owner-custom-city-save" onclick="saveOwnerCustomCity('ownerCurrent','ownerCurrentCity')">SAVE CITY</button>
             </div>
           </div>
