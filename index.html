@@ -1866,6 +1866,66 @@ body {
   color: #FFD700;
 }
 
+.number-panel-stack{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  width:min(390px, calc(100vw - 28px));
+  margin:12px auto 0;
+}
+.number-panel{
+  background:rgba(15,23,42,.88);
+  border:1px solid rgba(56,189,248,.38);
+  border-radius:12px;
+  box-shadow:0 0 12px rgba(56,189,248,.14);
+  overflow:hidden;
+}
+.number-panel summary{
+  cursor:pointer;
+  list-style:none;
+  min-height:44px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:10px 38px;
+  color:#38bdf8;
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:1.3px;
+  text-align:center;
+  text-transform:uppercase;
+  position:relative;
+}
+.number-panel summary::-webkit-details-marker{display:none;}
+.number-panel summary::after{
+  content:"+";
+  position:absolute;
+  right:14px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#FFD700;
+  font-size:18px;
+  line-height:1;
+}
+.number-panel[open] summary::after{content:"-";}
+.number-panel-body{
+  border-top:1px solid rgba(56,189,248,.22);
+  padding:12px;
+  text-align:center;
+}
+.number-panel-text{
+  color:#94a3b8;
+  font-size:12px;
+  line-height:1.45;
+  text-align:left;
+}
+.number-mini-card{
+  background:#0f172a;
+  border:1px solid rgba(56,189,248,.24);
+  border-radius:9px;
+  padding:10px;
+}
+
 
 
 
@@ -2936,7 +2996,7 @@ body.primary-astrology #disclaimerAcceptBtn{
 <div class="title">Numerology App</div>
 
 <div class="tabs" id="tabs">
-  <div class="tab" data-tab="spirit" onclick="showTab('spirit')">SPIRITUAL NUMBER</div>
+  <div class="tab" data-tab="spirit" onclick="showTab('spirit')">NUMBER</div>
   <div class="tab" data-tab="codes" onclick="showTab('codes')">CODES</div>
   <div class="tab" data-tab="analysis" onclick="showTab('analysis')">ANALYSIS</div>
   <div class="tab" data-tab="pyramid" onclick="showTab('pyramid')">ASPECT</div>
@@ -3143,72 +3203,89 @@ body.primary-astrology #disclaimerAcceptBtn{
   </div>
 </div>
 
-<!-- SPIRITUAL NUMBER -->
+<!-- NUMBER -->
 
 <div id="spirit" class="section">
 
-  <h3 style="color:#38bdf8;">SPIRITUAL NUMBER</h3>
+  <h3 style="color:#38bdf8;">NUMBER</h3>
 
-  <div style="margin-top:10px; margin-bottom:15px; color:#38bdf8; font-size:12px; opacity:0.8;">
-    The day of birth in Numerology is referred to as the SPIRITUAL NUMBER. In this section, we will analyze individuals born on any day from the 1st to the 31st of the month.
+  <div class="number-panel-stack">
 
-It is important to note that the interpretation of the birth day should be used as a supportive tool in understanding a person's character. It should not be taken as a standalone rule, but rather considered together with other key elements of the chart - especially the influence of the birth month and how it interacts with the day.
+    <details class="number-panel">
+      <summary>SPIRITUAL NUMBER</summary>
+      <div class="number-panel-body">
+        <div class="number-panel-text" style="margin-bottom:12px;">
+          The day of birth in Numerology is referred to as the SPIRITUAL NUMBER. In this section, we will analyze individuals born on any day from the 1st to the 31st of the month.<br><br>
+          It is important to note that the interpretation of the birth day should be used as a supportive tool in understanding a person's character. It should not be taken as a standalone rule, but rather considered together with other key elements of the chart - especially the influence of the birth month and how it interacts with the day.<br><br>
+          For example, being born on the 29th carries a different meaning depending on whether the month is April or November, as each context shapes the final interpretation differently.
+        </div>
 
-For example, being born on the 29th carries a different meaning depending on whether the month is April or November, as each context shapes the final interpretation differently.
+        <select id="spiritSelect"></select>
+
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px;">
+          <div id="spiritNumber" class="main-number" style="font-size:90px;"></div>
+          <button class="num-help-btn" type="button" onclick="event.stopPropagation(); openSpiritDetail(parseInt(document.getElementById('spiritSelect').value || '1', 10));" aria-label="Help for spiritual number">?</button>
+        </div>
+
+        <div class="spirit-hint" style="margin-top:10px;">
+          Tap ? to reveal<br>
+          the meaning of your spiritual number
+        </div>
+      </div>
+    </details>
+
+    <details class="number-panel">
+      <summary>BIRTH DEGREE</summary>
+      <div class="number-panel-body">
+        <div id="spiritCodeWrap" style="text-align:center;">
+          <div class="spirit-text">
+            Birth degree is a numerological code that shows how you act in real life, based on your birth date.
+          </div>
+          <div id="spiritCode" class="spirit-number">0</div>
+        </div>
+      </div>
+    </details>
+
+    <details class="number-panel">
+      <summary>PERSONAL DAY NUMBER</summary>
+      <div class="number-panel-body">
+        <div id="personalDayWrap" style="text-align:center;">
+          <div class="number-mini-card">
+            <div id="personalDayNumber" style="font-size:34px;line-height:1;color:#38bdf8;font-weight:900;">-</div>
+            <div style="font-size:10px;color:#94a3b8;margin-top:4px;">TODAY</div>
+          </div>
+          <div id="personalDaySummary" style="margin-top:9px;font-size:11px;color:#cbd5e1;line-height:1.35;">Enter birth date to calculate.</div>
+          <button class="num-help-btn" type="button" style="width:22px;height:22px;font-size:12px;margin-top:9px;" onclick="openPersonalDayHelp()" aria-label="Help for personal day number">?</button>
+        </div>
+      </div>
+    </details>
+
+    <details class="number-panel">
+      <summary>BIRTH WEEKDAY</summary>
+      <div class="number-panel-body">
+        <div class="number-mini-card">
+          <div id="birthWeekdayName" style="font-size:18px;line-height:1.2;color:#e0f2fe;font-weight:900;">-</div>
+          <div style="font-size:10px;color:#94a3b8;margin-top:4px;">BIRTH WEEKDAY</div>
+        </div>
+        <div id="birthWeekdaySummary" style="margin-top:9px;font-size:11px;color:#cbd5e1;line-height:1.35;">Enter birth date to calculate.</div>
+      </div>
+    </details>
+
+    <details class="number-panel">
+      <summary>DAY / NIGHT BIRTH</summary>
+      <div class="number-panel-body">
+        <div class="number-mini-card">
+          <div id="dayNightBirthResult" style="font-size:18px;line-height:1.2;color:#FFD700;font-weight:900;">-</div>
+          <div style="font-size:10px;color:#94a3b8;margin-top:4px;">SUNRISE TO SUNSET</div>
+        </div>
+        <div id="dayNightBirthTimes" style="margin-top:9px;font-size:11px;color:#cbd5e1;line-height:1.35;">Enter birth date, time and city to calculate.</div>
+        <div id="dayNightBirthSummary" class="number-panel-text" style="text-align:center;margin-top:8px;">
+          Day birth is counted from the beginning of sunrise until complete sunset at the birth location.
+        </div>
+      </div>
+    </details>
+
   </div>
-
-  <!-- SELECT -->
-  <select id="spiritSelect"></select>
-
-  <!-- REZULTAT -->
-  <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px;">
-    <div id="spiritNumber" class="main-number" style="font-size:90px;"></div>
-    <button class="num-help-btn" type="button" onclick="event.stopPropagation(); openSpiritDetail(parseInt(document.getElementById('spiritSelect').value || '1', 10));" aria-label="Help for spiritual number">?</button>
-  </div>
-
-  <div class="spirit-hint" style="margin-top:10px;">
-  Tap ? to reveal<br>
-  the meaning of your spiritual number
-</div>
-
-<div id="spiritCodeWrap" style="margin-top:20px; text-align:center;">
-
-  <div class="spirit-text">
-    Birth degree is a numerological code that shows how you act in real life, based on your birth date.
-  </div>
-
-  <div id="spiritCode" class="spirit-number">
-    0
-  </div>
-
-</div>
-
-<div id="personalDayWrap" style="
-  margin:18px auto 0;
-  width:min(360px, calc(100vw - 28px));
-  background:rgba(30,41,59,.72);
-  border:1px solid rgba(56,189,248,.42);
-  border-radius:12px;
-  padding:12px;
-  box-shadow:0 0 14px rgba(56,189,248,.18);
-  text-align:center;
-">
-  <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;">
-    <div style="font-size:11px;letter-spacing:1.6px;color:#38bdf8;font-weight:bold;">PERSONAL DAY NUMBER</div>
-    <button class="num-help-btn" type="button" style="width:20px;height:20px;font-size:12px;" onclick="openPersonalDayHelp()" aria-label="Help for personal day number">?</button>
-  </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-    <div style="background:#0f172a;border:1px solid rgba(56,189,248,.24);border-radius:9px;padding:9px;">
-      <div id="personalDayNumber" style="font-size:34px;line-height:1;color:#38bdf8;font-weight:900;">-</div>
-      <div style="font-size:10px;color:#94a3b8;margin-top:4px;">TODAY</div>
-    </div>
-    <div style="background:#0f172a;border:1px solid rgba(56,189,248,.24);border-radius:9px;padding:9px;">
-      <div id="birthWeekdayName" style="font-size:15px;line-height:1.2;color:#e0f2fe;font-weight:900;">-</div>
-      <div style="font-size:10px;color:#94a3b8;margin-top:4px;">BIRTH WEEKDAY</div>
-    </div>
-  </div>
-  <div id="personalDaySummary" style="margin-top:9px;font-size:11px;color:#cbd5e1;line-height:1.35;">Enter birth date to calculate.</div>
-</div>
 
 </div>
 
@@ -3613,13 +3690,6 @@ onclick="appNavigate('free.pdf')">
     0
   </div>
 
-  <div id="pythCycleLine" style="
-    font-size:11px;
-    color:#94a3b8;
-    margin-bottom:12px;
-    line-height:1.35;">
-    Main -> Year -> Month -> Day
-  </div>
 
   <!-- CODE FOR YEAR -->
   <div style=""
@@ -5863,10 +5933,7 @@ function pythagoreanCycleCodes(base, year, month, day){
 }
 
 function updatePythagoreanCycleLine(codes){
-  const line = document.getElementById("pythCycleLine");
-  if(line && codes){
-    line.innerText = `Main ${codes.main} -> Year ${codes.year} -> Month ${codes.month} -> Day ${codes.day}`;
-  }
+  return codes;
 }
 function calculateTodayPythagorean(){
 
@@ -7085,7 +7152,6 @@ function openPortalTarot(){
 }
 
 function openPrimaryAstrology(){
-  fillEmptyHomeInputsFromOwner();
   const pageUrl = buildAstroPageUrl("chart.html");
   if(!pageUrl) return;
   try{ sessionStorage.setItem("portalArriveAstrology", "1"); }catch(e){}
@@ -7093,6 +7159,7 @@ function openPrimaryAstrology(){
 }
 
 function fillEmptyHomeInputsFromOwner(force = false){
+  if(!force) return false;
   let owner = null;
   try{ owner = JSON.parse(localStorage.getItem("numerology_owner_profile") || "null"); }catch(e){ owner = null; }
   if(!owner) return false;
@@ -7111,27 +7178,19 @@ function fillEmptyHomeInputsFromOwner(force = false){
 }
 
 function ensureNumerologyInputForTab(){
-  fillEmptyHomeInputsFromOwner(true);
   const date = document.getElementById("input");
   const value = date ? date.value : "";
   if(validateDate(value)) return true;
   showTab("home");
-  if(typeof showOwnerSetupMessageIfNeeded === "function"){
-    showOwnerSetupMessageIfNeeded();
-  }else{
-    alert("Please enter owner birth data first.");
-  }
+  alert("Choose a saved profile or enter a birth date first.");
   return false;
 }
 
 function generate(){
   if(primaryPage() === "astrology"){
-    fillEmptyHomeInputsFromOwner();
     openPrimaryAstrology();
     return;
   }
-
-  fillEmptyHomeInputsFromOwner();
 
   document.getElementById("tabs").style.display="flex";
   document.body.classList.add("has-tabs");
@@ -7825,7 +7884,6 @@ function openSite(){
 //SPIRITUAL NUMBER
 
 function loadSpirit(){
-  fillEmptyHomeInputsFromOwner();
 
   let select = document.getElementById("spiritSelect");
   select.innerHTML = "";
@@ -7902,15 +7960,8 @@ function parseNumerologyDate(value){
 }
 
 function getSpiritBirthDate(){
-  fillEmptyHomeInputsFromOwner();
   const inputDate = parseNumerologyDate(document.getElementById("input")?.value);
-  if(inputDate) return inputDate;
-  try{
-    const owner = JSON.parse(localStorage.getItem("numerology_owner_profile") || "null");
-    return parseNumerologyDate(owner && owner.birthDate);
-  }catch(e){
-    return null;
-  }
+  return inputDate;
 }
 
 function personalYearNumber(birth, targetDate){
@@ -7947,16 +7998,170 @@ const weekdayTexts = [
   {name:"Saturday", text:"Saturday birth carries Saturn energy: discipline, karma, patience, responsibility, endurance and long-term building."}
 ];
 
+function timeStringToMinutes(value){
+  const normalized = normalizeOwnerTime(value || "", ownerUnits());
+  const match = /^(\d{1,2}):(\d{2})$/.exec(normalized);
+  if(!match) return null;
+  const hours = Number(match[1]);
+  const minutes = Number(match[2]);
+  if(hours < 0 || hours > 23 || minutes < 0 || minutes > 59) return null;
+  return hours * 60 + minutes;
+}
+
+function dayOfYearNumber(date){
+  const start = new Date(date.getFullYear(), 0, 0);
+  return Math.floor((date - start) / 86400000);
+}
+
+function normalizeDegrees(value){
+  return ((value % 360) + 360) % 360;
+}
+
+function normalizeMinutes(value){
+  return ((value % 1440) + 1440) % 1440;
+}
+
+function formatClockMinutes(value){
+  const total = Math.round(normalizeMinutes(value));
+  const hours = Math.floor(total / 60) % 24;
+  const minutes = total % 60;
+  return String(hours).padStart(2, "0") + ":" + String(minutes).padStart(2, "0");
+}
+
+function timezoneOffsetMinutes(timeZone, date){
+  if(!timeZone) return Math.round(-date.getTimezoneOffset());
+  try{
+    const reference = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0));
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone,
+      year:"numeric",
+      month:"2-digit",
+      day:"2-digit",
+      hour:"2-digit",
+      minute:"2-digit",
+      second:"2-digit",
+      hour12:false
+    }).formatToParts(reference).reduce((acc, part) => {
+      acc[part.type] = part.value;
+      return acc;
+    }, {});
+    const asUtc = Date.UTC(+parts.year, +parts.month - 1, +parts.day, +parts.hour, +parts.minute, +parts.second);
+    return Math.round((asUtc - reference.getTime()) / 60000);
+  }catch(e){
+    return Math.round(-date.getTimezoneOffset());
+  }
+}
+
+function solarEventMinutes(date, lat, lon, timeZone, isSunrise){
+  const zenith = 90.833;
+  const n = dayOfYearNumber(date);
+  const lngHour = lon / 15;
+  const t = n + (((isSunrise ? 6 : 18) - lngHour) / 24);
+  const m = (0.9856 * t) - 3.289;
+  let l = m + (1.916 * Math.sin(m * Math.PI / 180)) + (0.020 * Math.sin(2 * m * Math.PI / 180)) + 282.634;
+  l = normalizeDegrees(l);
+  let ra = Math.atan(0.91764 * Math.tan(l * Math.PI / 180)) * 180 / Math.PI;
+  ra = normalizeDegrees(ra);
+  const lQuadrant = Math.floor(l / 90) * 90;
+  const raQuadrant = Math.floor(ra / 90) * 90;
+  ra = (ra + (lQuadrant - raQuadrant)) / 15;
+  const sinDec = 0.39782 * Math.sin(l * Math.PI / 180);
+  const cosDec = Math.cos(Math.asin(sinDec));
+  const cosH = (Math.cos(zenith * Math.PI / 180) - (sinDec * Math.sin(lat * Math.PI / 180))) / (cosDec * Math.cos(lat * Math.PI / 180));
+  if(cosH > 1) return {type:"polar-night"};
+  if(cosH < -1) return {type:"polar-day"};
+  let h = isSunrise ? 360 - (Math.acos(cosH) * 180 / Math.PI) : (Math.acos(cosH) * 180 / Math.PI);
+  h = h / 15;
+  const localMeanTime = h + ra - (0.06571 * t) - 6.622;
+  const utcHours = localMeanTime - lngHour;
+  const localMinutes = (utcHours * 60) + timezoneOffsetMinutes(timeZone, date);
+  return {type:"time", minutes:normalizeMinutes(localMinutes)};
+}
+
+function resolveBirthLocationForDayNight(){
+  const input = document.getElementById("cityInput");
+  const raw = String(input && input.value || "").trim();
+  if(!raw) return null;
+  const selectedLat = Number(input && input.dataset.selectedCityLat);
+  const selectedLon = Number(input && input.dataset.selectedCityLon);
+  if(Number.isFinite(selectedLat) && Number.isFinite(selectedLon)){
+    return {lat:selectedLat, lon:selectedLon, tz:(input.dataset.selectedCityTz || ""), name:raw};
+  }
+  const base = raw.split(",")[0].trim();
+  const found = window.WorldCities && (WorldCities.find(raw) || WorldCities.find(base));
+  if(found) return {lat:Number(found.lat), lon:Number(found.lon), tz:found.tz || "", name:WorldCities.displayName ? WorldCities.displayName(found) : raw};
+  const known = (typeof cityCoords !== "undefined") && (cityCoords[raw] || cityCoords[base]);
+  if(known) return {lat:Number(known.lat), lon:Number(known.lon), tz:known.tz || "", name:base || raw};
+  return null;
+}
+
+function resetDayNightBirthPanel(message){
+  const resultEl = document.getElementById("dayNightBirthResult");
+  const timesEl = document.getElementById("dayNightBirthTimes");
+  const summaryEl = document.getElementById("dayNightBirthSummary");
+  if(resultEl) resultEl.textContent = "-";
+  if(timesEl) timesEl.textContent = message || "Enter birth date, time and city to calculate.";
+  if(summaryEl) summaryEl.textContent = "Day birth is counted from the beginning of sunrise until complete sunset at the birth location.";
+}
+
+function updateDayNightBirthPanel(birth){
+  const resultEl = document.getElementById("dayNightBirthResult");
+  const timesEl = document.getElementById("dayNightBirthTimes");
+  const summaryEl = document.getElementById("dayNightBirthSummary");
+  if(!resultEl || !timesEl || !summaryEl) return;
+  if(!birth){
+    resetDayNightBirthPanel("Enter birth date to calculate.");
+    return;
+  }
+  const birthMinutes = timeStringToMinutes(document.getElementById("timeInput")?.value || "");
+  if(birthMinutes === null){
+    resetDayNightBirthPanel("Enter birth time to calculate day or night birth.");
+    return;
+  }
+  const location = resolveBirthLocationForDayNight();
+  if(!location || !Number.isFinite(location.lat) || !Number.isFinite(location.lon)){
+    resetDayNightBirthPanel("Choose a city from the list or save a custom city with coordinates.");
+    return;
+  }
+  const sunrise = solarEventMinutes(birth.date, location.lat, location.lon, location.tz, true);
+  const sunset = solarEventMinutes(birth.date, location.lat, location.lon, location.tz, false);
+  if(sunrise.type === "polar-day" || sunset.type === "polar-day"){
+    resultEl.textContent = "DAY BIRTH";
+    timesEl.textContent = "The Sun stays above the horizon on this date at " + location.name + ".";
+    summaryEl.textContent = "Because there is no complete sunset, this birth is treated as day birth.";
+    return;
+  }
+  if(sunrise.type === "polar-night" || sunset.type === "polar-night"){
+    resultEl.textContent = "NIGHT BIRTH";
+    timesEl.textContent = "The Sun stays below the horizon on this date at " + location.name + ".";
+    summaryEl.textContent = "Because there is no sunrise, this birth is treated as night birth.";
+    return;
+  }
+  const sunriseMinutes = sunrise.minutes;
+  const sunsetMinutes = sunset.minutes;
+  const isDay = sunriseMinutes <= sunsetMinutes
+    ? birthMinutes >= sunriseMinutes && birthMinutes <= sunsetMinutes
+    : birthMinutes >= sunriseMinutes || birthMinutes <= sunsetMinutes;
+  resultEl.textContent = isDay ? "DAY BIRTH" : "NIGHT BIRTH";
+  timesEl.textContent = "Sunrise " + formatClockMinutes(sunriseMinutes) + " / Sunset " + formatClockMinutes(sunsetMinutes) + " - " + location.name;
+  summaryEl.textContent = isDay
+    ? "Birth time is between sunrise and complete sunset at the birth location."
+    : "Birth time is before sunrise or after complete sunset at the birth location.";
+}
+
 function updatePersonalDayPanel(){
   const birth = getSpiritBirthDate();
   const dayEl = document.getElementById("personalDayNumber");
   const weekdayEl = document.getElementById("birthWeekdayName");
   const summaryEl = document.getElementById("personalDaySummary");
+  const weekdaySummaryEl = document.getElementById("birthWeekdaySummary");
   if(!dayEl || !weekdayEl || !summaryEl) return;
   if(!birth){
     dayEl.textContent = "-";
     weekdayEl.textContent = "-";
     summaryEl.textContent = "Enter birth date to calculate.";
+    if(weekdaySummaryEl) weekdaySummaryEl.textContent = "Enter birth date to calculate.";
+    updateDayNightBirthPanel(null);
     return;
   }
   const today = new Date();
@@ -7967,6 +8172,8 @@ function updatePersonalDayPanel(){
   dayEl.textContent = pDay || "-";
   weekdayEl.textContent = weekday ? weekday.name : "-";
   summaryEl.textContent = "Personal year " + pYear + " / month " + pMonth + " / day " + pDay + ". " + (personalDayTexts[pDay] || "");
+  if(weekdaySummaryEl) weekdaySummaryEl.textContent = weekday ? weekday.text : "Birth weekday describes the planetary tone of the day you were born.";
+  updateDayNightBirthPanel(birth);
 }
 
 function openPersonalDayHelp(){
@@ -9540,7 +9747,6 @@ function saveOwnerProfile(){
     window.localStorage.setItem('numerology_owner_profile', JSON.stringify(profile));
     saveAppSettings();
     syncOwnerContact();
-    fillEmptyHomeInputsFromOwner();
     updatePersonalDayPanel();
     if(window.refreshAppNotifications){
       window.refreshAppNotifications().then(result => {
@@ -9866,7 +10072,6 @@ function renderSavedList(){
 // Inicijalizacija pri uÄTitavanju
 document.addEventListener('DOMContentLoaded', function(){
   syncOwnerContact();
-  fillEmptyHomeInputsFromOwner();
   updatePersonalDayPanel();
   updateSavedCount();
   loadAppSettings();
@@ -9960,6 +10165,12 @@ function restoreNumerologyPortalOnly(){
   }
 }
 
+function clearAstroReturnMarkers(){
+  try{
+    sessionStorage.removeItem("returningFromChart");
+    sessionStorage.removeItem("astroReturnState");
+  }catch(e){}
+}
 function hideIntroAndFooterAfterAstroReturn(){
   const intro = document.getElementById("introContainer");
   if(intro) intro.style.display = "none";
@@ -10021,6 +10232,7 @@ function restoreAstroReturnState(){
     showHomeTabWithTabs();
     hideIntroAndFooterAfterAstroReturn();
     applyPortalArriveNumerology();
+    clearAstroReturnMarkers();
     sessionStorage.removeItem("openNumerologyCode");
 
     setTimeout(scrollToAstroEntry, 350);
@@ -10073,6 +10285,7 @@ function restoreAstroReturnState(){
   showHomeTabWithTabs();
   hideIntroAndFooterAfterAstroReturn();
   applyPortalArriveNumerology();
+  clearAstroReturnMarkers();
   sessionStorage.removeItem("openNumerologyCode");
 
   setTimeout(scrollToAstroEntry, 350);
@@ -10080,22 +10293,21 @@ function restoreAstroReturnState(){
 }
 
 function buildAstroPageUrl(page){
-  const fallback = window.AppSharedState ? AppSharedState.lastAstroInput() : null;
-  const rawDate = document.getElementById("input").value || (fallback && fallback.date) || "";
-  const rawTime = document.getElementById("timeInput").value || (fallback && fallback.time) || "";
+  const rawDate = document.getElementById("input").value || "";
+  const rawTime = document.getElementById("timeInput").value || "";
   const date = normalizeOwnerDate(rawDate, ownerUnits());
   const time = normalizeOwnerTime(rawTime, ownerUnits());
-  const city = document.getElementById("cityInput").value || (fallback && fallback.city) || "";
-  const isTwin = (document.getElementById("twinCheck") && document.getElementById("twinCheck").checked) || !!(fallback && fallback.isTwin);
-  const isTwin3 = (document.getElementById("twinCheck3") && document.getElementById("twinCheck3").checked) || !!(fallback && fallback.isTwin3);
-  if(window.AppSharedState){
-    AppSharedState.saveLastAstroInput({date, time, city, isTwin, isTwin3});
-  }
+  const city = document.getElementById("cityInput").value || "";
+  const isTwin = !!(document.getElementById("twinCheck") && document.getElementById("twinCheck").checked);
+  const isTwin3 = !!(document.getElementById("twinCheck3") && document.getElementById("twinCheck3").checked);
 
   // Validacija datuma
   if(!validateDate(rawDate)){
     alert("Please enter a valid date (DD.MM.YYYY)");
     return "";
+  }
+  if(window.AppSharedState){
+    AppSharedState.saveLastAstroInput({date, time, city, isTwin, isTwin3});
   }
 
   // SaÄTuvaj stanje za povratak
